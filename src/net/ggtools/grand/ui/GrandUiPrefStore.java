@@ -27,19 +27,13 @@
  */
 package net.ggtools.grand.ui;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import net.ggtools.grand.ui.prefs.GeneralPreferencePage;
@@ -62,10 +56,24 @@ import org.eclipse.swt.graphics.RGB;
  * @author Christophe Labouisse
  */
 public class GrandUiPrefStore extends PreferenceStore {
+
     /**
-     * Logger for this class
+     * @param unEscapeString(item)
+     * @return
      */
-    private static final Log log = LogFactory.getLog(GrandUiPrefStore.class);
+    private static String escapeString(final String item) {
+        return item.replaceAll("%","%%").replaceAll(",","%,");
+    }
+
+    /**
+     * @param item
+     * @return
+     */
+    private static String unEscapeString(final String item) {
+        return item.replaceAll("%,",",").replaceAll("%%","%");
+    }
+
+    final ColorRegistry colorRegistry = new ColorRegistry();
 
     /**
      * @param unEscapeString(item)
@@ -158,105 +166,5 @@ public class GrandUiPrefStore extends PreferenceStore {
             fontRegistry.put(key, newFontDataArray);
         }
         return fontRegistry.get(key);
-    }
-
-    /**
-     * Retrieve a Properties object stored by
-     * {@link #setValue(String, Properties)}.
-     * 
-     * @param key
-     * @return
-     */
-    public Properties getProperties(final String key) {
-        Properties properties = null;
-        if (propertiesTable.containsKey(key)) {
-            properties = new Properties();
-            properties.putAll((Properties) propertiesTable.get(key));
-        }
-        return properties;
-    }
-
-    public void load() throws IOException {
-        super.load();
-        // TODO load properties
-    }
-
-    public void save() throws IOException {
-        super.save();
-        // TODO save properties
-    }
-
-    /**
-     * Sets a properties to the default value. It removes the key from the
-     * properties table and mark it for removal on next save.
-     * @param key
-     */
-    public void setPropertiesToDefault(final String key) {
-        if (propertiesTable.containsKey(key)) {
-            propertiesTable.remove(key);
-            pendingPropertiesRemoval.add(key);
-        }
-    }
-
-    /**
-     * Save a string collection into the preference store. The collection is
-     * stored by escaping each element and appending them separated by commas.
-     * 
-     * @param key
-     * @param value
-     */
-    public void setValue(final String key, final Collection value) {
-        final StringBuffer buffer = new StringBuffer();
-        for (final Iterator iter = value.iterator(); iter.hasNext();) {
-            final String item = (String) iter.next();
-            buffer.append(escapeString(item));
-            if (iter.hasNext()) buffer.append(",");
-        }
-        setValue(key, buffer.toString());
-    }
-
-    /**
-     * Save a {@link Properties} into the preference store.
-     * 
-     * @param key
-     * @param props
-     */
-    public void setValue(final String key, final Properties props) {
-        final Properties myProperties = new Properties();
-        myProperties.putAll(props);
-        propertiesTable.remove(key);
-        propertiesTable.put(key, myProperties);
-    }
-
-    /**
-     * 
-     */
-    private void migratePreferences() {
-        // Try to get data from the old preference store.
-        final Preferences node = Preferences.userNodeForPackage(GrandUiPrefStore.class);
-        final String[] keys;
-        try {
-            keys = node.keys();
-            for (int i = 0; i < keys.length; i++) {
-                String key = keys[i];
-                putValue(key, node.get(key, "SHOULD NOT APPEAR"));
-            }
-            save();
-            node.removeNode();
-        } catch (BackingStoreException e) {
-            log.warn("Cannot retrieve previous preferences", e);
-        } catch (IOException e) {
-            log.error("Cannot save preferences after migration", e);
-        }
-    }
-
-    /**
-     * 
-     */
-    private void setDefaults() {
-        setDefault(GeneralPreferencePage.MAX_RECENT_FILES_PREFS_KEY, 4);
-        GraphPreferencePage.setDefaults(this);
-        NodesPreferencePage.setDefaults(this);
-        LinksPreferencePage.setDefaults(this);
     }
 }
