@@ -116,7 +116,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         outlineViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(SelectionChangedEvent event) {
                 final ISelection selection = event.getSelection();
-                
+
                 if (!selection.isEmpty()) {
                     if (selection instanceof IStructuredSelection) {
                         final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
@@ -125,8 +125,8 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
                         }
                     }
                 }
-            }});
-
+            }
+        });
 
         canvas = new FigureCanvas(outlineSashForm);
         canvas.getViewport().setContentsTracksHeight(true);
@@ -192,10 +192,12 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
             final Rectangle bounds = graph.getBoundsForNode(nodeName);
             if (bounds != null) {
                 final Point center = bounds.getCenter();
+                final float graphZoom = graph.getZoom();
                 Display.getDefault().asyncExec(new Runnable() {
                     public void run() {
                         final org.eclipse.swt.graphics.Point size = canvas.getSize();
-                        canvas.scrollSmoothTo(center.x - size.x / 2, center.y - size.y / 2);
+                        canvas.scrollSmoothTo((int) (center.x * graphZoom - size.x / 2),
+                                (int) (center.y * graphZoom - size.y / 2));
                     }
                 });
 
