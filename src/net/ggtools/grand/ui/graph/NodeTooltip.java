@@ -31,16 +31,7 @@ import net.ggtools.grand.ui.AppData;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.draw2d.AbstractBorder;
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.text.BlockFlow;
 import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.draw2d.text.InlineFlow;
@@ -53,7 +44,7 @@ import sf.jzgraph.IVertex;
  * 
  * @author Christophe Labouisse
  */
-public class NodeTooltip extends AbstractGraphToolTip implements DotGraphAttributes {
+public class NodeTooltip extends AbstractGraphTooltip implements DotGraphAttributes {
     private static final Log log = LogFactory.getLog(NodeTooltip.class);
 
     private final IVertex vertex;
@@ -65,6 +56,7 @@ public class NodeTooltip extends AbstractGraphToolTip implements DotGraphAttribu
     public NodeTooltip(IVertex vertex) {
         super();
         this.vertex = vertex;
+        createContents();
     }
 
     protected void createContents() {

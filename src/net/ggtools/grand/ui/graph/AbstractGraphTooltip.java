@@ -45,7 +45,7 @@ import org.eclipse.draw2d.text.FlowPage;
  * 
  * @author Christophe Labouisse
  */
-abstract class AbstractGraphToolTip extends Figure {
+abstract class AbstractGraphTooltip extends Figure {
     /**
      * A border for the <em>optional</em> sections of the tooltip.
      * @author Christophe Labouisse
@@ -73,23 +73,23 @@ abstract class AbstractGraphToolTip extends Figure {
     }
 
     private static final int TOOLTIP_WIDTH = 400;
-
+    
     /**
-     *  
+     * Default constructor. 
      */
-    public AbstractGraphToolTip() {
+    public AbstractGraphTooltip() {
         setForegroundColor(ColorConstants.tooltipForeground);
         setBackgroundColor(ColorConstants.tooltipBackground);
         setOpaque(true);
 
         final ToolbarLayout layout = new ToolbarLayout();
         setLayoutManager(layout);
-        createContents();
         setBorder(new MarginBorder(5));
     }
 
     /**
-     * Create the tooltip's contents.
+     * Create the tooltip's contents. Should be called explicitly by implementing classes.
+     * TODO: Make this part automatic (ticket #37).
      */
     abstract protected void createContents();
 
@@ -107,5 +107,4 @@ abstract class AbstractGraphToolTip extends Figure {
         add(page);
         return page;
     }
-
 }

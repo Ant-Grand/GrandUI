@@ -166,6 +166,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      *            the node to add
      */
     private void buildNodeFigure(Draw2dGraph contents, IVertex node) {
+        if (log.isDebugEnabled()) log.debug("Building node "+ node.getName());
         final Draw2dNode polygon = contents.createNode(node);
         polygon.setToolTip(new NodeTooltip(node));
     }

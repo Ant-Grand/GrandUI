@@ -47,7 +47,7 @@ import sf.jzgraph.IEdge;
  * 
  * @author Christophe Labouisse
  */
-public class LinkTooltip extends AbstractGraphToolTip implements DotGraphAttributes {
+public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttributes {
     private static final Log log = LogFactory.getLog(LinkTooltip.class);
 
     private final IEdge edge;
@@ -59,6 +59,7 @@ public class LinkTooltip extends AbstractGraphToolTip implements DotGraphAttribu
     public LinkTooltip(IEdge edge) {
         super();
         this.edge = edge;
+        createContents();
     }
 
     protected void createContents() {
