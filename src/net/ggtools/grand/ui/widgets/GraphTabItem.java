@@ -165,6 +165,15 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         textDisplayer.setText(text);
         textComposite.setMinSize(textDisplayer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
     }
+    
+    /**
+     * @param sourcePanelVisible
+     *            The sourcePanelVisible to set.
+     */
+    public final void setSourcePanelVisible(boolean sourcePanelVisible) {
+        textComposite.setVisible(sourcePanelVisible);
+        sashForm.layout();
+    }
 
     /*
      * (non-Javadoc)

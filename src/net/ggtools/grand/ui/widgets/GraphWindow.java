@@ -81,6 +81,10 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
 
     private CTabFolder tabFolder;
 
+    private boolean sourcePanelVisible = true;
+
+    private boolean outlinePanelVisible = true;
+
     public GraphWindow() {
         this(null);
     }
@@ -142,6 +146,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      */
     public GraphDisplayer newDisplayer(final GraphControler controler) {
         final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE, controler);
+        graphTabItem.setSourcePanelVisible(sourcePanelVisible);
         tabFolder.setSelection(graphTabItem);
         controlerAvailableDispatcher.dispatch(controler);
         controler.setProgressMonitor(new SafeProgressMonitor(getStatusLineManager()
@@ -246,5 +251,33 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
         manager.add(new HelpMenu(this));
         manager.setVisible(true);
         return manager;
+    }
+
+    /**
+     * @param outlinePanelVisible
+     *            The outlinePanelVisible to set.
+     */
+    public final void setOutlinePanelVisible(boolean outlinePanelVisible) {
+        if (outlinePanelVisible != this.outlinePanelVisible) {
+            this.outlinePanelVisible = outlinePanelVisible;
+        }
+    }
+
+    /**
+     * @param sourcePanelVisible
+     *            The sourcePanelVisible to set.
+     */
+    public final void setSourcePanelVisible(boolean sourcePanelVisible) {
+        if (sourcePanelVisible != this.sourcePanelVisible) {
+            this.sourcePanelVisible = sourcePanelVisible;
+            final CTabItem [] children = tabFolder.getItems();
+            for (int i = 0; i < children.length; i++) {
+                final CTabItem current = children[i];
+                if (current instanceof GraphTabItem) {
+                    final GraphTabItem tab = (GraphTabItem) current;
+                    tab.setSourcePanelVisible(sourcePanelVisible);
+                }
+            }
+        }
     }
 }

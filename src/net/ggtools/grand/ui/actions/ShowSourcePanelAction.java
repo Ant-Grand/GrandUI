@@ -1,4 +1,4 @@
-// $Id$
+// $Id: AboutAction.java 240 2004-06-23 23:19:03Z moi $
 /* ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse
  * All rights reserved.
@@ -29,32 +29,37 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.ggtools.grand.ui.menu;
+package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.actions.ShowSourcePanelAction;
-import net.ggtools.grand.ui.actions.UseBusRoutingAction;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.eclipse.jface.action.Action;
 
 /**
  * 
  * 
  * @author Christophe Labouisse
  */
-public class ViewMenu extends MenuManager {
+public class ShowSourcePanelAction extends Action {
+    
+    private static final Log log = LogFactory.getLog(ShowSourcePanelAction.class);
 
-    public ViewMenu(GraphWindow window) {
-        super("View");
-        add(new Separator("panels"));
-        add(new ShowSourcePanelAction(window));
-        // Show Outline panel
-        add(new Separator("display"));
-        add(new UseBusRoutingAction(window));
-        add(new Separator("zoom"));
-        // Zoom in
-        // Zoom out
-        // Reset zoom
+    private static final String DEFAULT_ACTION_NAME = "Show source panel";
+
+    private final GraphWindow window;
+
+    public ShowSourcePanelAction(final GraphWindow parent) {
+        super(DEFAULT_ACTION_NAME);
+        window = parent;
+        setChecked(true);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.IAction#run()
+     */
+    public void run() {
+        window.setSourcePanelVisible(isChecked());
     }
 }
