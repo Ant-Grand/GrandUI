@@ -40,6 +40,7 @@ import net.ggtools.grand.ui.graph.GraphDisplayer;
 import net.ggtools.grand.ui.menu.FileMenuManager;
 import net.ggtools.grand.ui.menu.GraphMenu;
 import net.ggtools.grand.ui.menu.HelpMenu;
+import net.ggtools.grand.ui.menu.ViewMenu;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -240,6 +241,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
         log.debug("Creating menu manager");
         manager = new MenuManager();
         manager.add(new FileMenuManager(this));
+        manager.add(new ViewMenu(this));
         manager.add(new GraphMenu(this));
         manager.add(new HelpMenu(this));
         manager.setVisible(true);

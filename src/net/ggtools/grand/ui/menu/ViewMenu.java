@@ -31,13 +31,7 @@
 
 package net.ggtools.grand.ui.menu;
 
-import net.ggtools.grand.ui.actions.ClearFiltersAction;
-import net.ggtools.grand.ui.actions.FilterConnectedToNodeAction;
-import net.ggtools.grand.ui.actions.FilterFromNodeAction;
-import net.ggtools.grand.ui.actions.FilterIsolatedNodesAction;
-import net.ggtools.grand.ui.actions.FilterMissingNodesAction;
-import net.ggtools.grand.ui.actions.FilterToNodeAction;
-import net.ggtools.grand.ui.actions.ReloadGraphAction;
+import net.ggtools.grand.ui.actions.UseBusRoutingAction;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
 import org.eclipse.jface.action.MenuManager;
@@ -48,19 +42,18 @@ import org.eclipse.jface.action.Separator;
  * 
  * @author Christophe Labouisse
  */
-public class GraphMenu extends MenuManager {
+public class ViewMenu extends MenuManager {
 
-    public GraphMenu(GraphControlerProvider controlerProvider) {
-        super("Graph");
-        add(new ReloadGraphAction(controlerProvider));
-        add(new Separator("general filters"));
-        add(new FilterIsolatedNodesAction(controlerProvider));
-        add(new FilterMissingNodesAction(controlerProvider));
-        add(new Separator("selected node filters"));
-        add(new FilterConnectedToNodeAction(controlerProvider));
-        add(new FilterFromNodeAction(controlerProvider));
-        add(new FilterToNodeAction(controlerProvider));
-        add(new Separator("clear filters"));
-        add(new ClearFiltersAction(controlerProvider));
+    public ViewMenu(GraphControlerProvider controlerProvider) {
+        super("View");
+        add(new Separator("panels"));
+        // Show Source panel
+        // Show Outline panel
+        add(new Separator("display"));
+        add(new UseBusRoutingAction(controlerProvider));
+        add(new Separator("zoom"));
+        // Zoom in
+        // Zoom out
+        // Reset zoom
     }
 }
