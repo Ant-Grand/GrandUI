@@ -115,6 +115,7 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
 
     /**
      * Add a new file to the recent file list.
+     * 
      * @param fileName
      */
     public void addNewFile(final File file) {
@@ -124,12 +125,13 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
     /**
      * Add a new file to the recent file list specifying the properties used
      * when it was opened.
+     * 
      * @param fileName
      * @param properties
      */
     public void addNewFile(final File file, final Properties properties) {
         if (log.isDebugEnabled()) log.debug("Adding " + file + " to recent files");
-        String fileName = file.getAbsolutePath();
+        final String fileName = file.getAbsolutePath();
         recentFiles.remove(fileName);
         recentFiles.addFirst(fileName);
         removeExcessFiles();
@@ -147,6 +149,31 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
             log.error("Cannot save recent files", e);
         }
         notifyListeners();
+    }
+
+    /**
+     * Update the properties for a specific file.
+     * 
+     * @param file
+     * @param properties
+     */
+    public void updatePropertiesFor(final File file, final Properties properties) {
+        if (log.isDebugEnabled()) log.debug("Updating properties for " + file);
+        final String fileName = file.getAbsolutePath();
+        if (recentFiles.contains(fileName)) {
+            if (properties == null) {
+                preferenceStore.setPropertiesToDefault(getKeyForProperties(fileName));
+            }
+            else {
+                preferenceStore.setValue(getKeyForProperties(fileName), properties);
+            }
+            try {
+                if (log.isDebugEnabled()) log.debug("Saving recent files");
+                preferenceStore.save();
+            } catch (IOException e) {
+                log.error("Cannot save recent files", e);
+            }
+        }
     }
 
     /**
@@ -185,6 +212,7 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
      */
     public void propertyChange(final PropertyChangeEvent event) {
@@ -210,6 +238,7 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
 
     /**
      * Get the recent files.
+     * 
      * @return
      */
     public final Collection getRecentFiles() {

@@ -50,13 +50,16 @@ public class EditGraphPropertiesAction extends GraphControlerAction {
      * @see org.eclipse.jface.action.IAction#run()
      */
     public void run() {
-        final PropertyEditionDialog dialog = new PropertyEditionDialog(getGraphControler().getWindow().getShell());
-        dialog.open();
-        getGraphControler().reloadGraph();
+        final PropertyEditionDialog dialog = new PropertyEditionDialog(getGraphControler()
+                .getWindow().getShell());
+        dialog.setProperties(getGraphControler().getGraphProperties());
+        if (dialog.open() == PropertyEditionDialog.OK) {
+            getGraphControler().reloadGraph(dialog.getProperties());
+        }
     }
 
     public EditGraphPropertiesAction(final GraphControlerProvider parent) {
-        super(parent,DEFAULT_ACTION_NAME);
+        super(parent, DEFAULT_ACTION_NAME);
     }
 
 }

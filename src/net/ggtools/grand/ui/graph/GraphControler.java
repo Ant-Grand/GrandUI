@@ -33,6 +33,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -81,7 +82,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         IPropertyChangeListener {
     private static final Log log = LogFactory.getLog(GraphControler.class);
 
-    // Ok that's bad it'll probably have to go to the forthcoming pref API.
+    // FIXME: Ok that's bad it'll probably have to go to the forthcoming pref
+    // API.
     private static int printMode = PrintFigureOperation.FIT_PAGE;
 
     /**
@@ -327,6 +329,14 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         return displayer;
     }
 
+    public Map getGraphProperties() {
+        if (model != null) {
+            return model.getUserProperties();
+        }
+        else
+            return null;
+    }
+
     public IStructuredContentProvider getNodeContentProvider() {
         return nodeContentProvider;
     }
@@ -468,6 +478,10 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * Reload the current graph.
      */
     public void reloadGraph() {
+        reloadGraph(null);
+    }
+
+    public void reloadGraph(Properties properties) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         // FIXME Check that there is a model.
@@ -476,12 +490,13 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         clearFiltersOnNextLoad = false;
 
         try {
-            model.reload();
+            model.reload(properties);
             if (log.isDebugEnabled()) log.debug("Model reloaded graph");
             progressMonitor.worked(1);
 
             filterAndRenderGraph(progressMonitor);
             if (log.isInfoEnabled()) log.info("Graph reloaded");
+            RecentFilesManager.getInstance().updatePropertiesFor(model.getLastLoadedFile(), properties);
         } catch (GrandException e) {
             reportError("Cannot reload graph", e);
         } catch (final BuildException e) {
@@ -620,5 +635,4 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         selectionChangedDispatcher = null;
         parameterChangedEvent = null;
     }
-
 }

@@ -54,6 +54,7 @@ public class RecentFilesMenu extends MenuManager implements RecentFilesListener 
 
     /**
      * An action openning a specific file when run.
+     * 
      * @author Christophe Labouisse
      */
     private class OpenRecentFileAction extends Action {
@@ -66,15 +67,16 @@ public class RecentFilesMenu extends MenuManager implements RecentFilesListener 
             super(fileName);
             this.window = window;
             this.file = new File(fileName);
-
         }
 
         /*
          * (non-Javadoc)
+         * 
          * @see org.eclipse.jface.action.Action#run()
          */
         public void run() {
-            window.openGraphInNewDisplayer(file, null);
+            window.openGraphInNewDisplayer(file, RecentFilesManager.getInstance().getProperties(
+                    file));
         }
     }
 
@@ -87,6 +89,7 @@ public class RecentFilesMenu extends MenuManager implements RecentFilesListener 
     /**
      * Creates a new RecentFilesMenu instance loading the recent files from the
      * preference store.
+     * 
      * @param window
      */
     public RecentFilesMenu(final GraphWindow window) {
@@ -99,7 +102,9 @@ public class RecentFilesMenu extends MenuManager implements RecentFilesListener 
 
     /**
      * Update the recent files menu.
-     * @param recentFiles list of files to put in the menu.
+     * 
+     * @param recentFiles
+     *            list of files to put in the menu.
      */
     public void refreshRecentFiles(final Collection recentFiles) {
         final Runnable runnable = new Runnable() {
@@ -112,7 +117,7 @@ public class RecentFilesMenu extends MenuManager implements RecentFilesListener 
                     if (item.isGroupMarker()) break;
                     remove(item);
                 }
-                
+
                 // Re-add the contents.
                 for (final Iterator iter = recentFiles.iterator(); iter.hasNext();) {
                     final String fileName = (String) iter.next();

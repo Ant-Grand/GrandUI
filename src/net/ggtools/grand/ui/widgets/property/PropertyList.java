@@ -49,17 +49,17 @@ class PropertyList {
      */
     private static final Log log = LogFactory.getLog(PropertyList.class);
 
-    final LinkedHashSet pairList = new LinkedHashSet();
-
-    EventManager eventManager;
-
-    private Dispatcher propertyChangedDispatcher;
+    private Dispatcher clearedPropertiesDispatcher;
 
     private Dispatcher propertyAddedDispatcher;
 
+    private Dispatcher propertyChangedDispatcher;
+
     private Dispatcher propertyRemovedDispatcher;
 
-    private Dispatcher clearedPropertiesDispatcher;
+    EventManager eventManager;
+
+    final LinkedHashSet pairList = new LinkedHashSet();
 
     public PropertyList() {
         eventManager = new EventManager("PropertyList event manager");
@@ -82,31 +82,46 @@ class PropertyList {
         }
     }
 
-    public PropertyPair[] toArray() {
-        return (PropertyPair[]) pairList.toArray(new PropertyPair[pairList.size()]);
+    public void addAll(final Map properties) {
+        for (Iterator iter = properties.entrySet().iterator(); iter.hasNext();) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            add(new PropertyPair(entry));
+        }
     }
 
     public void addProperty() {
         add(new PropertyPair("", ""));
     }
 
-    /**
-     * @param pair
-     */
-    private void add(final PropertyPair pair) {
-        pairList.add(pair);
-        propertyAddedDispatcher.dispatch(pair);
-    }
-
     public void addPropertyChangedListener(final PropertyChangedListener listener) {
         eventManager.subscribe(listener);
     }
 
-    /**
-     * @param pair
-     */
-    public void update(final PropertyPair pair) {
-        propertyChangedDispatcher.dispatch(pair);
+    public void clear() {
+        pairList.clear();
+        clearedPropertiesDispatcher.dispatch(null);
+    }
+
+    public Properties getAsProperties() {
+        final Properties props = new Properties();
+        for (Iterator iter = pairList.iterator(); iter.hasNext();) {
+            PropertyPair pair = (PropertyPair) iter.next();
+            props.setProperty(pair.getName(), pair.getValue());
+        }
+        return props;
+    }
+
+    public void remove(PropertyPair pair) {
+        pairList.remove(pair);
+        propertyRemovedDispatcher.dispatch(pair);
+    }
+
+    public void removePropertyChangedListener(final PropertyChangedListener listener) {
+        eventManager.unSubscribe(listener);
+    }
+
+    public PropertyPair[] toArray() {
+        return (PropertyPair[]) pairList.toArray(new PropertyPair[pairList.size()]);
     }
 
     public String toString() {
@@ -118,29 +133,18 @@ class PropertyList {
         return strBuff.toString();
     }
 
-    public void remove(PropertyPair pair) {
-        pairList.remove(pair);
-        propertyRemovedDispatcher.dispatch(pair);
+    /**
+     * @param pair
+     */
+    public void update(final PropertyPair pair) {
+        propertyChangedDispatcher.dispatch(pair);
     }
 
-    public void clear() {
-        pairList.clear();
-        clearedPropertiesDispatcher.dispatch(null);
-    }
-
-    public void addAll(final Map properties) {
-        for (Iterator iter = properties.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            add(new PropertyPair(entry));
-        }
-    }
-
-    public Properties getAsProperties() {
-        final Properties props = new Properties();
-        for (Iterator iter = pairList.iterator(); iter.hasNext();) {
-            PropertyPair pair = (PropertyPair) iter.next();
-            props.setProperty(pair.getName(), pair.getValue());
-        }
-        return props;
+    /**
+     * @param pair
+     */
+    private void add(final PropertyPair pair) {
+        pairList.add(pair);
+        propertyAddedDispatcher.dispatch(pair);
     }
 }

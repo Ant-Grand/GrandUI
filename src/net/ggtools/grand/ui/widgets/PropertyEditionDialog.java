@@ -27,10 +27,14 @@
  */
 package net.ggtools.grand.ui.widgets;
 
+import java.util.Map;
+import java.util.Properties;
+
 import net.ggtools.grand.ui.widgets.property.PropertyEditor;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -38,9 +42,12 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * 
  * @author Christophe Labouisse
- *
+ * 
  */
 public class PropertyEditionDialog extends Dialog {
+
+    private PropertyEditor propertyEditor;
+    private Map propertiesToLoad;
 
     public PropertyEditionDialog(Shell parentShell) {
         super(parentShell);
@@ -49,17 +56,37 @@ public class PropertyEditionDialog extends Dialog {
 
     protected Control createDialogArea(Composite parent) {
         Composite composite = (Composite) super.createDialogArea(parent);
-        new PropertyEditor(composite,SWT.NONE);
+        composite.setLayout(new FillLayout());
+        propertyEditor = new PropertyEditor(composite, SWT.NONE);
+        if (propertiesToLoad != null) {
+            propertyEditor.setInput(propertiesToLoad);
+            propertiesToLoad = null;
+        }
         return composite;
     }
-    
-    
+
     /*
      * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Property Edition");
+    }
+
+    public void setProperties(Map properties) {
+        if (propertyEditor == null) {
+            propertiesToLoad = properties;
+        }
+        else {
+            propertyEditor.setInput(properties);
+        }
+    }
+    
+    public Properties getProperties() {
+        if (propertyEditor == null) return null;
+        
+        return propertyEditor.getValues();
     }
 }

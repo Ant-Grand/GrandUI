@@ -74,6 +74,8 @@ public class PropertyEditor {
 
         private TableViewer tableViewer;
 
+        private PropertyList currentPropertyList;
+
         public void clearedProperties(Object fillerParameter) {
             tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
                 public void run() {
@@ -83,8 +85,9 @@ public class PropertyEditor {
         }
 
         public void dispose() {
-            // TODO Auto-generated method stub
-
+            if (currentPropertyList != null) {
+                currentPropertyList.removePropertyChangedListener(this);
+            }
         }
 
         public Object[] getElements(Object inputElement) {
@@ -99,8 +102,14 @@ public class PropertyEditor {
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
             this.tableViewer = (TableViewer) viewer;
+            
+            if (oldInput != null) {
+                ((PropertyList) oldInput).removePropertyChangedListener(this);
+            }
+            
             if (newInput != null) {
-                ((PropertyList) newInput).addPropertyChangedListener(this);
+                currentPropertyList = ((PropertyList) newInput);
+                currentPropertyList.addPropertyChangedListener(this);
             }
         }
 
@@ -278,19 +287,6 @@ public class PropertyEditor {
         gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false);
         filler.setLayoutData(gridData);
 
-        final Button clear = new Button(parent, SWT.PUSH | SWT.CENTER);
-        clear.setText("Clear");
-
-        gridData = new GridData(GridData.HORIZONTAL_ALIGN_END);
-        gridData.widthHint = BUTTON_WIDTH;
-        clear.setLayoutData(gridData);
-        clear.addSelectionListener(new SelectionAdapter() {
-
-            public void widgetSelected(SelectionEvent e) {
-                propertyList.clear();
-            }
-        });
-
         final Button add = new Button(parent, SWT.PUSH | SWT.CENTER);
         add.setText("Add");
 
@@ -325,6 +321,20 @@ public class PropertyEditor {
                 }
             }
         });
+        
+        final Button clear = new Button(parent, SWT.PUSH | SWT.CENTER);
+        clear.setText("Clear");
+
+        gridData = new GridData(GridData.HORIZONTAL_ALIGN_END);
+        gridData.widthHint = BUTTON_WIDTH;
+        clear.setLayoutData(gridData);
+        clear.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                propertyList.clear();
+            }
+        });
+
     }
 
     private void createContents(Composite parent, int style) {

@@ -29,6 +29,7 @@
 package net.ggtools.grand.ui.graph;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Properties;
 
 import net.ggtools.grand.ant.AntProject;
@@ -50,7 +51,7 @@ public class GraphModel implements GraphProducer {
 
     private File lastLoadedFile;
 
-    private GraphProducer producer = null;
+    private AntProject producer = null;
 
     private Properties lastLoadedFileProperties;
 
@@ -74,9 +75,11 @@ public class GraphModel implements GraphProducer {
         producer = new AntProject(file,properties);
     }
 
-    public void reload() throws GrandException {
+    public void reload(final Properties properties) throws GrandException {
         if (lastLoadedFile != null) {
             if (log.isDebugEnabled()) log.debug("Reloading last file");
+            if (properties != null)
+                lastLoadedFileProperties = properties;
             openFile(lastLoadedFile, lastLoadedFileProperties);
         }
         else {
@@ -89,5 +92,27 @@ public class GraphModel implements GraphProducer {
      */
     final File getLastLoadedFile() {
         return lastLoadedFile;
+    }
+    
+    /**
+     * Gets all the properties from the producer.
+     * 
+     * @return
+     */
+    final Map getAllProperties() {
+        Map rc = null;
+        if (producer != null) {
+            rc = producer.getAntProject().getProperties();
+        }
+        return rc;
+    }
+    
+    /**
+     * Gets the properties set by the user when loading the graph.
+     * 
+     * @return
+     */
+    final Map getUserProperties() {
+        return lastLoadedFileProperties;
     }
 }
