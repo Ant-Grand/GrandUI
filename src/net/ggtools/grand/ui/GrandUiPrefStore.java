@@ -27,6 +27,8 @@
  */
 package net.ggtools.grand.ui;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,13 +36,20 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.prefs.Preferences;
 
-import net.ggtools.grand.ui.prefs.*;
+import net.ggtools.grand.ui.prefs.GeneralPreferencePage;
+import net.ggtools.grand.ui.prefs.GraphPreferencePage;
+import net.ggtools.grand.ui.prefs.LinksPreferencePage;
+import net.ggtools.grand.ui.prefs.NodesPreferencePage;
 
-import org.eclipse.jface.preference.*;
-import org.eclipse.jface.resource.*;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.jface.resource.FontRegistry;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.RGB;
 
 /**
  * @author Christophe Labouisse
