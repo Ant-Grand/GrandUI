@@ -139,6 +139,49 @@ public class PropertyEditor {
         }
     }
 
+    private static final class Sorter extends ViewerSorter {
+        private final static int NAME_COLUMN = 1;
+
+        private final static int VALUE_COLUMN = 2;
+
+        private int column = NAME_COLUMN;
+
+        public int compare(Viewer viewer, Object e1, Object e2) {
+            if (e1 instanceof PropertyPair && e2 instanceof PropertyPair) {
+                final PropertyPair p1 = (PropertyPair) e1;
+                final PropertyPair p2 = (PropertyPair) e2;
+
+                String name1 = null;
+                String name2 = null;
+
+                switch (column) {
+                case NAME_COLUMN:
+                    name1 = p1.getName();
+                    name2 = p2.getName();
+                    break;
+
+                case VALUE_COLUMN:
+                    name1 = p1.getValue();
+                    name2 = p2.getValue();
+                    break;
+
+                }
+                return collator.compare(name1, name2);
+            }
+            else {
+                return super.compare(viewer, e1, e2);
+            }
+        }
+
+        public void sortByName() {
+            column = NAME_COLUMN;
+        }
+
+        public void sortByValue() {
+            column = VALUE_COLUMN;
+        }
+    }
+
     private static final int BUTTON_WIDTH = 80;
 
     private static final int DEFAULT_NUM_LINES = 10;
@@ -189,11 +232,14 @@ public class PropertyEditor {
 
     private TableViewer tableViewer;
 
+    private Sorter viewerSorter;
+
     /**
      * 
      */
     public PropertyEditor(final Composite parent, final int style) {
         propertyList = new PropertyList();
+        viewerSorter = new Sorter();
         createContents(parent, style);
         tableViewer.setInput(propertyList);
     }
@@ -375,10 +421,26 @@ public class PropertyEditor {
         column.setText(NAME_COLUMN);
         column.setWidth(200);
         column.setMoveable(true);
+        column.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                log.info("First column");
+                viewerSorter.sortByName();
+                if (tableViewer != null) tableViewer.refresh(false);
+            }
+        });
+
         column = new TableColumn(table, SWT.LEFT);
         column.setText(VALUE_COLUMN);
         column.setWidth(200);
         column.setMoveable(true);
+        column.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                log.info("Second column");
+                viewerSorter.sortByValue();
+                if (tableViewer != null) tableViewer.refresh(false);
+            }
+        });
+
     }
 
     /**
@@ -439,8 +501,7 @@ public class PropertyEditor {
                 propertyList.update(pair);
             }
         });
-        // Set the default sorter for the viewer
-        tableViewer.setSorter(new ViewerSorter());
+        tableViewer.setSorter(viewerSorter);
     }
 
     /**
