@@ -51,7 +51,7 @@ public class OpenFileAction extends Action {
 
     private static final Log log = LogFactory.getLog(OpenFileAction.class);
 
-    private static final String[] FILTER_EXTENSIONS = new String[]{"*.xml"};
+    private static final String[] FILTER_EXTENSIONS = new String[]{"*.xml","*"};
     
     private static final String DEFAULT_ACTION_NAME = "Open";
 
