@@ -72,7 +72,7 @@ class PropertyList {
                     .getDeclaredMethod("propertyRemoved", new Class[]{PropertyPair.class}));
             clearedPropertiesDispatcher = eventManager
                     .createDispatcher(PropertyChangedListener.class.getDeclaredMethod(
-                            "clearedProperties", new Class[0]));
+                            "clearedProperties", new Class[]{Object.class}));
         } catch (SecurityException e) {
             log.fatal("Caught exception initializing PropertyList", e);
             throw new RuntimeException("Cannot instanciate PropertyList", e);

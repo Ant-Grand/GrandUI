@@ -37,5 +37,5 @@ public interface PropertyChangedListener {
 
     void propertyRemoved(PropertyPair propertyPair);
     
-    void clearedProperties();
+    void clearedProperties(Object fillerParameter);
 }

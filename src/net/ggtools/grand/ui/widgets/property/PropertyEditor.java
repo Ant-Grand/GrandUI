@@ -120,7 +120,7 @@ public class PropertyEditor {
             });
         }
 
-        public void clearedProperties() {
+        public void clearedProperties(Object fillerParameter) {
             tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
                 public void run() {
                     tableViewer.refresh();
