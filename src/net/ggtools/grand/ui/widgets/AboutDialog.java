@@ -27,8 +27,13 @@
  */
 package net.ggtools.grand.ui.widgets;
 
+import java.io.IOException;
+
+import net.ggtools.grand.Configuration;
 import net.ggtools.grand.ui.Application;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -42,12 +47,20 @@ import org.eclipse.swt.widgets.Shell;
  * @author Christophe Labouisse
  */
 public class AboutDialog extends Dialog {
+    private static final Log log = LogFactory.getLog(AboutDialog.class);
+    private Configuration coreConfiguration;
 
     /**
      * @param parentShell
      */
     public AboutDialog(Shell parentShell) {
         super(parentShell);
+        try {
+            coreConfiguration = Configuration.getConfiguration();
+        } catch (IOException e) {
+            log.error("Cannot load core configuration",e);
+            coreConfiguration = null;
+        }
     }
 
     /*
@@ -81,8 +94,11 @@ public class AboutDialog extends Dialog {
         final Label image = new Label(composite, SWT.NONE);
         image.setImage(Application.getInstance().getImage(Application.ABOUT_DIALOG_IMAGE));
         Label message = new Label(composite, SWT.NONE);
-        message.setText("Grand ©2004 Christophe Labouisse, distributed under BSD License\nUi: "
-                + Application.getInstance().getVersionString());
+        final StringBuffer messageBuffer = new StringBuffer("Grand ©2004 Christophe Labouisse, distributed under BSD License\nUi: ");
+        messageBuffer.append(Application.getInstance().getVersionString());
+        if (coreConfiguration != null)
+            messageBuffer.append("\nCore: ").append(coreConfiguration.getVersionString());
+        message.setText(messageBuffer.toString());
         return composite;
     }
 }

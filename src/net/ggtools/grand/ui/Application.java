@@ -110,11 +110,10 @@ public class Application {
     private Application() throws IOException {
         singleton = this;
         buildProperties = new Properties();
-        buildProperties.load(getClass().getResourceAsStream("/buildnum.properties"));
+        buildProperties.load(getClass().getResourceAsStream("buildnum.properties"));
         versionString = "v" + buildProperties.getProperty("build.version.string") + " (build "
                 + buildProperties.getProperty("build.number") + " "
                 + buildProperties.getProperty("build.date") + ")";
-
     }
 
     /**
