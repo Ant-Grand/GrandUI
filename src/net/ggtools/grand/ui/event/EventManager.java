@@ -43,11 +43,11 @@ public class EventManager implements Runnable {
 
     private final class DispatchEventAction implements Runnable {
 
-        private final InternalDispatcher dispatcher;
+        private final Dispatcher dispatcher;
 
         private final Object event;
 
-        public DispatchEventAction(final Object event, final InternalDispatcher dispatcher) {
+        public DispatchEventAction(final Object event, final Dispatcher dispatcher) {
             this.event = event;
             this.dispatcher = dispatcher;
         }
@@ -61,23 +61,6 @@ public class EventManager implements Runnable {
         public void run() {
             dispatchOneEvent(event, dispatcher);
         }
-    }
-
-    /**
-     * Internal interface to be implemented by objects actually dispatching the
-     * events to the subscribers.
-     * 
-     * @author Christophe Labouisse
-     */
-    interface InternalDispatcher {
-        /**
-         * Send one event to one subscriber.
-         * 
-         * @param subscriber
-         * @param eventData
-         */
-        void sendEventToSubscriber(final Object subscriber, final Object eventData);
-
     }
 
     private final class SubscriptionAction implements Runnable {
@@ -242,8 +225,7 @@ public class EventManager implements Runnable {
      * @param event
      * @param method
      */
-    private final void asynchronousDispatchEvent(final Object event,
-            final InternalDispatcher dispatcher) {
+    private final void asynchronousDispatchEvent(final Object event, final Dispatcher dispatcher) {
         synchronized (eventQueue) {
             eventQueue.add(new DispatchEventAction(event, dispatcher));
             eventQueue.notify();
@@ -256,7 +238,7 @@ public class EventManager implements Runnable {
      * @param eventData
      * @param method
      */
-    private void dispatchOneEvent(final Object eventData, final InternalDispatcher dispatcher) {
+    private void dispatchOneEvent(final Object eventData, final Dispatcher dispatcher) {
         if (log.isDebugEnabled()) log.debug("Start dispatching to " + dispatcher);
         synchronized (listenerList) {
             for (Iterator iterator = listenerList.iterator(); iterator.hasNext();) {
@@ -267,7 +249,8 @@ public class EventManager implements Runnable {
                     if (log.isTraceEnabled())
                             log.trace("Dispatching " + eventData + " to " + subscriber);
                     dispatcher.sendEventToSubscriber(subscriber, eventData);
-                } else {
+                }
+                else {
                     // Remove the listener since it has been garbage collected.
                     if (log.isDebugEnabled())
                             log.debug("Removing weak reference " + weakReference);
@@ -318,8 +301,7 @@ public class EventManager implements Runnable {
      * @param event
      * @param method
      */
-    private final void synchronousDispatchEvent(final Object event,
-            final InternalDispatcher dispatcher) {
+    private final void synchronousDispatchEvent(final Object event, final Dispatcher dispatcher) {
         dispatchOneEvent(event, dispatcher);
     }
 
@@ -331,10 +313,11 @@ public class EventManager implements Runnable {
      * @param eventData
      * @param dispatcher
      */
-    final void dispatchEvent(final Object eventData, final InternalDispatcher dispatcher) {
+    final void dispatchEvent(final Object eventData, final Dispatcher dispatcher) {
         if (defaultDispatchAsynchronous) {
             asynchronousDispatchEvent(eventData, dispatcher);
-        } else {
+        }
+        else {
             synchronousDispatchEvent(eventData, dispatcher);
         }
     }

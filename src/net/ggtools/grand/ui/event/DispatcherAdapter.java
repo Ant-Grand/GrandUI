@@ -28,28 +28,29 @@
 
 package net.ggtools.grand.ui.event;
 
-import net.ggtools.grand.ui.event.EventManager.InternalDispatcher;
-
 /**
- * Adapter class providing a straightforward implementation of dispatchEvent.
+ * Adapter class providing a straightforward implementation of dispatch. This
+ * class is meant to be subclassesd by defining the
+ * {@link net.ggtools.grand.ui.event.Dispatcher#sendEventToSubscriber(Object, Object)}
+ * method.
  * 
  * @author Christophe Labouisse
  */
-abstract class DispatcherAdapter implements Dispatcher, InternalDispatcher {
+abstract class DispatcherAdapter implements Dispatcher {
 
     private final EventManager eventManager;
 
     /**
      * @param EventManager
      */
-    DispatcherAdapter(EventManager manager) {
+    protected DispatcherAdapter(EventManager manager) {
         this.eventManager = manager;
     }
 
     /**
      * Ask the EventManager to dispatch an event to the subscribers.
      */
-    public void dispatch(final Object eventData) {
+    public final void dispatch(final Object eventData) {
         this.eventManager.dispatchEvent(eventData, this);
     }
 
