@@ -170,6 +170,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         filterChain.addFilterLast(filter);
         progressMonitor.worked(1);
         renderFilteredGraph();
+        progressMonitor.done();
     }
 
     /*
@@ -187,6 +188,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         filterChain.clearFilters();
         progressMonitor.worked(1);
         renderFilteredGraph();
+        progressMonitor.done();
     }
 
     /*
