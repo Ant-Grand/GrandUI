@@ -98,13 +98,8 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
         
         if (!"".equals(edge.getName())) {
             blockFlow = new BlockFlow();
-            textFlow = new TextFlow("Link #: ");
+            textFlow = new TextFlow("Link #"+edge.getName());
             blockFlow.add(textFlow);
-            inline = new InlineFlow();
-            textFlow = new TextFlow(edge.getName());
-            textFlow.setFont(AppData.getInstance().getItalicFont(AppData.TOOLTIP_FONT));
-            inline.add(textFlow);
-            blockFlow.add(inline);
             page.add(blockFlow);
         }
 
