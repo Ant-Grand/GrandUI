@@ -410,6 +410,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             filterAndRenderGraph(progressMonitor);
             if (log.isInfoEnabled()) log.info("Graph loaded & rendered");
             RecentFilesManager.getInstance().addNewFile(file, properties);
+            // TODO: Remove ...
+            save();
         } catch (final GrandException e) {
             reportError("Cannot open graph", e);
             stopControler();
@@ -491,7 +493,6 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      */
     public void reloadGraph() {
         reloadGraph(null);
-        save();
     }
 
     public void reloadGraph(Properties properties) {
@@ -651,16 +652,20 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     }
 
     private void save() {
+        /*
+         * Use the "printable layer" which includes the primary layer and the
+         * connections. See PrintGraphicalViewerOperation for an example.
+         */
         final Device device = window.getShell().getDisplay();
         final Rectangle r = figure.getBounds();
 
         FileOutputStream result = null;
         try {
-            result = new FileOutputStream("/tmp/image.gif");
+            result = new FileOutputStream("/tmp/image.jpg");
 
             Image image = null;
             GC gc = null;
-            Graphics g = null;
+            SWTGraphics g = null;
             try {
                 image = new Image(device, r.width, r.height);
                 gc = new GC(image);
@@ -686,13 +691,12 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             if (result != null) {
                 try {
                     result.close();
                 } catch (IOException e) {
-                    log.warn("Got exception exporting graph",e);
+                    log.warn("Got exception exporting graph", e);
                 }
             }
         }
