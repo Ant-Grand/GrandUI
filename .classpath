@@ -7,7 +7,7 @@
 	<classpathentry sourcepath="COMMONS_LOGGING_SRC" kind="var" path="COMMONS_LOGGING"/>
 	<classpathentry sourcepath="ANT_SRC" kind="var" path="ANT_LIB"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JFACE"/>
-	<classpathentry kind="var" path="LOG4J_LIB"/>
+	<classpathentry sourcepath="/LOG4J_SRC" kind="var" path="LOG4J_LIB"/>
 	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.gef.source_3.0.1/src/org.eclipse.draw2d_3.0.1/draw2dsrc.zip" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.draw2d_3.0.1/draw2d.jar"/>
 	<classpathentry kind="src" path="/JzGraph"/>
 	<classpathentry kind="var" path="ASM_LIB"/>
