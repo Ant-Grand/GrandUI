@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Display;
  * 
  * @author Christophe Labouisse
  */
-public class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
+class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
 
     /**
      * Logger for this class
