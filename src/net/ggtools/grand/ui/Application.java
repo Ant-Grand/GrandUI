@@ -42,6 +42,7 @@ import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -172,6 +173,7 @@ public class Application {
         
         // Ensure that ColorConstant is loaded.
         final Color color = ColorConstants.black;
+        Window.setDefaultImage(getImage(APPLICATION_ICON));
     }
 
     /**

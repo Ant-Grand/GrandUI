@@ -31,7 +31,6 @@ package net.ggtools.grand.ui.widgets;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
 import net.ggtools.grand.ui.graph.GraphControler;
@@ -187,7 +186,6 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
         shell.setText("Grand");
-        shell.setImage(Application.getInstance().getImage(Application.APPLICATION_ICON));
     }
 
     /*
