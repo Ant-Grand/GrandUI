@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class AboutDialog extends Dialog {
     private static final Log log = LogFactory.getLog(AboutDialog.class);
+
     private Configuration coreConfiguration;
 
     /**
@@ -58,7 +59,7 @@ public class AboutDialog extends Dialog {
         try {
             coreConfiguration = Configuration.getConfiguration();
         } catch (IOException e) {
-            log.error("Cannot load core configuration",e);
+            log.error("Cannot load core configuration", e);
             coreConfiguration = null;
         }
     }
@@ -94,10 +95,13 @@ public class AboutDialog extends Dialog {
         final Label image = new Label(composite, SWT.NONE);
         image.setImage(Application.getInstance().getImage(Application.ABOUT_DIALOG_IMAGE));
         Label message = new Label(composite, SWT.NONE);
-        final StringBuffer messageBuffer = new StringBuffer("Grand ©2004 Christophe Labouisse, distributed under BSD License\nUi: ");
+        final StringBuffer messageBuffer = new StringBuffer(
+                "Grand ©2004 Christophe Labouisse, distributed under BSD License\nUi: ");
         messageBuffer.append(Application.getInstance().getVersionString());
         if (coreConfiguration != null)
-            messageBuffer.append("\nCore: ").append(coreConfiguration.getVersionString());
+                messageBuffer.append("\nCore: ").append(coreConfiguration.getVersionString());
+        messageBuffer.append("\nJRE: ").append(System.getProperty("java.vm.name")).append(" ")
+        .append(System.getProperty("java.vm.version"));
         message.setText(messageBuffer.toString());
         return composite;
     }
