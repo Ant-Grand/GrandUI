@@ -221,6 +221,8 @@ public class Application {
 
         // Put the same icons for all windows & dialogs.
         Window.setDefaultImage(getImage(APPLICATION_ICON));
+        
+        net.ggtools.grand.Log.setLogger(new CommonLogginsLogger());
     }
 
     /**

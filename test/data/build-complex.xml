@@ -4,6 +4,20 @@
 		A more complex build file to test Grand.
 		This build file feature two distinct graphs.
 	</description>
+    
+    
+    <!-- = = = = = = = = = = = = = = = = =
+          macrodef: testmacro          
+         = = = = = = = = = = = = = = = = = -->
+    <macrodef name="testmacro">
+        <attribute name="target" />
+        <sequential>
+            <ant target="@{target}"></ant>
+            <antcall target="prepare"></antcall>
+        </sequential>
+    </macrodef>
+
+
 
 	<target name="init" />
 
@@ -17,6 +31,16 @@
 		<antcall target="compile.cpp">
 		</antcall>
 	</target>
+    
+    
+    <!-- ================================= 
+          target: testmacro              
+         ================================= -->
+    <target name="testmacro" depends="prepare" description="--> Test macrodef">
+        <testmacro target="compile.jni"/>
+    </target>
+
+
 
 	<target name="process-config-files" depends="prepare,compile">
 		<foreach list="ga,bu,zo,meu"

@@ -1,7 +1,7 @@
-// $Id$
+//$Id$
 /*
  * ====================================================================
- * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
+ * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -25,65 +25,59 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+package net.ggtools.grand.ui;
 
-package net.ggtools.grand.ui.graph;
-
-import java.io.File;
-
-import net.ggtools.grand.ant.AntProject;
-import net.ggtools.grand.exceptions.GrandException;
-import net.ggtools.grand.graph.Graph;
-import net.ggtools.grand.graph.GraphProducer;
+import net.ggtools.grand.log.Logger;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * A UI friendly wrapper over the Grand core task.
- * 
+ * A logger for Grand's core.
  * @author Christophe Labouisse
  */
-public class GraphModel implements GraphProducer {
-
-    private static final Log log = LogFactory.getLog(GraphModel.class);
-
-    private File lastLoadedFile;
-
-    private GraphProducer producer = null;
+public class CommonLogginsLogger implements Logger {
+    private static final Log log = LogFactory.getLog("core");
 
     /**
-     * @return Returns the currentGraph.
-     * @throws GrandException
+     * Package only. 
      */
-    public final Graph getGraph() throws GrandException {
-        // Do not cache the graph as node may be filtered out
-        Graph graph = null;
-        if (producer != null) {
-            graph = producer.getGraph();
-        }
-        return graph;
+    CommonLogginsLogger() {
     }
 
-    public void openFile(final File file) throws GrandException {
-        if (log.isDebugEnabled()) log.debug("Loading " + file);
-        lastLoadedFile = file;
-        producer = new AntProject(file);
-    }
-
-    public void reload() throws GrandException {
-        if (lastLoadedFile != null) {
-            if (log.isDebugEnabled()) log.debug("Reloading last file");
-            openFile(lastLoadedFile);
-        }
-        else {
-            log.warn("No file previously loaded, skipping reload");
-        }
-    }
-
-    /**
-     * @return Returns the lastLoadedFile.
+    /* (non-Javadoc)
+     * @see net.ggtools.grand.log.Logger#log(java.lang.String, int)
      */
-    final File getLastLoadedFile() {
-        return lastLoadedFile;
+    public void log(String message, int logLevel) {
+        switch (logLevel) {
+        case net.ggtools.grand.Log.MSG_DEBUG:
+            log.trace(message);
+            break;
+
+        case net.ggtools.grand.Log.MSG_VERBOSE:
+            log.debug(message);
+            break;
+
+        case net.ggtools.grand.Log.MSG_INFO:
+            log.info(message);
+            break;
+
+        case net.ggtools.grand.Log.MSG_WARN:
+            log.warn(message);
+            break;
+
+        case net.ggtools.grand.Log.MSG_ERR:
+            log.error(message);
+            break;
+        }
     }
+
+    /* (non-Javadoc)
+     * @see net.ggtools.grand.log.Logger#setLogLevel(int)
+     */
+    public void setLogLevel(int logLevel) {
+        // TODO Auto-generated method stub
+
+    }
+
 }
