@@ -12,7 +12,7 @@
    <property environment="env"/>
    <property name="build.compiler" value="jikes"/>
    <property name="src_root" value="${env.SRC_ROOT}"/>
-   <property name="kernel_root" value="${env.KERNEL_ROOT}"/>
+   <property name="kernel_root" value="."/>
    <property name="osfamily" value="${env.OSFAMILY}"/>
    <property file="${kernel_root}/ant-${osfamily}.properties"/>
    <property file="${kernel_root}/buildnum.txt"/>
@@ -113,7 +113,7 @@
     
    <!-- Solaris package creation: uploads onto the solaris host and runs "pkgmk"-->
    <target name="create-sun-package" depends="create-tree" description="Creation of Sun package">
-      <ant dir="${kernel_root}" target="create-package" inheritrefs="true"/>
+      <ant target="create-package" antfile="mc-top.xml" inheritrefs="true"/>
    </target>
 
    
