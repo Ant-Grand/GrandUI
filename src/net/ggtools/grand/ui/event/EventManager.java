@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Christophe Labouisse
  */
-public class EventDispatcher implements Runnable {
+public class EventManager implements Runnable {
 
     /**
      * A simple dispatcher implementation of InternalDispatcher using
@@ -49,6 +49,8 @@ public class EventDispatcher implements Runnable {
      * @author Christophe Labouisse
      */
     private class BasicDispatcher implements Dispatcher, InternalDispatcher {
+        private final Log log = LogFactory.getLog(BasicDispatcher.class);
+
         private final Method method;
 
         private BasicDispatcher(Method method) {
@@ -58,7 +60,7 @@ public class EventDispatcher implements Runnable {
         /*
          * (non-Javadoc)
          * 
-         * @see net.ggtools.grand.ui.event.EventDispatcher.Dispatcher#dispatch(java.lang.Object)
+         * @see net.ggtools.grand.ui.event.EventManager.Dispatcher#dispatch(java.lang.Object)
          */
         public void dispatch(final Object eventData) {
             dispatchEvent(eventData, this);
@@ -67,7 +69,7 @@ public class EventDispatcher implements Runnable {
         /*
          * (non-Javadoc)
          * 
-         * @see net.ggtools.grand.ui.event.EventDispatcher.Dispatcher#sendEventToSubscriber(java.lang.Object,
+         * @see net.ggtools.grand.ui.event.EventManager.Dispatcher#sendEventToSubscriber(java.lang.Object,
          *      java.lang.Object)
          */
         public void sendEventToSubscriber(Object subscriber, Object eventData) {
@@ -111,7 +113,7 @@ public class EventDispatcher implements Runnable {
         /**
          * Dispatch one event.
          * 
-         * @see EventDispatcher#dispatchOneEvent(Object, Method)
+         * @see EventManager#dispatchOneEvent(Object, Method)
          * @see java.lang.Runnable#run()
          */
         public void run() {
@@ -163,7 +165,7 @@ public class EventDispatcher implements Runnable {
         /**
          * Add the subscriber to the event's dispatcher subscribtion list.
          * 
-         * @see EventDispatcher#doUnsubscription(Object)
+         * @see EventManager#doUnsubscription(Object)
          * @see java.lang.Runnable#run()
          */
         public void run() {
@@ -171,7 +173,7 @@ public class EventDispatcher implements Runnable {
         }
     }
 
-    private static final Log log = LogFactory.getLog(EventDispatcher.class);
+    private static final Log log = LogFactory.getLog(EventManager.class);
 
     private boolean defaultDispatchAsynchronous = true;
 
@@ -187,7 +189,7 @@ public class EventDispatcher implements Runnable {
      * Creates a event dispatcher. The created dispatcher will have the
      * "Anonymous" name and will log the dispatching process.
      */
-    public EventDispatcher() {
+    public EventManager() {
         this("Anonymous");
     }
 
@@ -197,7 +199,7 @@ public class EventDispatcher implements Runnable {
      * 
      * @param name
      */
-    public EventDispatcher(String name) {
+    public EventManager(String name) {
         this.name = name;
         this.dispatcherThread = new Thread(this, "Dispatcher thread " + name);
         dispatcherThread.start();

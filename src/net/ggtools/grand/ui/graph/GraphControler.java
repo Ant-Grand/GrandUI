@@ -40,7 +40,7 @@ import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.Link;
 import net.ggtools.grand.graph.Node;
-import net.ggtools.grand.ui.event.EventDispatcher;
+import net.ggtools.grand.ui.event.EventManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -74,9 +74,9 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
 
     private final Set selectedNodes = new HashSet();
 
-    private final EventDispatcher selectionEventManager;
+    private final EventManager selectionEventManager;
 
-    private final EventDispatcher.Dispatcher selectionChangedDispatcher;
+    private final EventManager.Dispatcher selectionChangedDispatcher;
 
     public GraphControler(final GraphDisplayer dest) {
         if (log.isDebugEnabled()) log.debug("Creating new controler to " + dest);
@@ -86,7 +86,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         // TODO voir si je peux virer le renderer et laisser le graph faire le
         // boulot tout seul.
         renderer = new Draw2dGraphRenderer();
-        selectionEventManager = new EventDispatcher("Selection Event");
+        selectionEventManager = new EventManager("Selection Event");
         try {
             selectionChangedDispatcher = selectionEventManager
                     .createDispatcher(GraphSelectionListener.class.getDeclaredMethod(
