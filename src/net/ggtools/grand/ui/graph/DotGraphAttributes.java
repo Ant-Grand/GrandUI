@@ -58,4 +58,7 @@ interface DotGraphAttributes {
 
     static final String SHAPE_ATTR = "shape";
 
+    static final double PATH_ITERATOR_FLATNESS = 1.0;
+
+
 }

@@ -79,7 +79,7 @@ public class GraphModel {
     private Set listeners = new LinkedHashSet();
 
     public void openFile(final String fileName) {
-        final Thread thread = new Thread(new LoadFileRunnable(fileName));
+        final Thread thread = new Thread(new LoadFileRunnable(fileName),"File loading");
         thread.start();
     }
     

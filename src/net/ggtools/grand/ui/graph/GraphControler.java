@@ -77,7 +77,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes {
     }
 
     public void openFile(final String fileName) {
-        if (log.isDebugEnabled()) log.debug("Opening " + fileName);
+        if (log.isInfoEnabled()) log.info("Opening " + fileName);
         dest.beginUpdate(5);
         model.openFile(fileName);
     }
@@ -184,7 +184,6 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes {
             vertex.setAttr(SHAPE_ATTR, "octagon");
             vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.yellow);
             vertex.setAttr(DRAW2DLINEWIDTH_ATTR, 2);
-            vertex.setAttr("rank","top");
         } else if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
             vertex.setAttr(SHAPE_ATTR, "box");
             vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.cyan);

@@ -31,7 +31,6 @@ package net.ggtools.grand.ui.graph;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.FlatteningPathIterator;
 import java.awt.geom.PathIterator;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -39,30 +38,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.BendpointConnectionRouter;
-import org.eclipse.draw2d.BorderLayout;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionLocator;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MidpointLocator;
-import org.eclipse.draw2d.MouseEvent;
-import org.eclipse.draw2d.MouseListener;
-import org.eclipse.draw2d.Panel;
-import org.eclipse.draw2d.Polygon;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.XYAnchor;
-import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.swt.graphics.Color;
 
 import sf.jzgraph.IDotGraph;
 import sf.jzgraph.IEdge;
 import sf.jzgraph.IVertex;
 import sf.jzgraph.dot.impl.DotRoute;
-import sf.jzgraph.impl.GraphShape;
 
 /**
  * Renders a IDotGraph into draw2d objects.
@@ -72,12 +63,9 @@ import sf.jzgraph.impl.GraphShape;
 public class Draw2dGraphRenderer implements DotGraphAttributes {
     private static final Log log = LogFactory.getLog(Draw2dGraphRenderer.class);
 
-    private static final double PATH_ITERATOR_FLATNESS = 1.0;
-
     public IFigure render(IDotGraph dotGraph) {
         if (log.isDebugEnabled()) log.debug("Rendering Draw2d Graph");
-        final IFigure contents = new Panel();
-        contents.setLayoutManager(new XYLayout());
+        final Draw2dGraph contents = new Draw2dGraph();
 
         for (Iterator iter = dotGraph.allVertices().iterator(); iter.hasNext();) {
             final IVertex node = (IVertex) iter.next();
@@ -160,7 +148,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         // TODO better tooltip
         addTooltip(conn, "From: " + edge.getTail().getName() + "\nTo: " + edge.getHead().getName());
 
-        contents.add(conn);
+        contents.add(conn,conn.getBounds());
     }
 
     /**
@@ -171,74 +159,12 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      * @param node
      *            the node to add
      */
-    private void buildNodeFigure(IFigure contents, IVertex node) {
-        int x, y, width, height;
-        Rectangle2D rect = (Rectangle2D) node.getAttr(_BOUNDS_ATTR);
-        x = (int) rect.getX();
-        y = (int) rect.getY();
-        width = (int) rect.getWidth();
-        height = (int) rect.getHeight();
-
-        final Polygon polygon = new Polygon();
-        polygon.setForegroundColor((Color) node.getAttr(DRAW2DFGCOLOR_ATTR));
-        polygon.setBackgroundColor((Color) node.getAttr(DRAW2DFILLCOLOR_ATTR));
-        polygon.setLineWidth(node.getAttrInt(DRAW2DLINEWIDTH_ATTR));
-        polygon.setOpaque(true);
-
-        final GraphShape shape = (GraphShape) node.getAttr(_SHAPE_ATTR);
-        final float[] coords = new float[6];
-        for (final PathIterator ite = new FlatteningPathIterator(shape
-                .getPathIterator(new AffineTransform()), PATH_ITERATOR_FLATNESS); !ite.isDone(); ite
-                .next()) {
-            final int segType = ite.currentSegment(coords);
-
-            switch (segType) {
-            case PathIterator.SEG_MOVETO:
-                polygon.addPoint(new Point(coords[0], coords[1]));
-                break;
-
-            case PathIterator.SEG_LINETO:
-                polygon.addPoint(new Point(coords[0], coords[1]));
-                break;
-
-            case PathIterator.SEG_CLOSE:
-                // Do nothing but no error
-                break;
-
-            default:
-                log.error("Unexpected segment type " + segType);
-                break;
-            }
-        }
-
-        final Label label;
-        label = new Label();
-
-        final String text = node.getAttrString(LABEL_ATTR);
-        label.setText(text);
-        label.setForegroundColor((Color) node.getAttr(DRAW2DFGCOLOR_ATTR));
-        polygon.setLayoutManager(new BorderLayout());
-        polygon.add(label, BorderLayout.CENTER);
-
+    private void buildNodeFigure(Draw2dGraph contents, IVertex node) {
+        final Draw2dNode polygon = contents.createNode(node);
+        
         if (node.hasAttr(DESCRIPTION_ATTR)) {
             addTooltip(polygon, node.getAttrAsString(DESCRIPTION_ATTR));
         }
-
-        polygon.addMouseListener(new MouseListener.Stub() {
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
-             */
-            public void mousePressed(MouseEvent me) {
-                if (me.button == 3) {
-                    log.trace("Button 3 pressed on " + text);
-                    me.consume();
-                }
-            }
-        });
-
-        contents.add(polygon, polygon.getBounds());
     }
 
     /**
