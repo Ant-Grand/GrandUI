@@ -27,13 +27,20 @@
  */
 package net.ggtools.grand.ui.widgets;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import net.ggtools.grand.ant.AntTargetNode;
 import net.ggtools.grand.ant.AntTargetNode.SourceElement;
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.graph.GraphControler;
 import net.ggtools.grand.ui.graph.GraphControlerListener;
 import net.ggtools.grand.ui.graph.GraphDisplayer;
+import net.ggtools.grand.ui.graph.GraphListener;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraph;
+import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
 import net.ggtools.grand.ui.menu.GraphMenu;
 
 import org.apache.commons.logging.Log;
@@ -47,6 +54,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
@@ -70,7 +78,7 @@ import org.eclipse.swt.widgets.Menu;
  * 
  * @author Christophe Labouisse
  */
-public class GraphTabItem extends CTabItem implements GraphDisplayer {
+public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListener {
     private final class MouseWheelZoomListener implements Listener {
         private MouseWheelZoomListener() {
         }
@@ -156,7 +164,10 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
                     if (selection instanceof IStructuredSelection) {
                         final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
                         if (structuredSelection.size() == 1) {
-                            jumpToNode(structuredSelection.getFirstElement().toString());
+                            final String nodeName = structuredSelection.getFirstElement()
+                                    .toString();
+                            jumpToNode(nodeName);
+                            getControler().selectNodeByName(nodeName, false);
                         }
                     }
                 }
@@ -183,6 +194,8 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         textComposite.setExpandHorizontal(true);
         textComposite.setExpandVertical(true);
         sourceSashForm.setWeights(new int[]{5, 1});
+
+        controler.addListener(this);
     }
 
     /*
@@ -236,9 +249,37 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
 
     /*
      * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanged(net.ggtools.grand.ui.graph.GraphControler)
+     */
+    public void parameterChanged(GraphControler graphControler) {
+    }
+
+    /*
+     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
     public void removeControlerListener(GraphControlerListener listener) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
+     */
+    public void selectionChanged(final Collection selectedNodes) {
+
+        final List selection = new ArrayList(selectedNodes.size());
+        for (Iterator iter = selectedNodes.iterator(); iter.hasNext();) {
+            Draw2dNode node = (Draw2dNode) iter.next();
+            selection.add(node.getNode());
+        }
+
+        Display.getDefault().syncExec(new Runnable() {
+
+            public void run() {
+                outlineViewer.setSelection(new StructuredSelection(selection),
+                        true);
+            }
+        });
     }
 
     /*

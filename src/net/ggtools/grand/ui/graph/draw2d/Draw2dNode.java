@@ -33,6 +33,7 @@ import java.awt.geom.FlatteningPathIterator;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
 
+import net.ggtools.grand.graph.Node;
 import net.ggtools.grand.ui.graph.DotGraphAttributes;
 
 import org.apache.commons.logging.Log;
@@ -137,14 +138,11 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
     }
 
     /**
-     * @return Returns the selected.
+     * Return the underlying node.
+     * @return
      */
-    public final boolean isSelected() {
-        return selected;
-    }
-
-    public String toString() {
-        return this.getClass().getName() + "@" + vertex.getName();
+    public Node getNode() {
+        return (Node) vertex.getData();
     }
 
     /**
@@ -152,6 +150,13 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
      */
     public final IVertex getVertex() {
         return vertex;
+    }
+
+    /**
+     * @return Returns the selected.
+     */
+    public final boolean isSelected() {
+        return selected;
     }
 
     /**
@@ -169,6 +174,10 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
             }
             repaint();
         }
+    }
+
+    public String toString() {
+        return this.getClass().getName() + "@" + vertex.getName();
     }
 
 }

@@ -241,7 +241,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
-     *  
+     * 
      */
     public void deselectAllNodes() {
         if (graphControler != null) graphControler.deselectAllNodes();
@@ -349,6 +349,16 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      */
     public void selectNode(Draw2dNode node, boolean addToSelection) {
         if (graphControler != null) graphControler.selectNode(node, addToSelection);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.SelectionManager#selectNodeByName(java.lang.String,
+     *      boolean)
+     */
+    public void selectNodeByName(String nodeName, boolean addToSelection) {
+        final Draw2dNode node = (Draw2dNode) nodeIndex.get(nodeName);
+        if (node != null) selectNode(node, addToSelection);
     }
 
     /**

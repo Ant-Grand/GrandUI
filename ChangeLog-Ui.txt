@@ -1,8 +1,15 @@
 $Id$
 
+Release 0.6 (build number xxx):
+
+* Upgraded to Grand core 1.6 &amp; and Eclipse 3.1M4,
+* Added support for mouse wheel,
+* Improved Synchronization between the outline and the other panels,
+
+
 Release 0.5 (build number 146):
 
-* Upgraded to Grand core 1.6 &amp; and Eclipse 3.0.1,
+* Upgraded to Grand core 1.5 &amp; and Eclipse 3.0.1,
 * Added special tooltip for subant genericantfile mode,
 * Added an outline panel,
 * Both outline &amp; source panels are now maskable,

@@ -116,6 +116,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     private GraphModel model;
 
+    private final GraphNodeContentProvider nodeContentProvider;
+
     private Dispatcher parameterChangedEvent;
 
     private IProgressMonitor progressMonitor;
@@ -128,18 +130,17 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     private GraphWindow window;
 
-    private final GraphNodeContentProvider nodeContentProvider;
-
     public GraphControler(final GraphWindow window) {
         if (log.isInfoEnabled()) log.info("Creating new controler to " + window);
         this.window = window;
         model = new GraphModel();
         filterChain = new FilterChainModel(model);
-        // TODO voir si je peux virer le renderer et laisser le graph faire le boulot tout seul.
+        // TODO voir si je peux virer le renderer et laisser le graph faire le
+        // boulot tout seul.
         renderer = new Draw2dGraphRenderer();
-        
+
         nodeContentProvider = new GraphNodeContentProvider();
-        
+
         graphEventManager = new EventManager("Graph Event");
         try {
             selectionChangedDispatcher = graphEventManager.createDispatcher(GraphListener.class
@@ -153,7 +154,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             log.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         }
-        
+
         clearFiltersOnNextLoad = true; // Conservative.
         final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
         busRoutingEnabled = preferenceStore.getBoolean(PreferenceKeys.GRAPH_BUS_ENABLED_DEFAULT);
@@ -288,6 +289,14 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         return displayer;
     }
 
+    public IStructuredContentProvider getNodeContentProvider() {
+        return nodeContentProvider;
+    }
+
+    public ILabelProvider getNodeLabelProvider() {
+        return nodeContentProvider;
+    }
+
     /**
      * @return Returns the progressMonitor.
      */
@@ -354,7 +363,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             String targetName = targetNode.getName();
             if (targetName != null) {
                 // Remove the surrounding [].
-                // FIXME add a method to get the real target name in AntTargetNode.
+                // FIXME add a method to get the real target name in
+                // AntTargetNode.
                 targetName = targetName.substring(1, targetName.length() - 1);
             }
             window.openGraphInNewDisplayer(new File(buildFile), targetName);
@@ -387,7 +397,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * Refreshing (i.e.: rerender) the current graph.
      */
     public void refreshGraph() {
-        //FIXME check that there is a graph.
+        // FIXME check that there is a graph.
         if (log.isInfoEnabled()) log.info("Refreshing current graph");
         progressMonitor.beginTask("Refreshing graph", 3);
         clearFiltersOnNextLoad = false;
@@ -454,6 +464,15 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             displayer.setRichSource(((AntTargetNode) node.getVertex().getData()).getRichSource());
             selectionChangedDispatcher.dispatch(selectedNodes);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.SelectionManager#selectNodeByName(java.lang.String,
+     *      boolean)
+     */
+    public void selectNodeByName(String nodeName, boolean addToSelection) {
+        figure.selectNodeByName(nodeName, addToSelection);
     }
 
     /**
@@ -540,13 +559,5 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         graphEventManager = null;
         selectionChangedDispatcher = null;
         parameterChangedEvent = null;
-    }
-    
-    public IStructuredContentProvider getNodeContentProvider() {
-        return nodeContentProvider;
-    }
-    
-    public ILabelProvider getNodeLabelProvider() {
-        return nodeContentProvider;
     }
 }
