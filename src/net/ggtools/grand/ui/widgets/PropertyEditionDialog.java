@@ -1,7 +1,7 @@
-// $Id$
+//$Id$
 /*
  * ====================================================================
- * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
+ * Copyright (c) 2002-2005, Christophe Labouisse All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -25,38 +25,41 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+package net.ggtools.grand.ui.widgets;
 
-package net.ggtools.grand.ui.actions;
+import net.ggtools.grand.ui.widgets.property.PropertyEditor;
 
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
-import net.ggtools.grand.ui.widgets.PropertyEditionDialog;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 
 /**
- * An action to remove all filters currently enabled.
  * 
  * @author Christophe Labouisse
+ *
  */
-public class EditGraphPropertiesAction extends GraphControlerAction {
-    private static final Log log = LogFactory.getLog(EditGraphPropertiesAction.class);
+public class PropertyEditionDialog extends Dialog {
 
-    private static final String DEFAULT_ACTION_NAME = "Edit Properties";
+    public PropertyEditionDialog(Shell parentShell) {
+        super(parentShell);
+        setShellStyle(getShellStyle() | SWT.RESIZE);
+    }
 
+    protected Control createDialogArea(Composite parent) {
+        Composite composite = (Composite) super.createDialogArea(parent);
+        new PropertyEditor(composite,SWT.NONE);
+        return composite;
+    }
+    
+    
     /*
      * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.action.IAction#run()
+     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
-    public void run() {
-        final PropertyEditionDialog dialog = new PropertyEditionDialog(getGraphControler().getWindow().getShell());
-        dialog.open();
-        getGraphControler().reloadGraph();
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setText("Property Edition");
     }
-
-    public EditGraphPropertiesAction(final GraphControlerProvider parent) {
-        super(parent,DEFAULT_ACTION_NAME);
-    }
-
 }
