@@ -40,6 +40,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.printing.PrintDialog;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
+import org.eclipse.swt.printing.SystemDefaultPrinter;
 
 /**
  * 
@@ -60,11 +61,19 @@ public class PrintAction extends Action {
      */
     public void run() {
         final PrintDialog dialog = new PrintDialog(window.getShell());
-        PrinterData printerData = dialog.open();
+        final PrinterData printerData = dialog.open();
         log.debug("Dialog returned " + printerData);
-        if (printerData == null) {
-            printerData = Printer.getDefaultPrinterData();
-            log.debug("Default printer data is " + printerData);
+        if (printerData != null) {
+            final Printer printer = new Printer(printerData);
+            window.getControler().print(printer);
+            printer.dispose();
+        }
+        /*else {
+            log.error("No printer available, disabling print");
+            setEnabled(false);
+        }*/
+        if (SWT.getPlatform().equals("gtk")) {
+            window.getControler().dotPrint();
         }
     }
 

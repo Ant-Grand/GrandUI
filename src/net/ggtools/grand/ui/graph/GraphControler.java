@@ -28,17 +28,22 @@
 
 package net.ggtools.grand.ui.graph;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
+import net.ggtools.grand.exceptions.GrandException;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.Link;
 import net.ggtools.grand.graph.Node;
+import net.ggtools.grand.output.DotWriter;
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
 
@@ -46,8 +51,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
+import org.eclipse.draw2d.FrameBorder;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PrintFigureOperation;
+import org.eclipse.draw2d.Viewport;
+import org.eclipse.draw2d.ViewportLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.widgets.Display;
 
 import sf.jzgraph.IDotGraph;
@@ -81,6 +92,8 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
 
     private final Dispatcher selectionChangedDispatcher;
 
+    private Draw2dGraph figure;
+
     public GraphControler(final GraphDisplayer dest) {
         if (log.isDebugEnabled()) log.debug("Creating new controler to " + dest);
         this.dest = dest;
@@ -110,13 +123,13 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      */
     public void addFilter(GraphFilter filter) {
         log.info("Adding filter " + filter);
-        dest.beginTask("Adding filter",4);
+        dest.beginTask("Adding filter", 4);
         filterChain.addFilterLast(filter);
     }
 
     public void clearFilters() {
         log.info("Clearing filters");
-        dest.beginTask("Clearing filters",4);
+        dest.beginTask("Clearing filters", 4);
         filterChain.clearFilters();
     }
 
@@ -177,7 +190,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
 
     public void openFile(final String fileName) {
         if (log.isInfoEnabled()) log.info("Opening " + fileName);
-        dest.beginTask("Opening new graph",5);
+        dest.beginTask("Opening new graph", 5);
         model.openFile(fileName);
     }
 
@@ -305,7 +318,9 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         return dotGraph;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.ggtools.grand.ui.graph.FilterChainModelListener#filteredGraphAvailable(net.ggtools.grand.ui.graph.FilterChainModel)
      */
     public void filteredGraphAvailable(final Graph filteredGraph) {
@@ -327,7 +342,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         dest.worked(1);
 
         dest.subTask("Rendering graph");
-        final Draw2dGraph figure = renderer.render(dotGraph);
+        figure = renderer.render(dotGraph);
         figure.setSelectionManager(this);
         dest.worked(1);
 
@@ -341,8 +356,40 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      */
     public void reloadGraph() {
         if (log.isInfoEnabled()) log.info("Reloading current graph");
-        dest.beginTask("Reloading graph",5);
+        dest.beginTask("Reloading graph", 5);
         model.reload();
+    }
+
+    /**
+     * Prints the current graph.
+     * @param printer
+     */
+    public void print(Printer printer) {
+        if (log.isDebugEnabled()) log.debug("Printing graph");
+        PrintFigureOperation printOp = new PrintFigureOperation(printer,figure);
+        printOp.setPrintMode(PrintFigureOperation.FIT_PAGE);
+        printOp.run("Grand-Printing");
+    }
+
+    /**
+     * Hack for gtk: print usign the dot command.
+     */
+    public void dotPrint() {
+        if (log.isDebugEnabled()) log.debug("Printing graph using dot");
+        final Properties props = new Properties();
+       // <arg line="-Tps -Gsize=11.69,8.27 -Grotate=90 -o build.ps build.dot"/>
+        props.setProperty("dot.graph.attributes","size=8,10");
+        try {
+            final DotWriter dotWriter = new DotWriter(props);
+            dotWriter.setProducer(filterChain);
+            dotWriter.write(new File("GrandDotPrint.dot"));
+            Process proc = Runtime.getRuntime().exec("dot -Tps -o GrandDotPrint.ps GrandDotPrint.dot");
+            proc.waitFor();
+            proc.destroy();
+            log.info("Graph printed to GrandDotPrint.ps");
+        } catch (Exception e) {
+            log.error("Got execption printing",e);
+        }
     }
 
 }
