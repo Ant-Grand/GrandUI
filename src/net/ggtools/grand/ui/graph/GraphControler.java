@@ -359,13 +359,13 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     /**
      * Opens a new graph.
-     * 
      * @param file
      *            the file to open.
-     * @param wait
-     *            wait for graph loading to be complete if <code>true</code>.
+     * @param properties
+     *            a set of properties to be preset when opening the graph or
+     *            <code>null</code> if no properties should be preset.
      */
-    public void openFile(final File file, boolean wait) {
+    public void openFile(final File file, final Properties properties) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
         
         if (log.isInfoEnabled()) log.info("Opening " + file);
@@ -375,7 +375,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
         try {
             progressMonitor.subTask("Loading ant file");
-            model.openFile(file);
+            model.openFile(file, properties);
             if (log.isDebugEnabled()) log.debug("Model loaded graph");
             progressMonitor.worked(1);
 
@@ -407,7 +407,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
                 // AntTargetNode.
                 targetName = targetName.substring(1, targetName.length() - 1);
             }
-            window.openGraphInNewDisplayer(new File(buildFile), targetName);
+            window.openGraphInNewDisplayer(new File(buildFile), targetName, null);
         }
     }
 

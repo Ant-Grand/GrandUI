@@ -81,7 +81,7 @@ public class RecentFilesMenu extends MenuManager implements IPropertyChangeListe
          * @see org.eclipse.jface.action.Action#run()
          */
         public void run() {
-            window.openGraphInNewDisplayer(file);
+            window.openGraphInNewDisplayer(file, null);
         }
     }
 

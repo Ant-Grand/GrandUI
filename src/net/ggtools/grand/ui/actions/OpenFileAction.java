@@ -31,15 +31,15 @@
 
 package net.ggtools.grand.ui.actions;
 
-import java.io.File;
-
 import net.ggtools.grand.ui.widgets.GraphWindow;
+import net.ggtools.grand.ui.widgets.OpenFileWizard;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.FileDialog;
 
 /**
  * Open a build file allowing setting some properties.
@@ -51,8 +51,6 @@ public class OpenFileAction extends Action {
 
     private static final Log log = LogFactory.getLog(OpenFileAction.class);
 
-    private static final String[] FILTER_EXTENSIONS = new String[]{"*.xml","*"};
-    
     private static final String DEFAULT_ACTION_NAME = "Open with properties";
 
     private final GraphWindow window;
@@ -62,15 +60,10 @@ public class OpenFileAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     public void run() {
-        final FileDialog dialog = new FileDialog(window.getShell());
-        dialog.setFilterExtensions(FILTER_EXTENSIONS);
-        dialog.setFilterPath(previousPath);
-        String buildFileName = dialog.open();
-        log.debug("Dialog returned " + buildFileName);
-        if (buildFileName != null) {
-            previousPath = dialog.getFilterPath();
-            window.openGraphInNewDisplayer(new File(buildFileName));
-        }
+        final IWizard wizard = new OpenFileWizard(window);
+        final WizardDialog dialog = new WizardDialog(window.getShell(), wizard);
+        dialog.create();
+        dialog.open();
     }
 
     /**

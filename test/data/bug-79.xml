@@ -1,5 +1,5 @@
 <!-- Test build file for ticket #79 -->
-<project default="init">
+<project name="bug-79" default="init">
     
     <taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"/>
 

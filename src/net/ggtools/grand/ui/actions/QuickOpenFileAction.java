@@ -69,7 +69,7 @@ public class QuickOpenFileAction extends Action {
         log.debug("Dialog returned " + buildFileName);
         if (buildFileName != null) {
             previousPath = dialog.getFilterPath();
-            window.openGraphInNewDisplayer(new File(buildFileName));
+            window.openGraphInNewDisplayer(new File(buildFileName), null);
         }
     }
 

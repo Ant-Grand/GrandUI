@@ -29,6 +29,7 @@
 package net.ggtools.grand.ui.graph;
 
 import java.io.File;
+import java.util.Properties;
 
 import net.ggtools.grand.ant.AntProject;
 import net.ggtools.grand.exceptions.GrandException;
@@ -51,6 +52,8 @@ public class GraphModel implements GraphProducer {
 
     private GraphProducer producer = null;
 
+    private Properties lastLoadedFileProperties;
+
     /**
      * @return Returns the currentGraph.
      * @throws GrandException
@@ -64,16 +67,17 @@ public class GraphModel implements GraphProducer {
         return graph;
     }
 
-    public void openFile(final File file) throws GrandException {
+    public void openFile(final File file, final Properties properties) throws GrandException {
+        lastLoadedFileProperties = properties;
         if (log.isDebugEnabled()) log.debug("Loading " + file);
         lastLoadedFile = file;
-        producer = new AntProject(file);
+        producer = new AntProject(file,properties);
     }
 
     public void reload() throws GrandException {
         if (lastLoadedFile != null) {
             if (log.isDebugEnabled()) log.debug("Reloading last file");
-            openFile(lastLoadedFile);
+            openFile(lastLoadedFile, lastLoadedFileProperties);
         }
         else {
             log.warn("No file previously loaded, skipping reload");

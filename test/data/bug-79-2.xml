@@ -1,6 +1,8 @@
 <!-- Test build file for ticket #79 -->
-<project default="init">
-    <import file="bug-79.xml"/>
+<project name="bug-79#2" default="init">
+    <property name="file" value="bug-79.xml"/>
+
+    <import file="${file}"/>
     
     <!-- ================================= 
           target: init              

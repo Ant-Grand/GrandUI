@@ -30,6 +30,7 @@ package net.ggtools.grand.ui.widgets;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Properties;
 
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
@@ -157,29 +158,34 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
 
     /**
      * Open an ant file in a new window.
-     * 
      * @param buildFile
+     * @param properties
+     *            a set of properties to be preset when opening the graph or
+     *            <code>null</code> if no properties should be preset.
      */
-    public void openGraphInNewDisplayer(final File buildFile) {
-        openGraphInNewDisplayer(buildFile, null);
+    public void openGraphInNewDisplayer(final File buildFile, Properties properties) {
+        openGraphInNewDisplayer(buildFile, null, properties);
     }
 
     /**
      * Open an ant file in a new window, focusing on a specific target.
-     * 
      * @param buildFile
      * @param targetName
      *            the target to scroll to or <code>null</code> not to focus on
      *            any target.
+     * @param properties
+     *            a set of properties to be preset when opening the graph or
+     *            <code>null</code> if no properties should be preset.
      */
-    public void openGraphInNewDisplayer(final File buildFile, final String targetName) {
+    public void openGraphInNewDisplayer(final File buildFile, final String targetName,
+            final Properties properties) {
         final GraphControler controler = new GraphControler(this);
         try {
             new ProgressMonitorDialog(getShell()).run(true, false, new IRunnableWithProgress() {
                 public void run(IProgressMonitor monitor) throws InvocationTargetException,
                         InterruptedException {
                     controler.setProgressMonitor(monitor);
-                    controler.openFile(buildFile, true);
+                    controler.openFile(buildFile, properties);
                     if (targetName != null) {
                         controler.focusOn(targetName);
                     }
@@ -304,12 +310,14 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
         manager.setVisible(true);
         return manager;
     }
+
     /**
      * @return Returns the outlinePanelVisible.
      */
     public final boolean isOutlinePanelVisible() {
         return outlinePanelVisible;
     }
+
     /**
      * @return Returns the sourcePanelVisible.
      */

@@ -55,12 +55,12 @@
 
    <!-- Compilation -->
    <target name="build-kernel">
-      <ant dir="${kernel_root}" target="build-more" inheritrefs="true"/>
+      <ant dir="${kernel_root}" antfile="mc-top.xml" target="build-more" inheritrefs="true"/>
    </target>
 
    <target name="build" depends="build-kernel" description="Compile all" unless="skip-jars">
       <!-- the targets below are for the bss package -->
-      <exec executable="${make}" dir="${src_root}/vendor/xml3gpp" output="${tmp_dir}/build-xml3gpp.log" failonerror="true"/>
+      <exec executable="${make}" dir="${src_root}/vendor/xml3gpp" output="${tmp_dir}/mc-top.xml3gpp.log" failonerror="true"/>
       <exec executable="${make}" dir="${src_root}/vendor/common" output="${tmp_dir}/build-common.log" failonerror="true"/>
       <exec executable="${make}" dir="${src_root}/vendor/nortel/help/" output="${tmp_dir}/build-nortel-help.log" failonerror="true"/>
    </target>
@@ -84,12 +84,12 @@
         But we do need to copy the protodef file, which is normally handled by prepare-tree-patch
    -->
    <target name="create-tree-bss" description="Creation of deployment tree">
-      <!-- Warning: the todir below must match pkg_dest_dir, defined in build.xml -->
+      <!-- Warning: the todir below must match pkg_dest_dir, defined in mc-top.xml -->
       <property name="pkg_dest_dir" value="${tmp_dir}/installPTMA/nnbss"/>
       <mkdir dir="${pkg_dest_dir}"/>
       <copy tofile="${pkg_dest_dir}/${pkgname_protodef}" file="${createinstall}/protodef"/>
       
-      <!-- Copy/pasted from $SRC_ROOT/build.xml:prepare-tree-patch -->
+      <!-- Copy/pasted from $SRC_ROOT/mc-top.xml:prepare-tree-patch -->
       <!-- copies package specific files needed to build the patch -->
       <property name="soldir" value="${kernel_root}/tools/setup/createinstall/solaris"/>
       <copy todir="${pkg_dest_dir}">
@@ -106,9 +106,9 @@
       <copy file="${soldir}/i.envsubst" tofile="${pkg_dest_dir}/i.envsubst.for_patch"/>
       <!-- end of copied lines-->
       
-      <ant dir="${kernel_root}" target="prepare-install-scripts" inheritrefs="true"/>
-      <ant dir="${kernel_root}" target="deployscript" inheritrefs="true"/>
-      <ant dir="${kernel_root}" target="test-tree" inheritrefs="true"/>
+      <ant dir="${kernel_root}" antfile="mc-top.xml" target="prepare-install-scripts" inheritrefs="true"/>
+      <ant dir="${kernel_root}" antfile="mc-top.xml" target="deployscript" inheritrefs="true"/>
+      <ant dir="${kernel_root}" antfile="mc-top.xml" target="test-tree" inheritrefs="true"/>
    </target>
     
    <!-- Solaris package creation: uploads onto the solaris host and runs "pkgmk"-->
@@ -119,7 +119,7 @@
    
    <!-- package / patch discrimination -->
    <!-- This target is executed first when PatchId is defined -->
-   <!-- todo: move to master build.xml and update nortelgsm's antfile -->
+   <!-- todo: move to master mc-top.xml and update nortelgsm's antfile -->
    <target name="set-patch-properties" if="PatchId">
       <echo message="Building a PATCH !!"/>
       <property name="scr-file" value="${pkgname}.patch.scr"/>
@@ -136,7 +136,7 @@
 
    <!-- Solaris package delivery (=copy to directory on muse)-->
    <target name="deliver-sun-package" depends="create-sun-package" description="Delivery of Sun package">
-      <ant dir="${kernel_root}" target="upload-sol-package" inheritrefs="true"/>
+      <ant dir="${kernel_root}" antfile="mc-top.xml" target="upload-sol-package" inheritrefs="true"/>
    </target>
 
    
@@ -146,7 +146,7 @@
    <!--    - upload on solaris host in /tmp/XXX     -->
    <!--    - upload on  muse in  "builds" directory -->
    <target name="install-all" depends="deliver-sun-package" description="Compile, generate setup tree, generate setup, install">
-      <ant dir="${kernel_root}" target="upload-sol-package" inheritrefs="true"/>
+      <ant dir="${kernel_root}" antfile="mc-top.xml" target="upload-sol-package" inheritrefs="true"/>
    </target>
 
    
