@@ -27,6 +27,9 @@
  */
 package net.ggtools.grand.ui.prefs;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -73,8 +76,10 @@ import org.xml.sax.SAXException;
  * 
  * @author Christophe Labouisse
  */
+/**
+ * @author Christophe Labouisse
+ */
 public class ComplexPreferenceStore extends PreferenceStore {
-
     /**
      * An interface used to load properties like structure. It is used to save
      * either a {@link PreferenceStore} or a {@link Properties}.
@@ -103,6 +108,27 @@ public class ComplexPreferenceStore extends PreferenceStore {
     }
 
     private static final int COLLECTION_NO_LIMIT = -1;
+
+    private static final String DATE_ATTRIBUTE = "date";
+
+    private static final String ENTRY_ELEMENT = "entry";
+
+    private static final String KEY_ATTRIBUTE = "key";
+
+    /**
+     * Logger for this class
+     */
+    private static final Log log = LogFactory.getLog(ComplexPreferenceStore.class);
+
+    private static final int PREF_FILE_VERSION_MAJOR = 1;
+
+    private static final int PREF_FILE_VERSION_MINOR = 0;
+
+    private static final String PROPERTIES_ELEMENT = "properties";
+
+    private static final String ROOT_ELEMENT = "preferences";
+
+    private static final String VERSION_ATTRIBUTE = "version";
 
     /**
      * Escapes the "," character in a script to be able to use the "," as
@@ -196,6 +222,10 @@ public class ComplexPreferenceStore extends PreferenceStore {
         return properties;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.preference.PreferenceStore#load()
+     */
     public void load() throws IOException {
         FileInputStream is = null;
         try {
@@ -211,13 +241,29 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 InputSource inputSource = new InputSource(is);
                 doc = db.parse(is);
             } catch (ParserConfigurationException e) {
+                log.error("Got exception while parsing preference file",e);
                 throw new Error(e);
             } catch (SAXException e) {
+                log.error("Got exception while parsing preference file",e);
                 throw new Error(e);
             }
 
             final Element rootElement = doc.getDocumentElement();
-            // TODO check version
+            if (rootElement.hasAttribute(VERSION_ATTRIBUTE)) {
+                final String version = rootElement.getAttribute(VERSION_ATTRIBUTE);
+                final String[] versionParts = version.split("\\.", 2);
+                if (PREF_FILE_VERSION_MAJOR != Integer.parseInt(versionParts[0])) {
+                    final String message = "Cannot load preferences file version " + version;
+                    log.error(message);
+                    throw new Error(message);
+                }
+                if (log.isInfoEnabled()) {
+                    log.info("Loading from perference file version " + version);
+                }
+            }
+            else {
+                log.warn("Root element does not have a version, trying to log anyway");
+            }
 
             final PropertyLoader loader = new PropertyLoader() {
 
@@ -227,18 +273,18 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
                 public void addProperties(final String key, final Element propertiesElement) {
                     final Properties properties = new Properties();
-                    final PropertyLoader loader = new PropertyLoader() {
+                    final PropertyLoader propertiesLoader = new PropertyLoader() {
 
-                        public void addEntry(String key, String value) {
-                            properties.setProperty(key, value);
+                        public void addEntry(final String k, final String v) {
+                            properties.setProperty(k, v);
                         }
 
-                        public void addProperties(final String key, final Element propertiesElement) {
-                            // DO nothing, no nested properties
+                        public void addProperties(final String k, final Element element) {
+                            log.warn("Nested properties not supported, ignoring key " + k);
                         }
                     };
 
-                    loadProperties(propertiesElement, loader);
+                    loadProperties(propertiesElement, propertiesLoader);
                     propertiesTable.put(key, properties);
                 }
             };
@@ -249,6 +295,9 @@ public class ComplexPreferenceStore extends PreferenceStore {
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.preference.IPersistentPreferenceStore#save()
+     */
     public void save() throws IOException {
         FileOutputStream os = null;
         try {
@@ -257,14 +306,16 @@ public class ComplexPreferenceStore extends PreferenceStore {
             DocumentBuilder db = null;
             try {
                 db = dbf.newDocumentBuilder();
-            } catch (ParserConfigurationException pce) {
-                assert (false);
+            } catch (ParserConfigurationException e) {
+                log.error("Cannot create document builder",e);
+                throw new Error("Cannot create document builder",e);
             }
 
             final Document doc = db.newDocument();
-            final Element rootElement = (Element) doc.appendChild(doc.createElement("preferences"));
-            rootElement.setAttribute("version", "1.0");
-            rootElement.setAttribute("date", new Date().toString());
+            final Element rootElement = (Element) doc.appendChild(doc.createElement(ROOT_ELEMENT));
+            rootElement.setAttribute(VERSION_ATTRIBUTE, Integer.toString(PREF_FILE_VERSION_MAJOR)
+                    + "." + PREF_FILE_VERSION_MINOR);
+            rootElement.setAttribute(DATE_ATTRIBUTE, new Date().toString());
 
             final PropertySaver prefStoreSaver = new PropertySaver() {
 
@@ -288,8 +339,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 final String propKey = (String) entry.getKey();
                 final Properties props = (Properties) entry.getValue();
                 final Element currentElement = (Element) rootElement.appendChild(doc
-                        .createElement("properties"));
-                currentElement.setAttribute("key", propKey);
+                        .createElement(PROPERTIES_ELEMENT));
+                currentElement.setAttribute(KEY_ATTRIBUTE, propKey);
                 final PropertySaver propertySaver = new PropertySaver() {
 
                     public String get(String key) {
@@ -314,16 +365,18 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 t.setOutputProperty(OutputKeys.INDENT, "yes");
                 t.setOutputProperty(OutputKeys.METHOD, "xml");
                 t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            } catch (TransformerConfigurationException tce) {
-                throw new RuntimeException("Cannot configure Tranformer to save preferences", tce);
+            } catch (TransformerConfigurationException e) {
+                log.error("Cannot configure Tranformer to save preferences",e);
+                throw new RuntimeException("Cannot configure Tranformer to save preferences", e);
             }
             final DOMSource doms = new DOMSource(doc);
             final StreamResult sr = new StreamResult(os);
             try {
                 t.transform(doms, sr);
-            } catch (TransformerException te) {
+            } catch (TransformerException e) {
+                log.error("Cannot save preferences",e);
                 IOException ioe = new IOException("Cannot save preferences");
-                ioe.initCause(te);
+                ioe.initCause(e);
                 throw ioe;
             }
         } finally {
@@ -386,18 +439,18 @@ public class ComplexPreferenceStore extends PreferenceStore {
         NodeList entries = propElement.getChildNodes();
         for (int i = 0; i < entries.getLength(); i++) {
             final Node item = entries.item(i);
-            if ("entry".equals(item.getNodeName())) {
+            if (ENTRY_ELEMENT.equals(item.getNodeName())) {
                 final Element entryElement = (Element) item;
-                if (entryElement.hasAttribute("key")) {
+                if (entryElement.hasAttribute(KEY_ATTRIBUTE)) {
                     final Node n = entryElement.getFirstChild();
                     final String val = (n == null) ? "" : n.getNodeValue();
-                    loader.addEntry(entryElement.getAttribute("key"), val);
+                    loader.addEntry(entryElement.getAttribute(KEY_ATTRIBUTE), val);
                 }
             }
-            else if ("properties".equals(item.getNodeName())) {
+            else if (PROPERTIES_ELEMENT.equals(item.getNodeName())) {
                 final Element entryElement = (Element) item;
-                if (entryElement.hasAttribute("key")) {
-                    loader.addProperties(entryElement.getAttribute("key"), entryElement);
+                if (entryElement.hasAttribute(KEY_ATTRIBUTE)) {
+                    loader.addProperties(entryElement.getAttribute(KEY_ATTRIBUTE), entryElement);
                 }
             }
         }
@@ -414,8 +467,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
         while (i.hasNext()) {
             final String key = (String) i.next();
             if (saver.needSaving(key)) {
-                Element entry = (Element) properties.appendChild(doc.createElement("entry"));
-                entry.setAttribute("key", key);
+                Element entry = (Element) properties.appendChild(doc.createElement(ENTRY_ELEMENT));
+                entry.setAttribute(KEY_ATTRIBUTE, key);
                 entry.appendChild(doc.createTextNode(saver.get(key)));
             }
         }
