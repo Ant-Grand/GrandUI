@@ -1,2 +1,2 @@
-start javaw -Djava.ext.dirs=lib -Djava.library.path=lib -jar grand-ui.jar
+start javaw -Djava.ext.dirs=lib;lib\win32 -Djava.library.path=lib\win32 -jar grand-ui.jar
 exit

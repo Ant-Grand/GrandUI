@@ -1,4 +1,20 @@
 #!/bin/bash
 
-BASEDIR=$(dirname `realpath $0`)
-java -Djava.ext.dirs=$BASEDIR/lib -Djava.library.path=$BASEDIR/lib -jar $BASEDIR/grand-ui.jar
+## resolve links - $0 may be a link
+PRG="$0"
+progname=`basename "$0"`
+ 
+# need this for relative symlinks
+while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+	    PRG="$link"
+    else
+		PRG=`dirname "$PRG"`"/$link"
+    fi
+done
+
+BASEDIR=`dirname "$PRG"`
+
+java -Djava.ext.dirs=$BASEDIR/lib:$BASEDIR/lib/linux-gtk -Djava.library.path=$BASEDIR/lib/linux-gtk -jar $BASEDIR/grand-ui.jar

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="jars" name="grand" basedir=".">
+	<property file="build-local.properties" />
+	<property file="build.properties" />
+
+	<property name="product.name" value="grand-ui" />
+	<property name="product.fullname" value="${product.name}-${product.version}" />
+	<property name="libdir" value="lib" />
+	<property name="extlibdir" value="deps" />
+	<property name="dlcachedir" value="cache" />
+	<property name="classesdir" value="bin" />
+	<property name="distdir" value="dist" />
+	<property name="srcdir" value="src" />
+	<property name="confdir" value="etc" />
+
+	<property name="verbose-get" value="false" />
+
+	<condition property="isLinux">
+		<os name="Linux" />
+	</condition>
+
+	<condition property="isWin32">
+		<os name="Windows" />
+	</condition>
+
+
+	<!-- Comment out the following lines not to use jikes -->
+	<property name="build.compiler.emacs" value="true" />
+	<property name="build.compiler.pedantic" value="true" />
+	<property name="build.compiler" value="jikes" />
+
+	<macrodef name="getjar" description="Download a jar to a the extlib directory">
+		<attribute name="dest" />
+		<attribute name="url" />
+		<sequential>
+			<get dest="${extlibdir}/@{dest}" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="get-extract-zip">
+		<attribute name="dest" />
+		<attribute name="url" />
+		<attribute name="libdir" default="${extlibdir}" />
+		<element name="select" optional="yes" />
+		<sequential>
+			<get dest="${dlcachedir}/@{dest}.zip" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}" />
+			<mkdir dir="${dlcachedir}/@{dest}" />
+			<unzip dest="${dlcachedir}/@{dest}" src="${dlcachedir}/@{dest}.zip">
+				<select />
+			</unzip>
+			<mkdir dir="@{libdir}" />
+			<copy todir="@{libdir}" flatten="true" includeemptydirs="no">
+				<fileset dir="${dlcachedir}/@{dest}" />
+			</copy>
+		</sequential>
+	</macrodef>
+
+	<target name="init" depends="get-deps">
+		<path id="ext-libs">
+			<fileset dir="${extlibdir}">
+				<include name="**/*.jar" />
+			</fileset>
+		</path>
+	</target>
+
+	<target name="dist" depends="bin-dist,src-dist" description="Create source and binary distributions" />
+
+	<target name="src-dist">
+		<mkdir dir="${distdir}" />
+		<tar destfile="${distdir}/${product.fullname}-src.tar.gz" compression="gzip">
+			<tarfileset dir="." prefix="${product.fullname}-src">
+				<include name="src/**" />
+				<include name="etc/**" />
+				<include name="README.txt" />
+				<include name="LICENSE" />
+				<include name="COPYING" />
+				<include name="LICENSE-Graphviz.txt" />
+				<include name="cpl-v10.html" />
+				<include name="scripts/**" />
+				<include name="build.xml" />
+				<include name="build.properties" />
+			</tarfileset>
+		</tar>
+	</target>
+
+	<target name="bin-dist" depends="jars,set-swt-properties">
+		<mkdir dir="${distdir}" />
+		<get-extract-zip dest="alien-swt" url="${url.eclipse.alien.swt}" libdir="${extlibdir}/${dist.aliendir}">
+			<select>
+				<patternset>
+					<include name="**/swt*.jar" />
+					<include name="**/swt*.dll" />
+					<include name="**/libswt*.so" />
+				</patternset>
+			</select>
+		</get-extract-zip>
+		<!-- Prepare for bin distribution -->
+		<delete dir="tmp" />
+		<mkdir dir="tmp/${product.fullname}" />
+		<copy tofile="tmp/${product.fullname}/grand-ui.jar" file="${libdir}/${product.fullname}.jar" />
+		<copy todir="tmp/${product.fullname}/lib">
+			<fileset dir="${extlibdir}">
+				<exclude name="*swt*.*" />
+			</fileset>
+		</copy>
+		<copy todir="tmp/${product.fullname}/lib/${dist.nativedir}">
+			<fileset dir="${extlibdir}">
+				<include name="*swt*.*" />
+			</fileset>
+		</copy>
+		<copy todir="tmp/${product.fullname}" flatten="true">
+			<fileset dir=".">
+				<include name="README.txt" />
+				<include name="LICENSE" />
+				<include name="COPYING" />
+				<include name="LICENSE-Graphviz.txt" />
+				<include name="cpl-v10.html" />
+				<include name="scripts/*" />
+			</fileset>
+		</copy>
+		<chmod perm="755">
+			<fileset dir="tmp/${product.fullname}">
+				<include name="*.jar" />
+				<include name="grand-ui" />
+			</fileset>
+		</chmod>
+
+		<tar destfile="${distdir}/${product.fullname}.tar.gz" compression="gzip">
+			<tarfileset dir="tmp/${product.fullname}" prefix="${product.fullname}" mode="755">
+				<include name="grand-ui" />
+				<include name="grand-ui.jar" />
+			</tarfileset>
+			<tarfileset dir="tmp/${product.fullname}" prefix="${product.fullname}">
+				<exclude name="grand-ui" />
+				<exclude name="grand-ui.jar" />
+			</tarfileset>
+		</tar>
+
+		<zip destfile="${distdir}/${product.fullname}.zip" basedir="tmp" includes="${product.fullname}/**" />
+	</target>
+
+	<target name="jars" depends="compile.java" description="Create the application jar(s)">
+		<mkdir dir="${libdir}" />
+		<jar destfile="${libdir}/${product.fullname}.jar" index="true">
+			<fileset dir="${classesdir}" />
+			<fileset dir="${confdir}" />
+			<manifest>
+				<attribute name="Main-Class" value="net.ggtools.grand.ui.Main" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="compile.java" depends="init" description="Compile the java source files">
+		<mkdir dir="${classesdir}" />
+		<javac srcdir="${srcdir}" destdir="${classesdir}" debug="true" optimize="true">
+			<classpath>
+				<path refid="ext-libs"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="clean" description="Remove intermediate files but not external libs">
+		<delete dir="${distdir}" />
+		<delete dir="${libdir}" />
+		<delete dir="${classesdir}" />
+	</target>
+
+	<target name="real.clean" depends="clean" description="Remove intermediate files ant external libs">
+		<delete dir="${extlibdir}" />
+		<delete dir="${dlcachedir}" />
+	</target>
+
+	<target name="get-deps" depends="get-extjars,get-rcp,get-draw2d" description="Get and prepare the external libraries" />
+
+	<target name="get-extjars" depends="prepare-download" unless="noget">
+		<getjar dest="ant.jar" url="${url.ant.jar}" />
+		<getjar dest="ant-launcher.jar" url="${url.ant-launcher.jar}" />
+		<getjar dest="blacksun_util.jar" url="${url.blacksun_util.jar}" />
+		<getjar dest="jzgraph.jar" url="${url.jzgraph.jar}" />
+		<getjar dest="oro.jar" url="${url.oro.jar}" />
+		<getjar dest="commons-logging.jar" url="${url.commons-logging.jar}" />
+		<getjar dest="grand.jar" url="${url.grand.jar}" />
+	</target>
+
+	<target name="get-rcp" depends="set-swt-properties" unless="noget">
+		<get-extract-zip dest="rcp" url="${url.eclipse.rcp}">
+			<select>
+				<patternset>
+					<include name="**/runtime.jar" />
+					<include name="**/jface.jar" />
+					<include name="**/osgi.jar" />
+					<include name="**/swt*.jar" />
+					<include name="**/swt*.dll" />
+					<include name="**/libswt*.so" />
+				</patternset>
+			</select>
+		</get-extract-zip>
+	</target>
+
+	<target name="get-draw2d" unless="noget">
+		<get-extract-zip dest="gef" url="${url.gef}">
+			<select>
+				<patternset>
+					<include name="**/draw2d.jar" />
+				</patternset>
+			</select>
+		</get-extract-zip>
+	</target>
+
+	<target name="prepare-download">
+		<mkdir dir="${extlibdir}" />
+		<mkdir dir="${dlcachedir}" />
+	</target>
+
+	<target name="set-swt-properties" depends="set-swt-properties-linux,set-swt-properties-win32" description="Set the swt properties according to the current os" />
+
+	<target name="set-swt-properties-linux" if="isLinux">
+		<property name="url.eclipse.rcp" value="${url.eclipse.rcp.linux}" />
+		<property name="url.eclipse.alien.swt" value="${url.eclipse.swt.windows}" />
+		<property name="dist.nativedir" value="linux-gtk" />
+		<property name="dist.aliendir" value="win32" />
+	</target>
+
+	<target name="set-swt-properties-win32" if="isWin32">
+		<property name="url.eclipse.rcp" value="${url.eclipse.rcp.windows}" />
+		<property name="url.eclipse.alien.swt" value="${url.eclipse.swt.linux}" />
+		<property name="dist.nativedir" value="win32" />
+		<property name="dist.aliendir" value="linux-gtk" />
+	</target>
+</project>
