@@ -78,6 +78,27 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         // FIXME find out the real dot margin.
         contents.setBorder(new MarginBorder(0,0,24,24));
 
+        return createGraph(dotGraph, contents);
+    }
+    
+    /**
+     * Fill an existing graph with a IDotGraph.
+     * 
+     * @param contents
+     * @param dotGraph
+     * @return
+     */
+    public Draw2dGraph render(Draw2dGraph contents, IDotGraph dotGraph) {
+        contents.removeAll();
+        return createGraph(dotGraph, contents);
+    }
+
+    /**
+     * @param dotGraph
+     * @param contents
+     * @return
+     */
+    private Draw2dGraph createGraph(IDotGraph dotGraph, final Draw2dGraph contents) {
         for (Iterator iter = dotGraph.allVertices().iterator(); iter.hasNext();) {
             final IVertex node = (IVertex) iter.next();
             buildNodeFigure(contents, node);
@@ -159,8 +180,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         else {
             targetPoint = (Point) bends.remove(bends.size() - 1);
         }
-        conn.setSourceAnchor(new XYRelativeAnchor(contents, sourcePoint));
-        conn.setTargetAnchor(new XYRelativeAnchor(contents, targetPoint));
+        conn.setSourceAnchor(new XYRelativeAnchor(conn, sourcePoint));
+        conn.setTargetAnchor(new XYRelativeAnchor(conn, targetPoint));
 
         if (bends.isEmpty()) {
             conn.setConnectionRouter(null);

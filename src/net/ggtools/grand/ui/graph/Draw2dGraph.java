@@ -36,11 +36,19 @@ import net.ggtools.grand.ui.widgets.CanvasScroller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.Cursors;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.InputEvent;
+import org.eclipse.draw2d.KeyEvent;
+import org.eclipse.draw2d.KeyListener;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.Panel;
+import org.eclipse.draw2d.ScaledGraphics;
 import org.eclipse.draw2d.XYLayout;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.Translatable;
+import org.eclipse.swt.SWT;
 
 import sf.jzgraph.IVertex;
 
@@ -48,6 +56,86 @@ import sf.jzgraph.IVertex;
  * @author Christophe Labouisse
  */
 public class Draw2dGraph extends Panel implements SelectionManager {
+    private final class ZoomListener extends KeyListener.Stub {
+        private final float[] ZOOM_STEPS = {0.134217728f, 0.16777216f, 0.2097152f, 0.262144f,
+                0.32768f, 0.4096f, 0.512f, 0.64f, 1.0f, 1.25f, 1.5625f, 1.953125f, 2.44140625f};
+
+        private int zoomStep = 8;
+
+        private final Log log;
+
+        private ZoomListener(Log log) {
+            super();
+            this.log = log;
+        }
+
+        {
+            zoom = ZOOM_STEPS[zoomStep];
+        }
+
+        public void keyReleased(KeyEvent ke) {
+            switch (ke.keycode) {
+            case SWT.PAGE_DOWN:
+                if (zoomStep > 0) {
+                    setZoom(ZOOM_STEPS[--zoomStep]);
+                }
+                break;
+
+            case SWT.PAGE_UP:
+                if (zoomStep < ZOOM_STEPS.length - 1) {
+                    setZoom(ZOOM_STEPS[++zoomStep]);
+                }
+                break;
+
+            default:
+                break;
+            }
+            log.trace("Zoom: " + zoom);
+        }
+    }
+
+    private final class GraphMouseListener extends MouseListener.Stub {
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
+         */
+        public void mousePressed(MouseEvent me) {
+            switch (me.button) {
+            case (1):
+                deselectAllNodes();
+                me.consume();
+
+            case (2):
+                if (scroller != null) {
+                    scroller.enterDragMode();
+                }
+                break;
+
+            case (3):
+                if (graphControler != null) {
+                    graphControler.getDest().getContextMenu().setVisible(true);
+                }
+                break;
+            }
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see org.eclipse.draw2d.MouseListener.Stub#mouseReleased(org.eclipse.draw2d.MouseEvent)
+         */
+        public void mouseReleased(MouseEvent me) {
+            switch (me.button) {
+            case (1):
+            case (2):
+                if (scroller != null) {
+                    scroller.leaveDragMode();
+                }
+                break;
+            }
+        }
+    }
+
     private final class NodeMouseListener extends MouseListener.Stub {
         private final Log log = LogFactory.getLog(NodeMouseListener.class);
 
@@ -119,53 +207,44 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     private GraphControler graphControler;
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.draw2d.IFigure#addNotify()
+     */
+    public void addNotify() {
+        if (log.isTraceEnabled()) log.trace("Adding listeners");
+        super.addNotify();
+        graphMouseListener = new GraphMouseListener();
+        addMouseListener(graphMouseListener);
+        zoomListener = new ZoomListener(log);
+        addKeyListener(zoomListener);
+        setFocusTraversable(true);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.draw2d.IFigure#removeNotify()
+     */
+    public void removeNotify() {
+        if (log.isTraceEnabled()) log.trace("Removing listeners");
+        super.removeNotify();
+        if (graphMouseListener != null) removeMouseListener(graphMouseListener);
+        if (zoomListener != null) removeKeyListener(zoomListener);
+        setFocusTraversable(false);
+    }
+
     private CanvasScroller scroller;
+
+    private float zoom;
+
+    private GraphMouseListener graphMouseListener;
+
+    private ZoomListener zoomListener;
 
     public Draw2dGraph() {
         super();
         scroller = null;
         setLayoutManager(new XYLayout());
-        addMouseListener(new MouseListener.Stub() {
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
-             */
-            public void mousePressed(MouseEvent me) {
-                switch (me.button) {
-                case (1):
-                    deselectAllNodes();
-                    me.consume();
-
-                case (2):
-                    if (scroller != null) {
-                        scroller.enterDragMode();
-                    }
-                    break;
-
-                case (3):
-                    if (graphControler != null) {
-                        graphControler.getDest().getContextMenu().setVisible(true);
-                    }
-                    break;
-                }
-            }
-
-            /*
-             * (non-Javadoc)
-             * @see org.eclipse.draw2d.MouseListener.Stub#mouseReleased(org.eclipse.draw2d.MouseEvent)
-             */
-            public void mouseReleased(MouseEvent me) {
-                switch (me.button) {
-                case (1):
-                case (2):
-                    if (scroller != null) {
-                        scroller.leaveDragMode();
-                    }
-                    break;
-                }
-            }
-        });
     }
 
     /**
@@ -199,10 +278,54 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
+     * @see org.eclipse.draw2d.Figure#getClientArea()
+     */
+    public Rectangle getClientArea(Rectangle rect) {
+        super.getClientArea(rect);
+        rect.width /= zoom;
+        rect.height /= zoom;
+        return rect;
+    }
+
+    /**
      * @return Returns the controler.
      */
     public final SelectionManager getControler() {
         return graphControler;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.draw2d.IFigure#getMinimumSize(int, int)
+     */
+    public Dimension getMinimumSize(int wHint, int hHint) {
+        final Dimension d = super.getMinimumSize(wHint, hHint);
+        int w = getInsets().getWidth();
+        int h = getInsets().getHeight();
+        return d.getExpanded(-w, -h).scale(zoom).expand(w, h);
+    }
+
+    public Dimension getPreferredSize(int wHint, int hHint) {
+        final Dimension d = super.getPreferredSize(wHint, hHint);
+        int w = getInsets().getWidth();
+        int h = getInsets().getHeight();
+        return d.getExpanded(-w, -h).scale(zoom).expand(w, h);
+    }
+
+    /**
+     * @return Returns the scroller.
+     */
+    public final CanvasScroller getScroller() {
+        return scroller;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
+     */
+    public Collection getSelection() {
+        if (graphControler != null) return graphControler.getSelection();
+        return null;
     }
 
     /**
@@ -221,11 +344,41 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
+     * @param scroller
+     *            The scroller to set.
+     */
+    public final void setScroller(CanvasScroller scroller) {
+        this.scroller = scroller;
+    }
+
+    /**
      * @param graphControler
      *            The controler to set.
      */
     public final void setSelectionManager(GraphControler graphControler) {
         this.graphControler = graphControler;
+    }
+
+    public void setZoom(float zoom) {
+        this.zoom = zoom;
+        revalidate();
+        repaint();
+    }
+
+    /**
+     * @see org.eclipse.draw2d.Figure#translateFromParent(Translatable)
+     */
+    public void translateFromParent(Translatable t) {
+        super.translateFromParent(t);
+        t.performScale(1 / zoom);
+    }
+
+    /**
+     * @see org.eclipse.draw2d.Figure#translateToParent(Translatable)
+     */
+    public void translateToParent(Translatable t) {
+        t.performScale(zoom);
+        super.translateToParent(t);
     }
 
     private void toggleSelection(final Draw2dNode node, final boolean addToSelection) {
@@ -237,24 +390,30 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
-     */
-    public Collection getSelection() {
-        if (graphControler != null) return graphControler.getSelection();
-        return null;
-    }
     /**
-     * @return Returns the scroller.
+     * @see org.eclipse.draw2d.Figure#paintClientArea(Graphics)
      */
-    public final CanvasScroller getScroller() {
-        return scroller;
+    protected void paintClientArea(Graphics graphics) {
+        if (getChildren().isEmpty()) return;
+
+        boolean optimizeClip = getBorder() == null || getBorder().isOpaque();
+
+        ScaledGraphics g = new ScaledGraphics(graphics);
+
+        if (!optimizeClip) g.clipRect(getBounds().getCropped(getInsets()));
+        g.translate(getBounds().x + getInsets().left, getBounds().y + getInsets().top);
+        g.scale(zoom);
+        g.pushState();
+        paintChildren(g);
+        g.popState();
+        g.dispose();
+        graphics.restoreState();
     }
+
     /**
-     * @param scroller The scroller to set.
+     * @see org.eclipse.draw2d.Figure#useLocalCoordinates()
      */
-    public final void setScroller(CanvasScroller scroller) {
-        this.scroller = scroller;
+    protected boolean useLocalCoordinates() {
+        return true;
     }
 }

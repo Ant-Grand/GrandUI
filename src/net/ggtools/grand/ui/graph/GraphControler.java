@@ -333,7 +333,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
         if (log.isDebugEnabled()) log.debug("Printing graph");
         PrintFigureOperation printOp = new PrintFigureOperation(printer, figure);
         printOp.setPrintMode(printMode);
-        printOp.run("Grand:"+graph.getName());
+        printOp.run("Grand:" + graph.getName());
     }
 
     /**
@@ -423,7 +423,12 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
         progressMonitor.worked(1);
 
         progressMonitor.subTask("Rendering graph");
-        figure = renderer.render(dotGraph);
+        if (figure == null) {
+            figure = renderer.render(dotGraph);
+        }
+        else {
+            renderer.render(figure, dotGraph);
+        }
         figure.setSelectionManager(this);
         progressMonitor.worked(1);
 

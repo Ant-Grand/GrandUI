@@ -124,6 +124,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         Display.getDefault().asyncExec(new Runnable() {
 
             public void run() {
+                // Do something for the previous graph.
                 canvas.setContents(graph);
                 setText(name);
                 setToolTipText(toolTip);
