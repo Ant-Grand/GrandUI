@@ -79,7 +79,7 @@
 			</copy>
 		</sequential>
 	</macrodef>
-	
+
 	<selector id="src-dist-selector">
 		<or>
 			<filename name="src/**" />
@@ -94,7 +94,7 @@
 			<filename name="build.properties" />
 		</or>
 	</selector>
-	
+
 	<patternset id="get-rcp-patterns">
 		<include name="**/runtime.jar" />
 		<include name="**/jface.jar" />
@@ -230,11 +230,8 @@
 		</javac>
 	</target>
 
-	<target name="incbuildnum">
-		<taskdef resource="svntask.properties" />
-		<svn>
-			<update file="${buildnum-file}" />
-		</svn>
+	<target name="incbuildnum" depends="setup-svn-macros">
+		<svn-update file="update ${buildnum-file}" />
 		<propertyfile file="${buildnum-file}">
 			<entry key="build.date" type="date" value="now" pattern="yyyy-MM-dd" />
 			<entry key="build.time" type="date" value="now" pattern="HH:mm:ss" />
@@ -243,10 +240,57 @@
 		</propertyfile>
 		<property file="${buildnum-file}" />
 		<echo message="build number set to ${build.number}" />
-		<svn>
-			<commit file="${buildnum-file}" message="Setting buildnum to ${build.number} for ${product.name}" />
-		</svn>
+		<svn-commit message="Setting buildnum to ${build.number} for ${product.name}" file="${buildnum-file}" />
 	</target>
+
+
+	<target name="setup-svn-macros" depends="setup-svn-macros-svn, setup-svn-macros-svk"/>
+
+	<target name="setup-svn-macros-svn" unless="USE_SVK">
+		<taskdef resource="svntask.properties" />
+		<macrodef name="svn-update">
+			<attribute name="file" />
+			<sequential>
+				<svn>
+					<update file="@{file}" />
+				</svn>
+			</sequential>
+		</macrodef>
+
+		<macrodef name="svn-commit">
+			<attribute name="file" />
+			<attribute name="message" />
+			<sequential>
+				<svn>
+					<commit file="@{file}" message="@{message}" />
+				</svn>
+			</sequential>
+		</macrodef>
+	</target>
+
+
+
+	<target name="setup-svn-macros-svk" if="USE_SVK">
+		<macrodef name="svn-update">
+			<attribute name="file" />
+			<sequential>
+				<exec executable="svk">
+					<arg line="update @{file}" />
+				</exec>
+			</sequential>
+		</macrodef>
+
+		<macrodef name="svn-commit">
+			<attribute name="file" />
+			<attribute name="message" />
+			<sequential>
+				<exec executable="svk">
+					<arg line="commit -m '@{message}' @{file}" />
+				</exec>
+			</sequential>
+		</macrodef>
+	</target>
+
 
 	<target name="clean" depends="clean.dist" description="Remove intermediate files but not external libs">
 		<delete dir="${extlibdir}" />
@@ -275,19 +319,19 @@
 	</target>
 
 	<target name="get-rcp-zip">
-		<fail unless="url.eclipse.rcp" message="url.eclipse.rcp should be defined"/>
+		<fail unless="url.eclipse.rcp" message="url.eclipse.rcp should be defined" />
 		<get-extract-zip dest="rcp" url="${url.eclipse.rcp}">
 			<select>
-				<patternset refid="get-rcp-patterns"/>
+				<patternset refid="get-rcp-patterns" />
 			</select>
 		</get-extract-zip>
 	</target>
-	
+
 	<target name="get-rcp-tgz">
-		<fail unless="url.eclipse.rcp" message="url.eclipse.rcp should be defined"/>
+		<fail unless="url.eclipse.rcp" message="url.eclipse.rcp should be defined" />
 		<get-extract-tgz dest="rcp" url="${url.eclipse.rcp}">
 			<select>
-				<patternset refid="get-rcp-patterns"/>
+				<patternset refid="get-rcp-patterns" />
 			</select>
 		</get-extract-tgz>
 	</target>
