@@ -30,6 +30,7 @@ package net.ggtools.grand.ui.widgets.property;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
 import net.ggtools.grand.ui.widgets.ExceptionDialog;
@@ -190,9 +191,9 @@ public class PropertyEditor {
     }
 
     /**
-     * @param list
+     * @param properties
      */
-    public void setInput(final Properties properties) {
+    public void setInput(final Map properties) {
         propertyList.clear();
         if (properties != null) propertyList.addAll(properties);
     }

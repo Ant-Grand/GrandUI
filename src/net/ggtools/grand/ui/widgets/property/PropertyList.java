@@ -128,7 +128,7 @@ class PropertyList {
         clearedPropertiesDispatcher.dispatch(null);
     }
 
-    public void addAll(Properties properties) {
+    public void addAll(final Map properties) {
         for (Iterator iter = properties.entrySet().iterator(); iter.hasNext();) {
             Map.Entry entry = (Map.Entry) iter.next();
             add(new PropertyPair(entry));

@@ -400,6 +400,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     }
 
     /**
+     * Open the build file containing a specific node.
+     * 
      * @param node
      */
     public void openNodeFile(Draw2dNode node) {
