@@ -58,9 +58,10 @@ import sf.jzgraph.IVertex;
 public class Draw2dGraph extends Panel implements SelectionManager {
     private final class ZoomListener extends KeyListener.Stub {
         private final float[] ZOOM_STEPS = {0.134217728f, 0.16777216f, 0.2097152f, 0.262144f,
-                0.32768f, 0.4096f, 0.512f, 0.64f, 1.0f, 1.25f, 1.5625f, 1.953125f, 2.44140625f};
+                0.32768f, 0.4096f, 0.512f, 0.64f, 0.8f, 1.0f, 1.25f, 1.5625f, 1.953125f,
+                2.44140625f};
 
-        private int zoomStep = 8;
+        private int zoomStep = 9;
 
         private final Log log;
 
