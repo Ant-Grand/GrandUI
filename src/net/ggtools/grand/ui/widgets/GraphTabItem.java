@@ -43,6 +43,12 @@ import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -65,7 +71,7 @@ import org.eclipse.swt.widgets.Menu;
 public class GraphTabItem extends CTabItem implements GraphDisplayer {
     private static final Log log = LogFactory.getLog(GraphTabItem.class);
 
-    private FigureCanvas canvas;
+    private final FigureCanvas canvas;
 
     private final CanvasScroller canvasScroller;
 
@@ -77,25 +83,52 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
 
     private Draw2dGraph graph;
 
-    private SashForm sashForm;
+    private final SashForm outlineSashForm;
 
-    private ScrolledComposite textComposite;
+    private final SashForm sourceSashForm;
 
-    private StyledText textDisplayer;
+    private final ScrolledComposite textComposite;
+
+    private final StyledText textDisplayer;
+
+    private final ListViewer outlineViewer;
 
     /**
-     * Creates a tab to display a new graph.
+     * Creates a tab to display a new graph. The tab will contain two sash forms
+     * a vertical one with the source panel as the bottom part and a second
+     * horizontal second one containing the outline window and the graph itself.
+     * 
      * @param parent
      *            parent CTabFolder.
      * @param style
      */
-    public GraphTabItem(CTabFolder parent, int style, GraphControler controler) {
+    public GraphTabItem(final CTabFolder parent, final int style, final GraphControler controler) {
         super(parent, style);
         this.controler = controler;
-        sashForm = new SashForm(parent, SWT.VERTICAL | SWT.BORDER);
-        setControl(sashForm);
+        sourceSashForm = new SashForm(parent, SWT.VERTICAL | SWT.BORDER);
+        outlineSashForm = new SashForm(sourceSashForm, SWT.HORIZONTAL | SWT.BORDER);
+        setControl(sourceSashForm);
 
-        canvas = new FigureCanvas(sashForm);
+        outlineViewer = new ListViewer(outlineSashForm, SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
+        outlineViewer.setContentProvider(controler.getNodeContentProvider());
+        outlineViewer.setLabelProvider(controler.getNodeLabelProvider());
+        outlineViewer.setSorter(new ViewerSorter());
+        outlineViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+            public void selectionChanged(SelectionChangedEvent event) {
+                final ISelection selection = event.getSelection();
+                
+                if (!selection.isEmpty()) {
+                    if (selection instanceof IStructuredSelection) {
+                        final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+                        if (structuredSelection.size() == 1) {
+                            jumpToNode(structuredSelection.getFirstElement().toString());
+                        }
+                    }
+                }
+            }});
+
+
+        canvas = new FigureCanvas(outlineSashForm);
         canvas.getViewport().setContentsTracksHeight(true);
         canvas.getViewport().setContentsTracksWidth(true);
         canvas.setBackground(ColorConstants.white);
@@ -104,13 +137,15 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         contextMenuManager = new GraphMenu(this);
         contextMenu = contextMenuManager.createContextMenu(canvas);
 
-        textComposite = new ScrolledComposite(sashForm, SWT.H_SCROLL | SWT.V_SCROLL);
+        outlineSashForm.setWeights(new int[]{1, 5});
+
+        textComposite = new ScrolledComposite(sourceSashForm, SWT.H_SCROLL | SWT.V_SCROLL);
         textDisplayer = new StyledText(textComposite, SWT.MULTI | SWT.READ_ONLY);
         textDisplayer.setFont(Application.getInstance().getFont(Application.MONOSPACE_FONT));
         textComposite.setContent(textDisplayer);
         textComposite.setExpandHorizontal(true);
         textComposite.setExpandVertical(true);
-        sashForm.setWeights(new int[]{5, 1});
+        sourceSashForm.setWeights(new int[]{5, 1});
     }
 
     /*
@@ -150,13 +185,17 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
      */
     public void jumpToNode(final String nodeName) {
         if (graph != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("jumpToNode(nodeName = " + nodeName + ")");
+            }
+
             final Rectangle bounds = graph.getBoundsForNode(nodeName);
             if (bounds != null) {
                 final Point center = bounds.getCenter();
                 Display.getDefault().asyncExec(new Runnable() {
                     public void run() {
                         final org.eclipse.swt.graphics.Point size = canvas.getSize();
-                        canvas.scrollTo(center.x - size.x / 2, center.y - size.y / 2);
+                        canvas.scrollSmoothTo(center.x - size.x / 2, center.y - size.y / 2);
                     }
                 });
 
@@ -187,6 +226,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
                 setText(name);
                 setToolTipText(toolTip);
                 graph.setScroller(canvasScroller);
+                outlineViewer.setInput(graph);
             }
         });
     }
@@ -242,7 +282,16 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
      */
     public final void setSourcePanelVisible(boolean sourcePanelVisible) {
         textComposite.setVisible(sourcePanelVisible);
-        sashForm.layout();
+        sourceSashForm.layout();
+    }
+
+    /**
+     * @param outlinePanelVisible
+     *            The sourcePanelVisible to set.
+     */
+    public final void setOutlinePanelVisible(boolean outlinePanelVisible) {
+        outlineViewer.getControl().setVisible(outlinePanelVisible);
+        outlineSashForm.layout();
     }
 
     /*

@@ -53,7 +53,7 @@ public class ShowSourcePanelAction extends Action {
     public ShowSourcePanelAction(final GraphWindow parent) {
         super(DEFAULT_ACTION_NAME);
         window = parent;
-        setChecked(true);
+        setChecked(parent.isSourcePanelVisible());
     }
     
     /* (non-Javadoc)

@@ -60,6 +60,8 @@ import org.eclipse.draw2d.PrintFigureOperation;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.widgets.Display;
 
@@ -126,6 +128,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     private GraphWindow window;
 
+    private final GraphNodeContentProvider nodeContentProvider;
+
     public GraphControler(final GraphWindow window) {
         if (log.isInfoEnabled()) log.info("Creating new controler to " + window);
         this.window = window;
@@ -133,6 +137,9 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         filterChain = new FilterChainModel(model);
         // TODO voir si je peux virer le renderer et laisser le graph faire le boulot tout seul.
         renderer = new Draw2dGraphRenderer();
+        
+        nodeContentProvider = new GraphNodeContentProvider();
+        
         graphEventManager = new EventManager("Graph Event");
         try {
             selectionChangedDispatcher = graphEventManager.createDispatcher(GraphListener.class
@@ -146,6 +153,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             log.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         }
+        
         clearFiltersOnNextLoad = true; // Conservative.
         final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
         busRoutingEnabled = preferenceStore.getBoolean(PreferenceKeys.GRAPH_BUS_ENABLED_DEFAULT);
@@ -477,6 +485,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         if (log.isDebugEnabled()) log.debug("Creating dot graph");
         progressMonitor.subTask("Laying out graph");
         graph = filterChain.getGraph();
+        nodeContentProvider.setGraph(graph);
         final DotGraphCreator creator = new DotGraphCreator(graph, busRoutingEnabled);
         final IDotGraph dotGraph = creator.getGraph();
         progressMonitor.worked(1);
@@ -531,5 +540,13 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         graphEventManager = null;
         selectionChangedDispatcher = null;
         parameterChangedEvent = null;
+    }
+    
+    public IStructuredContentProvider getNodeContentProvider() {
+        return nodeContentProvider;
+    }
+    
+    public ILabelProvider getNodeLabelProvider() {
+        return nodeContentProvider;
     }
 }

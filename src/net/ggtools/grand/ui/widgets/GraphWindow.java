@@ -79,7 +79,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
 
     private MenuManager manager;
 
-    private boolean outlinePanelVisible = true;
+    private boolean outlinePanelVisible = false;
 
     private boolean sourcePanelVisible = true;
 
@@ -147,6 +147,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
     public GraphDisplayer newDisplayer(final GraphControler controler) {
         final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE, controler);
         graphTabItem.setSourcePanelVisible(sourcePanelVisible);
+        graphTabItem.setOutlinePanelVisible(outlinePanelVisible);
         tabFolder.setSelection(graphTabItem);
         controlerAvailableDispatcher.dispatch(controler);
         controler.setProgressMonitor(new SafeProgressMonitor(getStatusLineManager()
@@ -206,6 +207,14 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
     public final void setOutlinePanelVisible(boolean outlinePanelVisible) {
         if (outlinePanelVisible != this.outlinePanelVisible) {
             this.outlinePanelVisible = outlinePanelVisible;
+            final CTabItem[] children = tabFolder.getItems();
+            for (int i = 0; i < children.length; i++) {
+                final CTabItem current = children[i];
+                if (current instanceof GraphTabItem) {
+                    final GraphTabItem tab = (GraphTabItem) current;
+                    tab.setOutlinePanelVisible(outlinePanelVisible);
+                }
+            }
         }
     }
 
@@ -294,5 +303,17 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
         manager.add(new HelpMenu(this));
         manager.setVisible(true);
         return manager;
+    }
+    /**
+     * @return Returns the outlinePanelVisible.
+     */
+    public final boolean isOutlinePanelVisible() {
+        return outlinePanelVisible;
+    }
+    /**
+     * @return Returns the sourcePanelVisible.
+     */
+    public final boolean isSourcePanelVisible() {
+        return sourcePanelVisible;
     }
 }
