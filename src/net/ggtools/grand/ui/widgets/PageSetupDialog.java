@@ -1,0 +1,110 @@
+// $Id$
+/*
+ * ====================================================================
+ * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+package net.ggtools.grand.ui.widgets;
+
+import net.ggtools.grand.ui.Application;
+import net.ggtools.grand.ui.graph.GraphControler;
+
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+
+/**
+ * TODO The whole thing is crappy I've to change it when the Prefs API will be
+ * there.
+ * @author Christophe Labouisse
+ */
+public class PageSetupDialog extends Dialog {
+
+    private Combo combo;
+
+    /**
+     * @param parentShell
+     */
+    public PageSetupDialog(Shell parentShell) {
+        super(parentShell);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
+     */
+    protected void cancelPressed() {
+        super.cancelPressed();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+     */
+    protected Control createDialogArea(Composite parent) {
+        Composite composite = (Composite) super.createDialogArea(parent);
+        final GridLayout layout = new GridLayout();
+        layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+        layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+        layout.numColumns = 2;
+        composite.setLayout(layout);
+        final Label label = new Label(composite, SWT.NONE);
+        label.setText("Print mode: ");
+        label.setAlignment(SWT.RIGHT);
+        label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+        combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
+        combo.setItems(new String[]{"Tile", "Fit on one page", "Fit on one page horizontally", "Fit one page vertically"});
+        combo.select(GraphControler.getPrintMode() - 1);
+        combo
+                .setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
+                        | GridData.GRAB_HORIZONTAL));
+        return composite;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+     */
+    protected void okPressed() {
+        GraphControler.setPrintMode(combo.getSelectionIndex()+1);
+        super.okPressed();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+     */
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setText("Page Setup");
+        newShell.setImage(Application.getInstance().getImage(Application.APPLICATION_ICON));
+    }
+}

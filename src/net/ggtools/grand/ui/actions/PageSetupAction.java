@@ -29,30 +29,38 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.ggtools.grand.ui.menu;
+package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.actions.OpenFileAction;
-import net.ggtools.grand.ui.actions.PageSetupAction;
-import net.ggtools.grand.ui.actions.PrintAction;
-import net.ggtools.grand.ui.actions.QuitAction;
 import net.ggtools.grand.ui.widgets.GraphWindow;
+import net.ggtools.grand.ui.widgets.PageSetupDialog;
 
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.eclipse.jface.action.Action;
 
 /**
  * 
  * 
  * @author Christophe Labouisse
  */
-public class FileMenuManager extends MenuManager {
-    public FileMenuManager(GraphWindow window) {
-        super("File");
-        add(new OpenFileAction(window));
-        add(new Separator());
-        add(new PageSetupAction(window));
-        add(new PrintAction(window));
-        add(new Separator());
-        add(new QuitAction());
+public class PageSetupAction extends Action {
+    
+    private static final Log log = LogFactory.getLog(PageSetupAction.class);
+
+    private static final String DEFAULT_ACTION_NAME = "Page Setup";
+
+    private final GraphWindow window;
+
+    public PageSetupAction(final GraphWindow parent) {
+        super(DEFAULT_ACTION_NAME);
+        window = parent;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.IAction#run()
+     */
+    public void run() {
+        final PageSetupDialog dialog = new PageSetupDialog(window.getShell());
+        dialog.open();
     }
 }

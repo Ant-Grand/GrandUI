@@ -39,6 +39,7 @@ import net.ggtools.grand.ant.AntTargetNode;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.output.DotWriter;
+import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
 import net.ggtools.grand.ui.widgets.GraphWindow;
@@ -47,6 +48,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.PrintFigureOperation;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.widgets.Display;
 
@@ -63,6 +65,24 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         FilterChainModelListener {
     private static final Log log = LogFactory.getLog(GraphControler.class);
 
+    // Ok that's bad it'll probably have to go to the forthcoming pref API.
+    private static int printMode = PrintFigureOperation.FIT_PAGE;
+
+    /**
+     * @return Returns the printMode.
+     */
+    public static final int getPrintMode() {
+        return printMode;
+    }
+
+    /**
+     * @param printMode
+     *            The printMode to set.
+     */
+    public static final void setPrintMode(int printMode) {
+        GraphControler.printMode = printMode;
+    }
+
     private boolean busRoutingEnabled;
 
     /**
@@ -70,8 +90,6 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      * graph is loaded.
      */
     private boolean clearFiltersOnNextLoad;
-
-    private final GraphWindow window;
 
     private GraphDisplayer dest;
 
@@ -87,13 +105,15 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
 
     private final Dispatcher parameterChangedEvent;
 
+    private IProgressMonitor progressMonitor;
+
     private final Draw2dGraphRenderer renderer;
 
     private final Set selectedNodes = new HashSet();
 
     private final Dispatcher selectionChangedDispatcher;
 
-    private IProgressMonitor progressMonitor;
+    private final GraphWindow window;
 
     public GraphControler(final GraphWindow window) {
         if (log.isInfoEnabled()) log.info("Creating new controler to " + window);
@@ -194,6 +214,11 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
             proc.waitFor();
             proc.destroy();
             log.info("Graph printed to GrandDotPrint.ps");
+            MessageDialog dialog = new MessageDialog(window.getShell(), "Graph printed",
+                    Application.getInstance().getImage(Application.APPLICATION_ICON),
+                    "Graph saved as GraphDotPrint.ps", MessageDialog.INFORMATION,
+                    new String[]{"OK"}, 0);
+            dialog.open();
         } catch (Exception e) {
             log.error("Got execption printing", e);
         }
@@ -244,6 +269,13 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
             });
         }
         return dest;
+    }
+
+    /**
+     * @return Returns the progressMonitor.
+     */
+    public final IProgressMonitor getProgressMonitor() {
+        return progressMonitor;
     }
 
     /*
@@ -299,13 +331,24 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     }
 
     /**
+     * @param node
+     */
+    public void openNodeFile(Draw2dNode node) {
+        final AntTargetNode targetNode = (AntTargetNode) node.getVertex().getData();
+        final String buildFile = targetNode.getBuildFile();
+        if (buildFile != null && (buildFile.length() > 0)) {
+            window.openGraphInNewDisplayer(new File(buildFile));
+        }
+    }
+
+    /**
      * Prints the current graph.
      * @param printer
      */
     public void print(Printer printer) {
         if (log.isDebugEnabled()) log.debug("Printing graph");
         PrintFigureOperation printOp = new PrintFigureOperation(printer, figure);
-        printOp.setPrintMode(PrintFigureOperation.FIT_PAGE);
+        printOp.setPrintMode(printMode);
         printOp.run("Grand-Printing");
     }
 
@@ -347,6 +390,14 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     }
 
     /**
+     * @param progressMonitor
+     *            The progressMonitor to set.
+     */
+    public final void setProgressMonitor(IProgressMonitor progressMonitor) {
+        this.progressMonitor = progressMonitor;
+    }
+
+    /**
      * Creates a Draw2d graph from a Grand graph. This method will work 3 units
      * and call <code>dest.done()</code> at the end.
      */
@@ -376,32 +427,6 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         getDest().setGraph(figure, graphName, model.getLastLoadedFile().getAbsolutePath());
         synchronized (this) {
             this.notifyAll();
-        }
-    }
-
-    /**
-     * @return Returns the progressMonitor.
-     */
-    public final IProgressMonitor getProgressMonitor() {
-        return progressMonitor;
-    }
-
-    /**
-     * @param progressMonitor
-     *            The progressMonitor to set.
-     */
-    public final void setProgressMonitor(IProgressMonitor progressMonitor) {
-        this.progressMonitor = progressMonitor;
-    }
-
-    /**
-     * @param node
-     */
-    public void openNodeFile(Draw2dNode node) {
-        final AntTargetNode targetNode = (AntTargetNode) node.getVertex().getData();
-        final String buildFile = targetNode.getBuildFile();
-        if (buildFile != null && (buildFile.length() > 0)) {
-            window.openGraphInNewDisplayer(new File(buildFile));
         }
     }
 }
