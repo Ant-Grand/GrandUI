@@ -388,6 +388,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         try {
             final DotWriter dotWriter = new DotWriter(props);
             dotWriter.setProducer(filterChain);
+            dotWriter.setShowGraphName(true);
             dotWriter.write(new File("GrandDotPrint.dot"));
             Process proc = Runtime.getRuntime().exec("dot -Tps -Gpage=8,10 -o GrandDotPrint.ps GrandDotPrint.dot");
             proc.waitFor();
