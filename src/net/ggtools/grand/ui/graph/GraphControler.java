@@ -29,7 +29,6 @@
 package net.ggtools.grand.ui.graph;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +37,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import net.ggtools.grand.exceptions.GrandException;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.Link;
@@ -51,11 +49,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
-import org.eclipse.draw2d.FrameBorder;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PrintFigureOperation;
-import org.eclipse.draw2d.Viewport;
-import org.eclipse.draw2d.ViewportLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.printing.Printer;
@@ -372,7 +366,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     }
 
     /**
-     * Hack for gtk: print usign the dot command.
+     * Hack for gtk: print using the dot command.
      */
     public void dotPrint() {
         if (log.isDebugEnabled()) log.debug("Printing graph using dot");
