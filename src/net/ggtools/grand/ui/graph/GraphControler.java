@@ -74,6 +74,11 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     private final Dispatcher selectionChangedDispatcher;
 
     private Draw2dGraph figure;
+    
+    /**
+     * If <code>true</code> the filter chain will be cleared when the next graph is loaded.
+     */
+    private boolean clearFiltersOnNextLoad;
 
     public GraphControler(final GraphDisplayer dest) {
         if (log.isDebugEnabled()) log.debug("Creating new controler to " + dest);
@@ -97,6 +102,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
             log.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         }
+        clearFiltersOnNextLoad = true; // Conservative.
     }
 
     /**
@@ -166,12 +172,14 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     public void newGraphLoaded(GraphEvent event) {
         if (log.isDebugEnabled()) log.debug("Received GraphLoaded event");
         dest.worked(1);
+        if (clearFiltersOnNextLoad) filterChain.clearFilters();
         dest.subTask("Filtering graph");
     }
 
     public void openFile(final String fileName) {
         if (log.isInfoEnabled()) log.info("Opening " + fileName);
         dest.beginTask("Opening new graph", 5);
+        clearFiltersOnNextLoad = true;
         model.openFile(fileName);
     }
 
@@ -247,6 +255,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     public void reloadGraph() {
         if (log.isInfoEnabled()) log.info("Reloading current graph");
         dest.beginTask("Reloading graph", 5);
+        clearFiltersOnNextLoad = false;
         model.reload();
     }
 

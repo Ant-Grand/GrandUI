@@ -155,7 +155,6 @@ public class FilterChainModel implements GraphProducer, GraphModelListener {
      * @see net.ggtools.grand.ui.graph.GraphModelListener#newGraphLoaded(net.ggtools.grand.ui.graph.GraphEvent)
      */
     public void newGraphLoaded(GraphEvent event) {
-        filterChain.clearFilters();
         startGraphUpdate();
     }
 

@@ -219,7 +219,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         vertex.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.black);
         vertex.setAttr(DRAW2DLINEWIDTH_ATTR, 1);
 
-        if (graph.getStartNode().equals(node)) {
+        if (node.equals(startNode)) {
             vertex.setAttr(SHAPE_ATTR, "octagon");
             vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.yellow);
             vertex.setAttr(DRAW2DLINEWIDTH_ATTR, 2);
