@@ -29,22 +29,20 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.ggtools.grand.ui;
+package net.ggtools.grand.ui.graph;
 
-import net.ggtools.grand.ui.graph.GraphCreator;
+import org.eclipse.core.runtime.IProgressMonitor;
+
 
 /**
- * Singleton holding the application data.
+ * 
  * 
  * @author Christophe Labouisse
  */
-public class AppData {
-    private static final GraphCreator gCreator = new GraphCreator();
-    
-    private AppData() {
-    }
-
-    public static GraphCreator getGraphCreator() {
-        return gCreator;
-    }
+public interface GraphDisplayer {
+    final static int UNKOWN_WORK = IProgressMonitor.UNKNOWN;
+    void beginUpdate(int totalWork);
+    void worked(int workDone);
+    void finished();
+    void setGraph(Graph graph);
 }

@@ -3,6 +3,7 @@
 	<name>GrandUi</name>
 	<comment></comment>
 	<projects>
+		<project>Grand</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

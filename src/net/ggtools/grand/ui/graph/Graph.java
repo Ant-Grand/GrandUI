@@ -29,22 +29,27 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.ggtools.grand.ui;
+package net.ggtools.grand.ui.graph;
 
-import net.ggtools.grand.ui.graph.GraphCreator;
+import org.eclipse.swt.graphics.Image;
 
 /**
- * Singleton holding the application data.
+ * 
  * 
  * @author Christophe Labouisse
  */
-public class AppData {
-    private static final GraphCreator gCreator = new GraphCreator();
+public class Graph {
+    String fileName;
     
-    private AppData() {
+    /**
+     * @return Returns the fileName.
+     */
+    public String getFileName() {
+        return fileName;
     }
-
-    public static GraphCreator getGraphCreator() {
-        return gCreator;
+    public Graph(String str) {
+        fileName = str;
     }
+    
+    
 }

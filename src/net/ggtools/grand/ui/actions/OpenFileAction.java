@@ -31,29 +31,69 @@
 
 package net.ggtools.grand.ui.actions;
 
+import net.ggtools.grand.ui.AppData;
+import net.ggtools.grand.ui.widgets.GraphWindow;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 
 /**
  * 
  * 
  * @author Christophe Labouisse
+ * @see org.eclipse.jface.action.Action
  */
 public class OpenFileAction extends Action {
-    private Window window;
+
+    private static final Log log = LogFactory.getLog(OpenFileAction.class);
+
+    private static final String[] FILTER_EXTENSIONS = new String[]{"*.xml"};
+    
+    private static final String DEFAULT_ACTION_NAME = "Open";
+
+    private GraphWindow window;
+    private String previousPath;
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IAction#run()
      */
     public void run() {
         final FileDialog dialog = new FileDialog(window.getShell());
-        dialog.open();
+        dialog.setFilterExtensions(FILTER_EXTENSIONS);
+        dialog.setFilterPath(previousPath);
+        String buildFileName = dialog.open();
+        log.debug("Dialog returned " + buildFileName);
+        if (buildFileName != null) {
+            AppData.getGraphCreator().asyncCreateGraph(buildFileName,window);
+            previousPath = dialog.getFilterPath();
+        }
     }
 
-    public OpenFileAction(final String name, final Window parent) {
+    /**
+     * Creates a new OpenFileAction object.
+     * 
+     * @param parent
+     */
+    public OpenFileAction(final GraphWindow parent) {
+        super(DEFAULT_ACTION_NAME);
+        window = parent;
+    }
+
+    /**
+     * Creates a new OpenFileAction object with specific name.
+     * 
+     * @param name
+     * @param parent
+     */
+    public OpenFileAction(final String name, final GraphWindow parent) {
         super(name);
         window = parent;
     }
 
+    public int getAccelerator() {
+        return SWT.CONTROL | 'O';
+    }
 }

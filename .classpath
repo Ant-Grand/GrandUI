@@ -2,11 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.core.runtime_3.0.0/runtime.jar"/>
-	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.platform.source_3.0.0/src/org.eclipse.jface_3.0.0/jfacesrc.zip" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.jface_3.0.0/jface-new.jar"/>
-	<classpathentry sourcepath="ORG_ECLIPSE_PLATFORM_SOURCE_LINUX_GTK_X86_SRC/org.eclipse.swt.gtk_3.0.0/ws/gtk/swtsrc.zip" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.swt.gtk_3.0.0/ws/gtk/swt.jar"/>
-	<classpathentry sourcepath="ORG_ECLIPSE_PLATFORM_SOURCE_LINUX_GTK_X86_SRC/org.eclipse.swt.gtk_3.0.0/ws/gtk/swt-mozillasrc.zip" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.swt.gtk_3.0.0/ws/gtk/swt-mozilla.jar"/>
-	<classpathentry sourcepath="ORG_ECLIPSE_PLATFORM_SOURCE_LINUX_GTK_X86_SRC/org.eclipse.swt.gtk_3.0.0/ws/gtk/swt-pisrc.zip" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.swt.gtk_3.0.0/ws/gtk/swt-pi.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.osgi_3.0.0/osgi.jar"/>
+	<classpathentry kind="src" path="/Grand"/>
+	<classpathentry kind="var" path="COMMONS_LOGGING"/>
+	<classpathentry sourcepath="ANT_SRC" kind="var" path="ANT_LIB"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JFACE"/>
+	<classpathentry kind="var" path="LOG4J_LIB"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -29,22 +29,25 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.ggtools.grand.ui;
+package net.ggtools.grand.ui.menu;
 
-import net.ggtools.grand.ui.graph.GraphCreator;
+import net.ggtools.grand.ui.actions.OpenFileAction;
+import net.ggtools.grand.ui.actions.QuitAction;
+import net.ggtools.grand.ui.widgets.GraphWindow;
+
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 
 /**
- * Singleton holding the application data.
+ * 
  * 
  * @author Christophe Labouisse
  */
-public class AppData {
-    private static final GraphCreator gCreator = new GraphCreator();
-    
-    private AppData() {
-    }
-
-    public static GraphCreator getGraphCreator() {
-        return gCreator;
+public class FileMenuManager extends MenuManager {
+    public FileMenuManager(GraphWindow window) {
+        super("File");
+        add(new OpenFileAction(window));
+        add(new Separator());
+        add(new QuitAction());
     }
 }

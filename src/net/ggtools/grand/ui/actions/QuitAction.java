@@ -29,22 +29,27 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.ggtools.grand.ui;
+package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.graph.GraphCreator;
+import org.eclipse.jface.action.Action;
 
 /**
- * Singleton holding the application data.
+ * 
  * 
  * @author Christophe Labouisse
  */
-public class AppData {
-    private static final GraphCreator gCreator = new GraphCreator();
+public class QuitAction extends Action {
     
-    private AppData() {
-    }
+    private static final String DEFAULT_ACTION_NAME = "Quit";
 
-    public static GraphCreator getGraphCreator() {
-        return gCreator;
+    public QuitAction() {
+        super(DEFAULT_ACTION_NAME);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.IAction#run()
+     */
+    public void run() {
+        System.exit(0);
     }
 }

@@ -31,64 +31,24 @@
 
 package net.ggtools.grand.ui;
 
-import net.ggtools.grand.ui.actions.OpenFileAction;
+import net.ggtools.grand.ui.widgets.*;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.MenuManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.window.ApplicationWindow;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 /**
  * 
  * 
  * @author Christophe Labouisse
  */
-public class Main extends ApplicationWindow {
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
-     */
-    protected Control createContents(Composite parent) {
-        Control contents = super.createContents(parent);
-        //contents.addListener(SWT.S)
-        return contents;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.window.ApplicationWindow#createMenuManager()
-     */
-    protected MenuManager createMenuManager() {
-        System.err.println("Creating menu manager");
-        MenuManager manager = new MenuManager();
-        MenuManager subMenu = new MenuManager("Menu");
-        manager.add(subMenu);
-        manager.add(new OpenFileAction("Ga",this));
-        subMenu.add(new Action("Gruik") {
-            public void run() {
-                System.err.println("Gruik");
-            }
-            
-            public int getAccelerator() {
-                return  SWT.CONTROL | SWT.SHIFT | 'T';
-            }
-        });
-        manager.setVisible(true);
-        return manager;
-    }
-
-    /**
-     */
-    public Main() {
-        super(null);
-        setBlockOnOpen(true);
-        addMenuBar();
-    }
+public class Main {
+    private static final Log log = LogFactory.getLog(Main.class);
 
     public static void main(String[] args) {
+        log.info("Starting application");
         Thread.currentThread().setName("Display thread");
-        Main mainWindow = new Main();
+        ApplicationWindow mainWindow = new GraphWindow();
         mainWindow.open();
     }
 }
