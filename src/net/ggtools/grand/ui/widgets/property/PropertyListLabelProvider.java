@@ -54,4 +54,14 @@ final class PropertyListLabelProvider extends LabelProvider implements ITableLab
         }
         return null;
     }
+
+    public String getText(Object element) {
+        if (element instanceof PropertyPair) {
+            final PropertyPair pair = (PropertyPair) element;
+            return pair.getName();
+        }
+        else {
+            return element.toString();
+        }
+    }
 }

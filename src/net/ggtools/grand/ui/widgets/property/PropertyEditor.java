@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -102,11 +103,11 @@ public class PropertyEditor {
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
             this.tableViewer = (TableViewer) viewer;
-            
+
             if (oldInput != null) {
                 ((PropertyList) oldInput).removePropertyChangedListener(this);
             }
-            
+
             if (newInput != null) {
                 currentPropertyList = ((PropertyList) newInput);
                 currentPropertyList.addPropertyChangedListener(this);
@@ -321,7 +322,7 @@ public class PropertyEditor {
                 }
             }
         });
-        
+
         final Button clear = new Button(parent, SWT.PUSH | SWT.CENTER);
         clear.setText("Clear");
 
@@ -435,8 +436,7 @@ public class PropertyEditor {
             }
         });
         // Set the default sorter for the viewer
-        // tableViewer.setSorter(new
-        // ExampleTaskSorter(ExampleTaskSorter.DESCRIPTION));
+        tableViewer.setSorter(new ViewerSorter());
     }
 
     /**
