@@ -224,6 +224,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.preference.PreferenceStore#load()
      */
     public void load() throws IOException {
@@ -241,10 +242,10 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 InputSource inputSource = new InputSource(is);
                 doc = db.parse(is);
             } catch (ParserConfigurationException e) {
-                log.error("Got exception while parsing preference file",e);
+                log.error("Got exception while parsing preference file", e);
                 throw new Error(e);
             } catch (SAXException e) {
-                log.error("Got exception while parsing preference file",e);
+                log.error("Got exception while parsing preference file", e);
                 throw new Error(e);
             }
 
@@ -253,7 +254,9 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 final String version = rootElement.getAttribute(VERSION_ATTRIBUTE);
                 final String[] versionParts = version.split("\\.", 2);
                 if (PREF_FILE_VERSION_MAJOR != Integer.parseInt(versionParts[0])) {
-                    final String message = "Cannot load preferences file version " + version;
+                    final String message = "Cannot load preferences file version " + version
+                            + " current version is " + PREF_FILE_VERSION_MAJOR + "."
+                            + PREF_FILE_VERSION_MINOR;
                     log.error(message);
                     throw new Error(message);
                 }
@@ -295,7 +298,9 @@ public class ComplexPreferenceStore extends PreferenceStore {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.preference.IPersistentPreferenceStore#save()
      */
     public void save() throws IOException {
@@ -307,8 +312,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
             try {
                 db = dbf.newDocumentBuilder();
             } catch (ParserConfigurationException e) {
-                log.error("Cannot create document builder",e);
-                throw new Error("Cannot create document builder",e);
+                log.error("Cannot create document builder", e);
+                throw new Error("Cannot create document builder", e);
             }
 
             final Document doc = db.newDocument();
@@ -366,7 +371,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 t.setOutputProperty(OutputKeys.METHOD, "xml");
                 t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             } catch (TransformerConfigurationException e) {
-                log.error("Cannot configure Tranformer to save preferences",e);
+                log.error("Cannot configure Tranformer to save preferences", e);
                 throw new RuntimeException("Cannot configure Tranformer to save preferences", e);
             }
             final DOMSource doms = new DOMSource(doc);
@@ -374,7 +379,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
             try {
                 t.transform(doms, sr);
             } catch (TransformerException e) {
-                log.error("Cannot save preferences",e);
+                log.error("Cannot save preferences", e);
                 IOException ioe = new IOException("Cannot save preferences");
                 ioe.initCause(e);
                 throw ioe;
