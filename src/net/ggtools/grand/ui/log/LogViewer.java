@@ -141,9 +141,6 @@ public class LogViewer extends Composite {
     private void createCommands(Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         final GridLayout layout = new GridLayout();
-        // layout.marginHeight = 0;
-        // layout.marginWidth = 0;
-        // layout.verticalSpacing = 0;
         composite.setLayout(layout);
         composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
