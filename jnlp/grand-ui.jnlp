@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+  spec="1.0+"
+  codebase="http://www.ggtools.net/files/grand/jnlp"
+  href="grand-ui.jnlp">
+  <information>
+    <title>Grand UI</title>
+    <vendor>ggTools</vendor>
+    <homepage href="http://www.ggtools.net/grand/"/>
+    <description>GUI for Grand</description>
+    <icon href="grand-icon.gif"/>
+    <icon kind="splash" href="splash.jpg"/>
+    <offline-allowed/>
+  </information>
+  <security>
+      <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.4+"/> 
+		<jar href="grand-ui.jar"/>
+		<jar href="ant.jar"/>
+		<jar href="ant-launcher.jar"/>
+		<jar href="blacksun_util.jar"/>
+		<jar href="commons-logging.jar"/>
+		<jar href="draw2d.jar"/>
+		<jar href="grand.jar"/>
+		<jar href="jface.jar"/>
+		<jar href="jzgraph.jar"/>
+		<jar href="oro.jar"/>
+		<jar href="osgi.jar"/>
+		<jar href="runtime.jar"/>
+  </resources>
+  <resources os="Windows"> 
+    <jar href="win32/swt.jar"/>
+    <nativelib href="win32/swt-lib.jar"/>
+  </resources>
+  <resources os="Linux" arch="i386"> 
+	<jar href="linux-gtk/swt.jar"/>
+	<jar href="linux-gtk/swt-mozilla.jar"/>
+	<jar href="linux-gtk/swt-pi.jar"/>
+    <nativelib href="linux-gtk/swt-lib.jar"/>
+  </resources> 
+  <application-desc main-class="net.ggtools.grand.ui.Application"/>
+</jnlp>
+
