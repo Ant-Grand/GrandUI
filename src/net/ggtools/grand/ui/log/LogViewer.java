@@ -54,41 +54,13 @@ import org.eclipse.swt.widgets.TableColumn;
  */
 public class LogViewer extends Composite {
 
-    private TableViewer viewer;
-
-    private LogEventFilter eventLevelFilter;
-
-    private LogEventRefreshListener refreshListener;
-
-    private int minLogLevel = LogEvent.INFO.value;
-
-    private LogEventBuffer logBuffer;
-
-    private final class LogSaver extends SelectionAdapter {
-        public void widgetSelected(SelectionEvent e) {
-            if (e.widget instanceof Button) {
-                final Button button = (Button) e.widget;
-                final FileDialog dialog = new FileDialog(viewer.getTable().getShell(),SWT.SAVE);
-                dialog.setFilterExtensions(new String [] {"*.glg","*.log","*"});
-                final String logFileName = dialog.open();
-                if (logFileName != null) {
-                    ObjectOutputStream oos = null;
-                    try {
-                        oos = new ObjectOutputStream(new FileOutputStream(logFileName));
-                        oos.writeObject(LogEventBufferImpl.getInstance());
-                    } catch (IOException exception) {
-                        throw new RuntimeException("Cannot save log to "+logFileName,exception);
-                    }
-                    finally {
-                        if (oos != null) try {
-                            oos.close();
-                        } catch (IOException exception) {
-                            throw new RuntimeException("Cannot close "+logFileName,exception);
-                        }
-                    }
-                }
+    private final class LogEventFilter extends ViewerFilter {
+        public boolean select(Viewer v, Object parentElement, Object element) {
+            if (element instanceof LogEvent) {
+                final LogEvent event = (LogEvent) element;
+                if (event.getLevel().value >= minLogLevel) return true;
             }
-
+            return false;
         }
     }
 
@@ -107,15 +79,42 @@ public class LogViewer extends Composite {
         }
     }
 
-    private final class LogEventFilter extends ViewerFilter {
-        public boolean select(Viewer v, Object parentElement, Object element) {
-            if (element instanceof LogEvent) {
-                final LogEvent event = (LogEvent) element;
-                if (event.getLevel().value >= minLogLevel) return true;
+    private final class LogSaver extends SelectionAdapter {
+        public void widgetSelected(SelectionEvent e) {
+            if (e.widget instanceof Button) {
+                final Button button = (Button) e.widget;
+                final FileDialog dialog = new FileDialog(viewer.getTable().getShell(), SWT.SAVE);
+                dialog.setFilterExtensions(new String[]{"*.glg", "*.log", "*"});
+                final String logFileName = dialog.open();
+                if (logFileName != null) {
+                    ObjectOutputStream oos = null;
+                    try {
+                        oos = new ObjectOutputStream(new FileOutputStream(logFileName));
+                        oos.writeObject(LogEventBufferImpl.getInstance());
+                    } catch (IOException exception) {
+                        throw new RuntimeException("Cannot save log to " + logFileName, exception);
+                    } finally {
+                        if (oos != null) try {
+                            oos.close();
+                        } catch (IOException exception) {
+                            throw new RuntimeException("Cannot close " + logFileName, exception);
+                        }
+                    }
+                }
             }
-            return false;
+
         }
     }
+
+    private LogEventFilter eventLevelFilter;
+
+    private LogEventBuffer logBuffer;
+
+    private int minLogLevel = LogEvent.INFO.value;
+
+    private LogEventRefreshListener refreshListener;
+
+    private TableViewer viewer;
 
     /**
      * @param parent
@@ -126,13 +125,25 @@ public class LogViewer extends Composite {
         createContents(this);
     }
 
-    private void createContents(final Composite composite) {
-        final GridLayout layout = new GridLayout();
-        composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-        createCommands(composite);
-        createViewer(composite);
-        refreshListener = new LogEventRefreshListener();
+    /**
+     * @return Returns the logBuffer.
+     */
+    public final LogEventBuffer getLogBuffer() {
+        return logBuffer;
+    }
+
+    /**
+     * @param newLogBuffer
+     *            The logBuffer to set.
+     */
+    public final void setLogBuffer(LogEventBuffer newLogBuffer) {
+        if (logBuffer != null) {
+            logBuffer.removeListener(refreshListener);
+        }
+
+        logBuffer = newLogBuffer;
+        logBuffer.addListener(refreshListener);
+        viewer.setInput(logBuffer.getEventList());
     }
 
     /**
@@ -185,16 +196,13 @@ public class LogViewer extends Composite {
         });
     }
 
-    /**
-     * Add value to the level selection combo.
-     * @param combo
-     */
-    protected void fillUpLevelCombo(Combo combo) {
-        combo.add(LogEvent.INFO.name);
-        combo.add(LogEvent.WARNING.name);
-        combo.add(LogEvent.ERROR.name);
-        combo.add(LogEvent.FATAL.name);
-        combo.select(0);
+    private void createContents(final Composite composite) {
+        final GridLayout layout = new GridLayout();
+        composite.setLayout(layout);
+        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        createCommands(composite);
+        createViewer(composite);
+        refreshListener = new LogEventRefreshListener();
     }
 
     private void createViewer(final Composite parent) {
@@ -220,30 +228,22 @@ public class LogViewer extends Composite {
     }
 
     /**
-     * @return Returns the logBuffer.
-     */
-    public final LogEventBuffer getLogBuffer() {
-        return logBuffer;
-    }
-    
-    /**
-     * @param newLogBuffer The logBuffer to set.
-     */
-    public final void setLogBuffer(LogEventBuffer newLogBuffer) {
-        if (logBuffer != null) {
-            logBuffer.removeListener(refreshListener);
-        }
-        
-        logBuffer = newLogBuffer;
-        logBuffer.addListener(refreshListener);
-        viewer.setInput(logBuffer.getEventList());
-    }
-
-    /**
      * @param comboIndex
      * @return
      */
     protected int comboIndexToLogLevel(int comboIndex) {
         return comboIndex + LogEvent.INFO.value;
+    }
+
+    /**
+     * Add value to the level selection combo.
+     * @param combo
+     */
+    protected void fillUpLevelCombo(Combo combo) {
+        combo.add(LogEvent.INFO.name);
+        combo.add(LogEvent.WARNING.name);
+        combo.add(LogEvent.ERROR.name);
+        combo.add(LogEvent.FATAL.name);
+        combo.select(0);
     }
 }
