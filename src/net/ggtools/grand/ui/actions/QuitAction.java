@@ -32,6 +32,7 @@
 package net.ggtools.grand.ui.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.SWT;
 
 /**
  * 
@@ -51,5 +52,9 @@ public class QuitAction extends Action {
      */
     public void run() {
         System.exit(0);
+    }
+
+    public int getAccelerator() {
+        return SWT.CONTROL | 'Q';
     }
 }

@@ -40,10 +40,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Viewport;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -65,6 +70,48 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
     private FigureCanvas canvas;
 
     private Image image;
+
+    private final static class CanvasScroller extends MouseAdapter implements
+            MouseMoveListener {
+        final private FigureCanvas canvas;
+
+        final Viewport viewport;
+
+        private int startDragX, startDragY;
+
+        public CanvasScroller(FigureCanvas c) {
+            canvas = c;
+            viewport = canvas.getViewport();
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
+         */
+        public void mouseDown(MouseEvent e) {
+            if (e.button == 2) {
+                final Point vpLocation = viewport.getViewLocation();
+                startDragX = vpLocation.x + e.x;
+                startDragY = vpLocation.y + e.y;
+                canvas.addMouseMoveListener(this);
+            }
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
+         */
+        public void mouseUp(MouseEvent e) {
+            if (e.button == 2) {
+                canvas.removeMouseMoveListener(this);
+            }
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
+         */
+        public void mouseMove(MouseEvent e) {
+            canvas.scrollTo(startDragX - e.x, startDragY - e.y);
+        }
+    }
 
     public GraphWindow() {
         this(null);
@@ -88,6 +135,9 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
         canvas.getViewport().setContentsTracksWidth(true);
         canvas.setBackground(ColorConstants.white);
         canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
+        final CanvasScroller synchronizer = new CanvasScroller(canvas);
+        canvas.addMouseListener(synchronizer);
+        //canvas.addMouseMoveListener(synchronizer);
         log.info("Default font: "
                 + parent.getDisplay().getSystemFont().getFontData()[0].toString());
         return canvas;
@@ -153,16 +203,17 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
         getShell().getDisplay().asyncExec(new Runnable() {
 
             public void run() {
+                canvas.scrollTo(0,0);
                 canvas.setContents(figure);
             }
         });
     }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
-    */
-   protected void configureShell(Shell shell) {
-      super.configureShell(shell);
-      shell.setText("Grand");
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+     */
+    protected void configureShell(Shell shell) {
+        super.configureShell(shell);
+        shell.setText("Grand");
+    }
 }

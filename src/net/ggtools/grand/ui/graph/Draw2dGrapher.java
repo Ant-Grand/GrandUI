@@ -175,12 +175,12 @@ public class Draw2dGrapher implements GraphConsumer {
         final IVertex vertex = dotGraph.newVertex(node.getName(), node);
 
         vertex.setAttr("draw2dfgcolor", ColorConstants.black);
-        vertex.setAttr("draw2dlinewidth",1);
+        vertex.setAttr("draw2dlinewidth", 1);
 
         if (isStartNode) {
-            vertex.setAttr("shape", "triangle");
+            vertex.setAttr("shape", "octagon");
             vertex.setAttr("draw2dfillcolor", ColorConstants.yellow);
-            vertex.setAttr("draw2dlinewidth",2);
+            vertex.setAttr("draw2dlinewidth", 2);
         } else if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
             vertex.setAttr("shape", "box");
             vertex.setAttr("draw2dfillcolor", ColorConstants.cyan);
@@ -193,9 +193,9 @@ public class Draw2dGrapher implements GraphConsumer {
             vertex.setAttr("draw2dfgcolor", ColorConstants.gray);
             vertex.setAttr("draw2dfillcolor", ColorConstants.lightGray);
         }
-        
+
         if (node.getDescription() != null) {
-            vertex.setAttr("description",node.getDescription());
+            vertex.setAttr("description", node.getDescription());
         }
 
         Display.getDefault().syncExec(new Runnable() {
@@ -215,6 +215,13 @@ public class Draw2dGrapher implements GraphConsumer {
      * @param edge the edge
      */
     static void buildEdgeFigure(final IFigure contents, final IEdge edge) {
+        log.debug("Adding new edge");
+        for (Iterator iter = edge.attrKeySet().iterator(); iter.hasNext();) {
+            String key = (String) iter.next();
+            log.info("Found key " + key + " -> " + edge.getAttr(key) + "("
+                    + edge.getAttr(key).getClass().getName() + ")");
+        }
+
         final DotRoute route = (DotRoute) edge.getAttr("pos");
         final float[] coords = new float[6];
         final ArrayList bends = new ArrayList();
@@ -253,6 +260,10 @@ public class Draw2dGrapher implements GraphConsumer {
 
         final Point sourcePoint = (Point) bends.remove(0);
         final Point targetPoint = new Point(route.getEndPt().getX(), route.getEndPt().getY());
+        //        log.debug("Before translate "+sourcePoint);
+        //        contents.translateFromParent(sourcePoint);
+        //        log.debug("After translate "+sourcePoint);
+        //        contents.translateToAbsolute(targetPoint);
         conn.setSourceAnchor(new XYAnchor(sourcePoint));
         conn.setTargetAnchor(new XYAnchor(targetPoint));
 
@@ -270,11 +281,14 @@ public class Draw2dGrapher implements GraphConsumer {
             label.setBackgroundColor(ColorConstants.buttonLightest);
             label.setBorder(new LineBorder());
             //final ConnectionLocator locator = new ConnectionLocator(conn, ConnectionLocator.SOURCE);
-            final ConnectionLocator locator = new MidpointLocator(conn, bends.size()/2);
+            final ConnectionLocator locator = new MidpointLocator(conn, bends.size() / 2);
             locator.setRelativePosition(PositionConstants.CENTER);
             conn.add(label, locator);
         }
-        // TODO Tooltip sur les edges ?
+
+        addTooltip(conn, "From: " + edge.getTail().getName() + "\nTo: "
+                + edge.getHead().getName());
+
         contents.add(conn);
     }
 
@@ -329,20 +343,52 @@ public class Draw2dGrapher implements GraphConsumer {
         final Label label;
         label = new Label();
 
-        String text = node.getAttrString("label");
+        final String text = node.getAttrString("label");
         label.setText(text);
         label.setForegroundColor((Color) node.getAttr("draw2dfgcolor"));
         polygon.setLayoutManager(new BorderLayout());
         polygon.add(label, BorderLayout.CENTER);
-        
+
         if (node.hasAttr("description")) {
-            final Label toolTip = new Label(node.getAttrAsString("description"));
-            toolTip.setForegroundColor(ColorConstants.tooltipForeground);
-            toolTip.setBackgroundColor(ColorConstants.tooltipBackground);
-            toolTip.setOpaque(true);
-            polygon.setToolTip(toolTip);
+            addTooltip(polygon, node.getAttrAsString("description"));
         }
 
+        polygon.addMouseListener(new MouseListener.Stub() {
+            /* (non-Javadoc)
+             * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
+             */
+            public void mousePressed(MouseEvent me) {
+                log.trace("Button " + me.button + " pressed");
+            }
+        });
+
+        polygon.addMouseMotionListener(new MouseMotionListener.Stub() {
+            /* (non-Javadoc)
+             * @see org.eclipse.draw2d.MouseMotionListener.Stub#mouseEntered(org.eclipse.draw2d.MouseEvent)
+             */
+            public void mouseEntered(MouseEvent me) {
+                log.trace("Entering " + text);
+            }
+
+            /* (non-Javadoc)
+             * @see org.eclipse.draw2d.MouseMotionListener.Stub#mouseExited(org.eclipse.draw2d.MouseEvent)
+             */
+            public void mouseExited(MouseEvent me) {
+                log.trace("Exiting " + text);
+            }
+        });
         contents.add(polygon, polygon.getBounds());
+    }
+
+    /**
+     * @param figure
+     * @param toolTipContent
+     */
+    private static void addTooltip(final IFigure figure, final String toolTipContent) {
+        final Label toolTip = new Label(toolTipContent);
+        toolTip.setForegroundColor(ColorConstants.tooltipForeground);
+        toolTip.setBackgroundColor(ColorConstants.tooltipBackground);
+        toolTip.setOpaque(true);
+        figure.setToolTip(toolTip);
     }
 }
