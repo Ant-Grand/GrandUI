@@ -1,5 +1,15 @@
 $Id$
 
+Release 0.3 (build number 48):
+
+* Double clicking on a external target now opens this target's build
+  file,
+* Page-Up & Page-Down zoom in & out on the graph,
+* Added a minimal page setup dialog,
+* Upgrade to Eclipse to 3.0 & GEF to 20040619,
+* Code cleanup & better error processing.
+
+
 Release 0.2:
 
 * The UI can now open several graphs in several tabs,
