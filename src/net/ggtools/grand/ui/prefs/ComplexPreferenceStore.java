@@ -28,6 +28,7 @@
 package net.ggtools.grand.ui.prefs;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -61,6 +62,10 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * A {@link org.eclipse.jface.preference.PreferenceStore} featuring higher level
@@ -85,8 +90,13 @@ public class ComplexPreferenceStore extends PreferenceStore {
         boolean needSaving(final String key);
     }
 
+    private static final int COLLECTION_NO_LIMIT = -1;
+
     /**
-     * @param unEscapeString(item)
+     * Escapes the "," character in a script to be able to use the "," as
+     * separator in lists.
+     * 
+     * @param item
      * @return
      */
     private static String escapeString(final String item) {
@@ -105,6 +115,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
     private final FontRegistry fontRegistry = new FontRegistry();
 
+    private File prefFile;
+
     private final Map propertiesTable = new HashMap();
 
     /**
@@ -114,7 +126,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * @return
      */
     public Collection getCollection(final String key) {
-        return getCollection(key, -1);
+        return getCollection(key, COLLECTION_NO_LIMIT);
     }
 
     /**
@@ -131,7 +143,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
     public Collection getCollection(final String key, int limit) {
         LinkedList list = new LinkedList();
         StringTokenizer tokenizer = new StringTokenizer(getString(key), ",");
-        if (limit == -1) limit = tokenizer.countTokens();
+        if (limit == COLLECTION_NO_LIMIT) limit = tokenizer.countTokens();
         for (int i = 0; (i < limit) && tokenizer.hasMoreTokens(); i++) {
             list.addLast(unEscapeString(tokenizer.nextToken()));
         }
@@ -173,16 +185,51 @@ public class ComplexPreferenceStore extends PreferenceStore {
     }
 
     public void load() throws IOException {
-        super.load();
-        // TODO load properties
+        FileInputStream is = null;
+        try {
+            is = new FileInputStream(prefFile);
+            final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setIgnoringElementContentWhitespace(true);
+            dbf.setValidating(false);
+            dbf.setCoalescing(true);
+            dbf.setIgnoringComments(true);
+            Document doc = null;
+            try {
+                DocumentBuilder db = dbf.newDocumentBuilder();
+                InputSource inputSource = new InputSource(is);
+                doc = db.parse(is);
+            } catch (ParserConfigurationException e) {
+                throw new Error(e);
+            } catch (SAXException e) {
+                throw new Error(e);
+            }
+
+            final Element rootElement = doc.getDocumentElement();
+            // TODO check version
+
+            NodeList entries = rootElement.getChildNodes();
+            for (int i = 0; i < entries.getLength(); i++) {
+                final Node item = entries.item(i);
+                if ("entry".equals(item.getNodeName())) {
+                    final Element entryElement = (Element) item;
+                    if (entryElement.hasAttribute("key")) {
+                        final Node n = entryElement.getFirstChild();
+                        final String val = (n == null) ? "" : n.getNodeValue();
+                        putValue(entryElement.getAttribute("key"), val);
+                    }
+                }
+            }
+
+            // TODO load properties
+        } finally {
+            if (is != null) is.close();
+        }
     }
 
     public void save() throws IOException {
         FileOutputStream os = null;
         try {
-            // TODO use the real file.
-            os = new FileOutputStream(
-                    new File(System.getProperty("user.home"), ".grandui/temp.xml"));
+            os = new FileOutputStream(prefFile);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = null;
             try {
@@ -191,10 +238,10 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 assert (false);
             }
 
-            Document doc = db.newDocument();
+            final Document doc = db.newDocument();
             final Element rootElement = (Element) doc.appendChild(doc.createElement("preferences"));
-            rootElement.setAttribute("version","1.0");
-            rootElement.setAttribute("date",new Date().toString());
+            rootElement.setAttribute("version", "1.0");
+            rootElement.setAttribute("date", new Date().toString());
 
             final PropertySaver prefStoreSaver = new PropertySaver() {
 
@@ -245,7 +292,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 t.setOutputProperty(OutputKeys.METHOD, "xml");
                 t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             } catch (TransformerConfigurationException tce) {
-                throw new RuntimeException("Cannot configure Tranformer to save preferences",tce);
+                throw new RuntimeException("Cannot configure Tranformer to save preferences", tce);
             }
             final DOMSource doms = new DOMSource(doc);
             final StreamResult sr = new StreamResult(os);
@@ -259,6 +306,10 @@ public class ComplexPreferenceStore extends PreferenceStore {
         } finally {
             if (os != null) os.close();
         }
+    }
+
+    public final void setPrefFile(File prefFile) {
+        this.prefFile = prefFile;
     }
 
     /**

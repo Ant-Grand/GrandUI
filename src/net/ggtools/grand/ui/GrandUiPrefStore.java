@@ -53,8 +53,6 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
 
     private final File baseDir;
     
-    private final File prefFile;
-
     /**
      * @param unEscapeString(item)
      * @return
@@ -66,10 +64,10 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
     GrandUiPrefStore() throws IOException {
         super();
         baseDir = new File(System.getProperty("user.home"), ".grandui" );
-        prefFile = new File(baseDir, "ui.prefs");
-        setFilename(prefFile.getPath());
+        final File destFile = new File(baseDir, "ui.prefs");
+        setPrefFile(destFile);
         setDefaults();
-        if (prefFile.isFile()) {
+        if (destFile.isFile()) {
             load();
         }
         else {
