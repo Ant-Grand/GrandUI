@@ -59,44 +59,6 @@ import sf.jzgraph.IVertex;
  * @author Christophe Labouisse
  */
 public class Draw2dGraph extends Panel implements SelectionManager {
-    private final class ZoomListener extends KeyListener.Stub {
-        private final float[] ZOOM_STEPS = {0.134217728f, 0.16777216f, 0.2097152f, 0.262144f,
-                0.32768f, 0.4096f, 0.512f, 0.64f, 0.8f, 1.0f, 1.25f, 1.5625f, 1.953125f,
-                2.44140625f};
-
-        private int zoomStep = 9;
-
-        private final Log log;
-
-        private ZoomListener(Log log) {
-            super();
-            this.log = log;
-        }
-
-        {
-            zoom = ZOOM_STEPS[zoomStep];
-        }
-
-        public void keyReleased(KeyEvent ke) {
-            switch (ke.keycode) {
-            case SWT.PAGE_DOWN:
-                if (zoomStep > 0) {
-                    setZoom(ZOOM_STEPS[--zoomStep]);
-                }
-                break;
-
-            case SWT.PAGE_UP:
-                if (zoomStep < ZOOM_STEPS.length - 1) {
-                    setZoom(ZOOM_STEPS[++zoomStep]);
-                }
-                break;
-
-            default:
-                break;
-            }
-            log.trace("Zoom: " + zoom);
-        }
-    }
 
     private final class GraphMouseListener extends MouseListener.Stub {
         /*
@@ -105,10 +67,12 @@ public class Draw2dGraph extends Panel implements SelectionManager {
          * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
          */
         public void mousePressed(MouseEvent me) {
+            if (log.isTraceEnabled()) log.trace("Graph got mousePressed " + me.button);
             switch (me.button) {
             case (1):
                 deselectAllNodes();
                 me.consume();
+            // No break
 
             case (2):
                 if (scroller != null) {
@@ -129,6 +93,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
          * @see org.eclipse.draw2d.MouseListener.Stub#mouseReleased(org.eclipse.draw2d.MouseEvent)
          */
         public void mouseReleased(MouseEvent me) {
+            if (log.isTraceEnabled()) log.trace("Graph got mouseReleased " + me.button);
             switch (me.button) {
             case (1):
             case (2):
@@ -155,7 +120,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
          * @see org.eclipse.draw2d.MouseListener#mouseDoubleClicked(org.eclipse.draw2d.MouseEvent)
          */
         public void mouseDoubleClicked(MouseEvent me) {
-            log.trace("Double click on " + me.button);
+            if (log.isTraceEnabled()) log.trace("Node got mouseDoubleClicked " + me.button);
             switch (me.button) {
             case (1): {
                 final boolean addToSelection;
@@ -178,7 +143,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
          * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
          */
         public void mousePressed(MouseEvent me) {
-            log.trace("Got mouse down");
+            if (log.isTraceEnabled()) log.trace("Node got mousePressed " + me.button);
             switch (me.button) {
             case (1): {
                 final boolean addToSelection;
@@ -205,43 +170,77 @@ public class Draw2dGraph extends Panel implements SelectionManager {
             }
         }
 
+        /*
+         * (non-Javadoc)
+         * @see org.eclipse.draw2d.MouseListener.Stub#mouseReleased(org.eclipse.draw2d.MouseEvent)
+         */
+        public void mouseReleased(MouseEvent me) {
+            if (log.isTraceEnabled()) log.trace("Node got mouseReleased " + me.button);
+
+            // Hack, the graph do not get this event if the mouse button is
+            // released
+            // on a node.
+            switch (me.button) {
+            case (1):
+            case (2):
+                if (scroller != null) {
+                    scroller.leaveDragMode();
+                }
+                break;
+            }
+        }
+
+    }
+
+    private final class ZoomListener extends KeyListener.Stub {
+
+        private final Log log;
+
+        private final float[] ZOOM_STEPS = {0.134217728f, 0.16777216f, 0.2097152f, 0.262144f,
+                0.32768f, 0.4096f, 0.512f, 0.64f, 0.8f, 1.0f, 1.25f, 1.5625f, 1.953125f,
+                2.44140625f};
+
+        private int zoomStep = 9;
+
+        {
+            zoom = ZOOM_STEPS[zoomStep];
+        }
+
+        private ZoomListener(Log log) {
+            super();
+            this.log = log;
+        }
+
+        public void keyReleased(KeyEvent ke) {
+            switch (ke.keycode) {
+            case SWT.PAGE_DOWN:
+                if (zoomStep > 0) {
+                    setZoom(ZOOM_STEPS[--zoomStep]);
+                }
+                break;
+
+            case SWT.PAGE_UP:
+                if (zoomStep < ZOOM_STEPS.length - 1) {
+                    setZoom(ZOOM_STEPS[++zoomStep]);
+                }
+                break;
+
+            default:
+                break;
+            }
+            log.trace("Zoom: " + zoom);
+        }
     }
 
     private static final Log log = LogFactory.getLog(Draw2dGraph.class);
 
     private GraphControler graphControler;
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.draw2d.IFigure#addNotify()
-     */
-    public void addNotify() {
-        if (log.isTraceEnabled()) log.trace("Adding listeners");
-        super.addNotify();
-        graphMouseListener = new GraphMouseListener();
-        addMouseListener(graphMouseListener);
-        zoomListener = new ZoomListener(log);
-        addKeyListener(zoomListener);
-        setFocusTraversable(true);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.draw2d.IFigure#removeNotify()
-     */
-    public void removeNotify() {
-        if (log.isTraceEnabled()) log.trace("Removing listeners");
-        super.removeNotify();
-        if (graphMouseListener != null) removeMouseListener(graphMouseListener);
-        if (zoomListener != null) removeKeyListener(zoomListener);
-        setFocusTraversable(false);
-    }
+    private GraphMouseListener graphMouseListener;
 
     private CanvasScroller scroller;
 
     private float zoom;
-
-    private GraphMouseListener graphMouseListener;
 
     private ZoomListener zoomListener;
 
@@ -256,6 +255,20 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      */
     public void addListener(GraphListener listener) {
         if (graphControler != null) graphControler.addListener(listener);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.draw2d.IFigure#addNotify()
+     */
+    public void addNotify() {
+        if (log.isTraceEnabled()) log.trace("Adding listeners");
+        super.addNotify();
+        graphMouseListener = new GraphMouseListener();
+        addMouseListener(graphMouseListener);
+        zoomListener = new ZoomListener(log);
+        addKeyListener(zoomListener);
+        setFocusTraversable(true);
     }
 
     public Draw2dNode createNode(IVertex vertex) {
@@ -330,6 +343,18 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     public Collection getSelection() {
         if (graphControler != null) return graphControler.getSelection();
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.draw2d.IFigure#removeNotify()
+     */
+    public void removeNotify() {
+        if (log.isTraceEnabled()) log.trace("Removing listeners");
+        super.removeNotify();
+        if (graphMouseListener != null) removeMouseListener(graphMouseListener);
+        if (zoomListener != null) removeKeyListener(zoomListener);
+        setFocusTraversable(false);
     }
 
     /**
