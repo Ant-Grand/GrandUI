@@ -97,6 +97,7 @@
 
 	<patternset id="get-rcp-patterns">
 		<include name="**/runtime.jar" />
+		<include name="**/core.jar" />
 		<include name="**/jface.jar" />
 		<include name="**/osgi.jar" />
 		<include name="**/swt*.jar" />
