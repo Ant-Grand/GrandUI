@@ -234,7 +234,7 @@ public class RecentFilesMenu extends MenuManager implements IPropertyChangeListe
             recentFiles.clear();
             for (int i = 0; (i < maxFiles) && tokenizer.hasMoreTokens(); i++) {
                 final String fileName = tokenizer.nextToken();
-                recentFiles.addFirst(fileName);
+                recentFiles.addLast(fileName);
             }
         }
     }
