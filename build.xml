@@ -172,7 +172,8 @@
 	
 	<target name="incbuildnum">
 		<propertyfile file="etc/buildnum.properties">
-			<entry key="build.date" type="date" value="now" pattern="yyyy-MM-dd HH:mm:ss"/>
+			<entry key="build.date" type="date" value="now" pattern="yyyy-MM-dd"/>
+			<entry key="build.time" type="date" value="now" pattern="HH:mm:ss"/>
 			<entry key="build.number" type="int" operation="+" default="0"/>
 			<entry key="build.version.string" type="string" value="${product.version}"/>
 		</propertyfile>
