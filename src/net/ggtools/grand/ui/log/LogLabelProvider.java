@@ -36,29 +36,62 @@ import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Table label provider for log events.
  * 
  * @author Christophe Labouisse
  */
-public class LogLabelProvider implements ITableLabelProvider,ITableColorProvider {
+public class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
+
+    public static final String[] COLUMN_NAMES = new String[]{"Level", "Date", "Class", "Message"};
+
     /**
      * Logger for this class
      */
     private static final Log log = LogFactory.getLog(LogLabelProvider.class);
 
-    public static final String[] COLUMN_NAMES = new String[]{"Level", "Date", "Class", "Message"};
-    
-    private static Color eventBg = new Color(null,255,255,255);
-    private static Color oddBg = new Color(null,240,240,240);
+    private Image errorImage;
+
+    private Image fatalErrorImage;
+
+    private Image infoImage;
+
+    private Image warningImage;
 
     /**
      * 
      */
     public LogLabelProvider() {
         super();
-        // TODO Auto-generated constructor stub
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
+     */
+    public void addListener(ILabelProviderListener listener) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
+     */
+    public void dispose() {
+        if (infoImage != null) infoImage.dispose();
+        if (warningImage != null) warningImage.dispose();
+        if (errorImage != null) errorImage.dispose();
+        if (fatalErrorImage != null) fatalErrorImage.dispose();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object,
+     *      int)
+     */
+    public Color getBackground(Object element, int columnIndex) {
+        return null;
     }
 
     /*
@@ -67,8 +100,43 @@ public class LogLabelProvider implements ITableLabelProvider,ITableColorProvider
      *      int)
      */
     public Image getColumnImage(Object element, int columnIndex) {
-        // TODO Auto-generated method stub
-        return null;
+        Image rc = null;
+
+        if (element instanceof LogEvent) {
+            final LogEvent event = (LogEvent) element;
+            if (columnIndex == 0) {
+                final int level = event.getLevel().value;
+                if (level == LogEvent.INFO.value) {
+                    if (infoImage == null) {
+                        infoImage = new Image(Display.getCurrent(), this.getClass()
+                                .getResourceAsStream("resource/info_obj.gif"));
+                    }
+                    rc = infoImage;
+                }
+                else if (level == LogEvent.WARNING.value) {
+                    if (warningImage == null) {
+                        warningImage = new Image(Display.getCurrent(), this.getClass()
+                                .getResourceAsStream("resource/warning_obj.gif"));
+                    }
+                    rc = warningImage;
+                }
+                else if (level == LogEvent.ERROR.value) {
+                    if (errorImage == null) {
+                        errorImage = new Image(Display.getCurrent(), this.getClass()
+                                .getResourceAsStream("resource/error_obj.gif"));
+                    }
+                    rc = errorImage;
+                }
+                else if (level == LogEvent.FATAL.value) {
+                    if (fatalErrorImage == null) {
+                        fatalErrorImage = new Image(Display.getCurrent(), this.getClass()
+                                .getResourceAsStream("resource/fatalerror_obj.gif"));
+                    }
+                    rc = fatalErrorImage;
+                }
+            }
+        }
+        return rc;
     }
 
     /*
@@ -82,7 +150,8 @@ public class LogLabelProvider implements ITableLabelProvider,ITableColorProvider
             final LogEvent event = (LogEvent) element;
             switch (columnIndex) {
             case 0:
-                rc = event.getLevel().name;
+                // No label for this one.
+                //rc = event.getLevel().name;
                 break;
 
             case 1:
@@ -91,34 +160,28 @@ public class LogLabelProvider implements ITableLabelProvider,ITableColorProvider
 
             case 2:
                 rc = event.getOriginator();
-                rc = rc.substring(rc.lastIndexOf('.')+1);
+                rc = rc.substring(rc.lastIndexOf('.') + 1);
                 break;
 
             case 3:
                 rc = event.getMessage().toString();
                 break;
-                
+
             default:
 
                 break;
             }
-
         }
         return rc;
     }
 
     /*
      * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
+     * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object,
+     *      int)
      */
-    public void addListener(ILabelProviderListener listener) {
-        if (log.isDebugEnabled()) {
-            log.debug("addListener(ILabelProviderListener listener = " + listener + ") - start");
-        }
-        
-        if (log.isDebugEnabled()) {
-            log.debug("addListener(ILabelProviderListener) - end");
-        }
+    public Color getForeground(Object element, int columnIndex) {
+        return null;
     }
 
     /*
@@ -127,16 +190,6 @@ public class LogLabelProvider implements ITableLabelProvider,ITableColorProvider
      *      java.lang.String)
      */
     public boolean isLabelProperty(Object element, String property) {
-        if (log.isDebugEnabled()) {
-            log.debug("isLabelProperty(Object element = " + element + ", String property = "
-                    + property + ") - start");
-        }
-
-        // TODO Auto-generated method stub
-
-        if (log.isDebugEnabled()) {
-            log.debug("isLabelProperty(Object, String) - end - return value = " + false);
-        }
         return false;
     }
 
@@ -145,31 +198,5 @@ public class LogLabelProvider implements ITableLabelProvider,ITableColorProvider
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     public void removeListener(ILabelProviderListener listener) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-     */
-    public void dispose() {
-        // TODO Auto-generated method stub
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object, int)
-     */
-    public Color getForeground(Object element, int columnIndex) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object, int)
-     */
-    public Color getBackground(Object element, int columnIndex) {
-        return null;
     }
 }
