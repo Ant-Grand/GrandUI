@@ -34,19 +34,16 @@ import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jface.action.Action;
 
 /**
  * An action to filter the isolated nodes.
  * 
  * @author Christophe Labouisse
  */
-public class FilterIsolatedNodesAction extends Action {
+public class FilterIsolatedNodesAction extends GraphControlerAction {
     private static final Log log = LogFactory.getLog(FilterIsolatedNodesAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Filter out isolated nodes";
-
-    private final GraphControlerProvider controlerProvider;
 
     /*
      * (non-Javadoc)
@@ -55,11 +52,10 @@ public class FilterIsolatedNodesAction extends Action {
      */
     public void run() {
         final GraphFilter filter = new IsolatedNodeFilter();
-        controlerProvider.getControler().addFilter(filter);
+        getGraphControler().addFilter(filter);
     }
 
     public FilterIsolatedNodesAction(final GraphControlerProvider parent) {
-        super(DEFAULT_ACTION_NAME);
-        controlerProvider = parent;
+        super(parent,DEFAULT_ACTION_NAME);
     }
 }

@@ -28,6 +28,7 @@
 package net.ggtools.grand.ui.widgets;
 
 import net.ggtools.grand.ui.graph.GraphControler;
+import net.ggtools.grand.ui.graph.GraphControlerListener;
 import net.ggtools.grand.ui.graph.GraphDisplayer;
 import net.ggtools.grand.ui.menu.GraphMenu;
 
@@ -48,7 +49,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 
 /**
- * A CTabItem specialized in displaying graph.
+ * A CTabItem specialized in displaying graph. Although it implements
+ * {@link net.ggtools.grand.ui.graph.GraphControlerProvider} this class
+ * only manage a dummy notification system as there won't be any change
+ * of the controler during the instances lifetime.
  * 
  * @author Christophe Labouisse
  */
@@ -101,14 +105,14 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
     }
 
     private static final Log log = LogFactory.getLog(GraphTabItem.class);
+
+    private FigureCanvas canvas;
+
+    private final Menu contextMenu;
     
     private final MenuManager contextMenuManager;
 
-    private final Menu contextMenu;
-
     private final GraphControler controler;
-
-    private FigureCanvas canvas;
 
     /**
      * @param parent
@@ -129,36 +133,10 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         contextMenu = contextMenuManager.createContextMenu(canvas);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setGraph(net.ggtools.grand.ui.graph.Graph)
-     */
-    public void setGraph(final IFigure figure, final String name) {
-        Display.getDefault().asyncExec(new Runnable() {
-
-            public void run() {
-                canvas.setContents(figure);
-                setText(name);
-                // TODO Display the file name in the tooltip.
-                //setToolTipText(filename);
-            }
-        });
-    }
-
-
     /* (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#getControler()
+     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#addControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
-    public GraphControler getControler() {
-        return controler;
-    }
-
-    /* (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#getContextMenu()
-     */
-    public Menu getContextMenu() {
-        return contextMenu;
+    public void addControlerListener(GraphControlerListener listener) {
     }
 
     /* (non-Javadoc)
@@ -178,6 +156,21 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
     }
 
     /* (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphDisplayer#getContextMenu()
+     */
+    public Menu getContextMenu() {
+        return contextMenu;
+    }
+
+
+    /* (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphDisplayer#getControler()
+     */
+    public GraphControler getControler() {
+        return controler;
+    }
+
+    /* (non-Javadoc)
      * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
      */
     public void internalWorked(double work) {
@@ -194,11 +187,34 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
     }
 
     /* (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
+     */
+    public void removeControlerListener(GraphControlerListener listener) {
+    }
+
+    /* (non-Javadoc)
      * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
      */
     public void setCanceled(boolean value) {
         // TODO Auto-generated method stub
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setGraph(net.ggtools.grand.ui.graph.Graph)
+     */
+    public void setGraph(final IFigure figure, final String name) {
+        Display.getDefault().asyncExec(new Runnable() {
+
+            public void run() {
+                canvas.setContents(figure);
+                setText(name);
+                // TODO Display the file name in the tooltip.
+                //setToolTipText(filename);
+            }
+        });
     }
 
     /* (non-Javadoc)

@@ -34,20 +34,16 @@ import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jface.action.Action;
 
 /**
  * An action to filter the <em>missing</em> nodes.
  * 
  * @author Christophe Labouisse
  */
-public class FilterMissingNodesAction extends Action {
+public class FilterMissingNodesAction extends GraphControlerAction {
     private static final Log log = LogFactory.getLog(FilterMissingNodesAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Filter out missing nodes";
-
-    private final GraphControlerProvider controlerProvider;
-
     /*
      * (non-Javadoc)
      * 
@@ -55,11 +51,10 @@ public class FilterMissingNodesAction extends Action {
      */
     public void run() {
         final GraphFilter filter = new MissingNodeFilter();
-        controlerProvider.getControler().addFilter(filter);
+        getGraphControler().addFilter(filter);
     }
 
     public FilterMissingNodesAction(final GraphControlerProvider parent) {
-        super(DEFAULT_ACTION_NAME);
-        controlerProvider = parent;
+        super(parent,DEFAULT_ACTION_NAME);
     }
 }

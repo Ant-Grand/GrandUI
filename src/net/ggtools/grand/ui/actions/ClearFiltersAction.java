@@ -32,19 +32,16 @@ import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jface.action.Action;
 
 /**
  * An action to remove all filters currently enabled.
  * 
  * @author Christophe Labouisse
  */
-public class ClearFiltersAction extends Action {
+public class ClearFiltersAction extends GraphControlerAction {
     private static final Log log = LogFactory.getLog(ClearFiltersAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Remove filters";
-
-    private final GraphControlerProvider controlerProvider;
 
     /*
      * (non-Javadoc)
@@ -52,12 +49,11 @@ public class ClearFiltersAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     public void run() {
-        controlerProvider.getControler().clearFilters();
+        getGraphControler().clearFilters();
     }
 
     public ClearFiltersAction(final GraphControlerProvider parent) {
-        super(DEFAULT_ACTION_NAME);
-        controlerProvider = parent;
+        super(parent,DEFAULT_ACTION_NAME);
     }
 
 }

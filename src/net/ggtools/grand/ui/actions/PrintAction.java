@@ -32,7 +32,6 @@ import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.printing.PrintDialog;
 import org.eclipse.swt.printing.Printer;
@@ -42,7 +41,7 @@ import org.eclipse.swt.printing.PrinterData;
  * @author Christophe Labouisse
  * @see org.eclipse.jface.action.Action
  */
-public class PrintAction extends Action {
+public class PrintAction extends GraphControlerAction {
 
     private static final Log log = LogFactory.getLog(PrintAction.class);
 
@@ -61,7 +60,7 @@ public class PrintAction extends Action {
         log.debug("Dialog returned " + printerData);
         if (printerData != null) {
             final Printer printer = new Printer(printerData);
-            window.getControler().print(printer);
+            getGraphControler().print(printer);
             printer.dispose();
         }
         /*
@@ -69,7 +68,7 @@ public class PrintAction extends Action {
          * setEnabled(false); }
          */
         if (SWT.getPlatform().equals("gtk")) {
-            window.getControler().dotPrint();
+            getGraphControler().dotPrint();
         }
     }
 
@@ -79,8 +78,7 @@ public class PrintAction extends Action {
      * @param parent
      */
     public PrintAction(final GraphWindow parent) {
-        super(DEFAULT_ACTION_NAME);
-        window = parent;
+        this(parent,DEFAULT_ACTION_NAME);
     }
 
     /**
@@ -89,8 +87,8 @@ public class PrintAction extends Action {
      * @param name
      * @param parent
      */
-    public PrintAction(final String name, final GraphWindow parent) {
-        super(name);
+    public PrintAction(final GraphWindow parent,final String name) {
+        super(parent,name);
         window = parent;
     }
 

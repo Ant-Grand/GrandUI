@@ -28,37 +28,28 @@
 
 package net.ggtools.grand.ui.actions;
 
-import java.util.Collection;
-
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.filters.ToNodeFilter;
-import net.ggtools.grand.ui.graph.Draw2dNode;
+import net.ggtools.grand.ui.graph.GraphControlerListener;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
 import net.ggtools.grand.ui.graph.GraphSelectionListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jface.action.Action;
 
 /**
  * Action to select only node depending on the selecte node.
  * 
  * @author Christophe Labouisse
  */
-public class FilterToNodeAction extends Action implements GraphSelectionListener {
+public class FilterToNodeAction extends GraphSelectionAction implements GraphControlerListener,
+        GraphSelectionListener {
     private static final Log log = LogFactory.getLog(FilterToNodeAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Filter to selected node";
 
-    private final GraphControlerProvider controlerProvider;
-
-    private String currentNode;
-
     public FilterToNodeAction(final GraphControlerProvider parent) {
-        super(DEFAULT_ACTION_NAME);
-        controlerProvider = parent;
-        parent.getControler().addSelectionListener(this);
-        setEnabled(false);
+        super(parent,DEFAULT_ACTION_NAME);
     }
 
     /*
@@ -67,20 +58,7 @@ public class FilterToNodeAction extends Action implements GraphSelectionListener
      * @see org.eclipse.jface.action.IAction#run()
      */
     public void run() {
-        final GraphFilter filter = new ToNodeFilter(currentNode);
-        controlerProvider.getControler().addFilter(filter);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.GraphSelectionListener#selectionChanged(java.util.Iterator)
-     */
-    public void selectionChanged(Collection selectedNodes) {
-        final boolean isEnabled = selectedNodes.size() == 1;
-        if (isEnabled) {
-            currentNode = ((Draw2dNode) selectedNodes.iterator().next()).getName();
-        }
-        setEnabled(isEnabled);
+        final GraphFilter filter = new ToNodeFilter(getCurrentNode());
+        getGraphControler().addFilter(filter);
     }
 }

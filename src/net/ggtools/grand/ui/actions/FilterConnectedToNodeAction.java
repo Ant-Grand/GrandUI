@@ -28,31 +28,23 @@
 
 package net.ggtools.grand.ui.actions;
 
-import java.util.Collection;
-
 import net.ggtools.grand.filters.ConnectedToNodeFilter;
 import net.ggtools.grand.filters.GraphFilter;
-import net.ggtools.grand.ui.graph.Draw2dNode;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
 import net.ggtools.grand.ui.graph.GraphSelectionListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jface.action.Action;
 
 /**
  * An action to add a filter to the currently selected node.
  * 
  * @author Christophe Labouisse
  */
-public class FilterConnectedToNodeAction extends Action implements GraphSelectionListener {
+public class FilterConnectedToNodeAction extends GraphSelectionAction implements GraphSelectionListener {
     private static final Log log = LogFactory.getLog(FilterConnectedToNodeAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Filter connected to selected node";
-
-    private final GraphControlerProvider controlerProvider;
-
-    private String currentNode;
 
     /*
      * (non-Javadoc)
@@ -60,28 +52,11 @@ public class FilterConnectedToNodeAction extends Action implements GraphSelectio
      * @see org.eclipse.jface.action.IAction#run()
      */
     public void run() {
-        final GraphFilter filter = new ConnectedToNodeFilter(currentNode);
-        controlerProvider.getControler().addFilter(filter);
+        final GraphFilter filter = new ConnectedToNodeFilter(getCurrentNode());
+        getGraphControler().addFilter(filter);
     }
 
     public FilterConnectedToNodeAction(final GraphControlerProvider parent) {
-        super(DEFAULT_ACTION_NAME);
-        controlerProvider = parent;
-        setEnabled(false);
-        controlerProvider.getControler().addSelectionListener(this);
+        super(parent,DEFAULT_ACTION_NAME);
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.GraphSelectionListener#selectionChanged(java.util.Iterator)
-     */
-    public void selectionChanged(Collection selectedNodes) {
-        final boolean isEnabled = selectedNodes.size() == 1;
-        if (isEnabled) {
-            currentNode = ((Draw2dNode)selectedNodes.iterator().next()).getName();
-        }
-        setEnabled(isEnabled);
-    }
-
 }

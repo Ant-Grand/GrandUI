@@ -32,20 +32,17 @@ import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
 
 /**
  * @author Christophe Labouisse
  * @see org.eclipse.jface.action.Action
  */
-public class ReloadGraphAction extends Action {
+public class ReloadGraphAction extends GraphControlerAction {
 
     private static final Log log = LogFactory.getLog(ReloadGraphAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Reload Graph";
-
-    private final GraphWindow window;
 
     /*
      * (non-Javadoc)
@@ -53,7 +50,7 @@ public class ReloadGraphAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     public void run() {
-        window.getControler().reloadGraph();
+        getGraphControler().reloadGraph();
     }
 
     /**
@@ -62,8 +59,7 @@ public class ReloadGraphAction extends Action {
      * @param parent
      */
     public ReloadGraphAction(final GraphWindow parent) {
-        super(DEFAULT_ACTION_NAME);
-        window = parent;
+        this(parent, DEFAULT_ACTION_NAME);
     }
 
     /**
@@ -72,9 +68,8 @@ public class ReloadGraphAction extends Action {
      * @param name
      * @param parent
      */
-    public ReloadGraphAction(final String name, final GraphWindow parent) {
-        super(name);
-        window = parent;
+    public ReloadGraphAction(final GraphWindow parent, final String name) {
+        super(parent, name);
     }
 
     public int getAccelerator() {

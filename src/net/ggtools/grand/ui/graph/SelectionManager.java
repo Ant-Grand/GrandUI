@@ -31,6 +31,8 @@
 
 package net.ggtools.grand.ui.graph;
 
+import java.util.Collection;
+
 /**
  * 
  * 
@@ -40,6 +42,13 @@ public interface SelectionManager {
     void addSelectionListener(GraphSelectionListener listener);
     
     void removeSelectionListener(GraphSelectionListener listener);
+    
+    /**
+     * Returns a collection of the current selection.
+     * 
+     * @return a read-only collection of the selected nodes.
+     */
+    Collection getSelection();
     
     /**
      * Deselect a node.

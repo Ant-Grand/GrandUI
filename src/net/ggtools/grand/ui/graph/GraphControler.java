@@ -291,4 +291,11 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         }
     }
 
+    /* (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
+     */
+    public Collection getSelection() {
+        return selectedNodes;
+    }
+
 }

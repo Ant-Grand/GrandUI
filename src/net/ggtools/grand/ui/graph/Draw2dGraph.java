@@ -28,6 +28,8 @@
 
 package net.ggtools.grand.ui.graph;
 
+import java.util.Collection;
+
 import net.ggtools.grand.ui.AppData;
 
 import org.apache.commons.logging.Log;
@@ -194,5 +196,13 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         } else {
             selectNode(node, addToSelection);
         }
+    }
+
+    /* (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
+     */
+    public Collection getSelection() {
+        if (selectionManager != null) return selectionManager.getSelection();
+        return null;
     }
 }

@@ -1,7 +1,7 @@
-// $Id$
+//$Id$
 /*
  * ====================================================================
- * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
+ * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -25,39 +25,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-package net.ggtools.grand.ui.actions;
-
-import net.ggtools.grand.filters.FromNodeFilter;
-import net.ggtools.grand.filters.GraphFilter;
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
-import net.ggtools.grand.ui.graph.GraphSelectionListener;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+package net.ggtools.grand.ui.graph;
 
 /**
- * Action to select only node on which the current node depend.
+ * Interface to be implemented by classes listener to GraphControler availablility events.
  * 
  * @author Christophe Labouisse
  */
-public class FilterFromNodeAction extends GraphSelectionAction implements GraphSelectionListener {
-    private static final Log log = LogFactory.getLog(FilterFromNodeAction.class);
-
-    private static final String DEFAULT_ACTION_NAME = "Filter from selected node";
-
-    public FilterFromNodeAction(final GraphControlerProvider parent) {
-        super(parent,DEFAULT_ACTION_NAME);
-    }
-
-
-    /*
-     * (non-Javadoc)
+public interface GraphControlerListener {
+    /**
+     * Notify the listener that the controler has been removed and should
+     * no longer be used.
      * 
-     * @see org.eclipse.jface.action.IAction#run()
+     * @param controler
      */
-    public void run() {
-        final GraphFilter filter = new FromNodeFilter(getCurrentNode());
-        getGraphControler().addFilter(filter);
-    }
+    void controlerRemoved(GraphControler controler);
+    
+    /**
+     * Notify the listener of the new available controler.
+     * 
+     * @param controler
+     */
+    void controlerAvailable(GraphControler controler);
 }

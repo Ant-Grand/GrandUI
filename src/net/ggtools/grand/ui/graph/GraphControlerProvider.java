@@ -28,13 +28,32 @@
 package net.ggtools.grand.ui.graph;
 
 /**
+ * Interface to be implemented by classes providing GraphControler instances. A
+ * provider's goal is to inform the GraphControler user wether or not a controler
+ * is currently available. This can happend either through a simple getGraphControler
+ * method of through a listener mecanism.
+ *  
  * @author Christophe Labouisse
  */
 public interface GraphControlerProvider {
+    
     /**
-     * Get the widget controler.
-     * @return
+     * Get the current controler.
+     * 
+     * @return the current controler or <code>null</code> if none is available.
      */
     GraphControler getControler();
 
+    /**
+     * Add a new listener to the provider.
+     * @param listener
+     * @see GraphControlerListener
+     */
+    void addControlerListener(GraphControlerListener listener);
+    
+    /**
+     * Remove a listener.
+     * @param listener
+     */
+    void removeControlerListener(GraphControlerListener listener);
 }
