@@ -87,6 +87,7 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
         canvas.getViewport().setContentsTracksHeight(true);
         canvas.getViewport().setContentsTracksWidth(true);
         canvas.setBackground(ColorConstants.white);
+        canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
         log.info("Default font: "
                 + parent.getDisplay().getSystemFont().getFontData()[0].toString());
         return canvas;

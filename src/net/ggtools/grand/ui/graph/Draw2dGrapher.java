@@ -54,6 +54,7 @@ import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.BorderLayout;
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.ConnectionLocator;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -61,11 +62,11 @@ import org.eclipse.draw2d.Panel;
 import org.eclipse.draw2d.Polygon;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.XYAnchor;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -85,6 +86,7 @@ import sf.jzgraph.impl.GraphShape;
  */
 public class Draw2dGrapher implements GraphConsumer {
     private static final double PATH_ITERATOR_FLATNESS = 1.0;
+
     private static Log log = LogFactory.getLog(Draw2dGrapher.class);
 
     private GraphProducer graphProducer;
@@ -103,9 +105,8 @@ public class Draw2dGrapher implements GraphConsumer {
 
         final Map vertexLUT = new HashMap();
         final Node startNode = graph.getStartNode();
-        
+
         if (startNode != null) {
-            //output.println(getNodeAsDot(startNode, startNodeAttributes));
             addNode(dotGraph, vertexLUT, startNode, true);
         }
 
@@ -125,60 +126,28 @@ public class Draw2dGrapher implements GraphConsumer {
             int index = 1;
             final int numDeps = deps.size();
             for (Iterator iterator = deps.iterator(); iterator.hasNext();) {
-                Link link = (Link) iterator.next();
-                dotGraph.newEdge((IVertex) vertexLUT.get(link.getStartNode().getName()),
-                        (IVertex) vertexLUT.get(link.getEndNode().getName()), link.getName(),
-                        link);
+                final Link link = (Link) iterator.next();
+                String name = "";
+                if (numDeps > 1) {
+                    name += index++;
+                }
+                final IEdge edge = dotGraph.newEdge((IVertex) vertexLUT.get(link.getStartNode()
+                        .getName()), (IVertex) vertexLUT.get(link.getEndNode().getName()),
+                        name, link);
             }
         }
 
         final Dot app = new Dot();
         app.layout(dotGraph, 0, 7);
-        dotGraph.saveImage("/tmp/graph.png", 1);
 
-        IVertex v = (IVertex) dotGraph.getVertexSet().toArray()[0];
+        final IVertex v = (IVertex) dotGraph.getVertexSet().toArray()[0];
         for (Iterator iter = v.attrKeySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             log.info("Found key " + key + " -> " + v.getAttr(key) + "("
                     + v.getAttr(key).getClass().getName() + ")");
         }
 
-        GraphShape shape = (GraphShape) v.getAttr("-shape");
-        final float[] coords = new float[6];
-        for (final PathIterator ite = /*new FlatteningPathIterator(*/shape
-                .getPathIterator(new AffineTransform())/*, 1.5)*/; !ite.isDone(); ite.next()) {
-            final int segType = ite.currentSegment(coords);
-
-            switch (segType) {
-            case PathIterator.SEG_MOVETO:
-                log.debug("Got SEG_MOVETO: " + coords[0] + "," + coords[1]);
-                break;
-
-            case PathIterator.SEG_LINETO:
-                log.debug("Got SEG_LINETO: " + coords[0] + "," + coords[1]);
-                break;
-
-            case PathIterator.SEG_CUBICTO:
-                log.debug("Got SEG_CUBICTO: " + coords[0] + "," + coords[1] + "," + coords[2]
-                        + "," + coords[3]);
-                break;
-
-            case PathIterator.SEG_QUADTO:
-                log.debug("Got SEG_QUADTO: " + coords[0] + "," + coords[1] + "," + coords[2]
-                        + "," + coords[3] + "," + coords[4] + "," + coords[5]);
-                break;
-
-            case PathIterator.SEG_CLOSE:
-                log.debug("Got SEG_CLOSE");
-                break;
-
-            default:
-                log.error("Unexpected segment type " + segType);
-                break;
-            }
-        }
-
-        IFigure contents = new Panel();
+        final IFigure contents = new Panel();
         contents.setLayoutManager(new XYLayout());
 
         for (Iterator iter = dotGraph.vertexIterator(); iter.hasNext();) {
@@ -198,36 +167,42 @@ public class Draw2dGrapher implements GraphConsumer {
      * @param dotGraph
      * @param vertexLUT
      * @param node
-     * @param isStartNode TODO
+     * @param isStartNode
      */
-    private void addNode(final IDotGraph dotGraph, final Map vertexLUT, final Node node, boolean isStartNode) {
+    private void addNode(final IDotGraph dotGraph, final Map vertexLUT, final Node node,
+            boolean isStartNode) {
         final IVertex vertex = dotGraph.newVertex(node.getName(), node);
-        
-        vertex.setAttr("draw2dcolor",ColorConstants.black);
+
+        vertex.setAttr("draw2dfgcolor", ColorConstants.black);
+        vertex.setAttr("draw2dlinewidth",1);
 
         if (isStartNode) {
             vertex.setAttr("shape", "triangle");
-            vertex.setAttr("draw2dfillcolor",ColorConstants.yellow);
-        }
-        else if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
+            vertex.setAttr("draw2dfillcolor", ColorConstants.yellow);
+            vertex.setAttr("draw2dlinewidth",2);
+        } else if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
             vertex.setAttr("shape", "box");
-            vertex.setAttr("draw2dfillcolor",ColorConstants.cyan);
+            vertex.setAttr("draw2dfillcolor", ColorConstants.cyan);
         } else {
             vertex.setAttr("shape", "oval");
-            vertex.setAttr("draw2dfillcolor",ColorConstants.white);
+            vertex.setAttr("draw2dfillcolor", ColorConstants.white);
         }
-        
+
         if (node.hasAttributes(Node.ATTR_MISSING_NODE)) {
-            vertex.setAttr("draw2dcolor",ColorConstants.lightGray);
-            vertex.setAttr("draw2dfillcolor",ColorConstants.lightGray);
+            vertex.setAttr("draw2dfgcolor", ColorConstants.gray);
+            vertex.setAttr("draw2dfillcolor", ColorConstants.lightGray);
         }
         
+        if (node.getDescription() != null) {
+            vertex.setAttr("description",node.getDescription());
+        }
+
         Display.getDefault().syncExec(new Runnable() {
             public void run() {
-                final Dimension dim = FigureUtilities.getTextExtents(node.getName(),
-                        Display.getDefault().getSystemFont());
-                vertex.setAttr("minwidth", Math.max(dim.width,50));
-                vertex.setAttr("minheight", Math.max(dim.height,25));
+                final Dimension dim = FigureUtilities.getTextExtents(node.getName(), Display
+                        .getDefault().getSystemFont());
+                vertex.setAttr("minwidth", Math.max(dim.width, 50));
+                vertex.setAttr("minheight", Math.max(dim.height, 25));
             }
         });
         vertexLUT.put(node.getName(), vertex);
@@ -244,7 +219,8 @@ public class Draw2dGrapher implements GraphConsumer {
         final ArrayList bends = new ArrayList();
         boolean isFirstPoint = true;
         for (final PathIterator ite = new FlatteningPathIterator(route.getPath()
-                .getPathIterator(new AffineTransform()), PATH_ITERATOR_FLATNESS); !ite.isDone(); ite.next()) {
+                .getPathIterator(new AffineTransform()), PATH_ITERATOR_FLATNESS); !ite.isDone(); ite
+                .next()) {
             final int segType = ite.currentSegment(coords);
 
             switch (segType) {
@@ -271,12 +247,13 @@ public class Draw2dGrapher implements GraphConsumer {
         }
 
         final PolylineConnection conn = new PolylineConnection();
-        conn.setForegroundColor(ColorConstants.gray);
         final PolygonDecoration dec = new PolygonDecoration();
         conn.setTargetDecoration(dec);
-        conn.setSourceAnchor(new XYAnchor((Point) bends.remove(0)));
-        conn.setTargetAnchor(new XYAnchor(new Point(route.getEndPt().getX(), route.getEndPt()
-                .getY())));
+
+        final Point sourcePoint = (Point) bends.remove(0);
+        final Point targetPoint = new Point(route.getEndPt().getX(), route.getEndPt().getY());
+        conn.setSourceAnchor(new XYAnchor(sourcePoint));
+        conn.setTargetAnchor(new XYAnchor(targetPoint));
 
         if (bends.isEmpty()) {
             conn.setConnectionRouter(null);
@@ -285,6 +262,16 @@ public class Draw2dGrapher implements GraphConsumer {
             conn.setRoutingConstraint(bends);
         }
 
+        final String name = edge.getName();
+        if (!"".equals(name)) {
+            Label label = new Label(name);
+            //label.setOpaque(true);
+            //label.setBackgroundColor(ColorConstants.buttonLightest);
+            //label.setBorder(new LineBorder());
+            final ConnectionLocator locator = new ConnectionLocator(conn, ConnectionLocator.SOURCE);
+            locator.setRelativePosition(PositionConstants.SOUTH_WEST);
+            conn.add(label, locator);
+        }
         contents.add(conn);
     }
 
@@ -302,14 +289,16 @@ public class Draw2dGrapher implements GraphConsumer {
         height = (int) rect.getHeight();
 
         final Polygon polygon = new Polygon();
-        polygon.setBackgroundColor((Color) node.getAttr("draw2dfillcolor"));
         polygon.setForegroundColor((Color) node.getAttr("draw2dfgcolor"));
+        polygon.setBackgroundColor((Color) node.getAttr("draw2dfillcolor"));
+        polygon.setLineWidth(node.getAttrInt("draw2dlinewidth"));
         polygon.setOpaque(true);
 
         final GraphShape shape = (GraphShape) node.getAttr("-shape");
         final float[] coords = new float[6];
         for (final PathIterator ite = new FlatteningPathIterator(shape
-                .getPathIterator(new AffineTransform()), PATH_ITERATOR_FLATNESS); !ite.isDone(); ite.next()) {
+                .getPathIterator(new AffineTransform()), PATH_ITERATOR_FLATNESS); !ite.isDone(); ite
+                .next()) {
             final int segType = ite.currentSegment(coords);
 
             switch (segType) {
@@ -342,6 +331,14 @@ public class Draw2dGrapher implements GraphConsumer {
         label.setForegroundColor((Color) node.getAttr("draw2dfgcolor"));
         polygon.setLayoutManager(new BorderLayout());
         polygon.add(label, BorderLayout.CENTER);
+        
+        if (node.hasAttr("description")) {
+            final Label toolTip = new Label(node.getAttrAsString("description"));
+            toolTip.setForegroundColor(ColorConstants.tooltipForeground);
+            toolTip.setBackgroundColor(ColorConstants.tooltipBackground);
+            toolTip.setOpaque(true);
+            polygon.setToolTip(toolTip);
+        }
 
         contents.add(polygon, polygon.getBounds());
     }

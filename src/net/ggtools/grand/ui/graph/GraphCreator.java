@@ -88,25 +88,6 @@ public class GraphCreator {
                 log.debug("Creating graph");
                 Draw2dGrapher grapher = new Draw2dGrapher();
                 grapher.setProducer(project);
-                /*DirectedGraph dGraph = grapher.drawGraph();
-                dest.worked(1);
-                log.debug("Layouting graph");
-                new DirectedGraphLayout().visit(dGraph);
-                dest.worked(1);
-                log.debug("Creating display nodes");
-                Figure contents = new Panel();
-                contents.setLayoutManager(new XYLayout());
-                for (int i = 0; i < dGraph.nodes.size(); i++) {
-                    Node node = dGraph.nodes.getNode(i);
-                    buildNodeFigure(contents, node);
-                }
-                dest.worked(1);
-                
-                log.debug("Creating display edge");
-                for (int i = 0; i < dGraph.edges.size(); i++) {
-                    Edge edge = dGraph.edges.getEdge(i);
-                    buildEdgeFigure(contents, edge);
-                }*/
                 IFigure contents = grapher.drawGraph();
                 dest.worked(1);
                 dest.setGraph(contents);
