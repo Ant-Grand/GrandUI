@@ -36,6 +36,19 @@ import org.eclipse.jface.wizard.Wizard;
  */
 public class OpenFileWizard extends Wizard {
 
+    /**
+     * @author Christophe Labouisse
+     */
+    interface SelectedFileProvider {
+        void addListener(SelectedFileListener listener);
+        
+        void removeListener(SelectedFileListener listener);
+    }
+    
+    interface SelectedFileListener {
+        void fileSelected(File selectedFile);
+    }
+
     private final GraphWindow window;
 
     private PropertySettingPage propertySettingPage;
@@ -58,7 +71,7 @@ public class OpenFileWizard extends Wizard {
     public void addPages() {
         fileSelectionPage = new FileSelectionPage();
         addPage(fileSelectionPage);
-        propertySettingPage = new PropertySettingPage();
+        propertySettingPage = new PropertySettingPage(fileSelectionPage);
         addPage(propertySettingPage);
     }
 
@@ -77,4 +90,7 @@ public class OpenFileWizard extends Wizard {
         return rc;
     }
 
+    public boolean canFinish() {
+        return fileSelectionPage.getSelectedFile() != null;
+    }
 }

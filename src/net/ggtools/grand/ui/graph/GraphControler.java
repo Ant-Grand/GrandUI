@@ -43,12 +43,12 @@ import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.output.DotWriter;
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.GrandUiPrefStore;
+import net.ggtools.grand.ui.RecentFilesManager;
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraph;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraphRenderer;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
-import net.ggtools.grand.ui.menu.RecentFilesMenu;
 import net.ggtools.grand.ui.prefs.PreferenceKeys;
 import net.ggtools.grand.ui.widgets.ExceptionDialog;
 import net.ggtools.grand.ui.widgets.GraphWindow;
@@ -381,7 +381,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
             filterAndRenderGraph(progressMonitor);
             if (log.isInfoEnabled()) log.info("Graph loaded & rendered");
-            RecentFilesMenu.addNewFile(file);
+            RecentFilesManager.getInstance().addNewFile(file,properties);
         } catch (final GrandException e) {
             reportError("Cannot open graph", e);
             stopControler();

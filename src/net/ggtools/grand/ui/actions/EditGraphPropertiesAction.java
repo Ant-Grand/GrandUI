@@ -1,7 +1,7 @@
-//$Id$
+// $Id$
 /*
  * ====================================================================
- * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
+ * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -25,29 +25,37 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.RecentFilesManager;
-import net.ggtools.grand.ui.menu.RecentFilesMenu;
+import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
-import org.eclipse.jface.action.Action;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
+ * An action to remove all filters currently enabled.
+ * 
  * @author Christophe Labouisse
  */
-public class ClearRecentFilesAction extends Action {
-    private RecentFilesMenu menu;
+public class EditGraphPropertiesAction extends GraphControlerAction {
+    private static final Log log = LogFactory.getLog(EditGraphPropertiesAction.class);
 
-    public ClearRecentFilesAction() {
-        super("Remove recent files");
-    }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.Action#run()
+    private static final String DEFAULT_ACTION_NAME = "Edit Properties";
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.IAction#run()
      */
     public void run() {
-        RecentFilesManager.getInstance().clear();
+        // TODO
+        //getGraphControler().clearFilters();
+        getGraphControler().reloadGraph();
     }
-    
-    
+
+    public EditGraphPropertiesAction(final GraphControlerProvider parent) {
+        super(parent,DEFAULT_ACTION_NAME);
+    }
+
 }

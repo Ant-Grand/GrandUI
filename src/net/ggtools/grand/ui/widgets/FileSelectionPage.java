@@ -28,15 +28,15 @@
 package net.ggtools.grand.ui.widgets;
 
 import java.io.File;
-import java.util.StringTokenizer;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 
-import net.ggtools.grand.ui.Application;
-import net.ggtools.grand.ui.GrandUiPrefStore;
-import net.ggtools.grand.ui.prefs.PreferenceKeys;
+import net.ggtools.grand.ui.RecentFilesManager;
+import net.ggtools.grand.ui.widgets.OpenFileWizard.SelectedFileProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.FileDialog;
 /**
  * @author Christophe Labouisse
  */
-public class FileSelectionPage extends WizardPage {
+public class FileSelectionPage extends WizardPage implements SelectedFileProvider {
     /**
      * Logger for this class
      */
@@ -64,21 +64,15 @@ public class FileSelectionPage extends WizardPage {
 
     private File selectedFile;
 
+    private final Collection subscribers;
+
     /**
      * @param pageName
      */
     public FileSelectionPage() {
-        super("fileselect","Build file selection",null);
+        super("fileselect", "Build file selection", null);
         setDescription("Select the build file to be opened");
-    }
-
-    /**
-     * @param pageName
-     * @param title
-     * @param titleImage
-     */
-    public FileSelectionPage(String pageName, String title, ImageDescriptor titleImage) {
-        super(pageName, title, titleImage);
+        subscribers = new HashSet();
     }
 
     /*
@@ -97,20 +91,19 @@ public class FileSelectionPage extends WizardPage {
 
         combo.add(""); // Default: no file.
         // Fill up the combo with the recent files
-        final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
-        int maxFiles = preferenceStore.getInt(PreferenceKeys.MAX_RECENT_FILES_PREFS_KEY);
-        StringTokenizer tokenizer = new StringTokenizer(preferenceStore
-                .getString(PreferenceKeys.RECENT_FILES_PREFS_KEY), ",");
-        for (int i = 0; (i < maxFiles) && tokenizer.hasMoreTokens(); i++) {
-            final String fileName = tokenizer.nextToken();
+        for (Iterator iter = RecentFilesManager.getInstance().getRecentFiles().iterator(); iter
+                .hasNext();) {
+            String fileName = (String) iter.next();
             combo.add(fileName);
         }
+
         combo.addSelectionListener(new SelectionListener() {
             public void widgetSelected(SelectionEvent e) {
                 updateSelectedFile(combo.getText());
 
                 if (log.isDebugEnabled()) {
-                    log.debug("widgetSelected() - Changing file : selectionFile = " + selectedFileName);
+                    log.debug("widgetSelected() - Changing file : selectionFile = "
+                            + selectedFileName);
                 }
             }
 
@@ -120,7 +113,7 @@ public class FileSelectionPage extends WizardPage {
             }
 
         });
-        
+
         updateSelectedFile(combo.getItem(0));
         setPageComplete(false);
 
@@ -151,7 +144,10 @@ public class FileSelectionPage extends WizardPage {
      */
     private void updateSelectedFile(final String text) {
         selectedFileName = text;
-        if (!"".equals(selectedFileName)) {
+        if ("".equals(selectedFileName)) {
+            selectedFile = null;
+        }
+        else {
             selectedFile = new File(selectedFileName);
             final boolean isSelectedFileValid = selectedFile.isFile();
             setPageComplete(isSelectedFileValid);
@@ -159,13 +155,32 @@ public class FileSelectionPage extends WizardPage {
                 setErrorMessage(null);
             else {
                 selectedFile = null;
-                setErrorMessage(selectedFileName+" is not a valid build file");
+                setErrorMessage(selectedFileName + " is not a valid build file");
             }
         }
+        notifyListeners();
     }
 
     public final File getSelectedFile() {
         return selectedFile;
     }
-    
+
+    public void addListener(OpenFileWizard.SelectedFileListener listener) {
+        if (!subscribers.contains(listener)) {
+            subscribers.add(listener);
+            listener.fileSelected(selectedFile);
+        }
+    }
+
+    public void removeListener(OpenFileWizard.SelectedFileListener listener) {
+        subscribers.remove(listener);
+    }
+
+    private void notifyListeners() {
+        for (Iterator iter = subscribers.iterator(); iter.hasNext();) {
+            final OpenFileWizard.SelectedFileListener listener = (OpenFileWizard.SelectedFileListener) iter.next();
+            listener.fileSelected(selectedFile);
+        }
+    }
+
 }

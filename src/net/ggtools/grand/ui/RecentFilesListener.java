@@ -25,29 +25,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package net.ggtools.grand.ui.actions;
+package net.ggtools.grand.ui;
 
-import net.ggtools.grand.ui.RecentFilesManager;
-import net.ggtools.grand.ui.menu.RecentFilesMenu;
-
-import org.eclipse.jface.action.Action;
+import java.util.Collection;
 
 /**
+ * Interface for classes listening to the changes in the recent files.
+ * 
  * @author Christophe Labouisse
  */
-public class ClearRecentFilesAction extends Action {
-    private RecentFilesMenu menu;
-
-    public ClearRecentFilesAction() {
-        super("Remove recent files");
-    }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.Action#run()
+public interface RecentFilesListener {
+    /**
+     * Tell the listener to update the recent files list.
      */
-    public void run() {
-        RecentFilesManager.getInstance().clear();
-    }
-    
-    
+    void refreshRecentFiles(Collection fileList);
 }

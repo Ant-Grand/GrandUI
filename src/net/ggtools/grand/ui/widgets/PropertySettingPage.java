@@ -1,4 +1,4 @@
-//$Id$
+// $Id$
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
@@ -27,11 +27,14 @@
  */
 package net.ggtools.grand.ui.widgets;
 
+import java.io.File;
 import java.util.Properties;
 
+import net.ggtools.grand.ui.RecentFilesManager;
+import net.ggtools.grand.ui.widgets.OpenFileWizard.SelectedFileListener;
+import net.ggtools.grand.ui.widgets.OpenFileWizard.SelectedFileProvider;
 import net.ggtools.grand.ui.widgets.property.PropertyEditor;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -40,39 +43,46 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Christophe Labouisse
  */
-public class PropertySettingPage extends WizardPage {
+public class PropertySettingPage extends WizardPage implements SelectedFileListener {
 
     private PropertyEditor editor;
 
-    /**
-     * @param pageName
-     */
-    public PropertySettingPage() {
-        super("Gruik");
-        // TODO Auto-generated constructor stub
-    }
+    private final SelectedFileProvider fileProvider;
 
     /**
      * @param pageName
-     * @param title
-     * @param titleImage
      */
-    public PropertySettingPage(String pageName, String title, ImageDescriptor titleImage) {
-        super(pageName, title, titleImage);
+    public PropertySettingPage(OpenFileWizard.SelectedFileProvider fileProvider) {
+        super("propertySetting", "Property setting", null);
+        setDescription("Set the properties for the file");
+        this.fileProvider = fileProvider;
+        fileProvider.addListener(this);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
-        final Composite composite = new Composite(parent,SWT.NONE);
+        final Composite composite = new Composite(parent, SWT.NONE);
         setControl(composite);
         composite.setLayout(new FillLayout());
-        editor = new PropertyEditor(composite,SWT.NONE);
+        editor = new PropertyEditor(composite, SWT.NONE);
     }
 
     public Properties getProperties() {
         return editor.getValues();
+    }
+    
+    public void dispose() {
+        fileProvider.removeListener(this);
+        super.dispose();
+    }
+
+    public void fileSelected(File selectedFile) {
+        if (editor != null)
+            editor.setInput(RecentFilesManager.getInstance().getProperties(
+                    selectedFile));
     }
 
 }

@@ -59,7 +59,9 @@ import org.eclipse.swt.widgets.TableItem;
  */
 public class PropertyEditor {
     private static final int BUTTON_WIDTH = 80;
+
     private static final int GRID_LAYOUT_COLUMNS = 4;
+
     /**
      * Logger for this class
      */
@@ -179,7 +181,7 @@ public class PropertyEditor {
      */
     public void setInput(final Properties properties) {
         propertyList.clear();
-        propertyList.addAll(properties);
+        if (properties != null) propertyList.addAll(properties);
     }
 
     /**
@@ -189,9 +191,9 @@ public class PropertyEditor {
      */
     private void createButtons(final Composite parent) {
 
-        final Button clear = new Button(parent,SWT.PUSH|SWT.CENTER);
+        final Button clear = new Button(parent, SWT.PUSH | SWT.CENTER);
         clear.setText("Clear");
-        
+
         GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
         gridData.widthHint = BUTTON_WIDTH;
         clear.setLayoutData(gridData);
@@ -201,11 +203,11 @@ public class PropertyEditor {
                 propertyList.clear();
             }
         });
-        
-        final Label filler = new Label(parent,SWT.NO_BACKGROUND);
-        gridData= new GridData(SWT.CENTER,SWT.CENTER,true,false);
+
+        final Label filler = new Label(parent, SWT.NO_BACKGROUND);
+        gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false);
         filler.setLayoutData(gridData);
-        
+
         final Button add = new Button(parent, SWT.PUSH | SWT.CENTER);
         add.setText("Add");
 
@@ -355,7 +357,7 @@ public class PropertyEditor {
             if (!display.readAndDispatch()) display.sleep();
         }
     }
-    
+
     public Properties getValues() {
         return propertyList.getAsProperties();
     }
