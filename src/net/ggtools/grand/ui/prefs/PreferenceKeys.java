@@ -45,7 +45,11 @@ public interface PreferenceKeys {
 
     public static final String GRAPH_BUS_IN_THRESHOLD = GRAPH_PREFIX+"bus.in.threshold";
 
-    public static final String LINK_WEAK_COLOR = GRAPH_PREFIX+"link.week.color";
+    public static final String LINK_SUBANT_COLOR = GRAPH_PREFIX+"link.subant.color";
+
+    public static final String LINK_SUBANT_LINEWIDTH = GRAPH_PREFIX+"link.subant.linewidth";
+
+    public static final String LINK_WEAK_COLOR = GRAPH_PREFIX+"link.weak.color";
 
     public static final String LINK_WEAK_LINEWIDTH = GRAPH_PREFIX+"link.weak.linewidth";
 

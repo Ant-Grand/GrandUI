@@ -44,6 +44,8 @@ public class LinksPreferencePage extends FieldEditorPreferencePage implements Pr
         prefs.setDefault(LINK_DEFAULT_LINEWIDTH, 1);
         PreferenceConverter.setDefault(prefs, LINK_WEAK_COLOR, ColorConstants.lightGray.getRGB());
         prefs.setDefault(LINK_WEAK_LINEWIDTH, 1);
+        PreferenceConverter.setDefault(prefs, LINK_SUBANT_COLOR, ColorConstants.lightGray.getRGB());
+        prefs.setDefault(LINK_SUBANT_LINEWIDTH, 2);
     }
 
     /**
@@ -73,5 +75,12 @@ public class LinksPreferencePage extends FieldEditorPreferencePage implements Pr
                 "Weak link width", parent);
         weakLinkLineWidth.setValidRange(1, 5);
         addField(weakLinkLineWidth);
+        final ColorFieldEditor subantLinkColor = new ColorFieldEditor(LINK_SUBANT_COLOR,
+                "subant link color", parent);
+        addField(subantLinkColor);
+        final IntegerFieldEditor subantLinkLineWidth = new IntegerFieldEditor(LINK_SUBANT_LINEWIDTH,
+                "subant link width", parent);
+        subantLinkLineWidth.setValidRange(1, 5);
+        addField(subantLinkLineWidth);
     }
 }

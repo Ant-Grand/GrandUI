@@ -174,8 +174,14 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         final IEdge edge = addLink(link);
         edge.setAttr(LINK_TASK_ATTR, link.getTaskName());
         edge.setAttr(LINK_PARAMETERS_ATTR, link.getParameterMap());
-        edge.setAttr(LINK_SUBANT_DIRECTORIES,link.getDirectories());
-     }
+        edge.setAttr(LINK_SUBANT_DIRECTORIES, link.getDirectories());
+        final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+        edge.setAttr(DRAW2DFGCOLOR_ATTR, preferenceStore
+                .getColor(PreferenceKeys.LINK_SUBANT_COLOR));
+        edge.setAttr(DRAW2DLINEWIDTH_ATTR, preferenceStore
+                .getInt(PreferenceKeys.LINK_SUBANT_LINEWIDTH));
+
+    }
 
     /*
      * (non-Javadoc)
