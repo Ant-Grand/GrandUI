@@ -39,7 +39,6 @@ import net.ggtools.grand.ant.AntTargetNode;
 import net.ggtools.grand.exceptions.GrandException;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
-import net.ggtools.grand.graph.Node;
 import net.ggtools.grand.output.DotWriter;
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.event.Dispatcher;
@@ -47,7 +46,6 @@ import net.ggtools.grand.ui.event.EventManager;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraph;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraphRenderer;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
-import net.ggtools.grand.ui.widgets.GraphTabItem;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.apache.commons.logging.Log;
