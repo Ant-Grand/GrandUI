@@ -37,11 +37,6 @@ import java.io.Serializable;
 public class LogEvent implements Serializable {
 
     /**
-     * Comment for <code>serialVersionUID</code>
-     */
-    private static final long serialVersionUID = 3258129163289702704L;
-    
-    /**
      * A log level.
      */
     public static final class Level implements Serializable {
@@ -50,7 +45,9 @@ public class LogEvent implements Serializable {
          * Comment for <code>serialVersionUID</code>
          */
         private static final long serialVersionUID = 3257003276267435833L;
+
         public final String name;
+
         public final int value;
 
         /**
@@ -76,6 +73,11 @@ public class LogEvent implements Serializable {
 
     public static final Level WARNING = new Level(4, "WARNING");
 
+    /**
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3258129163289702704L;
+
     private Throwable exception;
 
     private Level level;
@@ -85,14 +87,12 @@ public class LogEvent implements Serializable {
     private String originator;
 
     private long time;
-    
-    private int eventNum;
 
     /**
      * 
      */
-    public LogEvent(final int eventNum, final Level level, final String originator, final Object message, final Throwable exception) {
-        this.eventNum = eventNum;
+    public LogEvent(final Level level, final String originator, final Object message,
+            final Throwable exception) {
         this.level = level;
         this.originator = originator;
         this.message = message;
@@ -101,75 +101,77 @@ public class LogEvent implements Serializable {
     }
 
     /**
-     * @param exception The exception to set.
-     */
-    final void setException(Throwable exception) {
-        this.exception = exception;
-    }
-    /**
-     * @param level The level to set.
-     */
-    final void setLevel(Level level) {
-        this.level = level;
-    }
-    /**
-     * @param message The message to set.
-     */
-    final void setMessage(String message) {
-        this.message = message;
-    }
-    /**
-     * @param originator The originator to set.
-     */
-    final void setOriginator(String originator) {
-        this.originator = originator;
-    }
-    /**
-     * @param time The time to set.
-     */
-    final void setTime(long time) {
-        this.time = time;
-    }
-    /**
      * @return Returns the exception.
      */
     public final Throwable getException() {
         return exception;
     }
+
     /**
      * @return Returns the level.
      */
     public final Level getLevel() {
         return level;
     }
+
     /**
      * @return Returns the message.
      */
     public final Object getMessage() {
         return message;
     }
+
     /**
      * @return Returns the originator.
      */
     public final String getOriginator() {
         return originator;
     }
+
     /**
      * @return Returns the time.
      */
     public final long getTime() {
         return time;
     }
+
     /**
-     * @return Returns the eventNum.
+     * @param exception
+     *            The exception to set.
      */
-    public final int getEventNum() {
-        return eventNum;
+    final void setException(Throwable exception) {
+        this.exception = exception;
     }
+
     /**
-     * @param eventNum The eventNum to set.
+     * @param level
+     *            The level to set.
      */
-    final void setEventNum(int eventNum) {
-        this.eventNum = eventNum;
+    final void setLevel(Level level) {
+        this.level = level;
+    }
+
+    /**
+     * @param message
+     *            The message to set.
+     */
+    final void setMessage(String message) {
+        this.message = message;
+    }
+
+    /**
+     * @param originator
+     *            The originator to set.
+     */
+    final void setOriginator(String originator) {
+        this.originator = originator;
+    }
+
+    /**
+     * @param time
+     *            The time to set.
+     */
+    final void setTime(long time) {
+        this.time = time;
     }
 }

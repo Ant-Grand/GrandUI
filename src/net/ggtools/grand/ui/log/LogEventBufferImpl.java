@@ -44,27 +44,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public class LogEventBufferImpl implements LogEventBuffer {
 
-    private static final long serialVersionUID = 4050761593883343159L;
+    private static LogEventBufferImpl instance;
 
     /**
      * Logger for this class
      */
     private static final Log log = LogFactory.getLog(LogEventBufferImpl.class);
 
-    private final LinkedList eventList = new LinkedList();
-
-    private int eventCounter = 0;
-
-    private static LogEventBufferImpl instance;
-
-    private transient LogEventListener listener;
-
-    /**
-     * Creates a new buffer.
-     */
-    private LogEventBufferImpl() {
-        super();
-    }
+    private static final long serialVersionUID = 4050761593883343159L;
 
     /**
      * Get the singleton instance.
@@ -78,6 +65,29 @@ public class LogEventBufferImpl implements LogEventBuffer {
         return instance;
     }
 
+    private final LinkedList eventList = new LinkedList();
+
+    private transient LogEventListener listener;
+
+    /**
+     * Creates a new buffer.
+     */
+    private LogEventBufferImpl() {
+        super();
+    }
+
+    public void addListener(final LogEventListener newListener) {
+        listener = newListener;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.log.LogEventBuffer#clearLogEvents()
+     */
+    synchronized public void clearLogEvents() {
+        eventList.clear();
+    }
+
     /**
      * Return an unmodifiable list.
      * 
@@ -87,31 +97,18 @@ public class LogEventBufferImpl implements LogEventBuffer {
         return Collections.unmodifiableList(eventList);
     }
 
-    void addLogEvent(final Level level, final String originator, final Object message) {
-        addLogEvent(level, originator, message, null);
-    }
-
-    synchronized void addLogEvent(final Level level, final String originator, final Object message,
-            final Throwable exception) {
-        final LogEvent logEvent = new LogEvent(eventCounter++, level, originator, message,
-                exception);
-        eventList.addLast(logEvent);
-        if (listener != null) listener.logEventReceived(logEvent);
-    }
-
-    public void addListener(final LogEventListener newListener) {
-        listener = newListener;
-    }
-
     public void removeListener(final LogEventListener toRemove) {
         if (listener == toRemove) listener = null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.ggtools.grand.ui.log.LogEventBuffer#clearLogEvents()
-     */
-    synchronized public void clearLogEvents() {
-        eventList.clear();
+    void addLogEvent(final Level level, final String originator, final Object message) {
+        addLogEvent(level, originator, message, null);
+    }
+
+    void addLogEvent(final Level level, final String originator, final Object message,
+            final Throwable exception) {
+        final LogEvent logEvent = new LogEvent(level, originator, message, exception);
+        eventList.addLast(logEvent);
+        if (listener != null) listener.logEventReceived(logEvent);
     }
 }
