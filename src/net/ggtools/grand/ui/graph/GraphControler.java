@@ -36,6 +36,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import net.ggtools.grand.ant.AntTargetNode;
+import net.ggtools.grand.exceptions.GrandException;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.output.DotWriter;
@@ -47,7 +48,11 @@ import net.ggtools.grand.ui.widgets.GraphWindow;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.PrintFigureOperation;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.widgets.Display;
@@ -61,8 +66,7 @@ import sf.jzgraph.dot.impl.Dot;
  * 
  * @author Christophe Labouisse
  */
-public class GraphControler implements GraphModelListener, DotGraphAttributes, SelectionManager,
-        FilterChainModelListener {
+public class GraphControler implements DotGraphAttributes, SelectionManager {
     private static final Log log = LogFactory.getLog(GraphControler.class);
 
     // Ok that's bad it'll probably have to go to the forthcoming pref API.
@@ -119,9 +123,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         if (log.isInfoEnabled()) log.info("Creating new controler to " + window);
         this.window = window;
         model = new GraphModel();
-        model.addListener(this);
         filterChain = new FilterChainModel(model);
-        filterChain.addListener(this);
         // TODO voir si je peux virer le renderer et laisser le graph faire le
         // boulot tout seul.
         renderer = new Draw2dGraphRenderer();
@@ -131,7 +133,6 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
                     .getDeclaredMethod("selectionChanged", new Class[]{Collection.class}));
             parameterChangedEvent = graphEventManager.createDispatcher(GraphListener.class
                     .getDeclaredMethod("parameterChanged", new Class[]{GraphControler.class}));
-            ;
         } catch (SecurityException e) {
             log.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
@@ -150,6 +151,8 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         log.info("Adding filter " + filter);
         progressMonitor.beginTask("Adding filter", 4);
         filterChain.addFilterLast(filter);
+        progressMonitor.worked(1);
+        renderFilteredGraph();
     }
 
     /*
@@ -165,6 +168,8 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         log.info("Clearing filters");
         progressMonitor.beginTask("Clearing filters", 4);
         filterChain.clearFilters();
+        progressMonitor.worked(1);
+        renderFilteredGraph();
     }
 
     /*
@@ -243,19 +248,6 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.FilterChainModelListener#filteredGraphAvailable(net.ggtools.grand.ui.graph.FilterChainModel)
-     */
-    public void filteredGraphAvailable(final Graph filteredGraph) {
-        if (log.isDebugEnabled()) log.debug("New filtered graph available");
-        graph = filteredGraph;
-        progressMonitor.worked(1);
-
-        renderFilteredGraph();
-    }
-
     /**
      * @return Returns the dest.
      */
@@ -293,18 +285,6 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         return busRoutingEnabled;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.GraphModelListener#newGraphLoaded(net.ggtools.grand.ui.graph.GraphEvent)
-     */
-    public void newGraphLoaded(GraphEvent event) {
-        if (log.isDebugEnabled()) log.debug("Received GraphLoaded event");
-        progressMonitor.worked(1);
-        if (clearFiltersOnNextLoad) filterChain.clearFilters();
-        progressMonitor.subTask("Filtering graph");
-    }
-
     /**
      * Opens a new graph.
      * 
@@ -315,18 +295,22 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      */
     public void openFile(final File file, boolean wait) {
         if (log.isInfoEnabled()) log.info("Opening " + file);
+
         progressMonitor.beginTask("Opening new graph", 5);
-        progressMonitor.subTask("Loading ant file");
         clearFiltersOnNextLoad = true;
-        model.openFile(file);
-        if (wait) {
-            synchronized (this) {
-                try {
-                    this.wait();
-                } catch (InterruptedException e) {
-                    log.debug("Wait interrupted", e);
-                }
-            }
+
+        try {
+            progressMonitor.subTask("Loading ant file");
+            model.openFile(file);
+            if (log.isDebugEnabled()) log.debug("Model loaded graph");
+            progressMonitor.worked(1);
+
+            filterAndRenderGraph();
+            if (log.isInfoEnabled()) log.info("Graph loaded & rendered");
+        } catch (final GrandException e) {
+            reportError("Cannot open graph", e);
+        } finally {
+            progressMonitor.done();
         }
     }
 
@@ -349,7 +333,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         if (log.isDebugEnabled()) log.debug("Printing graph");
         PrintFigureOperation printOp = new PrintFigureOperation(printer, figure);
         printOp.setPrintMode(printMode);
-        printOp.run("Grand-Printing");
+        printOp.run("Grand:"+graph.getName());
     }
 
     /**
@@ -359,7 +343,19 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         if (log.isInfoEnabled()) log.info("Reloading current graph");
         progressMonitor.beginTask("Reloading graph", 5);
         clearFiltersOnNextLoad = false;
-        model.reload();
+
+        try {
+            model.reload();
+            if (log.isDebugEnabled()) log.debug("Model reloaded graph");
+            progressMonitor.worked(1);
+
+            filterAndRenderGraph();
+            if (log.isInfoEnabled()) log.info("Graph reloaded");
+        } catch (GrandException e) {
+            reportError("Cannot reload graph", e);
+        } finally {
+            progressMonitor.done();
+        }
     }
 
     /*
@@ -398,12 +394,25 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     }
 
     /**
-     * Creates a Draw2d graph from a Grand graph. This method will work 3 units
-     * and call <code>dest.done()</code> at the end.
+     * Filter the current graph of the model and render it.
+     */
+    private void filterAndRenderGraph() {
+        progressMonitor.subTask("Filtering graph");
+        if (clearFiltersOnNextLoad) filterChain.clearFilters();
+        filterChain.filterGraph();
+        if (log.isDebugEnabled()) log.debug("Filtering done");
+        progressMonitor.worked(1);
+
+        renderFilteredGraph();
+    }
+
+    /**
+     *  
      */
     private void renderFilteredGraph() {
         if (log.isDebugEnabled()) log.debug("Creating dot graph");
         progressMonitor.subTask("Laying out graph");
+        graph = filterChain.getGraph();
         final DotGraphCreator creator = new DotGraphCreator(graph, busRoutingEnabled);
         final IDotGraph dotGraph = creator.getGraph();
         progressMonitor.worked(1);
@@ -418,15 +427,32 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         figure.setSelectionManager(this);
         progressMonitor.worked(1);
 
-        if (log.isDebugEnabled()) log.debug("Done");
-        progressMonitor.done();
         String graphName = graph.getName();
         if (graphName == null) {
-            graphName = "Graph";
+            graphName = "Untitled";
         }
         getDest().setGraph(figure, graphName, model.getLastLoadedFile().getAbsolutePath());
-        synchronized (this) {
-            this.notifyAll();
+    }
+
+    /**
+     * Reports an error in both log and a dialog.
+     * 
+     * @param message
+     * @param e
+     */
+    private void reportError(final String message, final Throwable e) {
+        log.error(message, e);
+        final MultiStatus topStatus = new MultiStatus("GrandUI", 0, message, e);
+        for (Throwable nested = e.getCause(); nested != null; nested = nested.getCause()) {
+            final IStatus status = new Status(IStatus.ERROR, "GraphUI", 0, nested.getMessage(),
+                    nested);
+            topStatus.add(status);
         }
+        window.getShell().getDisplay().syncExec(new Runnable() {
+
+            public void run() {
+                ErrorDialog.openError(window.getShell(), message, e.getMessage(), topStatus);
+            }
+        });
     }
 }

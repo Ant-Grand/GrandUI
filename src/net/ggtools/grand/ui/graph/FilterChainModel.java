@@ -35,8 +35,6 @@ import net.ggtools.grand.filters.FilterChain;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.GraphProducer;
-import net.ggtools.grand.ui.event.Dispatcher;
-import net.ggtools.grand.ui.event.EventManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,31 +44,9 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Christophe Labouisse
  */
-public class FilterChainModel implements GraphProducer, GraphModelListener {
-
-    private final class FilterGraphRunnable implements Runnable {
-        private final Log log = LogFactory.getLog(FilterGraphRunnable.class);
-
-        public void run() {
-            if (log.isDebugEnabled())
-                    log.debug("Start filtering, filter chain size is: "
-                            + filterChain.getFilterList().size());
-            try {
-                graph = filterChain.getGraph();
-                notifyGraphAvailable();
-            } catch (GrandException e) {
-                // TODO Proper exception handling.
-                log.error("Cannot filter graph", e);
-                graph = null;
-            }
-        }
-    }
+public class FilterChainModel implements GraphProducer {
 
     private static final Log log = LogFactory.getLog(FilterChainModel.class);
-
-    private final Dispatcher eventDispatcher;
-
-    private final EventManager eventManager;
 
     private final FilterChain filterChain;
 
@@ -80,19 +56,7 @@ public class FilterChainModel implements GraphProducer, GraphModelListener {
 
     public FilterChainModel(GraphModel graphModel) {
         filterChain = new FilterChain();
-        eventManager = new EventManager("FilterChainModel");
-        try {
-            eventDispatcher = eventManager.createDispatcher(FilterChainModelListener.class
-                    .getDeclaredMethod("filteredGraphAvailable", new Class[]{Graph.class}));
-        } catch (SecurityException e) {
-            log.fatal("Caught exception initializing FilterChainModel", e);
-            throw new RuntimeException("Cannot instanciate FilterChainModel", e);
-        } catch (NoSuchMethodException e) {
-            log.fatal("Caught exception initializing FilterChainModel", e);
-            throw new RuntimeException("Cannot instanciate FilterChainModel", e);
-        }
         this.graphModel = graphModel;
-        graphModel.addListener(this);
         filterChain.setProducer(graphModel);
     }
 
@@ -102,7 +66,7 @@ public class FilterChainModel implements GraphProducer, GraphModelListener {
     public void addFilterFirst(GraphFilter newFilter) {
         if (log.isDebugEnabled()) log.debug("Adding new head filter " + newFilter);
         filterChain.addFilterFirst(newFilter);
-        startGraphUpdate();
+        filterGraph();
     }
 
     /**
@@ -111,17 +75,7 @@ public class FilterChainModel implements GraphProducer, GraphModelListener {
     public void addFilterLast(GraphFilter newFilter) {
         if (log.isDebugEnabled()) log.debug("Adding new tail filter " + newFilter);
         filterChain.addFilterLast(newFilter);
-        startGraphUpdate();
-    }
-
-    /**
-     * Add a new listener to this filter's events.
-     * 
-     * @param listener
-     */
-    public void addListener(FilterChainModelListener listener) {
-        if (log.isDebugEnabled()) log.debug("Adding new listener " + listener);
-        eventManager.subscribe(listener);
+        filterGraph();
     }
 
     /**
@@ -131,8 +85,9 @@ public class FilterChainModel implements GraphProducer, GraphModelListener {
         if (filterChain.getFilterList().size() > 0) {
             if (log.isDebugEnabled()) log.debug("Clearing filters");
             filterChain.clearFilters();
-            startGraphUpdate();
-        } else if (log.isDebugEnabled()) log.debug("Empty filter chain, not clearing");
+            filterGraph();
+        }
+        else if (log.isDebugEnabled()) log.debug("Empty filter chain, not clearing");
     }
 
     /**
@@ -149,13 +104,17 @@ public class FilterChainModel implements GraphProducer, GraphModelListener {
         return graph;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.GraphModelListener#newGraphLoaded(net.ggtools.grand.ui.graph.GraphEvent)
-     */
-    public void newGraphLoaded(GraphEvent event) {
-        startGraphUpdate();
+    public void filterGraph() {
+        if (log.isDebugEnabled())
+                log.debug("Start filtering, filter chain size is: "
+                        + filterChain.getFilterList().size());
+        try {
+            graph = filterChain.getGraph();
+        } catch (GrandException e) {
+            // TODO Proper exception handling.
+            log.error("Cannot filter graph", e);
+            graph = null;
+        }
     }
 
     /**
@@ -164,18 +123,4 @@ public class FilterChainModel implements GraphProducer, GraphModelListener {
     public void setProducer(GraphProducer producer) {
         filterChain.setProducer(producer);
     }
-
-    /**
-     * Start an asynchronous update of the graph.
-     */
-    private final void startGraphUpdate() {
-        // TODO Implements a queue.
-        final Thread thread = new Thread(new FilterGraphRunnable(), "Graph filtering");
-        thread.start();
-    }
-
-    protected void notifyGraphAvailable() {
-        eventDispatcher.dispatch(graph);
-    }
-
 }

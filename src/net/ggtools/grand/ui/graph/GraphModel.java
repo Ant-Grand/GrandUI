@@ -34,8 +34,6 @@ import net.ggtools.grand.ant.AntProject;
 import net.ggtools.grand.exceptions.GrandException;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.GraphProducer;
-import net.ggtools.grand.ui.event.Dispatcher;
-import net.ggtools.grand.ui.event.EventManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,32 +45,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class GraphModel implements GraphProducer {
 
-    private final class LoadFileRunnable implements Runnable {
-
-        private final File file;
-
-        private final Log log = LogFactory.getLog(LoadFileRunnable.class);
-
-        private LoadFileRunnable(final File file) {
-            this.file = file;
-        }
-
-        public void run() {
-            if (log.isDebugEnabled()) log.debug("Loading " + file);
-            lastLoadedFile = file;
-            final GraphProducer p;
-            try {
-                p = new AntProject(file);
-            } catch (GrandException e) {
-                throw new RuntimeException(e);
-            }
-            synchronized (GraphModel.this) {
-                producer = p;
-            }
-            notifyGraphLoaded();
-        }
-    }
-
     static {
         // disable logs in Grand core
         net.ggtools.grand.Log.setLogLevel(net.ggtools.grand.Log.MSG_ERR);
@@ -80,67 +52,37 @@ public class GraphModel implements GraphProducer {
 
     private static final Log log = LogFactory.getLog(GraphModel.class);
 
-    private final Dispatcher eventDispatcher;
-
-    private final EventManager eventManager;
-
     private File lastLoadedFile;
 
     private GraphProducer producer = null;
 
-    public GraphModel() {
-        eventManager = new EventManager("GraphModel");
-        try {
-            eventDispatcher = eventManager.createDispatcher(GraphModelListener.class
-                    .getDeclaredMethod("newGraphLoaded", new Class[]{GraphEvent.class}));
-        } catch (SecurityException e) {
-            log.fatal("Caught exception initializing GraphModel", e);
-            throw new RuntimeException("Cannot instanciate GraphModel", e);
-        } catch (NoSuchMethodException e) {
-            log.fatal("Caught exception initializing GraphModel", e);
-            throw new RuntimeException("Cannot instanciate GraphModel", e);
-        }
-    }
-
-    public void addListener(GraphModelListener listener) {
-        eventManager.subscribe(listener);
-    }
-
     /**
      * @return Returns the currentGraph.
+     * @throws GrandException
      */
-    public final Graph getGraph() {
+    public final Graph getGraph() throws GrandException {
         // Do not cache the graph as node may be filtered out
         Graph graph = null;
         if (producer != null) {
-            try {
-                graph = producer.getGraph();
-            } catch (GrandException e) {
-                // TODO Proper exception handling.
-                log.error("Cannot build Grand graph", e);
-            }
+            graph = producer.getGraph();
         }
         return graph;
     }
 
-    public void openFile(final File file) {
-        final Thread thread = new Thread(new LoadFileRunnable(file), "File loading");
-        thread.start();
+    public void openFile(final File file) throws GrandException {
+        if (log.isDebugEnabled()) log.debug("Loading " + file);
+        lastLoadedFile = file;
+        producer = new AntProject(file);
     }
 
-    public void reload() {
+    public void reload() throws GrandException {
         if (lastLoadedFile != null) {
             if (log.isDebugEnabled()) log.debug("Reloading last file");
             openFile(lastLoadedFile);
         }
         else {
-            log.info("No file previously loaded, skipping reload");
+            log.warn("No file previously loaded, skipping reload");
         }
-    }
-
-    protected void notifyGraphLoaded() {
-        final GraphEvent event = new GraphEvent(this);
-        eventDispatcher.dispatch(event);
     }
 
     /**
