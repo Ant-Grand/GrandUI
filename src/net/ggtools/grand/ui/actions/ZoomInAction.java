@@ -36,7 +36,7 @@ import net.ggtools.grand.ui.graph.GraphControlerProvider;
 /**
  * @author Christophe Labouisse
  */
-public class ZoomInAction extends ZoomAction {
+public class ZoomInAction extends GraphControlerAction {
 
     private static final String DEFAULT_ACTION_NAME = "Zoom In";
 
@@ -50,13 +50,13 @@ public class ZoomInAction extends ZoomAction {
      */
     public ZoomInAction(GraphControlerProvider provider) {
         super(provider, DEFAULT_ACTION_NAME);
-        setAccelerator(SWT.PAGE_DOWN);
+        setAccelerator(SWT.PAGE_UP);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.Action#run()
      */
     public void run() {
-        doZoomIn();
+        getGraphControler().getDisplayer().zoomIn();
     }
 }

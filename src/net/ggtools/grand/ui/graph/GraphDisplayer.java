@@ -47,12 +47,6 @@ public interface GraphDisplayer extends GraphControlerProvider {
     Menu getContextMenu();
 
     /**
-     * Returns the current zoom factor.
-     * @return
-     */
-    float getZoom();
-
-    /**
      * Scroll the canvas to display a specific node.
      * 
      * @param nodeName
@@ -81,8 +75,20 @@ public interface GraphDisplayer extends GraphControlerProvider {
     void setSourceText(String text);
 
     /**
-     * Sets the zoom factor for the graph.
-     * @param zoom
+     * Zoom in the displayed graph by one step.
+     *
      */
-    void setZoom(float zoom);
+    void zoomIn();
+    
+    /**
+     * Zoom out the displayed graph by one step.
+     *
+     */
+    void zoomOut();
+    
+    /**
+     * Reset the zoom factor to 1:1.
+     *
+     */
+    void zoomReset();
 }

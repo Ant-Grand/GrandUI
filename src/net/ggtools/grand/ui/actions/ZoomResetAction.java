@@ -27,16 +27,16 @@
  */
 package net.ggtools.grand.ui.actions;
 
+import net.ggtools.grand.ui.graph.GraphControlerProvider;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
-
 /**
  * @author Christophe Labouisse
  */
-public class ZoomResetAction extends ZoomAction {
+public class ZoomResetAction extends GraphControlerAction {
 
     private static final String DEFAULT_ACTION_NAME = "Reset Zoom";
 
@@ -57,6 +57,6 @@ public class ZoomResetAction extends ZoomAction {
      * @see org.eclipse.jface.action.Action#run()
      */
     public void run() {
-        setZoom(1.0f);
+        getGraphControler().getDisplayer().zoomReset();
     }
 }
