@@ -156,7 +156,7 @@ public class Analyzer extends ApplicationWindow {
                 combo.add(LogEvent.WARNING.name);
                 combo.add(LogEvent.ERROR.name);
                 combo.add(LogEvent.FATAL.name);
-                combo.select(0);
+                combo.select(LogEvent.INFO.value - LogEvent.TRACE.value);
             }
         };
         return logViewer;
