@@ -90,8 +90,8 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
 
         graph = new Label(sc, SWT.BORDER);
         sc.setContent(graph);
-        final String imageName = "/data/images/moi/xine_snapshot-1.png";
-        setImage(imageName);
+        //final String imageName = "/data/images/moi/xine_snapshot-1.png";
+        //setImage(imageName);
 
         return graph;
     }
