@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="etc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/Grand"/>
-	<classpathentry sourcepath="lib/duf-gtkPrint.jar" kind="lib" path="lib/duf-gtkPrint.jar"/>
 	<classpathentry kind="var" path="COMMONS_LOGGING"/>
 	<classpathentry sourcepath="ANT_SRC" kind="var" path="ANT_LIB"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JFACE"/>
