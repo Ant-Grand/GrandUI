@@ -54,6 +54,7 @@ public class ShowSourcePanelAction extends Action {
         super(DEFAULT_ACTION_NAME);
         window = parent;
         setChecked(parent.isSourcePanelVisible());
+        setAccelerator('s');
     }
     
     /* (non-Javadoc)

@@ -54,6 +54,7 @@ public class ShowOutlinePanelAction extends Action {
         super(DEFAULT_ACTION_NAME);
         window = parent;
         setChecked(parent.isOutlinePanelVisible());
+        setAccelerator('o');
     }
     
     /* (non-Javadoc)
