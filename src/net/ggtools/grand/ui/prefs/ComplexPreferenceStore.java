@@ -28,7 +28,6 @@
 package net.ggtools.grand.ui.prefs;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -73,6 +72,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
     /**
      * An interface used to save properties like structure. It is used to save
      * either a PreferenceStore or a Properties.
+     * 
      * @author Christophe Labouisse
      */
     private interface PropertySaver {
@@ -100,29 +100,11 @@ public class ComplexPreferenceStore extends PreferenceStore {
         return item.replaceAll("%,", ",").replaceAll("%%", "%");
     }
 
-    private final File baseDir;
-
     private final ColorRegistry colorRegistry = new ColorRegistry();
 
     private final FontRegistry fontRegistry = new FontRegistry();
 
     private final Map propertiesTable = new HashMap();
-
-    protected final File prefFile;
-
-    /**
-     * Creates a new instance.
-     * 
-     * @param appName
-     * @param storeName
-     * @throws IOException
-     */
-    public ComplexPreferenceStore(final String appName, final String storeName) throws IOException {
-        super();
-        baseDir = new File(System.getProperty("user.home"), "." + appName);
-        prefFile = new File(baseDir, storeName + ".prefs");
-        setFilename(prefFile.getPath());
-    }
 
     /**
      * Get a collection of {@link String}s.
@@ -195,15 +177,11 @@ public class ComplexPreferenceStore extends PreferenceStore {
     }
 
     public void save() throws IOException {
-        if (!baseDir.isDirectory()) {
-            baseDir.mkdirs();
-            if (!baseDir.isDirectory()) { throw new FileNotFoundException("Cannot find/create "
-                    + baseDir); }
-        }
-
         FileOutputStream os = null;
         try {
-            os = new FileOutputStream(new File(baseDir, "temp.xml"));
+            // TODO use the real file.
+            os = new FileOutputStream(
+                    new File(System.getProperty("user.home"), ".grandui/temp.xml"));
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = null;
             try {
@@ -255,8 +233,6 @@ public class ComplexPreferenceStore extends PreferenceStore {
                     }
                 };
                 saveProperties(doc, propElement, propertySaver);
-
-                // TODO save properties
             }
 
             TransformerFactory tf = TransformerFactory.newInstance();
@@ -283,7 +259,6 @@ public class ComplexPreferenceStore extends PreferenceStore {
         } finally {
             if (os != null) os.close();
         }
-        // super.save();
     }
 
     /**

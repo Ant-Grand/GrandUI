@@ -30,6 +30,8 @@ package net.ggtools.grand.ui;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -49,16 +51,23 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
      */
     private static final Log log = LogFactory.getLog(GrandUiPrefStore.class);
 
+    private final File baseDir;
+    
+    private final File prefFile;
+
     /**
      * @param unEscapeString(item)
      * @return
      */
     private static String escapeString(final String item) {
-        return item.replaceAll("%","%%").replaceAll(",","%,");
+        return item.replaceAll("%", "%%").replaceAll(",", "%,");
     }
 
     GrandUiPrefStore() throws IOException {
-        super("grandui","ui");
+        super();
+        baseDir = new File(System.getProperty("user.home"), ".grandui" );
+        prefFile = new File(baseDir, "ui.prefs");
+        setFilename(prefFile.getPath());
         setDefaults();
         if (prefFile.isFile()) {
             load();
@@ -66,6 +75,16 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
         else {
             migratePreferences();
         }
+    }
+
+    public void save() throws IOException {
+        if (!baseDir.isDirectory()) {
+            baseDir.mkdirs();
+            if (!baseDir.isDirectory()) { throw new FileNotFoundException("Cannot find/create "
+                    + baseDir); }
+        }
+
+        super.save();
     }
 
     /**
