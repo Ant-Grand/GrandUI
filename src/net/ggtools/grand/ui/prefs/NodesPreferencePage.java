@@ -175,7 +175,7 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
                 final FieldEditor fieldEditor = (FieldEditor) iter.next();
                 if (fieldEditor.getNumberOfControls() < layout.numColumns)
                         fieldEditor.fillIntoGrid(parent, layout.numColumns);
-                fieldEditor.setPreferencePage(this);
+                fieldEditor.setPage(this);
                 //pe.setPropertyChangeListener(this);
                 fieldEditor.setPreferenceStore(getPreferenceStore());
                 fieldEditor.load();
