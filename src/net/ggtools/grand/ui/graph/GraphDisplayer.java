@@ -31,7 +31,6 @@
 
 package net.ggtools.grand.ui.graph;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.swt.widgets.Menu;
 
@@ -41,7 +40,7 @@ import org.eclipse.swt.widgets.Menu;
  * 
  * @author Christophe Labouisse
  */
-public interface GraphDisplayer extends IProgressMonitor, GraphControlerProvider {
+public interface GraphDisplayer extends GraphControlerProvider {
     /**
      * Ask to display the supplied figure.
      * @param graph

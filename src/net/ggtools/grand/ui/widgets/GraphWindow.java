@@ -29,6 +29,7 @@
 package net.ggtools.grand.ui.widgets;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.event.Dispatcher;
@@ -44,7 +45,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.StatusLineManager;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -62,8 +64,7 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * @author Christophe Labouisse
  */
-public class GraphWindow extends ApplicationWindow implements GraphControlerProvider,
-        IProgressMonitor {
+public class GraphWindow extends ApplicationWindow implements GraphControlerProvider {
 
     private static final Log log = LogFactory.getLog(GraphWindow.class);
 
@@ -117,39 +118,6 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
 
     /*
      * (non-Javadoc)
-     * 
-     * @see org.eclipse.core.runtime.IProgressMonitor#beginTask(java.lang.String,
-     *      int)
-     */
-    public void beginTask(final String name, final int totalWork) {
-        final StatusLineManager slManager = getStatusLineManager();
-        final IProgressMonitor monitor = slManager.getProgressMonitor();
-        display.asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.beginTask(name, totalWork);
-            }
-        });
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.core.runtime.IProgressMonitor#done()
-     */
-    public void done() {
-        final StatusLineManager slManager = getStatusLineManager();
-        final IProgressMonitor monitor = slManager.getProgressMonitor();
-        display.asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.done();
-            }
-        });
-    }
-
-    /*
-     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#getControler()
      */
     public GraphControler getControler() {
@@ -165,41 +133,41 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
+    /**
+     * Create a new displayer for a controler.
+     * 
+     * @param controler
+     * @return
      */
-    public void internalWorked(double work) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#isCanceled()
-     */
-    public boolean isCanceled() {
-        // TODO Auto-generated method stub
-        return false;
+    public GraphDisplayer newDisplayer(final GraphControler controler) {
+        final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE, controler);
+        tabFolder.setSelection(graphTabItem);
+        controlerAvailableDispatcher.dispatch(controler);
+        controler.setProgressMonitor(new SafeProgressMonitor(getStatusLineManager()
+                .getProgressMonitor(), display));
+        return graphTabItem;
     }
 
     /**
-     * @return
+     * Open an ant file in a new window.
+     * 
+     * @param buildFile
      */
-    public GraphDisplayer newDisplayer() {
-        final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE);
-        tabFolder.setSelection(graphTabItem);
-        controlerAvailableDispatcher.dispatch(graphTabItem.getControler());
-        graphTabItem.setProgressMonitor(this);
-        return graphTabItem;
-    }
-    
     public void openGraphInNewDisplayer(final File buildFile) {
-        final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE);
-        tabFolder.setSelection(graphTabItem);
-        controlerAvailableDispatcher.dispatch(graphTabItem.getControler());
-        graphTabItem.setProgressMonitor(this);
-        graphTabItem.getControler().openFile(buildFile);
+        final GraphControler controler = new GraphControler(this);
+        try {
+            new ProgressMonitorDialog(getShell()).run(true, false, new IRunnableWithProgress() {
+                public void run(IProgressMonitor monitor) throws InvocationTargetException,
+                        InterruptedException {
+                    controler.setProgressMonitor(monitor);
+                    controler.openFile(buildFile, true);
+                }
+            });
+        } catch (InvocationTargetException e) {
+            log.error("Caugh exception opening file", e);
+        } catch (InterruptedException e) {
+            log.info("Loading cancelled", e);
+        }
     }
 
     /*
@@ -208,62 +176,6 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      */
     public void removeControlerListener(GraphControlerListener listener) {
         controlerEventManager.unSubscribe(listener);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
-     */
-    public void setCanceled(boolean value) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#setTaskName(java.lang.String)
-     */
-    public void setTaskName(final String name) {
-        final StatusLineManager slManager = getStatusLineManager();
-        final IProgressMonitor monitor = slManager.getProgressMonitor();
-        display.asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.setTaskName(name);
-            }
-        });
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.core.runtime.IProgressMonitor#subTask(java.lang.String)
-     */
-    public void subTask(final String name) {
-        final StatusLineManager slManager = getStatusLineManager();
-        final IProgressMonitor monitor = slManager.getProgressMonitor();
-        display.asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.subTask(name);
-            }
-        });
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.core.runtime.IProgressMonitor#worked(int)
-     */
-    public void worked(final int work) {
-        final StatusLineManager slManager = getStatusLineManager();
-        final IProgressMonitor monitor = slManager.getProgressMonitor();
-        display.asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.worked(work);
-            }
-        });
     }
 
     /*

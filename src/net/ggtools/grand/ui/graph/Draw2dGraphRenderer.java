@@ -42,6 +42,7 @@ import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionLocator;
+import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
@@ -109,6 +110,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         conn.setTargetDecoration(dec);
 
         conn.setToolTip(new LinkTooltip(edge));
+        conn.setCursor(Cursors.HAND);
         contents.add(conn, conn.getBounds());
     }
 

@@ -34,8 +34,8 @@ import net.ggtools.grand.ui.menu.GraphMenu;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Viewport;
@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Menu;
  * @author Christophe Labouisse
  */
 public class GraphTabItem extends CTabItem implements GraphDisplayer {
-    private final static class CanvasScroller extends MouseAdapter implements MouseMoveListener {
+    private final class CanvasScroller extends MouseAdapter implements MouseMoveListener {
         final private FigureCanvas canvas;
 
         private int startDragX, startDragY;
@@ -76,11 +76,12 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
          * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
          */
         public void mouseDown(MouseEvent e) {
-            if (e.button == 2) {
+            if (e.button == 2 || e.button == 1) {
                 final Point vpLocation = viewport.getViewLocation();
                 startDragX = vpLocation.x + e.x;
                 startDragY = vpLocation.y + e.y;
                 canvas.addMouseMoveListener(this);
+                getControl().setCursor(Cursors.SIZEALL);
             }
         }
 
@@ -99,8 +100,9 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
          * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
          */
         public void mouseUp(MouseEvent e) {
-            if (e.button == 2) {
+            if (e.button == 2 || e.button == 1) {
                 canvas.removeMouseMoveListener(this);
+                getControl().setCursor(Cursors.ARROW);
             }
         }
     }
@@ -115,15 +117,14 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
 
     private final GraphControler controler;
 
-    private IProgressMonitor progressMonitor;
-
     /**
-     * @param parent
+     * Creates a tab to display a new graph.
+     * @param parent parent CTabFolder.
      * @param style
      */
-    public GraphTabItem(CTabFolder parent, int style) {
+    public GraphTabItem(CTabFolder parent, int style, GraphControler controler) {
         super(parent, style);
-        controler = new GraphControler(this);
+        this.controler = controler;
         canvas = new FigureCanvas(parent);
         setControl(canvas);
         canvas.getViewport().setContentsTracksHeight(true);
@@ -134,7 +135,6 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         canvas.addMouseListener(synchronizer);
         contextMenuManager = new GraphMenu(this);
         contextMenu = contextMenuManager.createContextMenu(canvas);
-        setText("Loading ...");
     }
 
     /*
@@ -142,21 +142,6 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#addControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
     public void addControlerListener(GraphControlerListener listener) {
-    }
-
-    /**
-     * @param name
-     * @param totalWork
-     */
-    public void beginTask(String name, int totalWork) {
-        if (progressMonitor != null) progressMonitor.beginTask(name, totalWork);
-    }
-
-    /**
-     *  
-     */
-    public void done() {
-        if (progressMonitor != null) progressMonitor.done();
     }
 
     /*
@@ -175,33 +160,11 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         return controler;
     }
 
-    /**
-     * @param work
-     */
-    public void internalWorked(double work) {
-        if (progressMonitor != null) progressMonitor.internalWorked(work);
-    }
-
-    /**
-     * @return
-     */
-    public boolean isCanceled() {
-        if (progressMonitor != null) return progressMonitor.isCanceled();
-        return false;
-    }
-
     /*
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
     public void removeControlerListener(GraphControlerListener listener) {
-    }
-
-    /**
-     * @param value
-     */
-    public void setCanceled(boolean value) {
-        if (progressMonitor != null) progressMonitor.setCanceled(value);
     }
 
     /*
@@ -219,34 +182,5 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
                 //setToolTipText(filename);
             }
         });
-    }
-
-    /**
-     * @param name
-     */
-    public void setTaskName(String name) {
-        if (progressMonitor != null) progressMonitor.setTaskName(name);
-    }
-
-    /**
-     * @param name
-     */
-    public void subTask(String name) {
-        if (progressMonitor != null) progressMonitor.subTask(name);
-    }
-
-    /**
-     * @param work
-     */
-    public void worked(int work) {
-        if (progressMonitor != null) progressMonitor.worked(work);
-    }
-
-    /**
-     * @param progressMonitor
-     *            The progressMonitor to set.
-     */
-    final void setProgressMonitor(IProgressMonitor progressMonitor) {
-        this.progressMonitor = progressMonitor;
     }
 }

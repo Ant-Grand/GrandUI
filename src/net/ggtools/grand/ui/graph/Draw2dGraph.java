@@ -34,6 +34,7 @@ import net.ggtools.grand.ui.Application;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.InputEvent;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
@@ -97,7 +98,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     private static final Log log = LogFactory.getLog(Draw2dGraph.class);
 
     private SelectionManager selectionManager;
-
+    
     public Draw2dGraph() {
         super();
         setLayoutManager(new XYLayout());
@@ -142,7 +143,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         add(node, node.getBounds());
         node.setFont(Application.getInstance().getFont(Application.NODE_FONT));
         node.addMouseListener(new NodeMouseListener(node));
-
+        node.setCursor(Cursors.HAND);
         return node;
     }
 

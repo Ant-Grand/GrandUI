@@ -40,11 +40,14 @@ import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.output.DotWriter;
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
+import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.PrintFigureOperation;
 import org.eclipse.swt.printing.Printer;
+import org.eclipse.swt.widgets.Display;
 
 import sf.jzgraph.IDotGraph;
 import sf.jzgraph.dot.impl.Dot;
@@ -67,7 +70,9 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      */
     private boolean clearFiltersOnNextLoad;
 
-    private final GraphDisplayer dest;
+    private final GraphWindow window;
+
+    private GraphDisplayer dest;
 
     private Draw2dGraph figure;
 
@@ -87,9 +92,11 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
 
     private final Dispatcher selectionChangedDispatcher;
 
-    public GraphControler(final GraphDisplayer dest) {
-        if (log.isDebugEnabled()) log.debug("Creating new controler to " + dest);
-        this.dest = dest;
+    private IProgressMonitor progressMonitor;
+
+    public GraphControler(final GraphWindow window) {
+        if (log.isInfoEnabled()) log.info("Creating new controler to " + window);
+        this.window = window;
         model = new GraphModel();
         model.addListener(this);
         filterChain = new FilterChainModel(model);
@@ -99,9 +106,8 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         renderer = new Draw2dGraphRenderer();
         graphEventManager = new EventManager("Graph Event");
         try {
-            selectionChangedDispatcher = graphEventManager
-                    .createDispatcher(GraphListener.class.getDeclaredMethod(
-                            "selectionChanged", new Class[]{Collection.class}));
+            selectionChangedDispatcher = graphEventManager.createDispatcher(GraphListener.class
+                    .getDeclaredMethod("selectionChanged", new Class[]{Collection.class}));
             parameterChangedEvent = graphEventManager.createDispatcher(GraphListener.class
                     .getDeclaredMethod("parameterChanged", new Class[]{GraphControler.class}));
             ;
@@ -121,7 +127,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      */
     public void addFilter(GraphFilter filter) {
         log.info("Adding filter " + filter);
-        dest.beginTask("Adding filter", 4);
+        progressMonitor.beginTask("Adding filter", 4);
         filterChain.addFilterLast(filter);
     }
 
@@ -136,7 +142,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
 
     public void clearFilters() {
         log.info("Clearing filters");
-        dest.beginTask("Clearing filters", 4);
+        progressMonitor.beginTask("Clearing filters", 4);
         filterChain.clearFilters();
     }
 
@@ -196,12 +202,12 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      */
     public void enableBusRouting(final boolean enabled) {
         if (busRoutingEnabled != enabled) {
-            log.info("Using bus routing set to "+enabled);
+            log.info("Using bus routing set to " + enabled);
             busRoutingEnabled = enabled;
             parameterChangedEvent.dispatch(this);
             final Thread thread = new Thread(new Runnable() {
                 public void run() {
-                    dest.beginTask("Rerouting graph", 3);
+                    progressMonitor.beginTask("Rerouting graph", 3);
                     renderFilteredGraph();
                 }
             }, "Graph Layout");
@@ -217,7 +223,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     public void filteredGraphAvailable(final Graph filteredGraph) {
         if (log.isDebugEnabled()) log.debug("New filtered graph available");
         graph = filteredGraph;
-        dest.worked(1);
+        progressMonitor.worked(1);
 
         renderFilteredGraph();
     }
@@ -226,6 +232,14 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      * @return Returns the dest.
      */
     public final GraphDisplayer getDest() {
+        if (dest == null) {
+            if (log.isInfoEnabled()) log.info("Opening graph displayer");
+            Display.getDefault().syncExec(new Runnable() {
+                public void run() {
+                    dest = window.newDisplayer(GraphControler.this);
+                }
+            });
+        }
         return dest;
     }
 
@@ -251,16 +265,32 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      */
     public void newGraphLoaded(GraphEvent event) {
         if (log.isDebugEnabled()) log.debug("Received GraphLoaded event");
-        dest.worked(1);
+        progressMonitor.worked(1);
         if (clearFiltersOnNextLoad) filterChain.clearFilters();
-        dest.subTask("Filtering graph");
+        progressMonitor.subTask("Filtering graph");
     }
 
-    public void openFile(final File file) {
+    /**
+     * Opens a new graph.
+     * 
+     * @param file the file to open.
+     * @param wait wait for graph loading to be complete if <code>true</code>.
+     */
+    public void openFile(final File file, boolean wait) {
         if (log.isInfoEnabled()) log.info("Opening " + file);
-        dest.beginTask("Opening new graph", 5);
+        progressMonitor.beginTask("Opening new graph", 5);
+        progressMonitor.subTask("Loading ant file");
         clearFiltersOnNextLoad = true;
         model.openFile(file);
+        if (wait) {
+            synchronized(this) {
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    log.debug("Wait interrupted",e);
+                }
+            }
+        }
     }
 
     /**
@@ -279,7 +309,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      */
     public void reloadGraph() {
         if (log.isInfoEnabled()) log.info("Reloading current graph");
-        dest.beginTask("Reloading graph", 5);
+        progressMonitor.beginTask("Reloading graph", 5);
         clearFiltersOnNextLoad = false;
         model.reload();
     }
@@ -317,24 +347,43 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      */
     private void renderFilteredGraph() {
         if (log.isDebugEnabled()) log.debug("Creating dot graph");
-        dest.subTask("Laying out graph");
+        progressMonitor.subTask("Laying out graph");
         final DotGraphCreator creator = new DotGraphCreator(graph, busRoutingEnabled);
         final IDotGraph dotGraph = creator.getGraph();
-        dest.worked(1);
+        progressMonitor.worked(1);
 
         if (log.isDebugEnabled()) log.debug("Laying out graph");
         final Dot app = new Dot();
         app.layout(dotGraph, 0, -7);
-        dest.worked(1);
+        progressMonitor.worked(1);
 
-        dest.subTask("Rendering graph");
+        progressMonitor.subTask("Rendering graph");
         figure = renderer.render(dotGraph);
         figure.setSelectionManager(this);
-        dest.worked(1);
+        progressMonitor.worked(1);
 
         if (log.isDebugEnabled()) log.debug("Done");
-        dest.done();
-        dest.setGraph(figure, graph.getName());
+        progressMonitor.done();
+        String graphName = graph.getName();
+        if (graphName == null) {
+            graphName = "Graph";
+        }
+        getDest().setGraph(figure, graphName);
+        synchronized(this) {
+            this.notifyAll();
+        }
     }
 
+    /**
+     * @return Returns the progressMonitor.
+     */
+    public final IProgressMonitor getProgressMonitor() {
+        return progressMonitor;
+    }
+    /**
+     * @param progressMonitor The progressMonitor to set.
+     */
+    public final void setProgressMonitor(IProgressMonitor progressMonitor) {
+        this.progressMonitor = progressMonitor;
+    }
 }

@@ -37,10 +37,12 @@ import net.ggtools.grand.ui.widgets.Splash;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -147,12 +149,14 @@ public class Application {
      *  
      */
     final private void initResources() {
-        if (log.isDebugEnabled()) log.debug("Initializing application resources");
+        if (log.isInfoEnabled()) log.info("Initializing application resources");
+        
         fontRegistry = new FontRegistry("net.ggtools.grand.ui.resource.fonts");
         for (Iterator iter = fontRegistry.getKeySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             fontRegistry.get(key);
         }
+        
         imageRegistry = new ImageRegistry();
 
         imageRegistry.put(APPLICATION_ICON, ImageDescriptor.createFromFile(Application.class,
@@ -161,6 +165,9 @@ public class Application {
                 "resource/link-icon.png"));
         imageRegistry.put(NODE_ICON, ImageDescriptor.createFromFile(Application.class,
                 "resource/node-icon.png"));
+        
+        // Ensure that ColorConstant is loaded.
+        final Color color = ColorConstants.black;
     }
 
     /**
