@@ -194,28 +194,41 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         log.debug("Frombus "+node.getAttr("frombus"));
         final Draw2dNode polygon = contents.createNode(node);
         polygon.setToolTip(new NodeTooltip(node));
+        
         if (node.hasAttr("inbus")) {
-           final PolylineConnection conn = createConnectionFromRoute(contents,null,(DotRoute)node.getAttr("inbus"));
+           final PolylineConnection conn = createBusConnexion(contents, node, ColorConstants.red, "inbus", "bus to");
            conn.setLineWidth(2);
-           conn.setForegroundColor(ColorConstants.red);
-           contents.add(conn,conn.getBounds());
         }
         if (node.hasAttr("outbus")) {
-           final PolylineConnection conn = createConnectionFromRoute(contents,null,(DotRoute)node.getAttr("outbus"));
+           final PolylineConnection conn = createBusConnexion(contents, node, ColorConstants.blue, "outbus", "bus from");
            conn.setLineWidth(2);
-           conn.setForegroundColor(ColorConstants.blue);
-           contents.add(conn,conn.getBounds());
         }
         if (node.hasAttr("tobus")) {
-           final PolylineConnection conn = createConnectionFromRoute(contents,null,(DotRoute)node.getAttr("tobus"));
-           conn.setForegroundColor(ColorConstants.blue);
-           contents.add(conn,conn.getBounds());
+           final PolylineConnection conn = createBusConnexion(contents, node, ColorConstants.blue, "tobus", "bus from");
         }
         if (node.hasAttr("frombus")) {
-           final PolylineConnection conn = createConnectionFromRoute(contents,null,(DotRoute)node.getAttr("frombus"));
-           conn.setForegroundColor(ColorConstants.red);
-           contents.add(conn,conn.getBounds());
+           final PolylineConnection conn = createBusConnexion(contents, node, ColorConstants.red, "frombus","bus to");
+           final PolygonDecoration dec = new PolygonDecoration();
+           conn.setTargetDecoration(dec);
         }
     }
+
+   /**
+    * @param contents
+    * @param node
+    * @param color
+    * @param busLabel
+    * @return
+    */
+   private PolylineConnection createBusConnexion(Draw2dGraph contents, IVertex node, Color color, String busId, String busLabel)
+   {
+      final PolylineConnection conn = createConnectionFromRoute(contents,null,(DotRoute)node.getAttr(busId));
+        conn.setForegroundColor(color);
+        contents.add(conn,conn.getBounds());
+        final Label label = new Label(busLabel+node.getName(), AppData.getInstance().getImage(AppData.LINK_ICON));
+        label.setFont(AppData.getInstance().getBoldFont(AppData.TOOLTIP_FONT));
+        conn.setToolTip(label);
+      return conn;
+   }
 
 }
