@@ -34,8 +34,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Date;
+import java.util.Iterator;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -59,6 +64,7 @@ import org.eclipse.swt.widgets.TableColumn;
  */
 public class LogViewer extends Composite {
     private static final int DEFAULT_NUM_LINES = 10;
+
     private static final int HEADER_EXTRA_WIDTH = 10;
 
     /**
@@ -242,7 +248,7 @@ public class LogViewer extends Composite {
         refreshListener = new LogEventRefreshListener();
     }
 
-    private void createViewer(final Composite parent) {
+private void createViewer(final Composite parent) {
         viewer = new TableViewer(parent, SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL
                 | SWT.HIDE_SELECTION);
         final LogLabelProvider logLabelProvider = new LogLabelProvider();
@@ -287,20 +293,29 @@ public class LogViewer extends Composite {
 
             columnWidth += HEADER_EXTRA_WIDTH;
             column.setText(header);
-
-            if (log.isDebugEnabled()) {
-                log.debug("createViewer() - Setting column width : header = " + header
-                        + ", columnWidth = " + columnWidth);
-            }
             column.setWidth(columnWidth);
         }
+        gc.dispose();
 
-    }
-
-    /**
-     * @param comboIndex
-     * @return
-     */
+        viewer.addDoubleClickListener(new IDoubleClickListener() {
+            public void doubleClick(DoubleClickEvent event) {
+                final ISelection s = event.getSelection();
+                if (s instanceof IStructuredSelection) {
+                    IStructuredSelection selection = (IStructuredSelection) s;
+                    for (Iterator iter = selection.iterator(); iter.hasNext();) {
+                        final LogEvent logEvent = (LogEvent) iter.next();
+                        final LogEventDetailDialog window = new LogEventDetailDialog(getShell(),
+                                logEvent);
+                        window.setBlockOnOpen(false);
+                        window.open();
+                    }
+                }
+            }
+        });
+    }    /**
+             * @param comboIndex
+             * @return
+             */
     protected int comboIndexToLogLevel(int comboIndex) {
         return comboIndex + LogEvent.INFO.value;
     }
