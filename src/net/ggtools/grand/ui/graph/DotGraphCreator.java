@@ -35,6 +35,7 @@ import java.util.Map;
 import net.ggtools.grand.ant.AntLink;
 import net.ggtools.grand.ant.AntTargetNode;
 import net.ggtools.grand.ant.AntTaskLink;
+import net.ggtools.grand.ant.SubantTaskLink;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.Link;
 import net.ggtools.grand.graph.Node;
@@ -157,6 +158,14 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
 
         edge.setAttr(LINK_TASK_ATTR, taskLink.getTaskName());
         edge.setAttr(LINK_PARAMETERS_ATTR, taskLink.getParameterMap());
+    }
+    
+    /* (non-Javadoc)
+     * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.SubantTaskLink)
+     */
+    public void visitLink(SubantTaskLink link) {
+        // TODO make the real thing.
+        visitLink((AntTaskLink)link);
     }
 
     /*
