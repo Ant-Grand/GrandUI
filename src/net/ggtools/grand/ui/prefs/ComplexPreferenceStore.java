@@ -1,4 +1,4 @@
-//$Id: /grand/local/GrandUi/src/net/ggtools/grand/ui/GrandUiPrefStore.java 586 2005-03-01T07:47:41.384387Z clabouisse  $
+//$Id$
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
