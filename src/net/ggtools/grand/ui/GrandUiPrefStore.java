@@ -27,17 +27,17 @@
  */
 package net.ggtools.grand.ui;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -47,6 +47,8 @@ import net.ggtools.grand.ui.prefs.GraphPreferencePage;
 import net.ggtools.grand.ui.prefs.LinksPreferencePage;
 import net.ggtools.grand.ui.prefs.NodesPreferencePage;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
@@ -81,14 +83,20 @@ public class GrandUiPrefStore extends PreferenceStore {
         return item.replaceAll("%,", ",").replaceAll("%%", "%");
     }
 
-    final ColorRegistry colorRegistry = new ColorRegistry();
+    private final File baseDir;
 
-    final FontRegistry fontRegistry = new FontRegistry();
+    private final ColorRegistry colorRegistry = new ColorRegistry();
+
+    private final FontRegistry fontRegistry = new FontRegistry();
+
+    private final Set pendingPropertiesRemoval = new HashSet();
+
+    private final Map propertiesTable = new HashMap();
 
     GrandUiPrefStore() throws IOException {
         super();
         setDefaults();
-        final File baseDir = new File(System.getProperty("user.home"), ".grandui");
+        baseDir = new File(System.getProperty("user.home"), ".grandui");
         if (!baseDir.isDirectory()) {
             baseDir.mkdirs();
             if (!baseDir.isDirectory()) { throw new FileNotFoundException("Cannot find/create "
@@ -160,26 +168,33 @@ public class GrandUiPrefStore extends PreferenceStore {
      * @return
      */
     public Properties getProperties(final String key) {
-        final Properties properties = new Properties();
-        final Collection keyList = getCollection(key);
-        for (Iterator iter = keyList.iterator(); iter.hasNext();) {
-            final String currentKey = (String) iter.next();
-            properties.setProperty(currentKey,
-                    getString(getPrefKeyForPropertiesKey(key, currentKey)));
+        Properties properties = null;
+        if (propertiesTable.containsKey(key)) {
+            properties = new Properties();
+            properties.putAll((Properties) propertiesTable.get(key));
         }
         return properties;
     }
 
+    public void load() throws IOException {
+        super.load();
+        // TODO load properties
+    }
+
+    public void save() throws IOException {
+        super.save();
+        // TODO save properties
+    }
+
     /**
+     * Sets a properties to the default value. It removes the key from the
+     * properties table and mark it for removal on next save.
      * @param key
      */
     public void setPropertiesToDefault(final String key) {
-        final Collection keyList = getCollection(key);
-        if (!keyList.isEmpty()) {
-            for (Iterator iter = keyList.iterator(); iter.hasNext();) {
-                final String currentKey = (String) iter.next();
-                setToDefault(getPrefKeyForPropertiesKey(key, currentKey));
-            }
+        if (propertiesTable.containsKey(key)) {
+            propertiesTable.remove(key);
+            pendingPropertiesRemoval.add(key);
         }
     }
 
@@ -201,40 +216,16 @@ public class GrandUiPrefStore extends PreferenceStore {
     }
 
     /**
-     * Save a {@link Properties} into the preference store. The key will store a
-     * the collection of keys and each value will be stored in a distinct entry
-     * with <code><i>key</i>__propertyValue.<i>propertyKey</i></code>. For
-     * instance setting a properties object containing <code>a=ga</code> and
-     * <code>c=bu</code> in the <code>gruik</code> key will create the
-     * following key/value pairs in the preference store:
-     * <ul>
-     * <li>gruik=a,c</
-     * <li>
-     * <li>gruik__propertyValue.a=ga</
-     * <li>
-     * <li>gruik__propertyValue.c=bu</
-     * <li>
-     * </ul>
+     * Save a {@link Properties} into the preference store.
+     * 
+     * @param key
+     * @param props
      */
     public void setValue(final String key, final Properties props) {
-        // Clear previous values for properties.
-        setPropertiesToDefault(key);
-
-        setValue(key, props.keySet());
-        for (Iterator iter = props.entrySet().iterator(); iter.hasNext();) {
-            final Map.Entry entry = (Map.Entry) iter.next();
-            setValue(getPrefKeyForPropertiesKey(key, (String) entry.getKey()), (String) entry
-                    .getValue());
-        }
-    }
-
-    /**
-     * @param key
-     * @param propertyKey
-     * @return
-     */
-    private String getPrefKeyForPropertiesKey(final String key, final String propertyKey) {
-        return key + "__propertyValue." + propertyKey;
+        final Properties myProperties = new Properties();
+        myProperties.putAll(props);
+        propertiesTable.remove(key);
+        propertiesTable.put(key, myProperties);
     }
 
     /**
@@ -268,5 +259,4 @@ public class GrandUiPrefStore extends PreferenceStore {
         NodesPreferencePage.setDefaults(this);
         LinksPreferencePage.setDefaults(this);
     }
-
 }
