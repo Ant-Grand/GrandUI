@@ -1,0 +1,4 @@
+#!/bin/bash
+
+BASEDIR=$(dirname `realpath $0`)
+java -Djava.ext.dirs=$BASEDIR/lib -Djava.$BASEDIR/library.path=$BASEDIR/lib -jar $BASEDIR/grand-ui.jar
