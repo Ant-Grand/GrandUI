@@ -33,6 +33,7 @@ package net.ggtools.grand.ui.menu;
 
 import net.ggtools.grand.ui.actions.OpenFileAction;
 import net.ggtools.grand.ui.actions.QuitAction;
+import net.ggtools.grand.ui.actions.ReloadGraphAction;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.eclipse.jface.action.MenuManager;
@@ -47,6 +48,8 @@ public class FileMenuManager extends MenuManager {
     public FileMenuManager(GraphWindow window) {
         super("File");
         add(new OpenFileAction(window));
+        add(new Separator());
+        add(new ReloadGraphAction(window));
         add(new Separator());
         add(new QuitAction());
     }

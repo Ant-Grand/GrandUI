@@ -118,6 +118,7 @@ public class GraphModel implements GraphProducer {
      * @return Returns the currentGraph.
      */
     public final Graph getGraph() {
+        // Do not cache the graph as node may be filtered out
         Graph graph = null;
         if (producer != null) {
             try {
