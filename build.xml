@@ -33,7 +33,9 @@
 		<attribute name="dest" />
 		<attribute name="url" />
 		<sequential>
-			<get dest="${extlibdir}/@{dest}" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}" />
+			<get dest="${dlcachedir}/@{dest}" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}" />
+			<copy file="${dlcachedir}/@{dest}" todir="${extlibdir}">
+			</copy>
 		</sequential>
 	</macrodef>
 
@@ -182,6 +184,7 @@
 	</target>
 
 	<target name="clean" depends="clean.dist" description="Remove intermediate files but not external libs">
+		<delete dir="${extlibdir}" />
 		<delete dir="${libdir}" />
 		<delete dir="${classesdir}" />
 	</target>
@@ -191,7 +194,6 @@
 	</target>
 
 	<target name="real.clean" depends="clean" description="Remove intermediate files ant external libs">
-		<delete dir="${extlibdir}" />
 		<delete dir="${dlcachedir}" />
 	</target>
 
