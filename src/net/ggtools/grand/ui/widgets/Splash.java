@@ -27,8 +27,12 @@
  */
 package net.ggtools.grand.ui.widgets;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
@@ -39,22 +43,41 @@ import org.eclipse.swt.widgets.Shell;
  * @author Christophe Labouisse
  */
 public class Splash {
+    private static final Log log = LogFactory.getLog(Splash.class);
+
     private final Display display;
 
     private final Image image;
 
     private final Shell shell;
 
-    public Splash(final Display display) {
+    public Splash(final Display display, final String versionString) {
         this.display = display;
         shell = new Shell(display, SWT.NO_TRIM | SWT.NO_BACKGROUND | SWT.ON_TOP);
         shell.setLayout(new FillLayout());
+        image = new Image(display, getClass().getResourceAsStream(
+                "/net/ggtools/grand/ui/resource/splash.png"));
         final Label label = new Label(shell, SWT.NONE);
-        image = new Image(display, getClass().getResourceAsStream("/net/ggtools/grand/ui/resource/splash.png"));
         label.setImage(image);
+        final Rectangle displayBounds = display.getPrimaryMonitor().getBounds();
+        final Rectangle imageBounds = image.getBounds();
+        final GC gc = new GC(image);
+        gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+        final Point size = gc.stringExtent(versionString);
+        gc.drawText(versionString, 210, imageBounds.height - size.y - 10, true);
+        gc.dispose();
+        shell.setBounds(displayBounds.x + ((displayBounds.width - imageBounds.width) / 2),
+                displayBounds.y + ((displayBounds.height - imageBounds.height) / 2),
+                imageBounds.width, imageBounds.height);
+        //shell.addPaintListener(this);
     }
 
     public void close() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            log.warn("Sleep interrupted", e);
+        }
         shell.close();
     }
 
@@ -64,13 +87,6 @@ public class Splash {
     }
 
     public void open() {
-        shell.pack();
-        Rectangle displayBounds = display.getPrimaryMonitor().getBounds();
-        Rectangle imageBounds = image.getBounds();
-        shell.setBounds(displayBounds.x + ((displayBounds.width - imageBounds.width) / 2),
-                displayBounds.y + ((displayBounds.height - imageBounds.height) / 2),
-                imageBounds.width, imageBounds.height);
         shell.open();
     }
-
 }

@@ -161,13 +161,23 @@
 		</jar>
 	</target>
 
-	<target name="compile.java" depends="init" description="Compile the java source files">
+	<target name="compile.java" depends="init,incbuildnum" description="Compile the java source files">
 		<mkdir dir="${classesdir}" />
 		<javac srcdir="${srcdir}" destdir="${classesdir}" debug="true" optimize="true">
 			<classpath>
 				<path refid="ext-libs" />
 			</classpath>
 		</javac>
+	</target>
+	
+	<target name="incbuildnum" depends="init">
+		<propertyfile file="etc/buildnum.properties">
+			<entry key="build.date" type="date" value="now" pattern="yyyy-MM-dd HH:mm:ss"/>
+			<entry key="build.number" type="int" operation="+" default="0"/>
+			<entry key="build.version.string" type="string" value="${product.version}"/>
+		</propertyfile>
+		<property file="etc/buildnum.properties"/>
+		<echo message="build number set to ${build.number}"/>
 	</target>
 
 	<target name="clean" description="Remove intermediate files but not external libs">

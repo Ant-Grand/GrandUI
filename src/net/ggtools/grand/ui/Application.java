@@ -28,7 +28,9 @@
 
 package net.ggtools.grand.ui;
 
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.Properties;
 
 import net.ggtools.grand.ui.widgets.GraphWindow;
 import net.ggtools.grand.ui.widgets.Splash;
@@ -77,20 +79,34 @@ public class Application {
     }
 
     public static void main(String[] args) {
-        log.info("Starting application");
-        Thread.currentThread().setName("Display thread");
-        final Application application = new Application();
-        application.run();
+        try {
+            log.info("Starting application");
+            Thread.currentThread().setName("Display thread");
+            final Application application = new Application();
+            application.run();
+        } catch (IOException e) {
+            log.fatal("Cannot run application", e);
+        }
         log.info("Exiting ...");
         System.exit(0);
     }
+
+    final private Properties buildProperties;
 
     private FontRegistry fontRegistry;
 
     private ImageRegistry imageRegistry;
 
-    private Application() {
+    final private String versionString;
+
+    private Application() throws IOException {
         singleton = this;
+        buildProperties = new Properties();
+        buildProperties.load(getClass().getResourceAsStream("/buildnum.properties"));
+        versionString = "v" + buildProperties.getProperty("build.version.string") + " (build "
+                + buildProperties.getProperty("build.number") + " "
+                + buildProperties.getProperty("build.date") + ")";
+
     }
 
     /**
@@ -140,7 +156,7 @@ public class Application {
         imageRegistry = new ImageRegistry();
 
         imageRegistry.put(APPLICATION_ICON, ImageDescriptor.createFromFile(Application.class,
-                "resource/application.gif"));
+                "resource/application.png"));
         imageRegistry.put(LINK_ICON, ImageDescriptor.createFromFile(Application.class,
                 "resource/link-icon.png"));
         imageRegistry.put(NODE_ICON, ImageDescriptor.createFromFile(Application.class,
@@ -148,11 +164,12 @@ public class Application {
     }
 
     /**
+     * @throws IOException
      *  
      */
     final private void run() {
         final Display display = Display.getDefault();
-        final Splash splash = new Splash(display);
+        final Splash splash = new Splash(display, versionString);
         splash.open();
         initResources();
         ApplicationWindow mainWindow = new GraphWindow();
@@ -160,5 +177,19 @@ public class Application {
         splash.close();
         splash.dispose();
         mainWindow.open();
+    }
+
+    /**
+     * @return Returns the buildProperties.
+     */
+    final Properties getBuildProperties() {
+        return buildProperties;
+    }
+
+    /**
+     * @return Returns the versionString.
+     */
+    final String getVersionString() {
+        return versionString;
     }
 }
