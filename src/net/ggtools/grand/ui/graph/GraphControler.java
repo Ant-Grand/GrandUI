@@ -61,7 +61,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tools.ant.BuildException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.PrintFigureOperation;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -73,7 +72,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -651,39 +649,59 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         parameterChangedEvent = null;
     }
 
-    private void save() {
-        /*
-         * Use the "printable layer" which includes the primary layer and the
-         * connections. See PrintGraphicalViewerOperation for an example.
-         */
-        final Device device = window.getShell().getDisplay();
+    /**
+     * Creates new {@link Image} for the current graph. As new image will be
+     * created for each call the caller is responsible for calling
+     * <code>dispose()</code> on the returned image.
+     * 
+     * @return a new image or <code>null</code> if no graph is loaded. This
+     *         image should be disposed after use.
+     */
+    public Image createImageForGraph() {
+        if (figure == null) return null;
+        final Display display = window.getShell().getDisplay();
         final Rectangle r = figure.getBounds();
+        final Image image = new Image(display, r.width, r.height);
 
+        // Fill the image up.
+        display.syncExec(new Runnable() {
+            public void run() {
+                GC gc = null;
+                SWTGraphics g = null;
+                try {
+                    gc = new GC(image);
+                    g = new SWTGraphics(gc);
+                    g.translate(r.x * -1, r.y * -1);
+                    g.setForegroundColor(figure.getForegroundColor());
+                    g.setBackgroundColor(figure.getBackgroundColor());
+                    g.setFont(figure.getFont());
+                    figure.paint(g);
+                } finally {
+                    if (g != null) {
+                        g.dispose();
+                    }
+                    if (gc != null) {
+                        gc.dispose();
+                    }
+                }
+            }
+        });
+
+        return image;
+    }
+
+    private void save() {
         FileOutputStream result = null;
         try {
             result = new FileOutputStream("/tmp/image.jpg");
 
             Image image = null;
-            GC gc = null;
-            SWTGraphics g = null;
             try {
-                image = new Image(device, r.width, r.height);
-                gc = new GC(image);
-                g = new SWTGraphics(gc);
-                g.translate(r.x * -1, r.y * -1);
-
-                figure.paint(g);
-
+                image = createImageForGraph();
                 ImageLoader imageLoader = new ImageLoader();
                 imageLoader.data = new ImageData[]{image.getImageData()};
                 imageLoader.save(result, SWT.IMAGE_JPEG);
             } finally {
-                if (g != null) {
-                    g.dispose();
-                }
-                if (gc != null) {
-                    gc.dispose();
-                }
                 if (image != null) {
                     image.dispose();
                 }
