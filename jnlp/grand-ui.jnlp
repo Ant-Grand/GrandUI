@@ -8,7 +8,7 @@
     <vendor>ggTools</vendor>
     <homepage href="http://www.ggtools.net/grand/"/>
     <description>GUI for Grand</description>
-    <icon href="grand-icon.gif"/>
+    <icon href="grand-icon.gif" width="64" height="64"/>
     <icon kind="splash" href="splash.jpg"/>
     <offline-allowed/>
   </information>
