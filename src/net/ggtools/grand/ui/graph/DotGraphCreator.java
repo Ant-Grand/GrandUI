@@ -32,14 +32,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.FigureUtilities;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.widgets.Display;
-
 import net.ggtools.grand.ant.AntLink;
 import net.ggtools.grand.ant.AntTargetNode;
 import net.ggtools.grand.ant.AntTaskLink;
@@ -49,6 +41,15 @@ import net.ggtools.grand.graph.Node;
 import net.ggtools.grand.graph.visit.LinkVisitor;
 import net.ggtools.grand.graph.visit.NodeVisitor;
 import net.ggtools.grand.ui.AppData;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.FigureUtilities;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.widgets.Display;
+
 import sf.jzgraph.IDotGraph;
 import sf.jzgraph.IEdge;
 import sf.jzgraph.IGraph;
@@ -242,6 +243,9 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
             vertex.setAttr(DESCRIPTION_ATTR, node.getDescription());
         }
 
+        vertex.setAttr("inthreshold",5);
+        vertex.setAttr("outthreshold",5);
+        
         vertexLUT.put(name, vertex);
         nameDimensions.put(name, vertex);
         return vertex;

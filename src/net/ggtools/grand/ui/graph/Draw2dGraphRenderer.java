@@ -93,6 +93,30 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     private void buildEdgeFigure(final IFigure contents, final IEdge edge) {
         if (log.isDebugEnabled()) log.debug("Building edge from "+ edge.getTail().getName() + " to " + edge.getHead().getName());
         final DotRoute route = (DotRoute) edge.getAttr(POSITION_ATTR);
+        
+        String name = edge.getName();
+        if ("".equals(name)) name = null;
+        
+        final PolylineConnection conn = createConnectionFromRoute(contents, name, route);
+
+        if (edge.getAttr(DRAW2DFGCOLOR_ATTR) != null) {
+            conn.setForegroundColor((Color) edge.getAttr(DRAW2DFGCOLOR_ATTR));
+        }
+
+        final PolygonDecoration dec = new PolygonDecoration();
+        conn.setTargetDecoration(dec);
+
+        conn.setToolTip(new LinkTooltip(edge));
+        contents.add(conn,conn.getBounds());
+    }
+
+    /**
+     * @param contents
+     * @param edge
+     * @param route
+     * @return
+     */
+    private PolylineConnection createConnectionFromRoute(final IFigure contents, final String name, final DotRoute route) {
         final float[] coords = new float[6];
         final ArrayList bends = new ArrayList();
         boolean isFirstPoint = true;
@@ -122,17 +146,17 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         }
 
         final PolylineConnection conn = new PolylineConnection();
-        final PolygonDecoration dec = new PolygonDecoration();
-        conn.setTargetDecoration(dec);
 
         final Point sourcePoint = (Point) bends.remove(0);
-        final Point targetPoint = new Point(route.getEndPt().getX(), route.getEndPt().getY());
+        final Point targetPoint;
+        if (route.getEndPt() != null) {
+        targetPoint = new Point(route.getEndPt().getX(), route.getEndPt().getY());
+        }
+        else {
+            targetPoint = (Point) bends.remove(bends.size()-1);
+        }
         conn.setSourceAnchor(new XYRelativeAnchor(contents,sourcePoint));
         conn.setTargetAnchor(new XYRelativeAnchor(contents,targetPoint));
-
-        if (edge.getAttr(DRAW2DFGCOLOR_ATTR) != null) {
-            conn.setForegroundColor((Color) edge.getAttr(DRAW2DFGCOLOR_ATTR));
-        }
 
         if (bends.isEmpty()) {
             conn.setConnectionRouter(null);
@@ -141,8 +165,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
             conn.setRoutingConstraint(bends);
         }
 
-        final String name = edge.getName();
-        if (!"".equals(name)) {
+        if (name != null) {
             Label label = new Label(name);
             label.setOpaque(true);
             label.setBackgroundColor(ColorConstants.buttonLightest);
@@ -152,9 +175,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
             locator.setRelativePosition(PositionConstants.CENTER);
             conn.add(label, locator);
         }
-
-        conn.setToolTip(new LinkTooltip(edge));
-        contents.add(conn,conn.getBounds());
+        return conn;
     }
 
     /**
@@ -167,8 +188,24 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      */
     private void buildNodeFigure(Draw2dGraph contents, IVertex node) {
         if (log.isDebugEnabled()) log.debug("Building node "+ node.getName());
+        log.debug("Inbus "+node.getAttr("inbus"));
+        log.debug("Outbus "+node.getAttr("outbus"));
+        log.debug("Tobus "+node.getAttr("tobus"));
+        log.debug("Frombus "+node.getAttr("frombus"));
         final Draw2dNode polygon = contents.createNode(node);
         polygon.setToolTip(new NodeTooltip(node));
+        if (node.hasAttr("inbus")) {
+            createConnectionFromRoute(contents,null,(DotRoute)node.getAttr("inbus"));
+        }
+        if (node.hasAttr("outbus")) {
+            createConnectionFromRoute(contents,null,(DotRoute)node.getAttr("outbus"));
+        }
+        if (node.hasAttr("tobus")) {
+            createConnectionFromRoute(contents,null,(DotRoute)node.getAttr("tobus"));
+        }
+        if (node.hasAttr("frombus")) {
+            createConnectionFromRoute(contents,null,(DotRoute)node.getAttr("frombus"));
+        }
     }
 
 }
