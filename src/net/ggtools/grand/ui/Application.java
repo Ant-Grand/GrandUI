@@ -64,7 +64,7 @@ public class Application {
 
     final public static String LINK_ICON = "net.ggtools.grand.ui.linkicon";
 
-    final public static String MONOSPACE_FONT = "net.ggtools.grand.ui.linkfont";
+    final public static String MONOSPACE_FONT = "net.ggtools.grand.ui.monospacefont";
 
     final public static String NODE_FONT = "net.ggtools.grand.ui.nodefont";
 

@@ -39,6 +39,7 @@ import net.ggtools.grand.ant.AntTargetNode;
 import net.ggtools.grand.exceptions.GrandException;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
+import net.ggtools.grand.graph.Node;
 import net.ggtools.grand.output.DotWriter;
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.event.Dispatcher;
@@ -46,6 +47,7 @@ import net.ggtools.grand.ui.event.EventManager;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraph;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraphRenderer;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
+import net.ggtools.grand.ui.widgets.GraphTabItem;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.apache.commons.logging.Log;
@@ -188,6 +190,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
                 currentNode.setSelected(false);
             }
             selectedNodes.clear();
+            dest.setSourceText("");
             selectionChangedDispatcher.dispatch(selectedNodes);
         }
     }
@@ -239,16 +242,12 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
      */
     public void enableBusRouting(final boolean enabled) {
         if (busRoutingEnabled != enabled) {
-            log.info("Using bus routing set to " + enabled);
+            if (log.isInfoEnabled()) log.info("Using bus routing set to " + enabled);
             busRoutingEnabled = enabled;
             parameterChangedEvent.dispatch(this);
-            final Thread thread = new Thread(new Runnable() {
-                public void run() {
-                    progressMonitor.beginTask("Rerouting graph", 3);
-                    renderFilteredGraph();
-                }
-            }, "Graph Layout");
-            thread.start();
+            progressMonitor.beginTask("Rerouting graph", 3);
+            renderFilteredGraph();
+            progressMonitor.done();
         }
     }
 
@@ -389,6 +388,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
             }
             selectedNodes.add(node);
             node.setSelected(true);
+            final AntTargetNode antNode = (AntTargetNode) node.getVertex().getData();
+            dest.setRichSource(((AntTargetNode) node.getVertex().getData()).getRichSource());
             selectionChangedDispatcher.dispatch(selectedNodes);
         }
     }

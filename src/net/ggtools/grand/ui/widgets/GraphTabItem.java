@@ -27,6 +27,9 @@
  */
 package net.ggtools.grand.ui.widgets;
 
+import net.ggtools.grand.ant.AntTargetNode;
+import net.ggtools.grand.ant.AntTargetNode.SourceElement;
+import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.graph.GraphControler;
 import net.ggtools.grand.ui.graph.GraphControlerListener;
 import net.ggtools.grand.ui.graph.GraphDisplayer;
@@ -38,8 +41,14 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 
@@ -64,6 +73,12 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
 
     private final GraphControler controler;
 
+    private SashForm sashForm;
+
+    private StyledText textDisplayer;
+
+    private ScrolledComposite textComposite;
+
     /**
      * Creates a tab to display a new graph.
      * @param parent
@@ -73,16 +88,25 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
     public GraphTabItem(CTabFolder parent, int style, GraphControler controler) {
         super(parent, style);
         this.controler = controler;
-        canvas = new FigureCanvas(parent);
-        setControl(canvas);
+        sashForm = new SashForm(parent, SWT.VERTICAL | SWT.BORDER);
+        setControl(sashForm);
+
+        canvas = new FigureCanvas(sashForm);
         canvas.getViewport().setContentsTracksHeight(true);
         canvas.getViewport().setContentsTracksWidth(true);
         canvas.setBackground(ColorConstants.white);
         canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
         canvasScroller = new CanvasScroller(canvas);
-        //canvas.addMouseListener(synchronizer);
         contextMenuManager = new GraphMenu(this);
         contextMenu = contextMenuManager.createContextMenu(canvas);
+
+        textComposite = new ScrolledComposite(sashForm, SWT.H_SCROLL | SWT.V_SCROLL);
+        textDisplayer = new StyledText(textComposite, SWT.MULTI | SWT.READ_ONLY);
+        textDisplayer.setFont(Application.getInstance().getFont(Application.MONOSPACE_FONT));
+        textComposite.setContent(textDisplayer);
+        textComposite.setExpandHorizontal(true);
+        textComposite.setExpandVertical(true);
+        sashForm.setWeights(new int[]{5, 1});
     }
 
     /*
@@ -131,5 +155,59 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
                 graph.setScroller(canvasScroller);
             }
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setSourceText(java.lang.String)
+     */
+    public void setSourceText(String text) {
+        textDisplayer.setText(text);
+        textComposite.setMinSize(textDisplayer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setRichSource(net.ggtools.grand.ant.AntTargetNode.SourceElement[])
+     */
+    public void setRichSource(SourceElement[] richSource) {
+        if (richSource == null) {
+            setSourceText("");
+            return;
+        }
+        
+        final StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < richSource.length; i++) {
+            AntTargetNode.SourceElement element = richSource[i];
+            buffer.append(element.getText());
+        }
+        setSourceText(buffer.toString());
+        
+        int start = 0;
+        for (int i = 0; i < richSource.length; i++) {
+            AntTargetNode.SourceElement element = richSource[i];
+            Color textColor;
+            switch (element.getStyle()) {
+            case AntTargetNode.SOURCE_ATTRIBUTE:
+                textColor = ColorConstants.darkGreen;
+                break;
+
+            case AntTargetNode.SOURCE_MARKUP:
+                textColor = ColorConstants.darkBlue;
+                break;
+
+            case AntTargetNode.SOURCE_TEXT:
+                textColor = ColorConstants.black;
+                break;
+
+            default:
+                textColor = ColorConstants.lightGray;
+
+                break;
+            }
+            textDisplayer.setStyleRange(new StyleRange(start, element.getText().length(), textColor,
+                    textDisplayer.getBackground()));
+            start += element.getText().length();
+        }
     }
 }

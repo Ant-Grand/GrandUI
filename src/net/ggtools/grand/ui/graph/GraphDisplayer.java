@@ -31,6 +31,7 @@
 
 package net.ggtools.grand.ui.graph;
 
+import net.ggtools.grand.ant.AntTargetNode.SourceElement;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraph;
 
 import org.eclipse.swt.widgets.Menu;
@@ -55,4 +56,16 @@ public interface GraphDisplayer extends GraphControlerProvider {
      * @return
      */
     Menu getContextMenu();
+    
+    /**
+     * Sets a text to display.
+     * @param text
+     * @return
+     */
+    void setSourceText(String text);
+
+    /**
+     * @param richSource
+     */
+    void setRichSource(SourceElement[] richSource);
 }
