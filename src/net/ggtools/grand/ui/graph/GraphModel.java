@@ -54,16 +54,16 @@ public class GraphModel implements GraphProducer {
     private final class LoadFileRunnable implements Runnable {
         private final Log log = LogFactory.getLog(LoadFileRunnable.class);
 
-        private final String fileName;
+        private final File file;
 
-        private LoadFileRunnable(final String fileName) {
-            this.fileName = fileName;
+        private LoadFileRunnable(final File file) {
+            this.file = file;
         }
 
         public void run() {
-            if (log.isDebugEnabled()) log.debug("Loading " + fileName);
-            lastLoadedFile = fileName;
-            final GraphProducer p = new AntProject(new File(fileName));
+            if (log.isDebugEnabled()) log.debug("Loading " + file);
+            lastLoadedFile = file;
+            final GraphProducer p = new AntProject(file);
             synchronized (GraphModel.this) {
                 producer = p;
             }
@@ -75,7 +75,7 @@ public class GraphModel implements GraphProducer {
 
     private GraphProducer producer = null;
 
-    private String lastLoadedFile;
+    private File lastLoadedFile;
 
     private final EventManager eventManager;
 
@@ -95,15 +95,15 @@ public class GraphModel implements GraphProducer {
         }
     }
 
-    public void openFile(final String fileName) {
-        final Thread thread = new Thread(new LoadFileRunnable(fileName), "File loading");
+    public void openFile(final File file) {
+        final Thread thread = new Thread(new LoadFileRunnable(file), "File loading");
         thread.start();
     }
     
     public void reload() {
         if (lastLoadedFile != null) {
             if (log.isDebugEnabled()) log.debug("Reloading last file");
-            openFile((lastLoadedFile));
+            openFile(lastLoadedFile);
         }
         else {
             log.info("No file previously loaded, skipping reload");

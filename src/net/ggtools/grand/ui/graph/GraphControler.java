@@ -176,11 +176,11 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         dest.subTask("Filtering graph");
     }
 
-    public void openFile(final String fileName) {
-        if (log.isInfoEnabled()) log.info("Opening " + fileName);
+    public void openFile(final File file) {
+        if (log.isInfoEnabled()) log.info("Opening " + file);
         dest.beginTask("Opening new graph", 5);
         clearFiltersOnNextLoad = true;
-        model.openFile(fileName);
+        model.openFile(file);
     }
 
     /*
@@ -246,7 +246,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
 
         if (log.isDebugEnabled()) log.debug("Done");
         dest.done();
-        dest.setGraph(figure);
+        dest.setGraph(figure, graph.getName());
     }
 
     /**

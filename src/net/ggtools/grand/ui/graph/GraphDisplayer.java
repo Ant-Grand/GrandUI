@@ -37,12 +37,21 @@ import org.eclipse.swt.widgets.Menu;
 
 
 /**
- * 
+ * Interface to be implemented by classes displaying graphs.
  * 
  * @author Christophe Labouisse
  */
-public interface GraphDisplayer extends IProgressMonitor {
-    void setGraph(IFigure graph);
-    GraphControler getControler();
+public interface GraphDisplayer extends IProgressMonitor, GraphControlerProvider {
+    /**
+     * Ask to display the supplied figure.
+     * @param graph
+     * @param name TODO
+     */
+    void setGraph(IFigure graph, String name);
+    
+    /**
+     * Get the widget context menu.
+     * @return
+     */
     Menu getContextMenu();
 }

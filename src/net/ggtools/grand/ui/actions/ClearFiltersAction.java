@@ -28,7 +28,7 @@
 
 package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.widgets.GraphWindow;
+import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,7 +44,7 @@ public class ClearFiltersAction extends Action {
 
     private static final String DEFAULT_ACTION_NAME = "Remove filters";
 
-    private final GraphWindow window;
+    private final GraphControlerProvider controlerProvider;
 
     /*
      * (non-Javadoc)
@@ -52,12 +52,12 @@ public class ClearFiltersAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     public void run() {
-        window.getControler().clearFilters();
+        controlerProvider.getControler().clearFilters();
     }
 
-    public ClearFiltersAction(final GraphWindow parent) {
+    public ClearFiltersAction(final GraphControlerProvider parent) {
         super(DEFAULT_ACTION_NAME);
-        window = parent;
+        controlerProvider = parent;
     }
 
 }

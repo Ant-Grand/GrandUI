@@ -33,8 +33,8 @@ import java.util.Collection;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.filters.ToNodeFilter;
 import net.ggtools.grand.ui.graph.Draw2dNode;
+import net.ggtools.grand.ui.graph.GraphControlerProvider;
 import net.ggtools.grand.ui.graph.GraphSelectionListener;
-import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,13 +50,13 @@ public class FilterToNodeAction extends Action implements GraphSelectionListener
 
     private static final String DEFAULT_ACTION_NAME = "Filter to selected node";
 
-    private final GraphWindow window;
+    private final GraphControlerProvider controlerProvider;
 
     private String currentNode;
 
-    public FilterToNodeAction(final GraphWindow parent) {
+    public FilterToNodeAction(final GraphControlerProvider parent) {
         super(DEFAULT_ACTION_NAME);
-        window = parent;
+        controlerProvider = parent;
         parent.getControler().addSelectionListener(this);
         setEnabled(false);
     }
@@ -68,7 +68,7 @@ public class FilterToNodeAction extends Action implements GraphSelectionListener
      */
     public void run() {
         final GraphFilter filter = new ToNodeFilter(currentNode);
-        window.getControler().addFilter(filter);
+        controlerProvider.getControler().addFilter(filter);
     }
 
     /*

@@ -1,7 +1,7 @@
-// $Id$
+//$Id$
 /*
  * ====================================================================
- * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
+ * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -25,41 +25,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-package net.ggtools.grand.ui.actions;
-
-import net.ggtools.grand.filters.GraphFilter;
-import net.ggtools.grand.filters.IsolatedNodeFilter;
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.eclipse.jface.action.Action;
+package net.ggtools.grand.ui.graph;
 
 /**
- * An action to filter the isolated nodes.
- * 
  * @author Christophe Labouisse
  */
-public class FilterIsolatedNodesAction extends Action {
-    private static final Log log = LogFactory.getLog(FilterIsolatedNodesAction.class);
-
-    private static final String DEFAULT_ACTION_NAME = "Filter out isolated nodes";
-
-    private final GraphControlerProvider controlerProvider;
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.action.IAction#run()
+public interface GraphControlerProvider {
+    /**
+     * Get the widget controler.
+     * @return
      */
-    public void run() {
-        final GraphFilter filter = new IsolatedNodeFilter();
-        controlerProvider.getControler().addFilter(filter);
-    }
+    GraphControler getControler();
 
-    public FilterIsolatedNodesAction(final GraphControlerProvider parent) {
-        super(DEFAULT_ACTION_NAME);
-        controlerProvider = parent;
-    }
 }

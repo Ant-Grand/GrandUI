@@ -37,7 +37,8 @@ import net.ggtools.grand.ui.actions.FilterFromNodeAction;
 import net.ggtools.grand.ui.actions.FilterIsolatedNodesAction;
 import net.ggtools.grand.ui.actions.FilterMissingNodesAction;
 import net.ggtools.grand.ui.actions.FilterToNodeAction;
-import net.ggtools.grand.ui.widgets.GraphWindow;
+import net.ggtools.grand.ui.graph.GraphControlerProvider;
+import net.ggtools.grand.ui.graph.GraphDisplayer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -49,16 +50,16 @@ import org.eclipse.jface.action.Separator;
  */
 public class GraphMenu extends MenuManager {
 
-    public GraphMenu(GraphWindow window) {
+    public GraphMenu(GraphControlerProvider controlerProvider) {
         super("Graph");
         add(new Separator("general filters"));
-        add(new FilterIsolatedNodesAction(window));
-        add(new FilterMissingNodesAction(window));
+        add(new FilterIsolatedNodesAction(controlerProvider));
+        add(new FilterMissingNodesAction(controlerProvider));
         add(new Separator("selected node filters"));
-        add(new FilterConnectedToNodeAction(window));
-        add(new FilterFromNodeAction(window));
-        add(new FilterToNodeAction(window));
+        add(new FilterConnectedToNodeAction(controlerProvider));
+        add(new FilterFromNodeAction(controlerProvider));
+        add(new FilterToNodeAction(controlerProvider));
         add(new Separator("clear filters"));
-        add(new ClearFiltersAction(window));
+        add(new ClearFiltersAction(controlerProvider));
     }
 }

@@ -28,101 +28,39 @@
 
 package net.ggtools.grand.ui.widgets;
 
+import java.io.File;
+
 import net.ggtools.grand.ui.AppData;
 import net.ggtools.grand.ui.graph.GraphControler;
+import net.ggtools.grand.ui.graph.GraphControlerProvider;
 import net.ggtools.grand.ui.graph.GraphDisplayer;
 import net.ggtools.grand.ui.menu.FileMenuManager;
-import net.ggtools.grand.ui.menu.GraphMenu;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.FigureCanvas;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Viewport;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Christophe Labouisse
  */
-public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
-
-    private final static class CanvasScroller extends MouseAdapter implements MouseMoveListener {
-        final private FigureCanvas canvas;
-
-        private int startDragX, startDragY;
-
-        final Viewport viewport;
-
-        public CanvasScroller(FigureCanvas c) {
-            canvas = c;
-            viewport = canvas.getViewport();
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
-         */
-        public void mouseDown(MouseEvent e) {
-            if (e.button == 2) {
-                final Point vpLocation = viewport.getViewLocation();
-                startDragX = vpLocation.x + e.x;
-                startDragY = vpLocation.y + e.y;
-                canvas.addMouseMoveListener(this);
-            }
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-         */
-        public void mouseMove(MouseEvent e) {
-            canvas.scrollTo(startDragX - e.x, startDragY - e.y);
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-         */
-        public void mouseUp(MouseEvent e) {
-            if (e.button == 2) {
-                canvas.removeMouseMoveListener(this);
-            }
-        }
-    }
+public class GraphWindow extends ApplicationWindow implements GraphControlerProvider {
 
     private static final Log log = LogFactory.getLog(GraphWindow.class);
 
-    private FigureCanvas canvas;
-
-    private Menu contextMenu;
-
-    private MenuManager contextMenuManager;
-
-    private final GraphControler controler;
-
     private Display display;
 
-    private Composite drawingArea;
-
     private MenuManager manager;
+
+    private CTabFolder tabFolder;
 
     public GraphWindow() {
         this(null);
@@ -130,7 +68,6 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
 
     public GraphWindow(Shell parent) {
         super(parent);
-        controler = new GraphControler(this);
         setBlockOnOpen(true);
         addStatusLine();
         addMenuBar();
@@ -167,78 +104,6 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
                 monitor.done();
             }
         });
-    }
-
-    public final Menu getContextMenu() {
-        return contextMenu;
-    }
-
-    /**
-     * @return Returns the contextMenuManager.
-     */
-    public final MenuManager getContextMenuManager() {
-        return contextMenuManager;
-    }
-
-    /**
-     * @return Returns the controler.
-     */
-    public final GraphControler getControler() {
-        return controler;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
-     */
-    public void internalWorked(final double work) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.core.runtime.IProgressMonitor#isCanceled()
-     */
-    public boolean isCanceled() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
-     */
-    public void setCanceled(final boolean value) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setGraph(net.ggtools.grand.ui.graph.Graph)
-     */
-    public void setGraph(final IFigure figure) {
-        getShell().getDisplay().asyncExec(new Runnable() {
-
-            public void run() {
-                canvas.setContents(figure);
-            }
-        });
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.core.runtime.IProgressMonitor#setTaskName(java.lang.String)
-     */
-    public void setTaskName(final String name) {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -292,19 +157,10 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
      */
     protected Control createContents(Composite parent) {
         log.debug("Creating contents");
-        final Composite comp = new Composite(parent, SWT.BORDER);
-        comp.setLayout(new FillLayout());
-        canvas = new FigureCanvas(comp);
-        canvas.getViewport().setContentsTracksHeight(true);
-        canvas.getViewport().setContentsTracksWidth(true);
-        canvas.setBackground(ColorConstants.white);
-        canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
-        final CanvasScroller synchronizer = new CanvasScroller(canvas);
-        canvas.addMouseListener(synchronizer);
-        manager = new GraphMenu(this);
-        contextMenu = manager.createContextMenu(canvas);
+        tabFolder = new CTabFolder(parent, SWT.BORDER | SWT.TOP);
+        //tabFolder.addCTabFolder2Listener(new CTabFolder2Adapter());
         display = parent.getDisplay();
-        return canvas;
+        return tabFolder;
     }
 
     /*
@@ -314,10 +170,33 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
      */
     protected MenuManager createMenuManager() {
         log.debug("Creating menu manager");
-        contextMenuManager = new MenuManager();
-        contextMenuManager.add(new FileMenuManager(this));
-        contextMenuManager.add(new GraphMenu(this));
-        contextMenuManager.setVisible(true);
-        return contextMenuManager;
+        manager = new MenuManager();
+        manager.add(new FileMenuManager(this));
+        //manager.add(new GraphMenu(this));
+        manager.setVisible(true);
+        return manager;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#getControler()
+     */
+    public GraphControler getControler(File buildFile) {
+        final GraphTabItem selectedTab = (GraphTabItem) tabFolder.getSelection();
+        if (selectedTab == null) {
+            return null;
+        }
+        else {
+            return selectedTab.getControler();
+        }
+    }
+
+    /**
+     * @return
+     */
+    public GraphDisplayer newDisplayer() {
+        final GraphTabItem graphTabItem = new GraphTabItem(tabFolder,SWT.CLOSE);
+        tabFolder.setSelection(graphTabItem);
+        return graphTabItem;
     }
 }

@@ -30,7 +30,7 @@ package net.ggtools.grand.ui.actions;
 
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.filters.MissingNodeFilter;
-import net.ggtools.grand.ui.widgets.GraphWindow;
+import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,7 +46,7 @@ public class FilterMissingNodesAction extends Action {
 
     private static final String DEFAULT_ACTION_NAME = "Filter out missing nodes";
 
-    private final GraphWindow window;
+    private final GraphControlerProvider controlerProvider;
 
     /*
      * (non-Javadoc)
@@ -55,11 +55,11 @@ public class FilterMissingNodesAction extends Action {
      */
     public void run() {
         final GraphFilter filter = new MissingNodeFilter();
-        window.getControler().addFilter(filter);
+        controlerProvider.getControler().addFilter(filter);
     }
 
-    public FilterMissingNodesAction(final GraphWindow parent) {
+    public FilterMissingNodesAction(final GraphControlerProvider parent) {
         super(DEFAULT_ACTION_NAME);
-        window = parent;
+        controlerProvider = parent;
     }
 }
