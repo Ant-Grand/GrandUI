@@ -27,6 +27,7 @@
  */
 package net.ggtools.grand.ui.widgets;
 
+import net.ggtools.grand.ui.graph.Draw2dGraph;
 import net.ggtools.grand.ui.graph.GraphControler;
 import net.ggtools.grand.ui.graph.GraphControlerListener;
 import net.ggtools.grand.ui.graph.GraphDisplayer;
@@ -35,17 +36,10 @@ import net.ggtools.grand.ui.menu.GraphMenu;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.FigureCanvas;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Viewport;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 
@@ -58,65 +52,11 @@ import org.eclipse.swt.widgets.Menu;
  * @author Christophe Labouisse
  */
 public class GraphTabItem extends CTabItem implements GraphDisplayer {
-    private final class CanvasScroller extends MouseAdapter implements MouseMoveListener {
-        final private FigureCanvas canvas;
-
-        private int startDragX, startDragY;
-
-        private final Viewport viewport;
-        
-        private boolean inDragMode;
-
-        public CanvasScroller(FigureCanvas c) {
-            canvas = c;
-            viewport = canvas.getViewport();
-            inDragMode = false;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
-         */
-        public void mouseDown(MouseEvent e) {
-            log.trace("Got mouse down");
-            if (!inDragMode && (e.button == 2 || e.button == 1)) {
-                final Point vpLocation = viewport.getViewLocation();
-                startDragX = vpLocation.x + e.x;
-                startDragY = vpLocation.y + e.y;
-                canvas.addMouseMoveListener(this);
-                getControl().setCursor(Cursors.SIZEALL);
-                inDragMode = true;
-            }
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-         */
-        public void mouseMove(MouseEvent e) {
-            canvas.scrollTo(startDragX - e.x, startDragY - e.y);
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-         */
-        public void mouseUp(MouseEvent e) {
-            log.trace("Got mouse up");
-            if (inDragMode && (e.button == 2 || e.button == 1)) {
-                canvas.removeMouseMoveListener(this);
-                getControl().setCursor(Cursors.ARROW);
-                inDragMode = false;
-            }
-        }
-    }
-
     private static final Log log = LogFactory.getLog(GraphTabItem.class);
 
     private FigureCanvas canvas;
+
+    private final CanvasScroller canvasScroller;
 
     private final Menu contextMenu;
 
@@ -126,7 +66,8 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
 
     /**
      * Creates a tab to display a new graph.
-     * @param parent parent CTabFolder.
+     * @param parent
+     *            parent CTabFolder.
      * @param style
      */
     public GraphTabItem(CTabFolder parent, int style, GraphControler controler) {
@@ -138,8 +79,8 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         canvas.getViewport().setContentsTracksWidth(true);
         canvas.setBackground(ColorConstants.white);
         canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
-        final CanvasScroller synchronizer = new CanvasScroller(canvas);
-        canvas.addMouseListener(synchronizer);
+        canvasScroller = new CanvasScroller(canvas);
+        //canvas.addMouseListener(synchronizer);
         contextMenuManager = new GraphMenu(this);
         contextMenu = contextMenuManager.createContextMenu(canvas);
     }
@@ -179,13 +120,14 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
      * 
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#setGraph(net.ggtools.grand.ui.graph.Graph)
      */
-    public void setGraph(final IFigure figure, final String name, final String toolTip) {
+    public void setGraph(final Draw2dGraph graph, final String name, final String toolTip) {
         Display.getDefault().asyncExec(new Runnable() {
 
             public void run() {
-                canvas.setContents(figure);
+                canvas.setContents(graph);
                 setText(name);
                 setToolTipText(toolTip);
+                graph.setScroller(canvasScroller);
             }
         });
     }

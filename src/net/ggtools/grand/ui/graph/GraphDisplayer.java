@@ -31,7 +31,6 @@
 
 package net.ggtools.grand.ui.graph;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.swt.widgets.Menu;
 
 
@@ -47,7 +46,7 @@ public interface GraphDisplayer extends GraphControlerProvider {
      * @param name
      * @param toolTip
      */
-    void setGraph(IFigure graph, String name, String toolTip);
+    void setGraph(Draw2dGraph graph, String name, String toolTip);
     
     /**
      * Get the widget context menu.

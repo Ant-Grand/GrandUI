@@ -31,6 +31,7 @@ package net.ggtools.grand.ui.graph;
 import java.util.Collection;
 
 import net.ggtools.grand.ui.Application;
+import net.ggtools.grand.ui.widgets.CanvasScroller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -85,6 +86,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
          * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
          */
         public void mousePressed(MouseEvent me) {
+            log.trace("Got mouse down");
             switch (me.button) {
             case (1): {
                 final boolean addToSelection;
@@ -117,8 +119,11 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     private GraphControler graphControler;
 
+    private CanvasScroller scroller;
+
     public Draw2dGraph() {
         super();
+        scroller = null;
         setLayoutManager(new XYLayout());
         addMouseListener(new MouseListener.Stub() {
             /*
@@ -128,16 +133,36 @@ public class Draw2dGraph extends Panel implements SelectionManager {
              */
             public void mousePressed(MouseEvent me) {
                 switch (me.button) {
-                case (1): {
+                case (1):
                     deselectAllNodes();
                     me.consume();
+
+                case (2):
+                    if (scroller != null) {
+                        scroller.enterDragMode();
+                    }
                     break;
-                }
-                case (3): {
+
+                case (3):
                     if (graphControler != null) {
                         graphControler.getDest().getContextMenu().setVisible(true);
                     }
+                    break;
                 }
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see org.eclipse.draw2d.MouseListener.Stub#mouseReleased(org.eclipse.draw2d.MouseEvent)
+             */
+            public void mouseReleased(MouseEvent me) {
+                switch (me.button) {
+                case (1):
+                case (2):
+                    if (scroller != null) {
+                        scroller.leaveDragMode();
+                    }
+                    break;
                 }
             }
         });
@@ -219,5 +244,17 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     public Collection getSelection() {
         if (graphControler != null) return graphControler.getSelection();
         return null;
+    }
+    /**
+     * @return Returns the scroller.
+     */
+    public final CanvasScroller getScroller() {
+        return scroller;
+    }
+    /**
+     * @param scroller The scroller to set.
+     */
+    public final void setScroller(CanvasScroller scroller) {
+        this.scroller = scroller;
     }
 }
