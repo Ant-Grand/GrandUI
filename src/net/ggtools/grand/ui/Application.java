@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import net.ggtools.grand.log.LoggerManager;
+import net.ggtools.grand.ui.log.CommonsLoggingLoggerFactory;
 import net.ggtools.grand.ui.widgets.ExceptionDialog;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 import net.ggtools.grand.ui.widgets.Splash;

@@ -25,36 +25,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package net.ggtools.grand.ui;
+package net.ggtools.grand.ui.log;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import net.ggtools.grand.log.LoggerFactory;
 
 /**
  * @author Christophe Labouisse
  */
-class CommonsLoggingLoggerFactory implements LoggerFactory {
-
-    /**
-     * Package instanciation only.
-     */
-    CommonsLoggingLoggerFactory() {
-    }
-
-    /* (non-Javadoc)
-     * @see net.ggtools.grand.log.LoggerFactory#getLog(java.lang.Class)
-     */
-    public Log getLog(Class clazz) {
-        return LogFactory.getLog(clazz);
-    }
-
-    /* (non-Javadoc)
-     * @see net.ggtools.grand.log.LoggerFactory#getLog(java.lang.String)
-     */
-    public Log getLog(String name) {
-        return LogFactory.getLog(name);
-    }
-
+public interface LogEventListener {
+    void logEventReceived(LogEvent event);
 }

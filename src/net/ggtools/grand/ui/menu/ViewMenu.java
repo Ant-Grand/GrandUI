@@ -31,6 +31,7 @@
 
 package net.ggtools.grand.ui.menu;
 
+import net.ggtools.grand.ui.actions.ShowLogAction;
 import net.ggtools.grand.ui.actions.ShowOutlinePanelAction;
 import net.ggtools.grand.ui.actions.ShowSourcePanelAction;
 import net.ggtools.grand.ui.actions.UseBusRoutingAction;
@@ -61,5 +62,7 @@ public class ViewMenu extends MenuManager {
         add(new ZoomOutAction(window));
         add(new ZoomResetAction(window));
         // Zoom menu
+        add(new Separator("misc"));
+        add(new ShowLogAction(window));
     }
 }
