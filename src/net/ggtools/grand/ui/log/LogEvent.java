@@ -76,7 +76,7 @@ public class LogEvent implements Serializable {
     /**
      * Comment for <code>serialVersionUID</code>
      */
-    private static final long serialVersionUID = 3258129163289702704L;
+    private static final long serialVersionUID = 3545794399121453874L;
 
     private Throwable exception;
 

@@ -51,7 +51,11 @@ public class LogEventBufferImpl implements LogEventBuffer {
      */
     private static final Log log = LogFactory.getLog(LogEventBufferImpl.class);
 
-    private static final long serialVersionUID = 4050761593883343159L;
+    /**
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3760564170055364917L;
+
 
     /**
      * Get the singleton instance.
