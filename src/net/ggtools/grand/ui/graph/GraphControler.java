@@ -29,6 +29,9 @@
 package net.ggtools.grand.ui.graph;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -58,7 +61,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tools.ant.BuildException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.PrintFigureOperation;
+import org.eclipse.draw2d.SWTGraphics;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
@@ -66,6 +72,12 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.widgets.Display;
 
@@ -479,6 +491,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      */
     public void reloadGraph() {
         reloadGraph(null);
+        save();
     }
 
     public void reloadGraph(Properties properties) {
@@ -496,7 +509,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
             filterAndRenderGraph(progressMonitor);
             if (log.isInfoEnabled()) log.info("Graph reloaded");
-            RecentFilesManager.getInstance().updatePropertiesFor(model.getLastLoadedFile(), properties);
+            RecentFilesManager.getInstance().updatePropertiesFor(model.getLastLoadedFile(),
+                    properties);
         } catch (GrandException e) {
             reportError("Cannot reload graph", e);
         } catch (final BuildException e) {
@@ -634,5 +648,53 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         graphEventManager = null;
         selectionChangedDispatcher = null;
         parameterChangedEvent = null;
+    }
+
+    private void save() {
+        final Device device = window.getShell().getDisplay();
+        final Rectangle r = figure.getBounds();
+
+        FileOutputStream result = null;
+        try {
+            result = new FileOutputStream("/tmp/image.gif");
+
+            Image image = null;
+            GC gc = null;
+            Graphics g = null;
+            try {
+                image = new Image(device, r.width, r.height);
+                gc = new GC(image);
+                g = new SWTGraphics(gc);
+                g.translate(r.x * -1, r.y * -1);
+
+                figure.paint(g);
+
+                ImageLoader imageLoader = new ImageLoader();
+                imageLoader.data = new ImageData[]{image.getImageData()};
+                imageLoader.save(result, SWT.IMAGE_JPEG);
+            } finally {
+                if (g != null) {
+                    g.dispose();
+                }
+                if (gc != null) {
+                    gc.dispose();
+                }
+                if (image != null) {
+                    image.dispose();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        finally {
+            if (result != null) {
+                try {
+                    result.close();
+                } catch (IOException e) {
+                    log.warn("Got exception exporting graph",e);
+                }
+            }
+        }
     }
 }
