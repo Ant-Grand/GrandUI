@@ -29,7 +29,6 @@
 package net.ggtools.grand.ui.event;
 
 import sf.blacksun.util.StopWatch;
-import net.ggtools.grand.ui.event.EventManager.InternalDispatcher;
 
 /**
  * @author Christophe Labouisse
@@ -37,11 +36,11 @@ import net.ggtools.grand.ui.event.EventManager.InternalDispatcher;
 public class DispatcherPerformanceMeter {
 
     private static final int LOOP = 100000000;
+
     /**
      * @author Christophe Labouisse
      */
-    public static class ManualDispatcher extends DispatcherAdapter implements Dispatcher,
-            InternalDispatcher {
+    public static class ManualDispatcher extends DispatcherAdapter implements Dispatcher {
 
         /**
          * @param manager
