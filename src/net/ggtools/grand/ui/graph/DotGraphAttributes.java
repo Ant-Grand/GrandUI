@@ -39,7 +39,7 @@ public interface DotGraphAttributes {
     static final String _BOUNDS_ATTR = "-bounds";
 
     static final String _SHAPE_ATTR = "-shape";
-    
+
     static final String BUILD_FILE_ATTR = "build.file";
 
     static final String DESCRIPTION_ATTR = "description";
@@ -49,7 +49,7 @@ public interface DotGraphAttributes {
     static final String DRAW2DFILLCOLOR_ATTR = "draw2dfillcolor";
 
     static final String DRAW2DLINEWIDTH_ATTR = "draw2dlinewidth";
-    
+
     static final String IF_CONDITION_ATTR = "ifCondition";
 
     static final String LABEL_ATTR = "label";
@@ -59,8 +59,10 @@ public interface DotGraphAttributes {
     static final String MINWIDTH_ATTR = "minwidth";
 
     static final double PATH_ITERATOR_FLATNESS = 1.0;
-    
+
     static final String LINK_PARAMETERS_ATTR = "link.params";
+
+    static final String LINK_SUBANT_DIRECTORIES = "link.subant.directories";
 
     static final String LINK_TASK_ATTR = "link.task";
 
@@ -69,6 +71,5 @@ public interface DotGraphAttributes {
     static final String SHAPE_ATTR = "shape";
 
     static final String UNLESS_CONDITION_ATTR = "unlessCondition";
-
 
 }

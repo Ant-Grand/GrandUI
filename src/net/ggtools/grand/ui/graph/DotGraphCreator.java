@@ -154,18 +154,8 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      */
     public void visitLink(AntTaskLink link) {
         final IEdge edge = addLink(link);
-        AntTaskLink taskLink = (AntTaskLink) link;
-
-        edge.setAttr(LINK_TASK_ATTR, taskLink.getTaskName());
-        edge.setAttr(LINK_PARAMETERS_ATTR, taskLink.getParameterMap());
-    }
-    
-    /* (non-Javadoc)
-     * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.SubantTaskLink)
-     */
-    public void visitLink(SubantTaskLink link) {
-        // TODO make the real thing.
-        visitLink((AntTaskLink)link);
+        edge.setAttr(LINK_TASK_ATTR, link.getTaskName());
+        edge.setAttr(LINK_PARAMETERS_ATTR, link.getParameterMap());
     }
 
     /*
@@ -175,6 +165,17 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
     public void visitLink(Link link) {
         addLink(link);
     }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.SubantTaskLink)
+     */
+    public void visitLink(SubantTaskLink link) {
+        final IEdge edge = addLink(link);
+        edge.setAttr(LINK_TASK_ATTR, link.getTaskName());
+        edge.setAttr(LINK_PARAMETERS_ATTR, link.getParameterMap());
+        edge.setAttr(LINK_SUBANT_DIRECTORIES,link.getDirectories());
+     }
 
     /*
      * (non-Javadoc)
@@ -217,12 +218,16 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
                 (IVertex) vertexLUT.get(link.getEndNode().getName()), currentLinkName, link);
         final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
         if (link.hasAttributes(Link.ATTR_WEAK_LINK)) {
-            edge.setAttr(DRAW2DFGCOLOR_ATTR, preferenceStore.getColor(PreferenceKeys.LINK_WEAK_COLOR));
-            edge.setAttr(DRAW2DLINEWIDTH_ATTR, preferenceStore.getInt(PreferenceKeys.LINK_WEAK_LINEWIDTH));
+            edge.setAttr(DRAW2DFGCOLOR_ATTR, preferenceStore
+                    .getColor(PreferenceKeys.LINK_WEAK_COLOR));
+            edge.setAttr(DRAW2DLINEWIDTH_ATTR, preferenceStore
+                    .getInt(PreferenceKeys.LINK_WEAK_LINEWIDTH));
         }
         else {
-            edge.setAttr(DRAW2DFGCOLOR_ATTR, preferenceStore.getColor(PreferenceKeys.LINK_DEFAULT_COLOR));
-            edge.setAttr(DRAW2DLINEWIDTH_ATTR, preferenceStore.getInt(PreferenceKeys.LINK_DEFAULT_LINEWIDTH));
+            edge.setAttr(DRAW2DFGCOLOR_ATTR, preferenceStore
+                    .getColor(PreferenceKeys.LINK_DEFAULT_COLOR));
+            edge.setAttr(DRAW2DLINEWIDTH_ATTR, preferenceStore
+                    .getInt(PreferenceKeys.LINK_DEFAULT_LINEWIDTH));
         }
         return edge;
     }
@@ -256,8 +261,10 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
 
         if (useBusRouting) {
             final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
-            vertex.setAttr("inthreshold", preferenceStore.getInt(PreferenceKeys.GRAPH_BUS_IN_THRESHOLD));
-            vertex.setAttr("outthreshold", preferenceStore.getInt(PreferenceKeys.GRAPH_BUS_OUT_THRESHOLD));
+            vertex.setAttr("inthreshold", preferenceStore
+                    .getInt(PreferenceKeys.GRAPH_BUS_IN_THRESHOLD));
+            vertex.setAttr("outthreshold", preferenceStore
+                    .getInt(PreferenceKeys.GRAPH_BUS_OUT_THRESHOLD));
         }
 
         vertexLUT.put(name, vertex);

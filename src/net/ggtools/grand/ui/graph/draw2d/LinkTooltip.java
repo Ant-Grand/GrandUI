@@ -27,19 +27,26 @@
  */
 package net.ggtools.grand.ui.graph.draw2d;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.graph.DotGraphAttributes;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.text.BlockFlow;
 import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.draw2d.text.InlineFlow;
 import org.eclipse.draw2d.text.TextFlow;
+import org.eclipse.swt.graphics.Font;
 
 import sf.jzgraph.IEdge;
 
@@ -49,6 +56,8 @@ import sf.jzgraph.IEdge;
  * @author Christophe Labouisse
  */
 public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttributes {
+    private static final String ELLIPSIS = "...";
+
     private static final Log log = LogFactory.getLog(LinkTooltip.class);
 
     private final IEdge edge;
@@ -64,10 +73,14 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
     }
 
     protected void createContents() {
+        if (log.isDebugEnabled()) {
+            log.debug("createContents() - start");
+        }
+
         final Label type;
         if (edge.hasAttr(LINK_TASK_ATTR)) {
-            type = new Label(edge.getAttrAsString(LINK_TASK_ATTR), Application.getInstance().getImage(
-                    Application.LINK_ICON));
+            type = new Label(edge.getAttrAsString(LINK_TASK_ATTR), Application.getInstance()
+                    .getImage(Application.LINK_ICON));
         }
         else {
             type = new Label("depency", Application.getInstance().getImage(Application.LINK_ICON));
@@ -75,13 +88,18 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
         type.setFont(Application.getInstance().getBoldFont(Application.TOOLTIP_FONT));
         add(type);
 
+        final Font italicMonospaceFont = Application.getInstance().getItalicFont(
+                Application.TOOLTIP_MONOSPACE_FONT);
+        final Font monospaceFont = Application.getInstance().getFont(
+                Application.TOOLTIP_MONOSPACE_FONT);
+
         final FlowPage page = createFlowPage();
         BlockFlow blockFlow = new BlockFlow();
         TextFlow textFlow = new TextFlow("From: ");
         blockFlow.add(textFlow);
         InlineFlow inline = new InlineFlow();
         textFlow = new TextFlow(edge.getTail().getName());
-        textFlow.setFont(Application.getInstance().getItalicFont(Application.TOOLTIP_MONOSPACE_FONT));
+        textFlow.setFont(italicMonospaceFont);
         inline.add(textFlow);
         blockFlow.add(inline);
         blockFlow.setBorder(new SectionBorder());
@@ -92,7 +110,7 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
         blockFlow.add(textFlow);
         inline = new InlineFlow();
         textFlow = new TextFlow(edge.getHead().getName());
-        textFlow.setFont(Application.getInstance().getItalicFont(Application.TOOLTIP_MONOSPACE_FONT));
+        textFlow.setFont(italicMonospaceFont);
         inline.add(textFlow);
         blockFlow.add(inline);
         page.add(blockFlow);
@@ -110,14 +128,13 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
                 final BlockFlow outterBlock = new BlockFlow();
                 for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
                     Map.Entry entry = (Map.Entry) iter.next();
-                    BlockFlow innerBlock = new BlockFlow();
+                    final BlockFlow innerBlock = new BlockFlow();
                     textFlow = new TextFlow(((String) entry.getKey()) + ": ");
-                    textFlow.setFont(Application.getInstance().getFont(Application.TOOLTIP_MONOSPACE_FONT));
+                    textFlow.setFont(monospaceFont);
                     innerBlock.add(textFlow);
                     inline = new InlineFlow();
                     textFlow = new TextFlow((String) entry.getValue());
-                    textFlow.setFont(Application.getInstance().getItalicFont(
-                            Application.TOOLTIP_MONOSPACE_FONT));
+                    textFlow.setFont(italicMonospaceFont);
                     inline.add(textFlow);
                     innerBlock.add(inline);
                     outterBlock.add(innerBlock);
@@ -125,6 +142,56 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
                 outterBlock.setBorder(new SectionBorder());
                 page.add(outterBlock);
             }
+        }
+
+        if (edge.hasAttr(LINK_SUBANT_DIRECTORIES)) {
+            final Collection directories = (Collection) edge.getAttr(LINK_SUBANT_DIRECTORIES);
+            if (!directories.isEmpty()) {
+                final BlockFlow outterBlock = new BlockFlow();
+                textFlow = new TextFlow("Generic ant file to be applied to:");
+                outterBlock.add(textFlow);
+                for (final Iterator iter = directories.iterator(); iter.hasNext();) {
+                    String currentDirectory = (String) iter.next();
+
+                    Dimension dim = FigureUtilities.getTextExtents(currentDirectory, monospaceFont);
+                    if (dim.width > TOOLTIP_WIDTH) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("createContents() - Filename too long, truncating : dim = "
+                                    + dim + ", currentDirectory = " + currentDirectory);
+                        }
+
+                        final int length = currentDirectory.length();
+                        int index = length;
+                        String part = "";
+                        while (true) {
+                            index = currentDirectory.lastIndexOf(File.separatorChar, index - 1);
+                            final String tmp = currentDirectory.substring(index);
+                            if (FigureUtilities.getTextExtents(ELLIPSIS + tmp, monospaceFont).width > TOOLTIP_WIDTH)
+                                    break;
+                            part = tmp;
+                        }
+                        currentDirectory = ELLIPSIS + part;
+
+                        if (log.isDebugEnabled()) {
+                            log.debug("createContents() - dir truncated to: currentDirectory = "
+                                    + currentDirectory);
+                        }
+                    }
+
+                    final BlockFlow innerBlock = new BlockFlow();
+                    textFlow = new TextFlow(currentDirectory);
+                    textFlow.setFont(monospaceFont);
+                    innerBlock.add(textFlow);
+                    outterBlock.add(innerBlock);
+                }
+                outterBlock.setBorder(new SectionBorder());
+                page.add(outterBlock);
+
+            }
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("createContents() - end");
         }
     }
 }

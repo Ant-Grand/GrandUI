@@ -72,7 +72,7 @@ abstract class AbstractGraphTooltip extends Figure {
 
     }
 
-    private static final int TOOLTIP_WIDTH = 400;
+    static final int TOOLTIP_WIDTH = 400;
     
     /**
      * Default constructor. 
