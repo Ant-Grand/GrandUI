@@ -77,6 +77,14 @@ public class PropertyEditor {
 
         private TableViewer tableViewer;
 
+        public void allPropertiesChanged(Object fillerParameter) {
+            tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
+                public void run() {
+                    tableViewer.refresh();
+                }
+            });
+        }
+
         public void clearedProperties(Object fillerParameter) {
             tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
                 public void run() {

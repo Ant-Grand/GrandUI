@@ -31,11 +31,18 @@ package net.ggtools.grand.ui.widgets.property;
  * @author Christophe Labouisse
  */
 public interface PropertyChangedListener {
-    void propertyChanged(PropertyPair propertyPair);
-    
+
+    /**
+     * This method will be call when a significant number of properties are
+     * changed. Listeners should reparse the complete property list.
+     */
+    void allPropertiesChanged(Object fillerParameter);
+
+    void clearedProperties(Object fillerParameter);
+
     void propertyAdded(PropertyPair propertyPair);
 
+    void propertyChanged(PropertyPair propertyPair);
+
     void propertyRemoved(PropertyPair propertyPair);
-    
-    void clearedProperties(Object fillerParameter);
 }

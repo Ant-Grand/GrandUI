@@ -49,6 +49,8 @@ class PropertyList {
      */
     private static final Log log = LogFactory.getLog(PropertyList.class);
 
+    private Dispatcher allPropertiesChangedDispatcher;
+
     private Dispatcher clearedPropertiesDispatcher;
 
     private Dispatcher propertyAddedDispatcher;
@@ -73,6 +75,9 @@ class PropertyList {
             clearedPropertiesDispatcher = eventManager
                     .createDispatcher(PropertyChangedListener.class.getDeclaredMethod(
                             "clearedProperties", new Class[]{Object.class}));
+            allPropertiesChangedDispatcher = eventManager
+                    .createDispatcher(PropertyChangedListener.class.getDeclaredMethod(
+                            "allPropertiesChanged", new Class[]{Object.class}));
         } catch (SecurityException e) {
             log.fatal("Caught exception initializing PropertyList", e);
             throw new RuntimeException("Cannot instanciate PropertyList", e);
@@ -85,8 +90,9 @@ class PropertyList {
     public void addAll(final Map properties) {
         for (Iterator iter = properties.entrySet().iterator(); iter.hasNext();) {
             Map.Entry entry = (Map.Entry) iter.next();
-            add(new PropertyPair(entry));
+            pairList.add(new PropertyPair(entry));
         }
+
     }
 
     public void addProperty() {
