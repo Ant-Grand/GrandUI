@@ -1,0 +1,14 @@
+<!-- Test build file for ticket #79 -->
+<project default="init">
+    
+    <taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"/>
+
+    <!-- ================================= 
+          target: init              
+         ================================= -->
+    <target name="init" description="--> description">
+        <echo>Init done</echo>
+    </target>
+
+
+</project>
