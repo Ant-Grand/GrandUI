@@ -35,6 +35,7 @@ import net.ggtools.grand.ui.actions.OpenFileAction;
 import net.ggtools.grand.ui.actions.PageSetupAction;
 import net.ggtools.grand.ui.actions.PreferenceAction;
 import net.ggtools.grand.ui.actions.PrintAction;
+import net.ggtools.grand.ui.actions.QuickOpenFileAction;
 import net.ggtools.grand.ui.actions.QuitAction;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
@@ -49,6 +50,7 @@ import org.eclipse.jface.action.Separator;
 public class FileMenuManager extends MenuManager {
     public FileMenuManager(GraphWindow window) {
         super("File");
+        add(new QuickOpenFileAction(window));
         add(new OpenFileAction(window));
         add(new Separator("print"));
         add(new PageSetupAction(window));

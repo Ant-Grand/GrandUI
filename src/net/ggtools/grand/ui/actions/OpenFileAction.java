@@ -42,7 +42,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 
 /**
- * 
+ * Open a build file allowing setting some properties.
  * 
  * @author Christophe Labouisse
  * @see org.eclipse.jface.action.Action
@@ -53,7 +53,7 @@ public class OpenFileAction extends Action {
 
     private static final String[] FILTER_EXTENSIONS = new String[]{"*.xml","*"};
     
-    private static final String DEFAULT_ACTION_NAME = "Open";
+    private static final String DEFAULT_ACTION_NAME = "Open with properties";
 
     private final GraphWindow window;
     private String previousPath;
@@ -74,7 +74,7 @@ public class OpenFileAction extends Action {
     }
 
     /**
-     * Creates a new OpenFileAction object.
+     * Creates a new QuickOpenFileAction object.
      * 
      * @param parent
      */
@@ -84,7 +84,7 @@ public class OpenFileAction extends Action {
     }
 
     /**
-     * Creates a new OpenFileAction object with specific name.
+     * Creates a new QuickOpenFileAction object with specific name.
      * 
      * @param name
      * @param parent
@@ -95,6 +95,6 @@ public class OpenFileAction extends Action {
     }
 
     public int getAccelerator() {
-        return SWT.CONTROL | 'O';
+        return SWT.SHIFT | SWT.CONTROL | 'O';
     }
 }
