@@ -62,6 +62,24 @@
 		</sequential>
 	</macrodef>
 
+	<macrodef name="get-extract-tgz">
+		<attribute name="dest" />
+		<attribute name="url" />
+		<attribute name="libdir" default="${extlibdir}" />
+		<element name="select" optional="yes" />
+		<sequential>
+			<get dest="${dlcachedir}/@{dest}.tgz" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}" />
+			<mkdir dir="${dlcachedir}/@{dest}" />
+			<untar compression="gzip" dest="${dlcachedir}/@{dest}" src="${dlcachedir}/@{dest}.tgz">
+				<select />
+			</untar>
+			<mkdir dir="@{libdir}" />
+			<copy todir="@{libdir}" flatten="true" includeemptydirs="no" preservelastmodified="true">
+				<fileset dir="${dlcachedir}/@{dest}" />
+			</copy>
+		</sequential>
+	</macrodef>
+	
 	<selector id="src-dist-selector">
 		<or>
 			<filename name="src/**" />
@@ -76,6 +94,16 @@
 			<filename name="build.properties" />
 		</or>
 	</selector>
+	
+	<patternset id="get-rcp-patterns">
+		<include name="**/runtime.jar" />
+		<include name="**/jface.jar" />
+		<include name="**/osgi.jar" />
+		<include name="**/swt*.jar" />
+		<include name="**/swt*.dll" if="isWin32" />
+		<include name="**/libswt*.so" if="isLinux" />
+	</patternset>
+
 
 	<target name="init" depends="get-deps">
 		<path id="ext-libs">
@@ -246,19 +274,26 @@
 		<getjar dest="grand.jar" url="${url.grand.jar}" />
 	</target>
 
-	<target name="get-rcp" depends="set-swt-properties" unless="noget">
+	<target name="get-rcp-zip">
+		<fail unless="url.eclipse.rcp" message="url.eclipse.rcp should be defined"/>
 		<get-extract-zip dest="rcp" url="${url.eclipse.rcp}">
 			<select>
-				<patternset>
-					<include name="**/runtime.jar" />
-					<include name="**/jface.jar" />
-					<include name="**/osgi.jar" />
-					<include name="**/swt*.jar" />
-					<include name="**/swt*.dll" />
-					<include name="**/libswt*.so" />
-				</patternset>
+				<patternset refid="get-rcp-patterns"/>
 			</select>
 		</get-extract-zip>
+	</target>
+	
+	<target name="get-rcp-tgz">
+		<fail unless="url.eclipse.rcp" message="url.eclipse.rcp should be defined"/>
+		<get-extract-tgz dest="rcp" url="${url.eclipse.rcp}">
+			<select>
+				<patternset refid="get-rcp-patterns"/>
+			</select>
+		</get-extract-tgz>
+	</target>
+
+	<target name="get-rcp" depends="set-swt-properties" unless="noget">
+		<antcall target="${get-rcp-target}" inheritall="true" inheritrefs="true" />
 		<!-- Creates a swt-lib.jar for JNLP -->
 		<delete dir="tmp" />
 		<mkdir dir="tmp/rcp" />
@@ -323,6 +358,7 @@
 		<property name="url.eclipse.alien.swt" value="${url.eclipse.swt.windows}" />
 		<property name="dist.nativedir" value="linux-gtk" />
 		<property name="dist.aliendir" value="win32" />
+		<property name="get-rcp-target" value="get-rcp-tgz" />
 	</target>
 
 	<target name="set-swt-properties-win32" if="isWin32">
@@ -330,5 +366,6 @@
 		<property name="url.eclipse.alien.swt" value="${url.eclipse.swt.linux}" />
 		<property name="dist.nativedir" value="win32" />
 		<property name="dist.aliendir" value="linux-gtk" />
+		<property name="get-rcp-target" value="get-rcp-zip" />
 	</target>
 </project>
