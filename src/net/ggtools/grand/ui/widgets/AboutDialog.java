@@ -82,7 +82,7 @@ public class AboutDialog extends Dialog {
         image.setImage(Application.getInstance().getImage(Application.ABOUT_DIALOG_IMAGE));
         Label message = new Label(composite, SWT.NONE);
         message.setText("Grand ©2004 Christophe Labouisse, distributed under BSD License\nUi: "
-                + Application.getInstance().getVersionString() + " Core: v1.4");
+                + Application.getInstance().getVersionString());
         return composite;
     }
 }
