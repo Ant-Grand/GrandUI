@@ -53,35 +53,29 @@ import sf.jzgraph.impl.GraphShape;
 public class Draw2dNode extends Polygon implements DotGraphAttributes {
     private static final Log log = LogFactory.getLog(Draw2dNode.class);
 
-    private IVertex vertex;
+    private Draw2dGraph graph;
 
     private Label label;
 
-    private boolean selected;
+    private String name;
 
     private Color nodeBgColor;
 
     private Color nodeFgColor;
 
+    private boolean selected;
+
     private Color selectedBgColor;
 
-    private Draw2dGraph graph;
-    
-    private String name;
+    private IVertex vertex;
 
-    /**
-     * @return Returns the name.
-     */
-    public final String getName() {
-        return name;
-    }
     public Draw2dNode(Draw2dGraph graph, IVertex vertex) {
         super();
-        
+
         this.vertex = vertex;
         this.selected = false;
         this.graph = graph;
-        
+
         nodeFgColor = (Color) vertex.getAttr(DRAW2DFGCOLOR_ATTR);
         nodeBgColor = (Color) vertex.getAttr(DRAW2DFILLCOLOR_ATTR);
         selectedBgColor = FigureUtilities.darker(nodeBgColor);
@@ -133,8 +127,11 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
         add(label, BorderLayout.CENTER);
     }
 
-    public String toString() {
-        return this.getClass().getName() + "@" + vertex.getName();
+    /**
+     * @return Returns the name.
+     */
+    public final String getName() {
+        return name;
     }
 
     /**
@@ -142,6 +139,10 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
      */
     public final boolean isSelected() {
         return selected;
+    }
+
+    public String toString() {
+        return this.getClass().getName() + "@" + vertex.getName();
     }
 
     /**
@@ -153,7 +154,8 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
             this.selected = selected;
             if (selected) {
                 setBackgroundColor(selectedBgColor);
-            } else {
+            }
+            else {
                 setBackgroundColor(nodeBgColor);
             }
             repaint();
