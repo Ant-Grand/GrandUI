@@ -39,6 +39,8 @@ interface DotGraphAttributes {
     static final String _BOUNDS_ATTR = "-bounds";
 
     static final String _SHAPE_ATTR = "-shape";
+    
+    static final String BUILD_FILE_ATTR = "build.file";
 
     static final String DESCRIPTION_ATTR = "description";
 
@@ -57,6 +59,10 @@ interface DotGraphAttributes {
     static final String MINWIDTH_ATTR = "minwidth";
 
     static final double PATH_ITERATOR_FLATNESS = 1.0;
+    
+    static final String LINK_PARAMETERS_ATTR = "link.params";
+
+    static final String LINK_TASK_ATTR = "link.task";
 
     static final String POSITION_ATTR = "pos";
 

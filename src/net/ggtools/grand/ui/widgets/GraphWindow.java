@@ -28,6 +28,7 @@
 
 package net.ggtools.grand.ui.widgets;
 
+import net.ggtools.grand.ui.AppData;
 import net.ggtools.grand.ui.graph.GraphControler;
 import net.ggtools.grand.ui.graph.GraphDisplayer;
 import net.ggtools.grand.ui.menu.FileMenuManager;
@@ -279,6 +280,8 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
      */
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
+        // We can load the resources since the display is initialized.
+        AppData.getInstance().initResources();
         shell.setText("Grand");
     }
 

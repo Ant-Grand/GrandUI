@@ -153,7 +153,6 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         // TODO better tooltip
         addTooltip(conn, "From: " + edge.getTail().getName() + "\nTo: " + edge.getHead().getName());
 
-        if (log.isTraceEnabled()) log.trace("Bound: "+conn.getBounds());
         contents.add(conn,conn.getBounds());
     }
 
@@ -167,30 +166,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      */
     private void buildNodeFigure(Draw2dGraph contents, IVertex node) {
         final Draw2dNode polygon = contents.createNode(node);
-        
-        final StringBuffer tooltipBuffer = new StringBuffer(); 
-        if (node.hasAttr(DESCRIPTION_ATTR)) {
-           tooltipBuffer.append(node.getAttrAsString(DESCRIPTION_ATTR));
-        }
-        
-        if (node.hasAttr(IF_CONDITION_ATTR)) {
-           if (tooltipBuffer.length() > 0) {
-              tooltipBuffer.append("\n");
-           }
-           
-           tooltipBuffer.append("if: ").append(node.getAttrAsString(IF_CONDITION_ATTR));
-        }
-        
-        if (node.hasAttr(UNLESS_CONDITION_ATTR)) {
-           if (tooltipBuffer.length() > 0) {
-              tooltipBuffer.append("\n");
-           }
-           tooltipBuffer.append("unless: ").append(node.getAttrAsString(UNLESS_CONDITION_ATTR));
-        }
-        
-        if (tooltipBuffer.length() > 0) {
-           addTooltip(polygon, tooltipBuffer.toString());
-        }
+        polygon.setToolTip(new NodeTooltip(node));
     }
 
     /**

@@ -38,6 +38,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import net.ggtools.grand.ant.AntTargetNode;
+import net.ggtools.grand.ant.AntTaskLink;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.Link;
@@ -281,6 +282,11 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
                 if (unlessCondition != null) {
                    vertex.setAttr(UNLESS_CONDITION_ATTR,unlessCondition);
                 }
+                
+                final String buildFile = antNode.getBuildFile();
+                if (buildFile != null) {
+                    vertex.setAttr(BUILD_FILE_ATTR,buildFile);
+                }
             }
         }
 
@@ -319,6 +325,12 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
                     edge.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.lightGray);
                 }
 
+                if (link instanceof AntTaskLink) {
+                    AntTaskLink taskLink = (AntTaskLink) link;
+                    
+                    edge.setAttr(LINK_TASK_ATTR,taskLink.getTaskName());
+                    edge.setAttr(LINK_PARAMETERS_ATTR,taskLink.getParameterMap());
+                }
             }
         }
 
