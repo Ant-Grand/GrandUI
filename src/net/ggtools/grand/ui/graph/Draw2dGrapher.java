@@ -126,7 +126,7 @@ public class Draw2dGrapher implements GraphConsumer {
 
         final Dot app = new Dot();
         app.layout(dotGraph, 0, 7);
-        IVertex v = dotGraph.getVertex("jar");
+        IVertex v = (IVertex) dotGraph.getVertexSet().toArray()[0];
         for (Iterator iter = v.attrKeySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             log.info("Found key " + key + " -> " + v.getAttr(key) + "("
