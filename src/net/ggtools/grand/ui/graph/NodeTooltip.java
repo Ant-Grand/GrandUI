@@ -53,35 +53,7 @@ import sf.jzgraph.IVertex;
  * 
  * @author Christophe Labouisse
  */
-public class NodeTooltip extends Figure implements DotGraphAttributes {
-    /**
-     * A border for the <em>optional</em> sections of the tooltip.
-     * @author Christophe Labouisse
-     */
-    public class SectionBorder extends AbstractBorder {
-
-        /*
-         * (non-Javadoc)
-         * @see org.eclipse.draw2d.Border#getInsets(org.eclipse.draw2d.IFigure)
-         */
-        public Insets getInsets(IFigure figure) {
-            return new Insets(1, 0, 0, 0);
-        }
-
-        /*
-         * (non-Javadoc)
-         * @see org.eclipse.draw2d.Border#paint(org.eclipse.draw2d.IFigure,
-         *      org.eclipse.draw2d.Graphics, org.eclipse.draw2d.geometry.Insets)
-         */
-        public void paint(IFigure figure, Graphics graphics, Insets insets) {
-            final Rectangle paintRectangle = getPaintRectangle(figure, insets);
-            graphics.drawLine(paintRectangle.getTopLeft(), paintRectangle.getTopRight());
-        }
-
-    }
-
-    private static final int TOOLTIP_WIDTH = 400;
-
+public class NodeTooltip extends AbstractGraphToolTip implements DotGraphAttributes {
     private static final Log log = LogFactory.getLog(NodeTooltip.class);
 
     private final IVertex vertex;
@@ -91,15 +63,8 @@ public class NodeTooltip extends Figure implements DotGraphAttributes {
      * @param vertex
      */
     public NodeTooltip(IVertex vertex) {
+        super();
         this.vertex = vertex;
-        setForegroundColor(ColorConstants.tooltipForeground);
-        setBackgroundColor(ColorConstants.tooltipBackground);
-        setOpaque(true);
-
-        final ToolbarLayout layout = new ToolbarLayout();
-        setLayoutManager(layout);
-        createContents();
-        setBorder(new MarginBorder(5));
     }
 
     protected void createContents() {
@@ -111,16 +76,6 @@ public class NodeTooltip extends Figure implements DotGraphAttributes {
         FlowPage page = null;
 
         if (vertex.hasAttr(BUILD_FILE_ATTR)) {
-            /*
-             * if (page == null) page = createFlowPage(); BlockFlow blockFlow =
-             * new BlockFlow(); InlineFlow inline = new InlineFlow(); final
-             * TextFlow textFlow = new
-             * TextFlow(vertex.getAttrAsString(BUILD_FILE_ATTR));
-             * inline.add(textFlow);
-             * textFlow.setFont(AppData.getInstance().getFont(AppData.TOOLTIP_MONOSPACE_FONT));
-             * blockFlow.add(inline); blockFlow.setBorder(new SectionBorder());
-             * page.add(blockFlow);
-             */
             final Label buildFile = new Label(vertex.getAttrAsString(BUILD_FILE_ATTR));
             buildFile.setFont(AppData.getInstance().getFont(AppData.TOOLTIP_MONOSPACE_FONT));
             buildFile.setBorder(new SectionBorder());
@@ -163,20 +118,5 @@ public class NodeTooltip extends Figure implements DotGraphAttributes {
             blockFlow.setBorder(new SectionBorder());
             page.add(blockFlow);
         }
-    }
-
-    /**
-     * @return
-     */
-    private FlowPage createFlowPage() {
-        FlowPage page;
-        page = new FlowPage();
-        final ConstrainedPageFlowLayout pageLayout = new ConstrainedPageFlowLayout(page);
-        page.setLayoutManager(pageLayout);
-        pageLayout.setMaxFlowWidth(TOOLTIP_WIDTH);
-        page.setBorder(new SectionBorder());
-        page.setFont(AppData.getInstance().getFont(AppData.TOOLTIP_FONT));
-        add(page);
-        return page;
     }
 }

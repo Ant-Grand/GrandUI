@@ -34,16 +34,7 @@ import net.ggtools.grand.ui.AppData;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.draw2d.AbstractBorder;
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.text.BlockFlow;
 import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.draw2d.text.InlineFlow;
@@ -56,35 +47,7 @@ import sf.jzgraph.IEdge;
  * 
  * @author Christophe Labouisse
  */
-public class LinkTooltip extends Figure implements DotGraphAttributes {
-    /**
-     * A border for the <em>optional</em> sections of the tooltip.
-     * @author Christophe Labouisse
-     */
-    public class SectionBorder extends AbstractBorder {
-
-        /*
-         * (non-Javadoc)
-         * @see org.eclipse.draw2d.Border#getInsets(org.eclipse.draw2d.IFigure)
-         */
-        public Insets getInsets(IFigure figure) {
-            return new Insets(1, 0, 0, 0);
-        }
-
-        /*
-         * (non-Javadoc)
-         * @see org.eclipse.draw2d.Border#paint(org.eclipse.draw2d.IFigure,
-         *      org.eclipse.draw2d.Graphics, org.eclipse.draw2d.geometry.Insets)
-         */
-        public void paint(IFigure figure, Graphics graphics, Insets insets) {
-            final Rectangle paintRectangle = getPaintRectangle(figure, insets);
-            graphics.drawLine(paintRectangle.getTopLeft(), paintRectangle.getTopRight());
-        }
-
-    }
-
-    private static final int TOOLTIP_WIDTH = 400;
-
+public class LinkTooltip extends AbstractGraphToolTip implements DotGraphAttributes {
     private static final Log log = LogFactory.getLog(LinkTooltip.class);
 
     private final IEdge edge;
@@ -94,15 +57,8 @@ public class LinkTooltip extends Figure implements DotGraphAttributes {
      * @param vertex
      */
     public LinkTooltip(IEdge edge) {
+        super();
         this.edge = edge;
-        setForegroundColor(ColorConstants.tooltipForeground);
-        setBackgroundColor(ColorConstants.tooltipBackground);
-        setOpaque(true);
-
-        final ToolbarLayout layout = new ToolbarLayout();
-        setLayoutManager(layout);
-        createContents();
-        setBorder(new MarginBorder(5));
     }
 
     protected void createContents() {
@@ -159,20 +115,5 @@ public class LinkTooltip extends Figure implements DotGraphAttributes {
             outterBlock.setBorder(new SectionBorder());
             page.add(outterBlock);
         }
-    }
-
-    /**
-     * @return
-     */
-    private FlowPage createFlowPage() {
-        FlowPage page;
-        page = new FlowPage();
-        final ConstrainedPageFlowLayout pageLayout = new ConstrainedPageFlowLayout(page);
-        page.setLayoutManager(pageLayout);
-        pageLayout.setMaxFlowWidth(TOOLTIP_WIDTH);
-        page.setBorder(new SectionBorder());
-        page.setFont(AppData.getInstance().getFont(AppData.TOOLTIP_FONT));
-        add(page);
-        return page;
     }
 }

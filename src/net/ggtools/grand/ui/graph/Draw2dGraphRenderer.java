@@ -153,9 +153,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
             conn.add(label, locator);
         }
 
-        // TODO better tooltip
         conn.setToolTip(new LinkTooltip(edge));
-
         contents.add(conn,conn.getBounds());
     }
 
@@ -170,18 +168,6 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     private void buildNodeFigure(Draw2dGraph contents, IVertex node) {
         final Draw2dNode polygon = contents.createNode(node);
         polygon.setToolTip(new NodeTooltip(node));
-    }
-
-    /**
-     * @param figure
-     * @param toolTipContent
-     */
-    private void addTooltip(final IFigure figure, final String toolTipContent) {
-        final Label toolTip = new Label(toolTipContent);
-        toolTip.setForegroundColor(ColorConstants.tooltipForeground);
-        toolTip.setBackgroundColor(ColorConstants.tooltipBackground);
-        toolTip.setOpaque(true);
-        figure.setToolTip(toolTip);
     }
 
 }
