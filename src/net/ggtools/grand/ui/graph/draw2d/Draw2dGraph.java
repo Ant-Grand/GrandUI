@@ -43,8 +43,6 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.InputEvent;
-import org.eclipse.draw2d.KeyEvent;
-import org.eclipse.draw2d.KeyListener;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.Panel;
@@ -53,7 +51,6 @@ import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Translatable;
-import org.eclipse.swt.SWT;
 
 import sf.jzgraph.IVertex;
 
@@ -165,7 +162,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                 }
                 // TODO rewrite in a clean way
                 if (graphControler != null) {
-                    ((GraphControler) graphControler).getDisplayer().getContextMenu().setVisible(true);
+                    ((GraphControler) graphControler).getDisplayer().getContextMenu().setVisible(
+                            true);
                 }
                 break;
             }
@@ -194,46 +192,6 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     }
 
-    private final class ZoomListener extends KeyListener.Stub {
-
-        private final float[] ZOOM_STEPS = {0.134217728f, 0.16777216f, 0.2097152f, 0.262144f,
-                0.32768f, 0.4096f, 0.512f, 0.64f, 0.8f, 1.0f, 1.25f, 1.5625f, 1.953125f,
-                2.44140625f};
-
-        private int zoomStep = 9;
-
-        {
-            zoom = ZOOM_STEPS[zoomStep];
-        }
-
-        private final Log log;
-
-        private ZoomListener(Log log) {
-            super();
-            this.log = log;
-        }
-
-        public void keyReleased(KeyEvent ke) {
-            switch (ke.keycode) {
-            case SWT.PAGE_DOWN:
-                if (zoomStep > 0) {
-                    setZoom(ZOOM_STEPS[--zoomStep]);
-                }
-                break;
-
-            case SWT.PAGE_UP:
-                if (zoomStep < ZOOM_STEPS.length - 1) {
-                    setZoom(ZOOM_STEPS[++zoomStep]);
-                }
-                break;
-
-            default:
-                break;
-            }
-            log.trace("Zoom: " + zoom);
-        }
-    }
-
     private static final Log log = LogFactory.getLog(Draw2dGraph.class);
 
     private GraphControler graphControler;
@@ -246,12 +204,11 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     private float zoom;
 
-    private ZoomListener zoomListener;
-
     public Draw2dGraph() {
         super();
         scroller = null;
         setLayoutManager(new XYLayout());
+        setZoom(1.0f);
     }
 
     /**
@@ -270,8 +227,6 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         super.addNotify();
         graphMouseListener = new GraphMouseListener();
         addMouseListener(graphMouseListener);
-        zoomListener = new ZoomListener(log);
-        addKeyListener(zoomListener);
         setFocusTraversable(true);
     }
 
@@ -363,6 +318,13 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         return null;
     }
 
+    /**
+     * @return Returns the zoom.
+     */
+    public final float getZoom() {
+        return zoom;
+    }
+
     /*
      * (non-Javadoc)
      * @see org.eclipse.draw2d.IFigure#removeNotify()
@@ -371,7 +333,6 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         if (log.isTraceEnabled()) log.trace("Removing listeners");
         super.removeNotify();
         if (graphMouseListener != null) removeMouseListener(graphMouseListener);
-        if (zoomListener != null) removeKeyListener(zoomListener);
         setFocusTraversable(false);
     }
 

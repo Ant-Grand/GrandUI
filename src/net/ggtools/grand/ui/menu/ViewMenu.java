@@ -33,6 +33,9 @@ package net.ggtools.grand.ui.menu;
 
 import net.ggtools.grand.ui.actions.ShowSourcePanelAction;
 import net.ggtools.grand.ui.actions.UseBusRoutingAction;
+import net.ggtools.grand.ui.actions.ZoomInAction;
+import net.ggtools.grand.ui.actions.ZoomOutAction;
+import net.ggtools.grand.ui.actions.ZoomResetAction;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.eclipse.jface.action.MenuManager;
@@ -53,8 +56,9 @@ public class ViewMenu extends MenuManager {
         add(new Separator("display"));
         add(new UseBusRoutingAction(window));
         add(new Separator("zoom"));
-        // Zoom in
-        // Zoom out
-        // Reset zoom
+        add(new ZoomInAction(window));
+        add(new ZoomOutAction(window));
+        add(new ZoomResetAction(window));
+        // Zoom menu
     }
 }

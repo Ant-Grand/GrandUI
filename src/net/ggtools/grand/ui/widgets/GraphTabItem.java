@@ -138,6 +138,14 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
 
     /*
      * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphDisplayer#getZoom()
+     */
+    public float getZoom() {
+        return graph == null ? 1.0f : graph.getZoom();
+    }
+
+    /*
+     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#jumpToNode(java.lang.String)
      */
     public void jumpToNode(final String nodeName) {
@@ -244,5 +252,15 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
     public void setSourceText(String text) {
         textDisplayer.setText(text);
         textComposite.setMinSize(textDisplayer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setZoom(float)
+     */
+    public void setZoom(float zoom) {
+        if (graph != null) {
+            graph.setZoom(zoom);
+        }
     }
 }

@@ -1,7 +1,7 @@
 // $Id$
 /*
  * ====================================================================
- * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
+ * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -25,64 +25,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+package net.ggtools.grand.ui.actions;
 
-package net.ggtools.grand.ui.graph;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.eclipse.swt.SWT;
 
-import net.ggtools.grand.ant.AntTargetNode.SourceElement;
-import net.ggtools.grand.ui.graph.draw2d.Draw2dGraph;
-
-import org.eclipse.swt.widgets.Menu;
+import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
 /**
- * Interface to be implemented by classes displaying graphs.
- * 
  * @author Christophe Labouisse
  */
-public interface GraphDisplayer extends GraphControlerProvider {
+public class ZoomOutAction extends ZoomAction {
+
+    private static final String DEFAULT_ACTION_NAME = "Zoom Out";
 
     /**
-     * Get the widget context menu.
-     * @return
+     * Logger for this class
      */
-    Menu getContextMenu();
+    private static final Log log = LogFactory.getLog(ZoomOutAction.class);
 
     /**
-     * Returns the current zoom factor.
-     * @return
+     * @param provider
      */
-    float getZoom();
+    public ZoomOutAction(GraphControlerProvider provider) {
+        super(provider, DEFAULT_ACTION_NAME);
+        setAccelerator(SWT.PAGE_UP);
+    }
 
-    /**
-     * Scroll the canvas to display a specific node.
-     * 
-     * @param nodeName
-     *            Node to be shown.
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.Action#run()
      */
-    void jumpToNode(final String nodeName);
-
-    /**
-     * Ask to display the supplied figure.
-     * @param graph
-     * @param name
-     * @param toolTip
-     */
-    void setGraph(Draw2dGraph graph, String name, String toolTip);
-
-    /**
-     * @param richSource
-     */
-    void setRichSource(SourceElement[] richSource);
-
-    /**
-     * Sets a text to display.
-     * @param text
-     * @return
-     */
-    void setSourceText(String text);
-
-    /**
-     * Sets the zoom factor for the graph.
-     * @param zoom
-     */
-    void setZoom(float zoom);
+    public void run() {
+        doZoomOut();
+    }
 }
