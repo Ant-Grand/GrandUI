@@ -47,7 +47,6 @@ import org.eclipse.draw2d.MidpointLocator;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PositionConstants;
-import org.eclipse.draw2d.XYAnchor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
 
@@ -90,6 +89,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      *            the edge
      */
     private void buildEdgeFigure(final IFigure contents, final IEdge edge) {
+        if (log.isDebugEnabled()) log.debug("Building edge from "+ edge.getTail().getName() + " to " + edge.getHead().getName());
         final DotRoute route = (DotRoute) edge.getAttr(POSITION_ATTR);
         final float[] coords = new float[6];
         final ArrayList bends = new ArrayList();
@@ -125,8 +125,9 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
 
         final Point sourcePoint = (Point) bends.remove(0);
         final Point targetPoint = new Point(route.getEndPt().getX(), route.getEndPt().getY());
-        conn.setSourceAnchor(new XYAnchor(sourcePoint));
-        conn.setTargetAnchor(new XYAnchor(targetPoint));
+        conn.setSourceAnchor(new XYRelativeAnchor(contents,sourcePoint));
+        conn.setTargetAnchor(new XYRelativeAnchor(contents,targetPoint));
+
         if (edge.getAttr(DRAW2DFGCOLOR_ATTR) != null) {
             conn.setForegroundColor((Color) edge.getAttr(DRAW2DFGCOLOR_ATTR));
         }
@@ -152,6 +153,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         // TODO better tooltip
         addTooltip(conn, "From: " + edge.getTail().getName() + "\nTo: " + edge.getHead().getName());
 
+        if (log.isTraceEnabled()) log.trace("Bound: "+conn.getBounds());
         contents.add(conn,conn.getBounds());
     }
 

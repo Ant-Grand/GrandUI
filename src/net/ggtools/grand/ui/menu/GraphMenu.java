@@ -51,13 +51,14 @@ public class GraphMenu extends MenuManager {
 
     public GraphMenu(GraphWindow window) {
         super("Graph");
+        add(new Separator("general filters"));
         add(new FilterIsolatedNodesAction(window));
         add(new FilterMissingNodesAction(window));
-        add(new Separator());
+        add(new Separator("selected node filters"));
         add(new FilterConnectedToNodeAction(window));
         add(new FilterFromNodeAction(window));
         add(new FilterToNodeAction(window));
-        add(new Separator());
+        add(new Separator("clear filters"));
         add(new ClearFiltersAction(window));
     }
 }

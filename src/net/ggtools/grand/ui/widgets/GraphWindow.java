@@ -225,7 +225,6 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
         getShell().getDisplay().asyncExec(new Runnable() {
 
             public void run() {
-                canvas.scrollTo(0, 0);
                 canvas.setContents(figure);
             }
         });
