@@ -27,11 +27,15 @@
  */
 package net.ggtools.grand.ui.widgets.property;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
+import net.ggtools.grand.ui.widgets.ExceptionDialog;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -48,6 +52,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -60,7 +65,9 @@ import org.eclipse.swt.widgets.TableItem;
 public class PropertyEditor {
     private static final int BUTTON_WIDTH = 80;
 
-    private static final int GRID_LAYOUT_COLUMNS = 4;
+    private static final int GRID_LAYOUT_COLUMNS = 6;
+
+    private static final String[] FILTER_EXTENSIONS = new String[]{"*.properties", "*"};
 
     /**
      * Logger for this class
@@ -134,7 +141,7 @@ public class PropertyEditor {
     private static final String NAME_COLUMN = "Name";
 
     private static final String VALUE_COLUMN = "Value";
-
+    
     /**
      * Main method to launch the window
      */
@@ -156,6 +163,7 @@ public class PropertyEditor {
         shell.open();
         propertyViewer.run(shell);
         System.err.println(propertyViewer.propertyList);
+        System.exit(0);
     }
 
     // Set column names
@@ -186,15 +194,88 @@ public class PropertyEditor {
 
     /**
      * Add the "Add" and "Delete" buttons
+     * 
      * @param parent
      *            the parent composite
      */
     private void createButtons(final Composite parent) {
 
+        final Button load = new Button(parent, SWT.PUSH | SWT.CENTER);
+        load.setText("Load");
+
+        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+        gridData.widthHint = BUTTON_WIDTH;
+        load.setLayoutData(gridData);
+        load.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent event) {
+                final FileDialog dialog = new FileDialog(table.getShell());
+                dialog.setFilterExtensions(FILTER_EXTENSIONS);
+                final String fileName = dialog.open();
+                if (fileName != null) {
+                    FileInputStream fileInputStream = null;
+                    try {
+                        final Properties props = new Properties();
+                        fileInputStream = new FileInputStream(fileName);
+                        props.load(fileInputStream);
+                        setInput(props);
+                    } catch (IOException e) {
+                        final String message = "Cannot load from " + fileName;
+                        log.error(message, e);
+                        ExceptionDialog.openException(table.getShell(), message, e);
+                    } finally {
+                        if (fileInputStream != null) try {
+                            fileInputStream.close();
+                        } catch (IOException e) {
+                            log.warn("Error closing file", e);
+                        }
+                    }
+                }
+            }
+        });
+
+        final Button save = new Button(parent, SWT.PUSH | SWT.CENTER);
+        save.setText("Save");
+
+        gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+        gridData.widthHint = BUTTON_WIDTH;
+        save.setLayoutData(gridData);
+        save.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent event) {
+                final FileDialog dialog = new FileDialog(table.getShell(), SWT.SAVE);
+                dialog.setFilterExtensions(FILTER_EXTENSIONS);
+                final String fileName = dialog.open();
+                if (fileName != null) {
+                    FileOutputStream fileOutputStream = null;
+                    try {
+                        fileOutputStream = new FileOutputStream(fileName);
+                        getValues().store(fileOutputStream, null);
+                    } catch (IOException e) {
+                        final String message = "Cannot save to " + fileName;
+                        log.error(message, e);
+                        ExceptionDialog.openException(table.getShell(), message, e);
+                    } finally {
+                        if (fileOutputStream != null) {
+                            try {
+                                fileOutputStream.close();
+                            } catch (IOException e) {
+                                log.warn("Error closing file", e);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        final Label filler = new Label(parent, SWT.NO_BACKGROUND);
+        gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false);
+        filler.setLayoutData(gridData);
+
         final Button clear = new Button(parent, SWT.PUSH | SWT.CENTER);
         clear.setText("Clear");
 
-        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+        gridData = new GridData(GridData.HORIZONTAL_ALIGN_END);
         gridData.widthHint = BUTTON_WIDTH;
         clear.setLayoutData(gridData);
         clear.addSelectionListener(new SelectionAdapter() {
@@ -203,10 +284,6 @@ public class PropertyEditor {
                 propertyList.clear();
             }
         });
-
-        final Label filler = new Label(parent, SWT.NO_BACKGROUND);
-        gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false);
-        filler.setLayoutData(gridData);
 
         final Button add = new Button(parent, SWT.PUSH | SWT.CENTER);
         add.setText("Add");
@@ -348,6 +425,7 @@ public class PropertyEditor {
 
     /**
      * Run and wait for a close event
+     * 
      * @param shell
      *            Instance of Shell
      */
