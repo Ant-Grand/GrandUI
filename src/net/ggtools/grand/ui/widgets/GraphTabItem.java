@@ -27,8 +27,6 @@
  */
 package net.ggtools.grand.ui.widgets;
 
-import java.util.Arrays;
-
 import net.ggtools.grand.ant.AntTargetNode;
 import net.ggtools.grand.ant.AntTargetNode.SourceElement;
 import net.ggtools.grand.ui.Application;
@@ -73,6 +71,31 @@ import org.eclipse.swt.widgets.Menu;
  * @author Christophe Labouisse
  */
 public class GraphTabItem extends CTabItem implements GraphDisplayer {
+    private final class MouseWheelZoomListener implements Listener {
+        private MouseWheelZoomListener() {
+        }
+
+        public void handleEvent(Event event) {
+            final float zoomBefore = getZoom();
+            event.doit = false;
+            if (event.count > 0) {
+                zoomIn();
+            }
+            else {
+                zoomOut();
+            }
+            final float zoomAfter = getZoom();
+            if (zoomAfter != zoomBefore) {
+                final Point location = canvas.getViewport().getViewLocation();
+                final int newX = (int) (((location.x + event.x) / zoomBefore) * zoomAfter)
+                        - event.x;
+                final int newY = (int) (((location.y + event.y) / zoomBefore) * zoomAfter)
+                        - event.y;
+                canvas.scrollTo(newX, newY);
+            }
+        }
+    }
+
     private static final Log log = LogFactory.getLog(GraphTabItem.class);
 
     private final FigureCanvas canvas;
@@ -97,13 +120,12 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
     private final ScrolledComposite textComposite;
 
     private final StyledText textDisplayer;
-    
-    private final float[] ZOOM_STEPS = {0.134217728f, 0.16777216f, 0.2097152f, 0.262144f,
-            0.32768f, 0.4096f, 0.512f, 0.64f, 0.8f, 1.0f, 1.25f, 1.5625f, 1.953125f, 2.44140625f};
 
-    private final float ZOOM_MAX = ZOOM_STEPS[ZOOM_STEPS.length-1];
-    
-    private final float ZOOM_MIN = ZOOM_STEPS[0];
+    private final float ZOOM_MAX = 3.0f;
+
+    private final float ZOOM_MIN = 0.25f;
+
+    private final float ZOOM_STEP = 1.1f;
 
     /**
      * Creates a tab to display a new graph. The tab will contain two sash forms
@@ -121,7 +143,8 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         outlineSashForm = new SashForm(sourceSashForm, SWT.HORIZONTAL | SWT.BORDER);
         setControl(sourceSashForm);
 
-        outlineViewer = new TableViewer(outlineSashForm, SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
+        outlineViewer = new TableViewer(outlineSashForm, SWT.READ_ONLY | SWT.H_SCROLL
+                | SWT.V_SCROLL);
         outlineViewer.setContentProvider(controler.getNodeContentProvider());
         outlineViewer.setLabelProvider(controler.getNodeLabelProvider());
         outlineViewer.setSorter(new ViewerSorter());
@@ -145,17 +168,8 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         canvas.getViewport().setContentsTracksWidth(true);
         canvas.setBackground(ColorConstants.white);
         canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
-        canvas.addListener(SWT.MouseWheel,new Listener() {
-            public void handleEvent(Event event) {
-                event.doit = false;
-                if (event.count > 0) {
-                    zoomIn();
-                }
-                else {
-                    zoomOut();
-                }
-            }});
-        
+        canvas.addListener(SWT.MouseWheel, new MouseWheelZoomListener());
+
         canvasScroller = new CanvasScroller(canvas);
         contextMenuManager = new GraphMenu(this);
         contextMenu = contextMenuManager.createContextMenu(canvas);
@@ -320,29 +334,34 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         textComposite.setMinSize(textDisplayer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#zoomIn()
      */
     public void zoomIn() {
         final float zoom = getZoom();
         if (zoom < ZOOM_MAX) {
-            final int index = getZoomStep(zoom);
-            setZoom(ZOOM_STEPS[index+1]);
+            /*
+             * final int index = getZoomStep(zoom); setZoom(ZOOM_STEPS[index +
+             * 1]);
+             */
+            setZoom(zoom * ZOOM_STEP);
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#zoomOut()
      */
     public void zoomOut() {
         final float zoom = getZoom();
         if (zoom > ZOOM_MIN) {
-            final int index = getZoomStep(zoom);
-            setZoom(ZOOM_STEPS[index-1]);
+            setZoom(zoom / ZOOM_STEP);
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#zoomReset()
      */
     public void zoomReset() {
@@ -356,21 +375,6 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
     private final float getZoom() {
         return graph == null ? 1.0f : graph.getZoom();
     }
-    
-    /**
-     * Find the step for a given zoom factor or the closed step.
-     * @param zoom
-     * @return
-     */
-    private final int getZoomStep(float zoom) {
-        int index = Arrays.binarySearch(ZOOM_STEPS, zoom);
-
-        if (index < 0) {
-            index = -(index + 1);
-            if (index >= ZOOM_STEPS.length) index = ZOOM_STEPS.length - 1;
-        }
-        return index;
-    }
 
     /*
      * (non-Javadoc)
@@ -378,8 +382,12 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
      */
     private final void setZoom(float zoom) {
         if (graph != null) {
+            if (log.isTraceEnabled()) {
+                log.trace("setZoom(zoom = " + zoom + ")");
+            }
+
             graph.setZoom(zoom);
         }
     }
-    
+
 }
