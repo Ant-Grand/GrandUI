@@ -105,7 +105,6 @@
     <target name="deploy"
             depends="clean, jars, get-alien-swt"
             description="Deploys the application to be used with SWT.">
-        <!-- TODO: les swt-lib.jar ne devraient pas être écrasés -->
         <fail message="You must define jnlp.deploydir" unless="jnlp.deploydir" />
         <copy tofile="${jnlp.deploydir}/grand-ui.jar"
               file="${libdir}/${product.fullname}.jar" />
