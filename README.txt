@@ -15,6 +15,18 @@ Get the tar.gz/zip file, extract it in the right place, and either run
 grand-ui (linux) or grand-ui.bat.
 
 
+Building from source
+--------------------
+
+You need Ant 1.6.1 to compile Grand-Ui. Get a source distribution, run "ant",
+and voilà, the build file should be intelligent enough to download the
+external dependencies. You can skip this part by defining the "noget" property.
+You can override any property in the build.properties file by creating a
+build-local.properties file.
+
+The build process should work on windows but hasn't been tested so far.
+
+
 More information
 ----------------
 
