@@ -54,20 +54,16 @@ import org.eclipse.swt.widgets.Display;
  * @author Christophe Labouisse
  */
 public class RecentFilesMenu extends MenuManager implements PreferenceChangeListener {
-    private static final String MAX_RECENT_FILES_PREFS_KEY = "max recent files";
-
-    private static final String RECENT_FILES_PREFS_KEY = "recent files";
-
-    private static final Log log = LogFactory.getLog(GraphControler.class);
 
     /**
      * An action openning a specific file when run.
      * @author Christophe Labouisse
      */
     private class OpenRecentFileAction extends Action {
-        private final GraphWindow window;
 
         private final File file;
+
+        private final GraphWindow window;
 
         public OpenRecentFileAction(final GraphWindow window, final String fileName) {
             super(fileName);
@@ -85,14 +81,68 @@ public class RecentFilesMenu extends MenuManager implements PreferenceChangeList
         }
     }
 
+    private static final Log log = LogFactory.getLog(GraphControler.class);
+
+    private static final String MAX_RECENT_FILES_PREFS_KEY = "max recent files";
+
     private static final Preferences prefs = Preferences.userNodeForPackage(RecentFilesMenu.class);
 
-    private final GraphWindow window;
+    /**
+     * The maximum number of files to keep in the recent files menu. A
+     * <code>-1</code> should be intepreted as need to load from the
+     * preferences store.
+     */
+    private static int maxFiles = -1;
+
+    private static final String RECENT_FILES_PREFS_KEY = "recent files";
 
     private final static LinkedList recentFiles = new LinkedList();
 
-    private static int maxFiles = prefs.getInt(MAX_RECENT_FILES_PREFS_KEY, 4);
+    /**
+     * Add a new file to the recent files list & the preference store.
+     * @param file
+     */
+    public final static void addNewFile(final File file) {
+        String fileName = file.getAbsolutePath();
+        recentFiles.remove(fileName);
+        recentFiles.addFirst(fileName);
+        if (recentFiles.size() > maxFiles) {
+            recentFiles.removeLast();
+        }
 
+        StringBuffer buffer = new StringBuffer();
+        for (final Iterator iter = recentFiles.iterator(); iter.hasNext();) {
+            final String item = (String) iter.next();
+            buffer.append(item);
+            if (iter.hasNext()) buffer.append(",");
+        }
+        prefs.put(RECENT_FILES_PREFS_KEY, buffer.toString());
+    }
+
+    /**
+     * Load the recent files from the preferences store to the local list.
+     */
+    private final static void loadRecentFiles() {
+        // if maxFiles is -1 we need to load the recent files into the local list.
+        if (maxFiles == -1) {
+            maxFiles = prefs.getInt(MAX_RECENT_FILES_PREFS_KEY, 4);
+            StringTokenizer tokenizer = new StringTokenizer(prefs.get(RECENT_FILES_PREFS_KEY, ""),
+                    ",");
+            recentFiles.clear();
+            for (int i = 0; (i < maxFiles) && tokenizer.hasMoreTokens(); i++) {
+                final String fileName = tokenizer.nextToken();
+                recentFiles.addFirst(fileName);
+            }
+        }
+    }
+
+    private final GraphWindow window;
+
+    /**
+     * Creates a new RecentFilesMenu instance loading the recent files from the
+     * preference store.
+     * @param window
+     */
     public RecentFilesMenu(final GraphWindow window) {
         super("Recent files");
         this.window = window;
@@ -102,6 +152,31 @@ public class RecentFilesMenu extends MenuManager implements PreferenceChangeList
         loadRecentFiles();
         addRecentFiles();
         prefs.addPreferenceChangeListener(this);
+    }
+
+    /**
+     * Remove recent files from the menu & from the preference store.
+     *  
+     */
+    public final void clear() {
+        if (log.isDebugEnabled()) log.debug("Clearing recent files");
+        removeRecentFiles();
+        prefs.put(RECENT_FILES_PREFS_KEY, "");
+        recentFiles.clear();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.util.prefs.PreferenceChangeListener#preferenceChange(java.util.prefs.PreferenceChangeEvent)
+     */
+    public void preferenceChange(PreferenceChangeEvent evt) {
+        if (log.isDebugEnabled())
+                log.debug("Prefs changed " + evt.getKey() + " '" + evt.getNewValue() + "'");
+
+        if (RECENT_FILES_PREFS_KEY.equals(evt.getKey())) {
+            removeRecentFiles();
+            addRecentFiles();
+        }
     }
 
     /**
@@ -129,42 +204,6 @@ public class RecentFilesMenu extends MenuManager implements PreferenceChangeList
     /**
      *  
      */
-    private final static void loadRecentFiles() {
-        StringTokenizer tokenizer = new StringTokenizer(prefs.get(RECENT_FILES_PREFS_KEY, ""), ",");
-        recentFiles.clear();
-        for (int i = 0; (i < maxFiles) && tokenizer.hasMoreTokens(); i++) {
-            final String fileName = tokenizer.nextToken();
-            recentFiles.addFirst(fileName);
-        }
-    }
-
-    public final static void addNewFile(final File file) {
-        String fileName = file.getAbsolutePath();
-        recentFiles.remove(fileName);
-        recentFiles.addFirst(fileName);
-        if (recentFiles.size() > maxFiles) {
-            recentFiles.removeLast();
-        }
-
-        StringBuffer buffer = new StringBuffer();
-        for (final Iterator iter = recentFiles.iterator(); iter.hasNext();) {
-            final String item = (String) iter.next();
-            buffer.append(item);
-            if (iter.hasNext()) buffer.append(",");
-        }
-        prefs.put(RECENT_FILES_PREFS_KEY, buffer.toString());
-    }
-
-    public final void clear() {
-        if (log.isDebugEnabled()) log.debug("Clearing recent files");
-        removeRecentFiles();
-        prefs.put(RECENT_FILES_PREFS_KEY, "");
-        recentFiles.clear();
-    }
-
-    /**
-     *  
-     */
     private final void removeRecentFiles() {
         final Runnable runnable = new Runnable() {
             public void run() {
@@ -183,19 +222,6 @@ public class RecentFilesMenu extends MenuManager implements PreferenceChangeList
         }
         else {
             runnable.run();
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see java.util.prefs.PreferenceChangeListener#preferenceChange(java.util.prefs.PreferenceChangeEvent)
-     */
-    public void preferenceChange(PreferenceChangeEvent evt) {
-        if (log.isDebugEnabled()) log.debug("Prefs changed " + evt.getKey()+ " '"+evt.getNewValue()+"'");
-
-        if (RECENT_FILES_PREFS_KEY.equals(evt.getKey())) {
-            removeRecentFiles();
-            addRecentFiles();
         }
     }
 }
