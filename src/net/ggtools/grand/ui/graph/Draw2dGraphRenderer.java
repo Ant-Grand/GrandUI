@@ -225,7 +225,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
       final PolylineConnection conn = createConnectionFromRoute(contents,null,(DotRoute)node.getAttr(busId));
         conn.setForegroundColor(color);
         contents.add(conn,conn.getBounds());
-        final Label label = new Label(busLabel+node.getName(), AppData.getInstance().getImage(AppData.LINK_ICON));
+        final Label label = new Label(busLabel+" "+node.getName(), AppData.getInstance().getImage(AppData.LINK_ICON));
         label.setFont(AppData.getInstance().getBoldFont(AppData.TOOLTIP_FONT));
         conn.setToolTip(label);
       return conn;
