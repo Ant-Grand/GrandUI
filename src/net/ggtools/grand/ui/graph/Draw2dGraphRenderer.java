@@ -34,7 +34,7 @@ import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.ggtools.grand.ui.AppData;
+import net.ggtools.grand.ui.Application;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -91,12 +91,14 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      *            the edge
      */
     private void buildEdgeFigure(final IFigure contents, final IEdge edge) {
-        if (log.isDebugEnabled()) log.debug("Building edge from "+ edge.getTail().getName() + " to " + edge.getHead().getName());
+        if (log.isTraceEnabled())
+                log.trace("Building edge from " + edge.getTail().getName() + " to "
+                        + edge.getHead().getName());
         final DotRoute route = (DotRoute) edge.getAttr(POSITION_ATTR);
-        
+
         String name = edge.getName();
         if ("".equals(name)) name = null;
-        
+
         final PolylineConnection conn = createConnectionFromRoute(contents, name, route);
 
         if (edge.getAttr(DRAW2DFGCOLOR_ATTR) != null) {
@@ -107,7 +109,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         conn.setTargetDecoration(dec);
 
         conn.setToolTip(new LinkTooltip(edge));
-        contents.add(conn,conn.getBounds());
+        contents.add(conn, conn.getBounds());
     }
 
     /**
@@ -116,7 +118,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      * @param route
      * @return
      */
-    private PolylineConnection createConnectionFromRoute(final IFigure contents, final String name, final DotRoute route) {
+    private PolylineConnection createConnectionFromRoute(final IFigure contents, final String name,
+            final DotRoute route) {
         final float[] coords = new float[6];
         final ArrayList bends = new ArrayList();
         boolean isFirstPoint = true;
@@ -128,7 +131,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
             case PathIterator.SEG_MOVETO:
                 if (isFirstPoint) {
                     bends.add(new AbsoluteBendpoint((int) coords[0], (int) coords[1]));
-                } else {
+                }
+                else {
                     log.error("Got SEG_MOVETO after first point");
                 }
                 break;
@@ -150,17 +154,18 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         final Point sourcePoint = (Point) bends.remove(0);
         final Point targetPoint;
         if (route.getEndPt() != null) {
-        targetPoint = new Point(route.getEndPt().getX(), route.getEndPt().getY());
+            targetPoint = new Point(route.getEndPt().getX(), route.getEndPt().getY());
         }
         else {
-            targetPoint = (Point) bends.remove(bends.size()-1);
+            targetPoint = (Point) bends.remove(bends.size() - 1);
         }
-        conn.setSourceAnchor(new XYRelativeAnchor(contents,sourcePoint));
-        conn.setTargetAnchor(new XYRelativeAnchor(contents,targetPoint));
+        conn.setSourceAnchor(new XYRelativeAnchor(contents, sourcePoint));
+        conn.setTargetAnchor(new XYRelativeAnchor(contents, targetPoint));
 
         if (bends.isEmpty()) {
             conn.setConnectionRouter(null);
-        } else {
+        }
+        else {
             conn.setConnectionRouter(new BendpointConnectionRouter());
             conn.setRoutingConstraint(bends);
         }
@@ -170,7 +175,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
             label.setOpaque(true);
             label.setBackgroundColor(ColorConstants.buttonLightest);
             label.setBorder(new LineBorder());
-            label.setFont(AppData.getInstance().getFont(AppData.LINK_FONT));
+            label.setFont(Application.getInstance().getFont(Application.LINK_FONT));
             final ConnectionLocator locator = new MidpointLocator(conn, bends.size() / 2);
             locator.setRelativePosition(PositionConstants.CENTER);
             conn.add(label, locator);
@@ -187,48 +192,50 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      *            the node to add
      */
     private void buildNodeFigure(Draw2dGraph contents, IVertex node) {
-        if (log.isDebugEnabled()) log.debug("Building node "+ node.getName());
-        log.debug("Inbus "+node.getAttr("inbus"));
-        log.debug("Outbus "+node.getAttr("outbus"));
-        log.debug("Tobus "+node.getAttr("tobus"));
-        log.debug("Frombus "+node.getAttr("frombus"));
+        if (log.isDebugEnabled()) log.debug("Building node " + node.getName());
         final Draw2dNode polygon = contents.createNode(node);
         polygon.setToolTip(new NodeTooltip(node));
-        
+
         if (node.hasAttr("inbus")) {
-           final PolylineConnection conn = createBusConnexion(contents, node, ColorConstants.red, "inbus", "bus to");
-           conn.setLineWidth(2);
+            final PolylineConnection conn = createBusConnexion(contents, node, ColorConstants.red,
+                    "inbus", "bus to");
+            conn.setLineWidth(2);
         }
         if (node.hasAttr("outbus")) {
-           final PolylineConnection conn = createBusConnexion(contents, node, ColorConstants.blue, "outbus", "bus from");
-           conn.setLineWidth(2);
+            final PolylineConnection conn = createBusConnexion(contents, node, ColorConstants.blue,
+                    "outbus", "bus from");
+            conn.setLineWidth(2);
         }
         if (node.hasAttr("tobus")) {
-           final PolylineConnection conn = createBusConnexion(contents, node, ColorConstants.blue, "tobus", "bus from");
+            final PolylineConnection conn = createBusConnexion(contents, node, ColorConstants.blue,
+                    "tobus", "bus from");
         }
         if (node.hasAttr("frombus")) {
-           final PolylineConnection conn = createBusConnexion(contents, node, ColorConstants.red, "frombus","bus to");
-           final PolygonDecoration dec = new PolygonDecoration();
-           conn.setTargetDecoration(dec);
+            final PolylineConnection conn = createBusConnexion(contents, node, ColorConstants.red,
+                    "frombus", "bus to");
+            final PolygonDecoration dec = new PolygonDecoration();
+            conn.setTargetDecoration(dec);
         }
     }
 
-   /**
-    * @param contents
-    * @param node
-    * @param color
-    * @param busLabel
-    * @return
-    */
-   private PolylineConnection createBusConnexion(Draw2dGraph contents, IVertex node, Color color, String busId, String busLabel)
-   {
-      final PolylineConnection conn = createConnectionFromRoute(contents,null,(DotRoute)node.getAttr(busId));
+    /**
+     * @param contents
+     * @param node
+     * @param color
+     * @param busLabel
+     * @return
+     */
+    private PolylineConnection createBusConnexion(Draw2dGraph contents, IVertex node, Color color,
+            String busId, String busLabel) {
+        final PolylineConnection conn = createConnectionFromRoute(contents, null, (DotRoute) node
+                .getAttr(busId));
         conn.setForegroundColor(color);
-        contents.add(conn,conn.getBounds());
-        final Label label = new Label(busLabel+" "+node.getName(), AppData.getInstance().getImage(AppData.LINK_ICON));
-        label.setFont(AppData.getInstance().getBoldFont(AppData.TOOLTIP_FONT));
+        contents.add(conn, conn.getBounds());
+        final Label label = new Label(busLabel + " " + node.getName(), Application.getInstance()
+                .getImage(Application.LINK_ICON));
+        label.setFont(Application.getInstance().getBoldFont(Application.TOOLTIP_FONT));
         conn.setToolTip(label);
-      return conn;
-   }
+        return conn;
+    }
 
 }

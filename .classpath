@@ -5,7 +5,7 @@
 	<classpathentry kind="src" path="/swt-gtkprinting"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/Grand"/>
-	<classpathentry kind="var" path="COMMONS_LOGGING"/>
+	<classpathentry sourcepath="COMMONS_LOGGING_SRC" kind="var" path="COMMONS_LOGGING"/>
 	<classpathentry sourcepath="ANT_SRC" kind="var" path="ANT_LIB"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JFACE"/>
 	<classpathentry kind="var" path="LOG4J_LIB"/>

@@ -27,7 +27,7 @@
  */
 package net.ggtools.grand.ui.graph;
 
-import net.ggtools.grand.ui.AppData;
+import net.ggtools.grand.ui.Application;
 
 import org.eclipse.draw2d.AbstractBorder;
 import org.eclipse.draw2d.ColorConstants;
@@ -103,7 +103,7 @@ abstract class AbstractGraphTooltip extends Figure {
         page.setLayoutManager(pageLayout);
         pageLayout.setMaxFlowWidth(TOOLTIP_WIDTH);
         page.setBorder(new SectionBorder());
-        page.setFont(AppData.getInstance().getFont(AppData.TOOLTIP_FONT));
+        page.setFont(Application.getInstance().getFont(Application.TOOLTIP_FONT));
         add(page);
         return page;
     }

@@ -27,7 +27,7 @@
  */
 package net.ggtools.grand.ui.graph;
 
-import net.ggtools.grand.ui.AppData;
+import net.ggtools.grand.ui.Application;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,16 +60,16 @@ public class NodeTooltip extends AbstractGraphTooltip implements DotGraphAttribu
     }
 
     protected void createContents() {
-        final Label name = new Label(vertex.getName(), AppData.getInstance().getImage(
-                AppData.NODE_ICON));
-        name.setFont(AppData.getInstance().getBoldFont(AppData.TOOLTIP_FONT));
+        final Label name = new Label(vertex.getName(), Application.getInstance().getImage(
+                Application.NODE_ICON));
+        name.setFont(Application.getInstance().getBoldFont(Application.TOOLTIP_FONT));
         add(name);
 
         FlowPage page = null;
 
         if (vertex.hasAttr(BUILD_FILE_ATTR)) {
             final Label buildFile = new Label(vertex.getAttrAsString(BUILD_FILE_ATTR));
-            buildFile.setFont(AppData.getInstance().getFont(AppData.TOOLTIP_MONOSPACE_FONT));
+            buildFile.setFont(Application.getInstance().getFont(Application.TOOLTIP_MONOSPACE_FONT));
             buildFile.setBorder(new SectionBorder());
             add(buildFile);
 
@@ -82,7 +82,7 @@ public class NodeTooltip extends AbstractGraphTooltip implements DotGraphAttribu
             InlineFlow inline = new InlineFlow();
             final TextFlow textFlow = new TextFlow(vertex.getAttrAsString(IF_CONDITION_ATTR));
             inline.add(textFlow);
-            textFlow.setFont(AppData.getInstance().getFont(AppData.TOOLTIP_MONOSPACE_FONT));
+            textFlow.setFont(Application.getInstance().getFont(Application.TOOLTIP_MONOSPACE_FONT));
             blockFlow.add(inline);
             blockFlow.setBorder(new SectionBorder());
             page.add(blockFlow);
@@ -95,7 +95,7 @@ public class NodeTooltip extends AbstractGraphTooltip implements DotGraphAttribu
             InlineFlow inline = new InlineFlow();
             final TextFlow textFlow = new TextFlow(vertex.getAttrAsString(UNLESS_CONDITION_ATTR));
             inline.add(textFlow);
-            textFlow.setFont(AppData.getInstance().getFont(AppData.TOOLTIP_MONOSPACE_FONT));
+            textFlow.setFont(Application.getInstance().getFont(Application.TOOLTIP_MONOSPACE_FONT));
             blockFlow.add(inline);
             blockFlow.setBorder(new SectionBorder());
             page.add(blockFlow);
@@ -105,7 +105,7 @@ public class NodeTooltip extends AbstractGraphTooltip implements DotGraphAttribu
             if (page == null) page = createFlowPage();
             BlockFlow blockFlow = new BlockFlow();
             final TextFlow textFlow = new TextFlow(vertex.getAttrAsString(DESCRIPTION_ATTR));
-            textFlow.setFont(AppData.getInstance().getItalicFont(AppData.TOOLTIP_FONT));
+            textFlow.setFont(Application.getInstance().getItalicFont(Application.TOOLTIP_FONT));
             blockFlow.add(textFlow);
             blockFlow.setBorder(new SectionBorder());
             page.add(blockFlow);

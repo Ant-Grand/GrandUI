@@ -30,18 +30,24 @@ package net.ggtools.grand.ui;
 
 import java.util.Iterator;
 
+import net.ggtools.grand.ui.widgets.GraphWindow;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Singleton holding the application data.
  * 
  * @author Christophe Labouisse
  */
-public class AppData {
+public class Application {
 
     final public static String APPLICATION_ICON = "net.ggtools.grand.ui.appicon";
 
@@ -61,21 +67,29 @@ public class AppData {
 
     final public static String TOOLTIP_MONOSPACE_FONT = "net.ggtools.grand.ui.tooltipmonospacefont";
 
-    private static AppData singleton;
+    private static final Log log = LogFactory.getLog(Application.class);
 
-    static public AppData getInstance() {
-        if (singleton == null) {
-            singleton = new AppData();
-        }
+    private static Application singleton;
 
+    static public Application getInstance() {
         return singleton;
+    }
+
+    public static void main(String[] args) {
+        log.info("Starting application");
+        Thread.currentThread().setName("Display thread");
+        final Application application = new Application();
+        application.run();
+        log.info("Exiting ...");
+        System.exit(0);
     }
 
     private FontRegistry fontRegistry;
 
     private ImageRegistry imageRegistry;
 
-    private AppData() {
+    private Application() {
+        singleton = this;
     }
 
     /**
@@ -115,19 +129,30 @@ public class AppData {
      * active display thread.
      *  
      */
-    final public void initResources() {
+    final private void initResources() {
         fontRegistry = new FontRegistry("net.ggtools.grand.ui.resource.fonts");
         for (Iterator iter = fontRegistry.getKeySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             fontRegistry.get(key);
         }
         imageRegistry = new ImageRegistry();
-        
-        imageRegistry.put(APPLICATION_ICON, ImageDescriptor.createFromFile(AppData.class,
-        "resource/application.gif"));
-        imageRegistry.put(LINK_ICON, ImageDescriptor.createFromFile(AppData.class,
+
+        imageRegistry.put(APPLICATION_ICON, ImageDescriptor.createFromFile(Application.class,
+                "resource/application.gif"));
+        imageRegistry.put(LINK_ICON, ImageDescriptor.createFromFile(Application.class,
                 "resource/link-icon.png"));
-        imageRegistry.put(NODE_ICON, ImageDescriptor.createFromFile(AppData.class,
+        imageRegistry.put(NODE_ICON, ImageDescriptor.createFromFile(Application.class,
                 "resource/node-icon.png"));
+    }
+
+    /**
+     *  
+     */
+    final private void run() {
+        Display.getDefault();
+        initResources();
+        ApplicationWindow mainWindow = new GraphWindow();
+        mainWindow.setBlockOnOpen(true);
+        mainWindow.open();
     }
 }

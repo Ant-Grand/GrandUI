@@ -30,7 +30,7 @@ package net.ggtools.grand.ui.graph;
 
 import java.util.Collection;
 
-import net.ggtools.grand.ui.AppData;
+import net.ggtools.grand.ui.Application;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -140,7 +140,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     public Draw2dNode createNode(IVertex vertex) {
         final Draw2dNode node = new Draw2dNode(this, vertex);
         add(node, node.getBounds());
-        node.setFont(AppData.getInstance().getFont(AppData.NODE_FONT));
+        node.setFont(Application.getInstance().getFont(Application.NODE_FONT));
         node.addMouseListener(new NodeMouseListener(node));
 
         return node;

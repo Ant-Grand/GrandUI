@@ -40,7 +40,7 @@ import net.ggtools.grand.graph.Link;
 import net.ggtools.grand.graph.Node;
 import net.ggtools.grand.graph.visit.LinkVisitor;
 import net.ggtools.grand.graph.visit.NodeVisitor;
-import net.ggtools.grand.ui.AppData;
+import net.ggtools.grand.ui.Application;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -107,7 +107,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         // Update width and height in nodes.
         Display.getDefault().syncExec(new Runnable() {
             public void run() {
-                final Font systemFont = AppData.getInstance().getFont(AppData.NODE_FONT);
+                final Font systemFont = Application.getInstance().getFont(Application.NODE_FONT);
                 for (Iterator iter = nameDimensions.entrySet().iterator(); iter.hasNext();) {
                     final Map.Entry entry = (Map.Entry) iter.next();
                     final String name = (String) entry.getKey();

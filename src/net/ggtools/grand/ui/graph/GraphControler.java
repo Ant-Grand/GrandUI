@@ -196,6 +196,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      */
     public void enableBusRouting(final boolean enabled) {
         if (busRoutingEnabled != enabled) {
+            log.info("Using bus routing set to "+enabled);
             busRoutingEnabled = enabled;
             parameterChangedEvent.dispatch(this);
             final Thread thread = new Thread(new Runnable() {

@@ -30,7 +30,7 @@ package net.ggtools.grand.ui.graph;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.ggtools.grand.ui.AppData;
+import net.ggtools.grand.ui.Application;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -65,13 +65,13 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
     protected void createContents() {
         final Label type;
         if (edge.hasAttr(LINK_TASK_ATTR)) {
-            type = new Label(edge.getAttrAsString(LINK_TASK_ATTR), AppData.getInstance().getImage(
-                    AppData.LINK_ICON));
+            type = new Label(edge.getAttrAsString(LINK_TASK_ATTR), Application.getInstance().getImage(
+                    Application.LINK_ICON));
         }
         else {
-            type = new Label("depency", AppData.getInstance().getImage(AppData.LINK_ICON));
+            type = new Label("depency", Application.getInstance().getImage(Application.LINK_ICON));
         }
-        type.setFont(AppData.getInstance().getBoldFont(AppData.TOOLTIP_FONT));
+        type.setFont(Application.getInstance().getBoldFont(Application.TOOLTIP_FONT));
         add(type);
 
         final FlowPage page = createFlowPage();
@@ -80,7 +80,7 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
         blockFlow.add(textFlow);
         InlineFlow inline = new InlineFlow();
         textFlow = new TextFlow(edge.getTail().getName());
-        textFlow.setFont(AppData.getInstance().getItalicFont(AppData.TOOLTIP_MONOSPACE_FONT));
+        textFlow.setFont(Application.getInstance().getItalicFont(Application.TOOLTIP_MONOSPACE_FONT));
         inline.add(textFlow);
         blockFlow.add(inline);
         blockFlow.setBorder(new SectionBorder());
@@ -91,7 +91,7 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
         blockFlow.add(textFlow);
         inline = new InlineFlow();
         textFlow = new TextFlow(edge.getHead().getName());
-        textFlow.setFont(AppData.getInstance().getItalicFont(AppData.TOOLTIP_MONOSPACE_FONT));
+        textFlow.setFont(Application.getInstance().getItalicFont(Application.TOOLTIP_MONOSPACE_FONT));
         inline.add(textFlow);
         blockFlow.add(inline);
         page.add(blockFlow);
@@ -111,12 +111,12 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
                     Map.Entry entry = (Map.Entry) iter.next();
                     BlockFlow innerBlock = new BlockFlow();
                     textFlow = new TextFlow(((String) entry.getKey()) + ": ");
-                    textFlow.setFont(AppData.getInstance().getFont(AppData.TOOLTIP_MONOSPACE_FONT));
+                    textFlow.setFont(Application.getInstance().getFont(Application.TOOLTIP_MONOSPACE_FONT));
                     innerBlock.add(textFlow);
                     inline = new InlineFlow();
                     textFlow = new TextFlow((String) entry.getValue());
-                    textFlow.setFont(AppData.getInstance().getItalicFont(
-                            AppData.TOOLTIP_MONOSPACE_FONT));
+                    textFlow.setFont(Application.getInstance().getItalicFont(
+                            Application.TOOLTIP_MONOSPACE_FONT));
                     inline.add(textFlow);
                     innerBlock.add(inline);
                     outterBlock.add(innerBlock);

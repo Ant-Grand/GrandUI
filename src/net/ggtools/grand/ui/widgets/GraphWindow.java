@@ -28,7 +28,7 @@
 
 package net.ggtools.grand.ui.widgets;
 
-import net.ggtools.grand.ui.AppData;
+import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
 import net.ggtools.grand.ui.graph.GraphControler;
@@ -101,7 +101,6 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         }
 
-        setBlockOnOpen(true);
         addStatusLine();
         addMenuBar();
     }
@@ -264,10 +263,8 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      */
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
-        // We can load the resources since the display is initialized.
-        AppData.getInstance().initResources();
         shell.setText("Grand");
-        shell.setImage(AppData.getInstance().getImage(AppData.APPLICATION_ICON));
+        shell.setImage(Application.getInstance().getImage(Application.APPLICATION_ICON));
     }
 
     /*
