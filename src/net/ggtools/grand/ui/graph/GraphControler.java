@@ -46,6 +46,7 @@ import net.ggtools.grand.ui.event.EventManager;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraph;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraphRenderer;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
+import net.ggtools.grand.ui.menu.RecentFilesMenu;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.apache.commons.logging.Log;
@@ -308,6 +309,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
 
             filterAndRenderGraph();
             if (log.isInfoEnabled()) log.info("Graph loaded & rendered");
+            RecentFilesMenu.addNewFile(file);
         } catch (final GrandException e) {
             reportError("Cannot open graph", e);
         } catch (final BuildException e) {

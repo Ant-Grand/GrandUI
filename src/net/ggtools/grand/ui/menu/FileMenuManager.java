@@ -49,10 +49,12 @@ public class FileMenuManager extends MenuManager {
     public FileMenuManager(GraphWindow window) {
         super("File");
         add(new OpenFileAction(window));
-        add(new Separator());
+        add(new Separator("print"));
         add(new PageSetupAction(window));
         add(new PrintAction(window));
-        add(new Separator());
+        add(new Separator("recent files"));
+        add(new RecentFilesMenu(window));
+        add(new Separator("quit"));
         add(new QuitAction());
     }
 }
