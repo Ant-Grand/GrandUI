@@ -58,60 +58,6 @@
      <appender-ref ref="FILE"/>
    </appender>
 
-   <!-- EMail events to an administrator
-   <appender name="SMTP" class="org.apache.log4j.net.SMTPAppender">
-     <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
-     <param name="Threshold" value="ERROR"/>
-     <param name="To" value="admin@myhost.domain.com"/>
-     <param name="From" value="nobody@myhost.domain.com"/>
-     <param name="Subject" value="JBoss Sever Errors"/>
-     <param name="SMTPHost" value="localhost"/>
-     <param name="BufferSize" value="10"/>
-     <layout class="org.apache.log4j.PatternLayout">
-       <param name="ConversionPattern" value="[%d{ABSOLUTE},%c{1}] %m%n"/>
-     </layout>
-   </appender>
-   -->
-
-   <!-- Syslog events
-   <appender name="SYSLOG" class="org.apache.log4j.net.SyslogAppender">
-     <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
-     <param name="Facility" value="LOCAL7"/>
-     <param name="FacilityPrinting" value="true"/>
-     <param name="SyslogHost" value="localhost"/>
-   </appender>
-   -->
-
-   <!-- Log events to JMS (requires a topic to be created)
-   <appender name="JMS" class="org.apache.log4j.net.JMSAppender">
-     <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
-     <param name="Threshold" value="ERROR"/>
-     <param name="TopicConnectionFactoryBindingName" value="java:/ConnectionFactory"/>
-     <param name="TopicBindingName" value="topic/MyErrorsTopic"/>
-   </appender>
-   -->
-
-   <!-- Log events through SNMP
-   <appender name="TRAP_LOG" class="org.apache.log4j.ext.SNMPTrapAppender">
-     <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
-     <param name="ImplementationClassName" value="org.apache.log4j.ext.JoeSNMPTrapSender"/>
-     <param name="ManagementHost" value="127.0.0.1"/>
-     <param name="ManagementHostTrapListenPort" value="162"/>
-     <param name="EnterpriseOID" value="1.3.6.1.4.1.24.0"/>
-     <param name="LocalIPAddress" value="127.0.0.1"/>
-     <param name="LocalTrapSendPort" value="161"/>
-     <param name="GenericTrapType" value="6"/>
-     <param name="SpecificTrapType" value="12345678"/>
-     <param name="CommunityString" value="public"/>
-     <param name="ForwardStackTraceWithTrap" value="true"/>
-     <param name="Threshold" value="DEBUG"/>
-     <param name="ApplicationTrapOID" value="1.3.6.1.4.1.24.12.10.22.64"/>
-     <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d,%p,[%t],[%c],%m%n"/>
-     </layout>
-   </appender>
-   -->
-
    <!-- ================ -->
    <!-- Limit categories -->
    <!-- ================ -->
