@@ -25,6 +25,10 @@
         <os name="Windows" />
     </condition>
 
+    <condition property="isWin32">
+        <os name="Windows 2000" />
+    </condition>
+
 
     <!-- Comment out the following lines not to use jikes -->
     <property name="build.compiler.emacs" value="true" />
