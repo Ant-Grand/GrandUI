@@ -32,17 +32,33 @@ import java.util.LinkedList;
 
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.Node;
+import net.ggtools.grand.ui.Application;
+import net.ggtools.grand.ui.GrandUiPrefStore;
+import net.ggtools.grand.ui.prefs.PreferenceKeys;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 /**
+ * The all singing all dancing class to provide content, label & decoration for
+ * nodes.
+ * 
+ * TODO change the data model to provide something better.
  * @author Christophe Labouisse
  */
-public class GraphNodeContentProvider implements IStructuredContentProvider, ILabelProvider {
+public class GraphNodeContentProvider implements IStructuredContentProvider, ILabelProvider,
+        IColorProvider {
+    /**
+     * Logger for this class
+     */
+    private static final Log log = LogFactory.getLog(GraphNodeContentProvider.class);
 
     private Graph graph;
 
@@ -71,6 +87,28 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
 
     /*
      * (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
+     */
+    public Color getBackground(Object element) {
+        if (element instanceof Node) {
+            final Node node = (Node) element;
+            final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+            if (node.equals(graph.getStartNode()))
+                    return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "start.fillcolor");
+            if (node.hasAttributes(Node.ATTR_MISSING_NODE))
+                    return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX
+                            + "missing.fillcolor");
+            if (node.hasAttributes(Node.ATTR_MAIN_NODE))
+                    return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "main.fillcolor");
+
+            return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "default.fillcolor");
+        }
+
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
     public Object[] getElements(Object inputElement) {
@@ -81,6 +119,27 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
             list.add(iter.next());
 
         return list.toArray();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
+     */
+    public Color getForeground(Object element) {
+        if (element instanceof Node) {
+            final Node node = (Node) element;
+            final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+            if (node.equals(graph.getStartNode()))
+                    return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "start.fgcolor");
+            if (node.hasAttributes(Node.ATTR_MISSING_NODE))
+                    return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "missing.fgcolor");
+            if (node.hasAttributes(Node.ATTR_MAIN_NODE))
+                    return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "main.fgcolor");
+
+            return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "default.fgcolor");
+        }
+
+        return null;
     }
 
     /*
@@ -97,14 +156,13 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      */
     public String getText(Object element) {
-        if (element == null)
-        return null;
-        
+        if (element == null) return null;
+
         if (element instanceof Node) {
             final Node node = (Node) element;
             return node.getName();
         }
-        
+
         return element.toString();
     }
 
@@ -143,5 +201,4 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
     void setGraph(final Graph graph) {
         this.graph = graph;
     }
-
 }

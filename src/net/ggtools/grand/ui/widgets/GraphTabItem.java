@@ -48,6 +48,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -91,7 +93,8 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
 
     private final StyledText textDisplayer;
 
-    private final ListViewer outlineViewer;
+    // TableViewer is richer than ListViewer
+    private final TableViewer outlineViewer;
 
     /**
      * Creates a tab to display a new graph. The tab will contain two sash forms
@@ -109,7 +112,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         outlineSashForm = new SashForm(sourceSashForm, SWT.HORIZONTAL | SWT.BORDER);
         setControl(sourceSashForm);
 
-        outlineViewer = new ListViewer(outlineSashForm, SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
+        outlineViewer = new TableViewer(outlineSashForm, SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
         outlineViewer.setContentProvider(controler.getNodeContentProvider());
         outlineViewer.setLabelProvider(controler.getNodeLabelProvider());
         outlineViewer.setSorter(new ViewerSorter());
