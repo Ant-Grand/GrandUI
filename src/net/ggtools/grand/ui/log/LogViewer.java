@@ -27,9 +27,13 @@
  */
 package net.ggtools.grand.ui.log;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.Date;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -38,6 +42,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -53,8 +58,31 @@ import org.eclipse.swt.widgets.TableColumn;
  * @author Christophe Labouisse
  */
 public class LogViewer extends Composite {
+    private static final int DEFAULT_NUM_LINES = 10;
+    private static final int HEADER_EXTRA_WIDTH = 10;
+
+    /**
+     * Logger for this class
+     */
+    private static final Log log = LogFactory.getLog(LogViewer.class);
+
+    static final String[] COLUMN_NAMES = new String[]{"Lvl", "Date", "Class", "Message"};
+
+    // Indexes for table columns.
+    static final int CI_LEVEL = 0;
+
+    static final int CI_DATE = 1;
+
+    static final int CI_CLASS = 2;
+
+    static final int CI_MESSAGE = 3;
 
     private final class LogEventFilter extends ViewerFilter {
+        /**
+         * Logger for this class
+         */
+        private final Log log = LogFactory.getLog(LogEventFilter.class);
+
         public boolean select(Viewer v, Object parentElement, Object element) {
             if (element instanceof LogEvent) {
                 final LogEvent event = (LogEvent) element;
@@ -65,6 +93,11 @@ public class LogViewer extends Composite {
     }
 
     private final class LogEventRefreshListener implements LogEventListener {
+        /**
+         * Logger for this class
+         */
+        private final Log log = LogFactory.getLog(LogEventRefreshListener.class);
+
         private final Display display = LogViewer.this.getDisplay();
 
         public void logEventReceived(final LogEvent event) {
@@ -80,6 +113,11 @@ public class LogViewer extends Composite {
     }
 
     private final class LogSaver extends SelectionAdapter {
+        /**
+         * Logger for this class
+         */
+        private final Log log = LogFactory.getLog(LogSaver.class);
+
         public void widgetSelected(SelectionEvent e) {
             if (e.widget instanceof Button) {
                 final Button button = (Button) e.widget;
@@ -102,7 +140,6 @@ public class LogViewer extends Composite {
                     }
                 }
             }
-
         }
     }
 
@@ -214,17 +251,50 @@ public class LogViewer extends Composite {
         eventLevelFilter = new LogEventFilter();
         viewer.addFilter(eventLevelFilter);
 
-        Table table = viewer.getTable();
-        for (int i = 0; i < LogLabelProvider.COLUMN_NAMES.length; i++) {
-            final String header = LogLabelProvider.COLUMN_NAMES[i];
-            final TableColumn column = new TableColumn(table, SWT.LEFT);
-            column.setText(header);
-            column.setWidth(100);
-        }
-
+        final Table table = viewer.getTable();
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
-        table.setLayoutData(new GridData(GridData.FILL_BOTH));
+        final GridData gridData = new GridData(GridData.FILL_BOTH);
+        gridData.heightHint = table.getHeaderHeight() * DEFAULT_NUM_LINES;
+        table.setLayoutData(gridData);
+
+        final GC gc = new GC(table);
+        gc.setFont(table.getFont());
+        for (int columnIndex = 0; columnIndex < COLUMN_NAMES.length; columnIndex++) {
+            final String header = COLUMN_NAMES[columnIndex];
+            final TableColumn column = new TableColumn(table, SWT.LEFT);
+            int columnWidth;
+            switch (columnIndex) {
+            case CI_DATE:
+                columnWidth = gc.stringExtent(new Date().toString()).x;
+                break;
+
+            case CI_CLASS:
+                // Approximately 20 chars
+                columnWidth = gc.stringExtent("em").x * 7;
+                break;
+
+            case CI_MESSAGE:
+                // Approximately 60 chars
+                columnWidth = gc.stringExtent("em").x * 20;
+                break;
+
+            default:
+                // Default behavior is header width.
+                columnWidth = gc.stringExtent(header).x;
+                break;
+            }
+
+            columnWidth += HEADER_EXTRA_WIDTH;
+            column.setText(header);
+
+            if (log.isDebugEnabled()) {
+                log.debug("createViewer() - Setting column width : header = " + header
+                        + ", columnWidth = " + columnWidth);
+            }
+            column.setWidth(columnWidth);
+        }
+
     }
 
     /**

@@ -48,8 +48,6 @@ import org.eclipse.swt.widgets.Display;
  */
 public class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
 
-    public static final String[] COLUMN_NAMES = new String[]{"Level", "Date", "Class", "Message"};
-
     /**
      * Logger for this class
      */
@@ -134,26 +132,29 @@ public class LogLabelProvider implements ITableLabelProvider, ITableColorProvide
         if (element instanceof LogEvent) {
             final LogEvent event = (LogEvent) element;
             switch (columnIndex) {
-            case 0:
+            case LogViewer.CI_LEVEL:
                 // No label for this one.
                 // rc = event.getLevel().name;
                 break;
 
-            case 1:
+            case LogViewer.CI_DATE:
                 rc = new Date(event.getTime()).toString();
                 break;
 
-            case 2:
+            case LogViewer.CI_CLASS:
                 rc = event.getOriginator();
                 rc = rc.substring(rc.lastIndexOf('.') + 1);
                 break;
 
-            case 3:
+            case LogViewer.CI_MESSAGE:
                 rc = event.getMessage().toString();
                 break;
 
             default:
-
+                if (log.isWarnEnabled()) {
+                    log.warn("getColumnText(columnIndex = " + columnIndex
+                            + ") - Got unexpected column index ");
+                }
                 break;
             }
         }
