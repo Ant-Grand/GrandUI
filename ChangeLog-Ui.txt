@@ -2,9 +2,12 @@ $Id$
 
 Release 0.6 (build number xxx):
 
-* Upgraded to Grand core 1.6 &amp; and Eclipse 3.1M4,
+* Upgraded to Grand core 1.7pre &amp; and Eclipse 3.1M4,
 * Added support for mouse wheel,
 * Improved Synchronization between the outline and the other panels,
+* Fixed an exception when parsing a file with a <taskdef> outside of a target,
+* Added a log window,
+* Minor bugfixes.
 
 
 Release 0.5 (build number 146):
