@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
 
+import net.ggtools.grand.ui.widgets.ExceptionDialog;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 import net.ggtools.grand.ui.widgets.Splash;
 
@@ -102,6 +103,8 @@ public class Application {
 
     private ImageRegistry imageRegistry;
 
+    private GrandUiPrefStore preferenceStore;
+
     final private String versionString;
 
     private Application() throws IOException {
@@ -123,11 +126,25 @@ public class Application {
     }
 
     /**
+     * @return Returns the buildProperties.
+     */
+    final public Properties getBuildProperties() {
+        return buildProperties;
+    }
+
+    /**
      * @param symbolicName
      * @return
      */
     final public Font getFont(final String symbolicName) {
         return fontRegistry.get(symbolicName);
+    }
+
+    /**
+     * @return Returns the fontRegistry.
+     */
+    public final FontRegistry getFontRegistry() {
+        return fontRegistry;
     }
 
     /**
@@ -139,6 +156,13 @@ public class Application {
     }
 
     /**
+     * @return Returns the imageRegistry.
+     */
+    public final ImageRegistry getImageRegistry() {
+        return imageRegistry;
+    }
+
+    /**
      * @param symbolicName
      * @return
      */
@@ -147,32 +171,56 @@ public class Application {
     }
 
     /**
+     * @return Returns the preferenceStore.
+     */
+    public final GrandUiPrefStore getPreferenceStore() {
+        return preferenceStore;
+    }
+
+    /**
+     * @return Returns the versionString.
+     */
+    final public String getVersionString() {
+        return versionString;
+    }
+
+    /**
      * Initializes the application resources. This method must be called from an
      * active display thread.
+     * @throws IOException
      *  
      */
-    final private void initResources() {
+    final private void initResources() throws IOException {
         if (log.isInfoEnabled()) log.info("Initializing application resources");
-        
+
+        if (log.isDebugEnabled()) log.debug("Initializing preferences");
+        preferenceStore = new GrandUiPrefStore();
+        // TODO init with default values.
+
+        if (log.isDebugEnabled()) log.debug("Initializing font registry");
         fontRegistry = new FontRegistry("net.ggtools.grand.ui.resource.fonts");
         for (Iterator iter = fontRegistry.getKeySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             fontRegistry.get(key);
         }
-        
+
+        if (log.isDebugEnabled()) log.debug("Initializing image registry");
         imageRegistry = new ImageRegistry();
 
         imageRegistry.put(ABOUT_DIALOG_IMAGE, ImageDescriptor.createFromFile(Application.class,
-        "resource/about.png"));
+                "resource/about.png"));
         imageRegistry.put(APPLICATION_ICON, ImageDescriptor.createFromFile(Application.class,
                 "resource/application.png"));
         imageRegistry.put(LINK_ICON, ImageDescriptor.createFromFile(Application.class,
                 "resource/link-icon.png"));
         imageRegistry.put(NODE_ICON, ImageDescriptor.createFromFile(Application.class,
                 "resource/node-icon.png"));
-        
+
+        if (log.isDebugEnabled()) log.debug("Initializing colors");
         // Ensure that ColorConstant is loaded.
         final Color color = ColorConstants.black;
+
+        // Put the same icons for all windows & dialogs.
         Window.setDefaultImage(getImage(APPLICATION_ICON));
     }
 
@@ -184,25 +232,15 @@ public class Application {
         final Display display = Display.getDefault();
         final Splash splash = new Splash(display, versionString);
         splash.open();
-        initResources();
+        try {
+            initResources();
+        } catch (IOException e) {
+            ExceptionDialog.openException(null,"Cannot load preferences",e);
+        }
         ApplicationWindow mainWindow = new GraphWindow();
         mainWindow.setBlockOnOpen(true);
         splash.close();
         splash.dispose();
         mainWindow.open();
-    }
-
-    /**
-     * @return Returns the buildProperties.
-     */
-    final public Properties getBuildProperties() {
-        return buildProperties;
-    }
-
-    /**
-     * @return Returns the versionString.
-     */
-    final public String getVersionString() {
-        return versionString;
     }
 }

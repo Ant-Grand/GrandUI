@@ -234,6 +234,10 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         if (edge.getAttr(DRAW2DFGCOLOR_ATTR) != null) {
             conn.setForegroundColor((Color) edge.getAttr(DRAW2DFGCOLOR_ATTR));
         }
+        
+        if (edge.getAttr(DRAW2DLINEWIDTH_ATTR) != null) {
+            conn.setLineWidth(edge.getAttrInt(DRAW2DLINEWIDTH_ATTR));
+        }
 
         final PolygonDecoration dec = new PolygonDecoration();
         conn.setTargetDecoration(dec);

@@ -27,8 +27,6 @@
  */
 package net.ggtools.grand.ui.widgets;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -43,8 +41,6 @@ import org.eclipse.swt.widgets.Shell;
  * @author Christophe Labouisse
  */
 public class Splash {
-    private static final Log log = LogFactory.getLog(Splash.class);
-
     private final Display display;
 
     private final Image image;
@@ -73,11 +69,6 @@ public class Splash {
     }
 
     public void close() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            log.warn("Sleep interrupted", e);
-        }
         shell.close();
     }
 

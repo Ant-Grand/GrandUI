@@ -41,24 +41,25 @@ import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.output.DotWriter;
 import net.ggtools.grand.ui.Application;
+import net.ggtools.grand.ui.GrandUiPrefStore;
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraph;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraphRenderer;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
 import net.ggtools.grand.ui.menu.RecentFilesMenu;
+import net.ggtools.grand.ui.prefs.PreferenceKeys;
+import net.ggtools.grand.ui.widgets.ExceptionDialog;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tools.ant.BuildException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.PrintFigureOperation;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.widgets.Display;
 
@@ -71,7 +72,8 @@ import sf.jzgraph.dot.impl.Dot;
  * 
  * @author Christophe Labouisse
  */
-public class GraphControler implements DotGraphAttributes, SelectionManager {
+public class GraphControler implements DotGraphAttributes, SelectionManager,
+        IPropertyChangeListener {
     private static final Log log = LogFactory.getLog(GraphControler.class);
 
     // Ok that's bad it'll probably have to go to the forthcoming pref API.
@@ -146,7 +148,9 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         }
         clearFiltersOnNextLoad = true; // Conservative.
-        busRoutingEnabled = false;
+        final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+        busRoutingEnabled = preferenceStore.getBoolean(PreferenceKeys.GRAPH_BUS_ENABLED_DEFAULT);
+        preferenceStore.addPropertyChangeListener(this);
     }
 
     /**
@@ -345,6 +349,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
      * Reload the current graph.
      */
     public void reloadGraph() {
+        // FIXME Check that there is a model.
         if (log.isInfoEnabled()) log.info("Reloading current graph");
         progressMonitor.beginTask("Reloading graph", 5);
         clearFiltersOnNextLoad = false;
@@ -358,6 +363,25 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
             if (log.isInfoEnabled()) log.info("Graph reloaded");
         } catch (GrandException e) {
             reportError("Cannot reload graph", e);
+        } catch (final BuildException e) {
+            reportError("Cannot open graph", e);
+        } finally {
+            progressMonitor.done();
+        }
+    }
+
+    /**
+     * Refreshing (i.e.: rerender) the current graph.
+     */
+    public void refreshGraph() {
+        //FIXME check that there is a graph.
+        if (log.isInfoEnabled()) log.info("Refreshing current graph");
+        progressMonitor.beginTask("Refreshing graph", 3);
+        clearFiltersOnNextLoad = false;
+
+        try {
+            renderFilteredGraph();
+            if (log.isInfoEnabled()) log.info("Graph refreshed");
         } catch (final BuildException e) {
             reportError("Cannot open graph", e);
         } finally {
@@ -416,7 +440,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
     }
 
     /**
-     *  
+     * Render the currently load/filtered graph. This method increase the
+     * progress monitor by 3.
      */
     private void renderFilteredGraph() {
         if (log.isDebugEnabled()) log.debug("Creating dot graph");
@@ -456,17 +481,17 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
      */
     private void reportError(final String message, final Throwable e) {
         log.error(message, e);
-        final MultiStatus topStatus = new MultiStatus("GrandUI", 0, message, e);
-        for (Throwable nested = e; nested != null; nested = nested.getCause()) {
-            final IStatus status = new Status(IStatus.ERROR, "GraphUI", 0, nested.getMessage(),
-                    nested);
-            topStatus.add(status);
-        }
-        window.getShell().getDisplay().syncExec(new Runnable() {
+        ExceptionDialog.openException(window.getShell(), message, e);
+    }
 
-            public void run() {
-                ErrorDialog.openError(window.getShell(), message, e.getMessage(), topStatus);
-            }
-        });
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+     */
+    public void propertyChange(PropertyChangeEvent event) {
+        if (log.isDebugEnabled()) log.debug("Get PropertyChangeEvent " + event.getProperty());
+        if (event.getProperty().startsWith(PreferenceKeys.GRAPH_PREFIX)) {
+            refreshGraph();
+        }
     }
 }

@@ -41,10 +41,11 @@ import net.ggtools.grand.graph.Node;
 import net.ggtools.grand.graph.visit.LinkVisitor;
 import net.ggtools.grand.graph.visit.NodeVisitor;
 import net.ggtools.grand.ui.Application;
+import net.ggtools.grand.ui.GrandUiPrefStore;
+import net.ggtools.grand.ui.prefs.PreferenceKeys;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Font;
@@ -65,19 +66,19 @@ import sf.jzgraph.dot.impl.DotGraph;
 public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttributes {
     private static final Log log = LogFactory.getLog(GraphControler.class);
 
+    private String currentLinkName;
+
+    private final IDotGraph dotGraph;
+
     private Graph graph;
 
     private final Map nameDimensions;
 
-    private final IDotGraph dotGraph;
-
-    private final Map vertexLUT;
-
-    private String currentLinkName;
-
     private final Node startNode;
 
     private final boolean useBusRouting;
+
+    private final Map vertexLUT;
 
     /**
      *  
@@ -138,27 +139,32 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         return dotGraph;
     }
 
-    /**
-     * Creates a basic link.
-     * @param link
-     * @param name
-     * @return
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.AntLink)
      */
-    private IEdge addLink(final Link link) {
-        final IEdge edge = dotGraph.newEdge((IVertex) vertexLUT.get(link.getStartNode().getName()),
-                (IVertex) vertexLUT.get(link.getEndNode().getName()), currentLinkName, link);
-        if (link.hasAttributes(Link.ATTR_WEAK_LINK)) {
-            edge.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.lightGray);
-        }
-        return edge;
+    public void visitLink(AntLink link) {
+        addLink(link);
     }
 
     /*
      * (non-Javadoc)
-     * @see net.ggtools.grand.graph.visit.NodeVisitor#visitNode(net.ggtools.grand.graph.Node)
+     * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.AntTaskLink)
      */
-    public void visitNode(Node node) {
-        addNode(node);
+    public void visitLink(AntTaskLink link) {
+        final IEdge edge = addLink(link);
+        AntTaskLink taskLink = (AntTaskLink) link;
+
+        edge.setAttr(LINK_TASK_ATTR, taskLink.getTaskName());
+        edge.setAttr(LINK_PARAMETERS_ATTR, taskLink.getParameterMap());
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.graph.Link)
+     */
+    public void visitLink(Link link) {
+        addLink(link);
     }
 
     /*
@@ -185,30 +191,31 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
 
     /*
      * (non-Javadoc)
-     * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.graph.Link)
+     * @see net.ggtools.grand.graph.visit.NodeVisitor#visitNode(net.ggtools.grand.graph.Node)
      */
-    public void visitLink(Link link) {
-        addLink(link);
+    public void visitNode(Node node) {
+        addNode(node);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.AntLink)
+    /**
+     * Creates a basic link.
+     * @param link
+     * @param name
+     * @return
      */
-    public void visitLink(AntLink link) {
-        addLink(link);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.AntTaskLink)
-     */
-    public void visitLink(AntTaskLink link) {
-        final IEdge edge = addLink(link);
-        AntTaskLink taskLink = (AntTaskLink) link;
-
-        edge.setAttr(LINK_TASK_ATTR, taskLink.getTaskName());
-        edge.setAttr(LINK_PARAMETERS_ATTR, taskLink.getParameterMap());
+    private IEdge addLink(final Link link) {
+        final IEdge edge = dotGraph.newEdge((IVertex) vertexLUT.get(link.getStartNode().getName()),
+                (IVertex) vertexLUT.get(link.getEndNode().getName()), currentLinkName, link);
+        final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+        if (link.hasAttributes(Link.ATTR_WEAK_LINK)) {
+            edge.setAttr(DRAW2DFGCOLOR_ATTR, preferenceStore.getColor(PreferenceKeys.LINK_WEAK_COLOR));
+            edge.setAttr(DRAW2DLINEWIDTH_ATTR, preferenceStore.getInt(PreferenceKeys.LINK_WEAK_LINEWIDTH));
+        }
+        else {
+            edge.setAttr(DRAW2DFGCOLOR_ATTR, preferenceStore.getColor(PreferenceKeys.LINK_DEFAULT_COLOR));
+            edge.setAttr(DRAW2DLINEWIDTH_ATTR, preferenceStore.getInt(PreferenceKeys.LINK_DEFAULT_LINEWIDTH));
+        }
+        return edge;
     }
 
     /**
@@ -220,26 +227,18 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         final String name = node.getName();
         final IVertex vertex = dotGraph.newVertex(name, node);
 
-        vertex.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.black);
-        vertex.setAttr(DRAW2DLINEWIDTH_ATTR, 1);
-
         if (node.equals(startNode)) {
-            vertex.setAttr(SHAPE_ATTR, "octagon");
-            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.yellow);
-            vertex.setAttr(DRAW2DLINEWIDTH_ATTR, 2);
+            setVertexPreferences(vertex, "start");
         }
         else if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
-            vertex.setAttr(SHAPE_ATTR, "box");
-            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.cyan);
+            setVertexPreferences(vertex, "main");
         }
-        else {
-            vertex.setAttr(SHAPE_ATTR, "oval");
-            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.white);
+        else if (node.hasAttributes(Node.ATTR_MISSING_NODE)) {
+            setVertexPreferences(vertex, "missing");
         }
 
-        if (node.hasAttributes(Node.ATTR_MISSING_NODE)) {
-            vertex.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.gray);
-            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.lightGray);
+        else {
+            setVertexPreferences(vertex, "default");
         }
 
         if (node.getDescription() != null) {
@@ -247,14 +246,27 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         }
 
         if (useBusRouting) {
-            // FIXME use preferences.
-            vertex.setAttr("inthreshold", 5);
-            vertex.setAttr("outthreshold", 5);
+            final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+            vertex.setAttr("inthreshold", preferenceStore.getInt(PreferenceKeys.GRAPH_BUS_IN_THRESHOLD));
+            vertex.setAttr("outthreshold", preferenceStore.getInt(PreferenceKeys.GRAPH_BUS_OUT_THRESHOLD));
         }
 
         vertexLUT.put(name, vertex);
         nameDimensions.put(name, vertex);
         return vertex;
+    }
+
+    /**
+     * @param vertex
+     * @param preferenceStore
+     */
+    private void setVertexPreferences(final IVertex vertex, final String nodeType) {
+        final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+        final String keyPrefix = PreferenceKeys.NODE_PREFIX + nodeType;
+        vertex.setAttr(SHAPE_ATTR, preferenceStore.getString(keyPrefix + ".shape"));
+        vertex.setAttr(DRAW2DFGCOLOR_ATTR, preferenceStore.getColor(keyPrefix + ".fgcolor"));
+        vertex.setAttr(DRAW2DFILLCOLOR_ATTR, preferenceStore.getColor(keyPrefix + ".fillcolor"));
+        vertex.setAttr(DRAW2DLINEWIDTH_ATTR, preferenceStore.getInt(keyPrefix + ".linewidth"));
     }
 
 }

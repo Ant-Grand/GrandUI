@@ -33,6 +33,7 @@ package net.ggtools.grand.ui.menu;
 
 import net.ggtools.grand.ui.actions.OpenFileAction;
 import net.ggtools.grand.ui.actions.PageSetupAction;
+import net.ggtools.grand.ui.actions.PreferenceAction;
 import net.ggtools.grand.ui.actions.PrintAction;
 import net.ggtools.grand.ui.actions.QuitAction;
 import net.ggtools.grand.ui.widgets.GraphWindow;
@@ -52,6 +53,7 @@ public class FileMenuManager extends MenuManager {
         add(new Separator("print"));
         add(new PageSetupAction(window));
         add(new PrintAction(window));
+        add(new PreferenceAction(window));
         add(new Separator("recent files"));
         add(new RecentFilesMenu(window));
         add(new Separator("quit"));
