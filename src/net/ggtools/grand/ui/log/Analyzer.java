@@ -36,7 +36,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
@@ -136,29 +135,7 @@ public class Analyzer extends ApplicationWindow {
      */
     protected Control createContents(Composite parent) {
         // Allow the LogViewer to display trace & debug events.
-        logViewer = new LogViewer(parent, SWT.NONE) {
-            /**
-             * @param comboIndex
-             * @return
-             */
-            protected int comboIndexToLogLevel(int comboIndex) {
-                return comboIndex + LogEvent.TRACE.value;
-            }
-
-            /**
-             * Add value to the level selection combo.
-             * @param combo
-             */
-            protected void fillUpLevelCombo(Combo combo) {
-                combo.add(LogEvent.TRACE.name);
-                combo.add(LogEvent.DEBUG.name);
-                combo.add(LogEvent.INFO.name);
-                combo.add(LogEvent.WARNING.name);
-                combo.add(LogEvent.ERROR.name);
-                combo.add(LogEvent.FATAL.name);
-                combo.select(LogEvent.INFO.value - LogEvent.TRACE.value);
-            }
-        };
+        logViewer = new LogViewer(parent, SWT.NONE);
         return logViewer;
     }
 

@@ -64,32 +64,46 @@ import org.eclipse.swt.widgets.TableItem;
  * @author Christophe Labouisse
  */
 public class LogViewer extends Composite {
-    private static final int DEFAULT_NUM_LINES = 10;
 
-    private static final int HEADER_EXTRA_WIDTH = 10;
+    private final class LogEventFilter extends ViewerFilter {
+        /**
+         * Logger for this class
+         */
+        private final Log log = LogFactory.getLog(LogEventFilter.class);
 
-    /**
-     * Logger for this class
-     */
-    private static final Log log = LogFactory.getLog(LogViewer.class);
+        public boolean select(Viewer v, Object parentElement, Object element) {
+            if (element instanceof LogEvent) {
+                final LogEvent event = (LogEvent) element;
+                if (event.getLevel().value >= minLogLevel) return true;
+            }
+            return false;
+        }
+    }
 
-    static final String[] COLUMN_NAMES = new String[]{"Lvl", "Date", "Class", "Message"};
+    private final class LogEventRefreshListener implements LogEventListener {
 
-    // Indexes for table columns.
-    static final int CI_LEVEL = 0;
+        /**
+         * Logger for this class
+         */
+        private final Log log = LogFactory.getLog(LogEventRefreshListener.class);
 
-    static final int CI_DATE = 1;
-
-    static final int CI_CLASS = 2;
-
-    static final int CI_MESSAGE = 3;
+        public void logEventReceived(final LogEvent event) {
+            if (event.getLevel().value >= minLogLevel) {
+                synchronized (refreshThread) {
+                    nextEvent = event;
+                    refreshThread.notify();
+                }
+            }
+        }
+    }
 
     private static final class LogEventTooltipListener extends TableTooltipListener {
-        private final Table table;
 
         private final int CI_CLASS;
 
         private final int CI_MESSAGE;
+
+        private final Table table;
 
         private LogEventTooltipListener(Table table, int CI_CLASS, int CI_MESSAGE) {
             super(table);
@@ -104,8 +118,8 @@ public class LogViewer extends Composite {
          *      org.eclipse.swt.widgets.TableItem)
          */
         protected Control createTooltipContents(Composite tooltipParent, TableItem item) {
-            final Composite composite = (Composite) super.createTooltipContents(tooltipParent,
-                    item);
+            final Composite composite = (Composite) super
+                    .createTooltipContents(tooltipParent, item);
 
             final GridLayout parentGridLayout = ((GridLayout) composite.getLayout());
             parentGridLayout.numColumns = 2;
@@ -128,47 +142,11 @@ public class LogViewer extends Composite {
             message.setText(item.getText(CI_MESSAGE));
             final GridData msgGridData = new GridData(GridData.GRAB_HORIZONTAL);
             msgGridData.horizontalSpan = 2;
-            msgGridData.widthHint = Math.min(400,
-                    message.computeSize(SWT.DEFAULT, SWT.DEFAULT).x
-                            + parentGridLayout.marginWidth);
+            msgGridData.widthHint = Math.min(400, message.computeSize(SWT.DEFAULT, SWT.DEFAULT).x
+                    + parentGridLayout.marginWidth);
             message.setLayoutData(msgGridData);
 
             return composite;
-        }
-    }
-
-    private final class LogEventFilter extends ViewerFilter {
-        /**
-         * Logger for this class
-         */
-        private final Log log = LogFactory.getLog(LogEventFilter.class);
-
-        public boolean select(Viewer v, Object parentElement, Object element) {
-            if (element instanceof LogEvent) {
-                final LogEvent event = (LogEvent) element;
-                if (event.getLevel().value >= minLogLevel) return true;
-            }
-            return false;
-        }
-    }
-
-    private final class LogEventRefreshListener implements LogEventListener {
-        /**
-         * Logger for this class
-         */
-        private final Log log = LogFactory.getLog(LogEventRefreshListener.class);
-
-        private final Display display = LogViewer.this.getDisplay();
-
-        public void logEventReceived(final LogEvent event) {
-            if (event.getLevel().value >= minLogLevel) {
-                display.asyncExec(new Runnable() {
-                    public void run() {
-                        viewer.refresh(false);
-                        viewer.reveal(event);
-                    }
-                });
-            }
         }
     }
 
@@ -203,13 +181,80 @@ public class LogViewer extends Composite {
         }
     }
 
+    private final class ViewerRefreshThread extends Thread {
+
+        private final Display display = LogViewer.this.getDisplay();
+
+        private boolean keepRunning = true;
+
+        public void run() {
+            while (keepRunning) {
+                final LogEvent myEvent;
+                synchronized (this) {
+                    myEvent = nextEvent;
+                    nextEvent = null;
+                }
+
+                if (myEvent != null) {
+                    display.syncExec(new Runnable() {
+                        public void run() {
+                            viewer.refresh(false);
+                            table.showItem(table.getItem(table.getItemCount() - 1));
+                        }
+                    });
+                }
+
+                try {
+                    sleep(1000L);
+                    synchronized (this) {
+                        wait();
+                    }
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        private void stopThread() {
+            keepRunning = false;
+            interrupt();
+        }
+    }
+
+    private static final int DEFAULT_NUM_LINES = 10;
+
+    private static final int HEADER_EXTRA_WIDTH = 10;
+
+    /**
+     * Logger for this class
+     */
+    private static final Log log = LogFactory.getLog(LogViewer.class);
+
+    static final int CI_CLASS = 2;
+
+    static final int CI_DATE = 1;
+
+    // Indexes for table columns.
+    static final int CI_LEVEL = 0;
+
+    static final int CI_MESSAGE = 3;
+
+    static final String[] COLUMN_NAMES = new String[]{"Lvl", "Date", "Class", "Message"};
+
     private LogEventFilter eventLevelFilter;
 
     private LogEventBuffer logBuffer;
 
     private int minLogLevel = LogEvent.INFO.value;
 
+    private LogEvent nextEvent = null;
+
     private LogEventRefreshListener refreshListener;
+
+    private final ViewerRefreshThread refreshThread;
+
+    private Table table;
 
     private TableViewer viewer;
 
@@ -219,7 +264,19 @@ public class LogViewer extends Composite {
      */
     public LogViewer(Composite parent, int style) {
         super(parent, style);
+        refreshThread = new ViewerRefreshThread();
         createContents(this);
+    }
+
+    public void dispose() {
+        refreshThread.stopThread();
+        try {
+            refreshThread.join();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        super.dispose();
     }
 
     /**
@@ -300,6 +357,7 @@ public class LogViewer extends Composite {
         createCommands(composite);
         createViewer(composite);
         refreshListener = new LogEventRefreshListener();
+        refreshThread.start();
     }
 
     private void createViewer(final Composite parent) {
@@ -311,14 +369,15 @@ public class LogViewer extends Composite {
         eventLevelFilter = new LogEventFilter();
         viewer.addFilter(eventLevelFilter);
 
-        final Table table = viewer.getTable();
+        table = viewer.getTable();
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         final GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.heightHint = table.getHeaderHeight() * DEFAULT_NUM_LINES;
         table.setLayoutData(gridData);
 
-        final TableTooltipListener tableListener = new LogEventTooltipListener(table, CI_CLASS, CI_MESSAGE);
+        final TableTooltipListener tableListener = new LogEventTooltipListener(table, CI_CLASS,
+                CI_MESSAGE);
         tableListener.activateTooltips();
 
         final GC gc = new GC(table);
@@ -376,7 +435,7 @@ public class LogViewer extends Composite {
      * @return
      */
     protected int comboIndexToLogLevel(int comboIndex) {
-        return comboIndex + LogEvent.INFO.value;
+        return comboIndex + LogEvent.TRACE.value;
     }
 
     /**
@@ -384,10 +443,12 @@ public class LogViewer extends Composite {
      * @param combo
      */
     protected void fillUpLevelCombo(Combo combo) {
+        combo.add(LogEvent.TRACE.name);
+        combo.add(LogEvent.DEBUG.name);
         combo.add(LogEvent.INFO.name);
         combo.add(LogEvent.WARNING.name);
         combo.add(LogEvent.ERROR.name);
         combo.add(LogEvent.FATAL.name);
-        combo.select(0);
+        combo.select(LogEvent.INFO.value - LogEvent.TRACE.value);
     }
 }
