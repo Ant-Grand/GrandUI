@@ -36,24 +36,16 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
 
-import net.ggtools.grand.ui.prefs.GeneralPreferencePage;
-import net.ggtools.grand.ui.prefs.GraphPreferencePage;
-import net.ggtools.grand.ui.prefs.JDKPreferenceStore;
-import net.ggtools.grand.ui.prefs.LinksPreferencePage;
-import net.ggtools.grand.ui.prefs.NodesPreferencePage;
+import net.ggtools.grand.ui.prefs.*;
 
-import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.jface.resource.ColorRegistry;
-import org.eclipse.jface.resource.FontRegistry;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.RGB;
+import org.eclipse.jface.preference.*;
+import org.eclipse.jface.resource.*;
+import org.eclipse.swt.graphics.*;
 
 /**
  * @author Christophe Labouisse
  */
-public class GrandUiPrefStore extends JDKPreferenceStore {
+public class GrandUiPrefStore extends PreferenceStore {
 
     /**
      * @param unEscapeString(item)
@@ -76,12 +68,20 @@ public class GrandUiPrefStore extends JDKPreferenceStore {
     final FontRegistry fontRegistry = new FontRegistry();
 
     GrandUiPrefStore() throws IOException {
-        super(Preferences.userNodeForPackage(GrandUiPrefStore.class));
-        setDefault(GeneralPreferencePage.MAX_RECENT_FILES_PREFS_KEY, 4);
-        GraphPreferencePage.setDefaults(this);
-        NodesPreferencePage.setDefaults(this);
-        LinksPreferencePage.setDefaults(this);
-        load();
+        //super(Preferences.userNodeForPackage(GrandUiPrefStore.class));
+       super();
+        setDefaults();
+        final File baseDir = new File(System.getProperty("user.home"),".grandui");
+        if (!baseDir.isDirectory()) {
+           baseDir.mkdirs();
+           if (!baseDir.isDirectory()) {
+              throw new FileNotFoundException("Cannot find/create "+baseDir);
+           }
+        }
+        final File prefFile = new File(baseDir,"ui.prefs");
+        setFilename(prefFile.getPath());
+        if (prefFile.isFile())
+            load();
     }
 
     /**
@@ -113,6 +113,17 @@ public class GrandUiPrefStore extends JDKPreferenceStore {
         }
         return list;
     }
+
+   /**
+    * 
+    */
+   private void setDefaults()
+   {
+      setDefault(GeneralPreferencePage.MAX_RECENT_FILES_PREFS_KEY, 4);
+      GraphPreferencePage.setDefaults(this);
+      NodesPreferencePage.setDefaults(this);
+      LinksPreferencePage.setDefaults(this);
+   }
 
     public Color getColor(final String key) {
         final RGB newRGBColor = PreferenceConverter.getColor(this, key);

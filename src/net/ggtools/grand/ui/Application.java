@@ -92,7 +92,7 @@ public class Application {
             Thread.currentThread().setName("Display thread");
             final Application application = new Application();
             application.run();
-        } catch (IOException e) {
+        } catch (Throwable e) {
             log.fatal("Cannot run application", e);
         }
         log.info("Exiting ...");
@@ -238,7 +238,11 @@ public class Application {
         try {
             initResources();
         } catch (IOException e) {
+            splash.close();
+            splash.dispose();
+            log.error("Caught exception initializing ressources",e);
             ExceptionDialog.openException(null,"Cannot load preferences",e);
+            throw new RuntimeException("Cannot initialize resources",e);
         }
         ApplicationWindow mainWindow = new GraphWindow();
         mainWindow.setBlockOnOpen(true);

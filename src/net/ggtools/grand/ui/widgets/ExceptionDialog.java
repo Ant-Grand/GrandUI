@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -60,7 +61,14 @@ public class ExceptionDialog extends ErrorDialog {
                     nested);
             topStatus.add(status);
         }
-        parent.getDisplay().syncExec(new Runnable() {
+        Display display;
+        if (parent == null) {
+            display = Display.getCurrent();
+        }
+        else {
+            display = parent.getDisplay();
+        }
+        display.syncExec(new Runnable() {
             public void run() {
                 ErrorDialog.openError(parent, message, e.getMessage(), topStatus);
             }
