@@ -64,6 +64,34 @@ public class LogViewer extends Composite {
 
     private LogEventBuffer logBuffer;
 
+    private final class LogSaver extends SelectionAdapter {
+        public void widgetSelected(SelectionEvent e) {
+            if (e.widget instanceof Button) {
+                final Button button = (Button) e.widget;
+                final FileDialog dialog = new FileDialog(viewer.getTable().getShell(),SWT.SAVE);
+                dialog.setFilterExtensions(new String [] {".log","*"});
+                final String logFileName = dialog.open();
+                if (logFileName != null) {
+                    ObjectOutputStream oos = null;
+                    try {
+                        oos = new ObjectOutputStream(new FileOutputStream(logFileName));
+                        oos.writeObject(LogEventBufferImpl.getInstance());
+                    } catch (IOException exception) {
+                        throw new RuntimeException("Cannot save log to "+logFileName,exception);
+                    }
+                    finally {
+                        if (oos != null) try {
+                            oos.close();
+                        } catch (IOException exception) {
+                            throw new RuntimeException("Cannot close "+logFileName,exception);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
     private final class LogEventRefreshListener implements LogEventListener {
         private final Display display = LogViewer.this.getDisplay();
 
@@ -147,35 +175,7 @@ public class LogViewer extends Composite {
         layout.numColumns++;
         saveButton.setLayoutData(new GridData(SWT.END, SWT.CENTER, true, false));
         saveButton.setText("Save log");
-        saveButton.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                if (e.widget instanceof Button) {
-                    Button button = (Button) e.widget;
-                    final FileDialog dialog = new FileDialog(viewer.getTable().getShell(),SWT.SAVE);
-                    dialog.setFilterExtensions(new String [] {".log","*"});
-                    String buildFileName = dialog.open();
-                    if (buildFileName != null) {
-                        ObjectOutputStream oos = null;
-                        try {
-                            oos = new ObjectOutputStream(new FileOutputStream(buildFileName));
-                            oos.writeObject(LogEventBufferImpl.getInstance());
-                        } catch (IOException e1) {
-                            // TODO Auto-generated catch block
-                            e1.printStackTrace();
-                        }
-                        finally {
-                            if (oos != null) try {
-                                oos.close();
-                            } catch (IOException e2) {
-                                // TODO Auto-generated catch block
-                                e2.printStackTrace();
-                            }
-                        }
-                    }
-                }
-
-            }
-        });
+        saveButton.addSelectionListener(new LogSaver());
 
         Button clearButton = new Button(composite, SWT.NONE);
         layout.numColumns++;
