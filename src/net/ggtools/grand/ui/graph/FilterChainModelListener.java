@@ -1,6 +1,6 @@
 // $Id$
 /* ====================================================================
- * Copyright (c) 2002-2003, Christophe Labouisse
+ * Copyright (c) 2002-2004, Christophe Labouisse
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,38 +29,16 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.ggtools.grand.ui.menu;
+package net.ggtools.grand.ui.graph;
 
-import net.ggtools.grand.ui.actions.ClearFiltersAction;
-import net.ggtools.grand.ui.actions.FilterConnectedToNodeAction;
-import net.ggtools.grand.ui.actions.FilterFromNodeAction;
-import net.ggtools.grand.ui.actions.FilterIsolatedNodesAction;
-import net.ggtools.grand.ui.actions.FilterMissingNodesAction;
-import net.ggtools.grand.ui.actions.FilterToNodeAction;
-import net.ggtools.grand.ui.actions.ReloadGraphAction;
-import net.ggtools.grand.ui.widgets.GraphWindow;
-
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import net.ggtools.grand.graph.Graph;
 
 /**
- * 
+ * Interface to be implemented by classes listening to FilterChainModel changes.
  * 
  * @author Christophe Labouisse
  */
-public class GraphMenu extends MenuManager {
+public interface FilterChainModelListener {
 
-    public GraphMenu(GraphWindow window) {
-        super("Graph");
-        add(new ReloadGraphAction(window));
-        add(new Separator());
-        add(new FilterIsolatedNodesAction(window));
-        add(new FilterMissingNodesAction(window));
-        add(new Separator());
-        add(new FilterConnectedToNodeAction(window));
-        add(new FilterFromNodeAction(window));
-        add(new FilterToNodeAction(window));
-        add(new Separator());
-        add(new ClearFiltersAction(window));
-    }
+    void filteredGraphAvailable(final Graph filteredGraph);
 }

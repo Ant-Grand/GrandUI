@@ -1,32 +1,29 @@
 // $Id$
-/* ====================================================================
- * Copyright (c) 2002-2003, Christophe Labouisse
- * All rights reserved.
- *
+/*
+ * ====================================================================
+ * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
+ * 
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above
- *    copyright notice, this list of conditions and the following
- *    disclaimer in the documentation and/or other materials provided
- *    with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 package net.ggtools.grand.ui.widgets;
@@ -54,43 +51,30 @@ import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * 
- * 
  * @author Christophe Labouisse
  */
 public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
-    private static final Log log = LogFactory.getLog(GraphWindow.class);
 
-    private MenuManager contextMenuManager;
-
-    private Composite drawingArea;
-
-    private FigureCanvas canvas;
-    
-    private final GraphControler controler;
-
-    private Menu contextMenu;
-
-    private MenuManager manager;
-
-    private final static class CanvasScroller extends MouseAdapter implements
-            MouseMoveListener {
+    private final static class CanvasScroller extends MouseAdapter implements MouseMoveListener {
         final private FigureCanvas canvas;
 
-        final Viewport viewport;
-
         private int startDragX, startDragY;
+
+        final Viewport viewport;
 
         public CanvasScroller(FigureCanvas c) {
             canvas = c;
             viewport = canvas.getViewport();
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
          */
         public void mouseDown(MouseEvent e) {
@@ -102,7 +86,18 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
             }
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
+         */
+        public void mouseMove(MouseEvent e) {
+            canvas.scrollTo(startDragX - e.x, startDragY - e.y);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
          * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
          */
         public void mouseUp(MouseEvent e) {
@@ -110,14 +105,23 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
                 canvas.removeMouseMoveListener(this);
             }
         }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-         */
-        public void mouseMove(MouseEvent e) {
-            canvas.scrollTo(startDragX - e.x, startDragY - e.y);
-        }
     }
+
+    private static final Log log = LogFactory.getLog(GraphWindow.class);
+
+    private FigureCanvas canvas;
+
+    private Menu contextMenu;
+
+    private MenuManager contextMenuManager;
+
+    private final GraphControler controler;
+
+    private Display display;
+
+    private Composite drawingArea;
+
+    private MenuManager manager;
 
     public GraphWindow() {
         this(null);
@@ -131,7 +135,157 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
         addMenuBar();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.core.runtime.IProgressMonitor#beginTask(java.lang.String,
+     *      int)
+     */
+    public void beginTask(final String name, final int totalWork) {
+        final StatusLineManager slManager = getStatusLineManager();
+        final IProgressMonitor monitor = slManager.getProgressMonitor();
+        display.asyncExec(new Runnable() {
+
+            public void run() {
+                monitor.beginTask(name, totalWork);
+            }
+        });
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.core.runtime.IProgressMonitor#done()
+     */
+    public void done() {
+        final StatusLineManager slManager = getStatusLineManager();
+        final IProgressMonitor monitor = slManager.getProgressMonitor();
+        display.asyncExec(new Runnable() {
+
+            public void run() {
+                monitor.done();
+            }
+        });
+    }
+
+    public final Menu getContextMenu() {
+        return contextMenu;
+    }
+
+    /**
+     * @return Returns the contextMenuManager.
+     */
+    public final MenuManager getContextMenuManager() {
+        return contextMenuManager;
+    }
+
+    /**
+     * @return Returns the controler.
+     */
+    public final GraphControler getControler() {
+        return controler;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
+     */
+    public void internalWorked(final double work) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.core.runtime.IProgressMonitor#isCanceled()
+     */
+    public boolean isCanceled() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
+     */
+    public void setCanceled(final boolean value) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setGraph(net.ggtools.grand.ui.graph.Graph)
+     */
+    public void setGraph(final IFigure figure) {
+        getShell().getDisplay().asyncExec(new Runnable() {
+
+            public void run() {
+                canvas.scrollTo(0, 0);
+                canvas.setContents(figure);
+            }
+        });
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.core.runtime.IProgressMonitor#setTaskName(java.lang.String)
+     */
+    public void setTaskName(final String name) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.core.runtime.IProgressMonitor#subTask(java.lang.String)
+     */
+    public void subTask(final String name) {
+        final StatusLineManager slManager = getStatusLineManager();
+        final IProgressMonitor monitor = slManager.getProgressMonitor();
+        display.asyncExec(new Runnable() {
+
+            public void run() {
+                monitor.subTask(name);
+            }
+        });
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.core.runtime.IProgressMonitor#worked(int)
+     */
+    public void worked(final int work) {
+        final StatusLineManager slManager = getStatusLineManager();
+        final IProgressMonitor monitor = slManager.getProgressMonitor();
+        display.asyncExec(new Runnable() {
+
+            public void run() {
+                monitor.worked(work);
+            }
+        });
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+     */
+    protected void configureShell(Shell shell) {
+        super.configureShell(shell);
+        shell.setText("Grand");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
     protected Control createContents(Composite parent) {
@@ -147,10 +301,13 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
         canvas.addMouseListener(synchronizer);
         manager = new GraphMenu(this);
         contextMenu = manager.createContextMenu(canvas);
+        display = parent.getDisplay();
         return canvas;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.window.ApplicationWindow#createMenuManager()
      */
     protected MenuManager createMenuManager() {
@@ -160,86 +317,5 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
         contextMenuManager.add(new GraphMenu(this));
         contextMenuManager.setVisible(true);
         return contextMenuManager;
-    }
-
-    /* (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#beginUpdate(int)
-     */
-    public void beginUpdate(final int totalWork) {
-        final StatusLineManager slManager = getStatusLineManager();
-        final IProgressMonitor monitor = slManager.getProgressMonitor();
-        getShell().getDisplay().asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.beginTask("Updating graph", totalWork);
-            }
-        });
-    }
-
-    /* (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#worked(int)
-     */
-    public void worked(final int workDone) {
-        final StatusLineManager slManager = getStatusLineManager();
-        final IProgressMonitor monitor = slManager.getProgressMonitor();
-        getShell().getDisplay().asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.worked(workDone);
-            }
-        });
-    }
-
-    /* (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#finished()
-     */
-    public void finished() {
-        final StatusLineManager slManager = getStatusLineManager();
-        final IProgressMonitor monitor = slManager.getProgressMonitor();
-        getShell().getDisplay().asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.done();
-            }
-        });
-    }
-
-    /* (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setGraph(net.ggtools.grand.ui.graph.Graph)
-     */
-    public void setGraph(final IFigure figure) {
-        getShell().getDisplay().asyncExec(new Runnable() {
-
-            public void run() {
-                canvas.scrollTo(0,0);
-                canvas.setContents(figure);
-            }
-        });
-    }
-
-    /**
-     * @return Returns the controler.
-     */
-    public final GraphControler getControler() {
-        return controler;
-    }
-    
-    public final Menu getContextMenu() {
-        return contextMenu;
-    }
-    
-    /**
-     * @return Returns the contextMenuManager.
-     */
-    public final MenuManager getContextMenuManager() {
-        return contextMenuManager;
-    }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
-     */
-    protected void configureShell(Shell shell) {
-        super.configureShell(shell);
-        shell.setText("Grand");
     }
 }

@@ -35,7 +35,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import net.ggtools.grand.exceptions.GrandException;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.Link;
@@ -64,12 +63,15 @@ import sf.jzgraph.dot.impl.DotGraph;
  * 
  * @author Christophe Labouisse
  */
-public class GraphControler implements GraphModelListener, DotGraphAttributes, SelectionManager {
+public class GraphControler implements GraphModelListener, DotGraphAttributes, SelectionManager,
+        FilterChainModelListener {
     private static final Log log = LogFactory.getLog(GraphControler.class);
 
     private final GraphDisplayer dest;
 
     private final GraphModel model;
+
+    private final FilterChainModel filterChain;
 
     private final Draw2dGraphRenderer renderer;
 
@@ -84,6 +86,8 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         this.dest = dest;
         model = new GraphModel();
         model.addListener(this);
+        filterChain = new FilterChainModel(model);
+        filterChain.addListener(this);
         // TODO voir si je peux virer le renderer et laisser le graph faire le
         // boulot tout seul.
         renderer = new Draw2dGraphRenderer();
@@ -94,10 +98,10 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
                             "selectionChanged", new Class[]{Collection.class}));
         } catch (SecurityException e) {
             log.fatal("Caught exception initializing GraphControler", e);
-            throw new RuntimeException("Cannot instanciate GraphControler",e);
+            throw new RuntimeException("Cannot instanciate GraphControler", e);
         } catch (NoSuchMethodException e) {
             log.fatal("Caught exception initializing GraphControler", e);
-            throw new RuntimeException("Cannot instanciate GraphControler",e);
+            throw new RuntimeException("Cannot instanciate GraphControler", e);
         }
     }
 
@@ -106,60 +110,14 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      */
     public void addFilter(GraphFilter filter) {
         log.info("Adding filter " + filter);
-
-        // TODO Add a filter API to the graph model, etc.
-        dest.beginUpdate(4);
-        filter.setProducer(model.getProducer());
-        Graph graph = null;
-
-        try {
-            graph = filter.getGraph();
-        } catch (GrandException e) {
-            log.error("Caught exception", e);
-        }
-        dest.worked(1);
-
-        final IDotGraph dotGraph = createDotGraph(graph);
-        dest.worked(1);
-
-        if (log.isDebugEnabled()) log.debug("Laying out graph");
-        final Dot app = new Dot();
-        app.layout(dotGraph, 0, -7);
-        dest.worked(1);
-
-        final Draw2dGraph figure = renderer.render(dotGraph);
-        figure.setSelectionManager(this);
-        dest.worked(1);
-
-        if (log.isDebugEnabled()) log.debug("Done");
-        dest.finished();
-        dest.setGraph(figure);
+        dest.beginTask("Adding filter",4);
+        filterChain.addFilterLast(filter);
     }
 
     public void clearFilters() {
-        if (log.isDebugEnabled()) log.debug("Clearing filters");
-        dest.beginUpdate(4);
-        final Graph graph = model.getGraph();
-        dest.worked(1);
-
-        // TODO Creation d'un type de IDotGraph pour moi dans lequel les Vertex
-        // & les Edges
-        // soient aussi des objets draw2d.
-        final IDotGraph dotGraph = createDotGraph(graph);
-        dest.worked(1);
-
-        if (log.isDebugEnabled()) log.debug("Laying out graph");
-        final Dot app = new Dot();
-        app.layout(dotGraph, 0, -7);
-        dest.worked(1);
-
-        final Draw2dGraph figure = renderer.render(dotGraph);
-        figure.setSelectionManager(this);
-        dest.worked(1);
-
-        if (log.isDebugEnabled()) log.debug("Done");
-        dest.finished();
-        dest.setGraph(figure);
+        log.info("Clearing filters");
+        dest.beginTask("Clearing filters",4);
+        filterChain.clearFilters();
     }
 
     /*
@@ -214,32 +172,12 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     public void newGraphLoaded(GraphEvent event) {
         if (log.isDebugEnabled()) log.debug("Received GraphLoaded event");
         dest.worked(1);
-        final Graph graph = model.getGraph();
-        dest.worked(1);
-
-        // TODO Creation d'un type de IDotGraph pour moi dans lequel les Vertex
-        // & les Edges
-        // soient aussi des objets draw2d.
-        final IDotGraph dotGraph = createDotGraph(graph);
-        dest.worked(1);
-
-        if (log.isDebugEnabled()) log.debug("Laying out graph");
-        final Dot app = new Dot();
-        app.layout(dotGraph, 0, -7);
-        dest.worked(1);
-
-        final Draw2dGraph figure = renderer.render(dotGraph);
-        figure.setSelectionManager(this);
-        dest.worked(1);
-
-        if (log.isDebugEnabled()) log.debug("Done");
-        dest.finished();
-        dest.setGraph(figure);
+        dest.subTask("Filtering graph");
     }
 
     public void openFile(final String fileName) {
         if (log.isInfoEnabled()) log.info("Opening " + fileName);
-        dest.beginUpdate(5);
+        dest.beginTask("Opening new graph",5);
         model.openFile(fileName);
     }
 
@@ -365,6 +303,46 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         }
 
         return dotGraph;
+    }
+
+    /* (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.FilterChainModelListener#filteredGraphAvailable(net.ggtools.grand.ui.graph.FilterChainModel)
+     */
+    public void filteredGraphAvailable(final Graph filteredGraph) {
+        if (log.isDebugEnabled()) log.debug("New filtered graph available");
+        final Graph graph = filteredGraph;
+        dest.worked(1);
+
+        // TODO Creation d'un type de IDotGraph pour moi dans lequel les Vertex
+        // & les Edges
+        // soient aussi des objets draw2d.
+        if (log.isDebugEnabled()) log.debug("Creating dot graph");
+        dest.subTask("Laying out graph");
+        final IDotGraph dotGraph = createDotGraph(graph);
+        dest.worked(1);
+
+        if (log.isDebugEnabled()) log.debug("Laying out graph");
+        final Dot app = new Dot();
+        app.layout(dotGraph, 0, -7);
+        dest.worked(1);
+
+        dest.subTask("Rendering graph");
+        final Draw2dGraph figure = renderer.render(dotGraph);
+        figure.setSelectionManager(this);
+        dest.worked(1);
+
+        if (log.isDebugEnabled()) log.debug("Done");
+        dest.done();
+        dest.setGraph(figure);
+    }
+
+    /**
+     * Reload the current graph.
+     */
+    public void reloadGraph() {
+        if (log.isInfoEnabled()) log.info("Reloading current graph");
+        dest.beginTask("Reloading graph",5);
+        model.reload();
     }
 
 }

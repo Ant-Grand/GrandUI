@@ -257,13 +257,15 @@ public class EventManager implements Runnable {
      * @param method
      */
     private void dispatchOneEvent(final Object eventData, final InternalDispatcher dispatcher) {
-        log.trace("Dispatching " + eventData + " to " + dispatcher);
+        if (log.isDebugEnabled()) log.debug("Start dispatching to " + dispatcher);
         synchronized (listenerList) {
             for (Iterator iterator = listenerList.iterator(); iterator.hasNext();) {
                 WeakReference weakReference = (WeakReference) iterator.next();
                 Object subscriber = weakReference.get();
 
                 if (subscriber != null) {
+                    if (log.isTraceEnabled())
+                            log.trace("Dispatching " + eventData + " to " + subscriber);
                     dispatcher.sendEventToSubscriber(subscriber, eventData);
                 } else {
                     // Remove the listener since it has been garbage collected.

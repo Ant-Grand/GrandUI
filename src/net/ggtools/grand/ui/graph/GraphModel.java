@@ -29,14 +29,13 @@
 package net.ggtools.grand.ui.graph;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import net.ggtools.grand.ant.AntProject;
 import net.ggtools.grand.exceptions.GrandException;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.GraphProducer;
+import net.ggtools.grand.ui.event.Dispatcher;
+import net.ggtools.grand.ui.event.EventManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,13 +45,15 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Christophe Labouisse
  */
-public class GraphModel {
+public class GraphModel implements GraphProducer {
     static {
         // disable logs in Grand core
         net.ggtools.grand.Log.setLogLevel(net.ggtools.grand.Log.MSG_ERR);
     }
+
     private final class LoadFileRunnable implements Runnable {
         private final Log log = LogFactory.getLog(LoadFileRunnable.class);
+
         private final String fileName;
 
         private LoadFileRunnable(final String fileName) {
@@ -60,11 +61,11 @@ public class GraphModel {
         }
 
         public void run() {
-            if (log.isDebugEnabled()) log.debug("Loading "+fileName);
+            if (log.isDebugEnabled()) log.debug("Loading " + fileName);
+            lastLoadedFile = fileName;
             final GraphProducer p = new AntProject(new File(fileName));
             synchronized (GraphModel.this) {
                 producer = p;
-                graph = null;
             }
             notifyGraphLoaded();
         }
@@ -72,54 +73,65 @@ public class GraphModel {
 
     private static final Log log = LogFactory.getLog(GraphModel.class);
 
-    private Graph graph = null;
-
     private GraphProducer producer = null;
-    
-    private Set listeners = new LinkedHashSet();
 
-    /**
-     * TODO for test purpose only, remove.
-     * @return Returns the producer.
-     */
-    public final GraphProducer getProducer() {
-        return producer;
+    private String lastLoadedFile;
+
+    private final EventManager eventManager;
+
+    private final Dispatcher eventDispatcher;
+
+    public GraphModel() {
+        eventManager = new EventManager("GraphModel");
+        try {
+            eventDispatcher = eventManager.createDispatcher(GraphModelListener.class
+                    .getDeclaredMethod("newGraphLoaded", new Class[]{GraphEvent.class}));
+        } catch (SecurityException e) {
+            log.fatal("Caught exception initializing GraphModel", e);
+            throw new RuntimeException("Cannot instanciate GraphModel", e);
+        } catch (NoSuchMethodException e) {
+            log.fatal("Caught exception initializing GraphModel", e);
+            throw new RuntimeException("Cannot instanciate GraphModel", e);
+        }
     }
+
     public void openFile(final String fileName) {
-        final Thread thread = new Thread(new LoadFileRunnable(fileName),"File loading");
+        final Thread thread = new Thread(new LoadFileRunnable(fileName), "File loading");
         thread.start();
     }
     
-    public void addListener(GraphModelListener listener) {
-        if (listeners.contains(listener)) {
-            if (log.isWarnEnabled()) log.warn("Duplicate listener "+listener);
-        } else {
-            listeners.add(listener);
+    public void reload() {
+        if (lastLoadedFile != null) {
+            if (log.isDebugEnabled()) log.debug("Reloading last file");
+            openFile((lastLoadedFile));
+        }
+        else {
+            log.info("No file previously loaded, skipping reload");
         }
     }
-    
+
+    public void addListener(GraphModelListener listener) {
+        eventManager.subscribe(listener);
+    }
+
     /**
      * @return Returns the currentGraph.
      */
     public final Graph getGraph() {
-        if (graph == null) {
-            if (producer != null) {
-                try {
-                    graph = producer.getGraph();
-                } catch (GrandException e) {
-                    // TODO Proper exception handling.
-                    log.error("Cannot build Grand graph",e);
-                }
+        Graph graph = null;
+        if (producer != null) {
+            try {
+                graph = producer.getGraph();
+            } catch (GrandException e) {
+                // TODO Proper exception handling.
+                log.error("Cannot build Grand graph", e);
             }
         }
         return graph;
     }
-    
+
     protected void notifyGraphLoaded() {
         final GraphEvent event = new GraphEvent(this);
-        for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-            GraphModelListener listener = (GraphModelListener) iter.next();
-            listener.newGraphLoaded(event);
-        }
+        eventDispatcher.dispatch(event);
     }
-} 
+}

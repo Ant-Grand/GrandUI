@@ -41,11 +41,7 @@ import org.eclipse.swt.widgets.Menu;
  * 
  * @author Christophe Labouisse
  */
-public interface GraphDisplayer {
-    final static int UNKOWN_WORK = IProgressMonitor.UNKNOWN;
-    void beginUpdate(int totalWork);
-    void worked(int workDone);
-    void finished();
+public interface GraphDisplayer extends IProgressMonitor {
     void setGraph(IFigure graph);
     GraphControler getControler();
     Menu getContextMenu();
