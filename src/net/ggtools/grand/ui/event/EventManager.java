@@ -29,7 +29,6 @@
 package net.ggtools.grand.ui.event;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -41,63 +40,6 @@ import org.apache.commons.logging.LogFactory;
  * @author Christophe Labouisse
  */
 public class EventManager implements Runnable {
-
-    /**
-     * A simple dispatcher implementation of InternalDispatcher using
-     * <code>invoke</code> to actually dispatch the events.
-     * 
-     * @author Christophe Labouisse
-     */
-    private class BasicDispatcher implements Dispatcher, InternalDispatcher {
-        private final Log log = LogFactory.getLog(BasicDispatcher.class);
-
-        private final Method method;
-
-        private BasicDispatcher(Method method) {
-            this.method = method;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see net.ggtools.grand.ui.event.EventManager.Dispatcher#dispatch(java.lang.Object)
-         */
-        public void dispatch(final Object eventData) {
-            dispatchEvent(eventData, this);
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see net.ggtools.grand.ui.event.EventManager.Dispatcher#sendEventToSubscriber(java.lang.Object,
-         *      java.lang.Object)
-         */
-        public void sendEventToSubscriber(Object subscriber, Object eventData) {
-            try {
-                method.invoke(subscriber, new Object[]{eventData});
-            } catch (IllegalAccessException e) {
-                log.fatal(name + " dispatchOneEvent", e);
-                throw new RuntimeException(e);
-            } catch (InvocationTargetException e) {
-                log.error(name + " dispatchOneEvent", e);
-                throw new RuntimeException(e.getCause());
-            }
-        }
-    }
-
-    /**
-     * Interface for class implementing event dispatching on the client side.
-     * 
-     * @author Christophe Labouisse
-     */
-    public interface Dispatcher {
-        /**
-         * Dispatch an event to the subscribers throught the EventManager.
-         * 
-         * @param eventData
-         */
-        void dispatch(final Object eventData);
-    }
 
     private final class DispatchEventAction implements Runnable {
 
@@ -127,7 +69,7 @@ public class EventManager implements Runnable {
      * 
      * @author Christophe Labouisse
      */
-    private interface InternalDispatcher {
+    interface InternalDispatcher {
         /**
          * Send one event to one subscriber.
          * 
@@ -177,6 +119,8 @@ public class EventManager implements Runnable {
 
     private boolean defaultDispatchAsynchronous = true;
 
+    private final DispatcherFactory dispatcherFactory;
+
     private Thread dispatcherThread;
 
     private final LinkedList eventQueue = new LinkedList();
@@ -199,20 +143,21 @@ public class EventManager implements Runnable {
      * 
      * @param name
      */
-    public EventManager(String name) {
+    public EventManager(final String name) {
         this.name = name;
         this.dispatcherThread = new Thread(this, "Dispatcher thread " + name);
         dispatcherThread.start();
+        dispatcherFactory = DispatcherFactory.getInstance();
     }
 
     public Dispatcher createDispatcher(final Method method) {
-        return new BasicDispatcher(method);
+        return dispatcherFactory.createDispatcher(this, method);
     }
 
     /**
      * @return String
      */
-    public String getName() {
+    final public String getName() {
         return name;
     }
 
@@ -306,22 +251,6 @@ public class EventManager implements Runnable {
     }
 
     /**
-     * Dispatch an event. The dispatching will be either synchronous or
-     * asynchronous depending of the <code>defaultDispatchAnsynchronous</code>
-     * attributes. The default is to use synchronous event dispatching.
-     * 
-     * @param eventData
-     * @param dispatcher
-     */
-    private final void dispatchEvent(final Object eventData, final InternalDispatcher dispatcher) {
-        if (defaultDispatchAsynchronous) {
-            asynchronousDispatchEvent(eventData, dispatcher);
-        } else {
-            synchronousDispatchEvent(eventData, dispatcher);
-        }
-    }
-
-    /**
      * Dispatch one event to the current subscriber.
      * 
      * @param eventData
@@ -390,6 +319,22 @@ public class EventManager implements Runnable {
     private final void synchronousDispatchEvent(final Object event,
             final InternalDispatcher dispatcher) {
         dispatchOneEvent(event, dispatcher);
+    }
+
+    /**
+     * Dispatch an event. The dispatching will be either synchronous or
+     * asynchronous depending of the <code>defaultDispatchAnsynchronous</code>
+     * attributes. The default is to use synchronous event dispatching.
+     * 
+     * @param eventData
+     * @param dispatcher
+     */
+    final void dispatchEvent(final Object eventData, final InternalDispatcher dispatcher) {
+        if (defaultDispatchAsynchronous) {
+            asynchronousDispatchEvent(eventData, dispatcher);
+        } else {
+            synchronousDispatchEvent(eventData, dispatcher);
+        }
     }
 
 }
