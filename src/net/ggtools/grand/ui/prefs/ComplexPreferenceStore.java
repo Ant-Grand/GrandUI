@@ -32,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -191,8 +192,9 @@ public class ComplexPreferenceStore extends PreferenceStore {
             }
 
             Document doc = db.newDocument();
-            final Element propertyElement = (Element) doc.appendChild(doc
-                    .createElement("properties"));
+            final Element rootElement = (Element) doc.appendChild(doc.createElement("preferences"));
+            rootElement.setAttribute("version","1.0");
+            rootElement.setAttribute("date",new Date().toString());
 
             final PropertySaver prefStoreSaver = new PropertySaver() {
 
@@ -209,15 +211,15 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 }
             };
 
-            saveProperties(doc, propertyElement, prefStoreSaver);
+            saveProperties(doc, rootElement, prefStoreSaver);
 
             for (Iterator iter = propertiesTable.entrySet().iterator(); iter.hasNext();) {
                 final Map.Entry entry = (Map.Entry) iter.next();
                 final String propKey = (String) entry.getKey();
                 final Properties props = (Properties) entry.getValue();
-                Element propElement = (Element) propertyElement.appendChild(doc
+                Element currentElement = (Element) rootElement.appendChild(doc
                         .createElement("properties"));
-                propElement.setAttribute("key", propKey);
+                currentElement.setAttribute("key", propKey);
                 final PropertySaver propertySaver = new PropertySaver() {
 
                     public String get(String key) {
@@ -232,27 +234,25 @@ public class ComplexPreferenceStore extends PreferenceStore {
                         return true;
                     }
                 };
-                saveProperties(doc, propElement, propertySaver);
+                saveProperties(doc, currentElement, propertySaver);
             }
 
-            TransformerFactory tf = TransformerFactory.newInstance();
+            final TransformerFactory tf = TransformerFactory.newInstance();
             Transformer t = null;
             try {
                 t = tf.newTransformer();
-                // t.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
-                // PROPS_DTD_URI);
                 t.setOutputProperty(OutputKeys.INDENT, "yes");
                 t.setOutputProperty(OutputKeys.METHOD, "xml");
                 t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             } catch (TransformerConfigurationException tce) {
-                assert (false);
+                throw new RuntimeException("Cannot configure Tranformer to save preferences",tce);
             }
-            DOMSource doms = new DOMSource(doc);
-            StreamResult sr = new StreamResult(os);
+            final DOMSource doms = new DOMSource(doc);
+            final StreamResult sr = new StreamResult(os);
             try {
                 t.transform(doms, sr);
             } catch (TransformerException te) {
-                IOException ioe = new IOException();
+                IOException ioe = new IOException("Cannot save preferences");
                 ioe.initCause(te);
                 throw ioe;
             }
