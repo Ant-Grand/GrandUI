@@ -1,5 +1,13 @@
 $Id$
 
+Release 0.4 (build number 66):
+
+* Fix a NPE when toggling bus routing,
+* Added source display of the selected target,
+* Added a preference dialog and allow customization of the graph rendering,
+* Upgraded to Ant 1.6.2.
+
+
 Release 0.3.1 (build number 50):
 
 * Repacking as the 0.3 archives were corrupted.
