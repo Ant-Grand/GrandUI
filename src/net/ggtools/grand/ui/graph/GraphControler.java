@@ -102,7 +102,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      */
     private boolean clearFiltersOnNextLoad;
 
-    private GraphDisplayer dest;
+    private GraphDisplayer displayer;
 
     private Draw2dGraph figure;
 
@@ -192,7 +192,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
                 currentNode.setSelected(false);
             }
             selectedNodes.clear();
-            dest.setSourceText("");
+            displayer.setSourceText("");
             selectionChangedDispatcher.dispatch(selectedNodes);
         }
     }
@@ -260,24 +260,24 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      *            the target to focus on.
      */
     public void focusOn(final String targetName) {
-        if (dest != null) {
-            dest.jumpToNode(targetName);
+        if (displayer != null) {
+            displayer.jumpToNode(targetName);
         }
     }
 
     /**
      * @return Returns the dest.
      */
-    public final GraphDisplayer getDest() {
-        if (dest == null) {
+    public final GraphDisplayer getDisplayer() {
+        if (displayer == null) {
             if (log.isInfoEnabled()) log.info("Opening graph displayer");
             Display.getDefault().syncExec(new Runnable() {
                 public void run() {
-                    dest = window.newDisplayer(GraphControler.this);
+                    displayer = window.newDisplayer(GraphControler.this);
                 }
             });
         }
-        return dest;
+        return displayer;
     }
 
     /**
@@ -443,7 +443,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             selectedNodes.add(node);
             node.setSelected(true);
             final AntTargetNode antNode = (AntTargetNode) node.getVertex().getData();
-            dest.setRichSource(((AntTargetNode) node.getVertex().getData()).getRichSource());
+            displayer.setRichSource(((AntTargetNode) node.getVertex().getData()).getRichSource());
             selectionChangedDispatcher.dispatch(selectedNodes);
         }
     }
@@ -500,7 +500,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         if (graphName == null) {
             graphName = "Untitled";
         }
-        getDest().setGraph(figure, graphName, model.getLastLoadedFile().getAbsolutePath());
+        getDisplayer().setGraph(figure, graphName, model.getLastLoadedFile().getAbsolutePath());
     }
 
     /**

@@ -84,7 +84,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
             case (3):
                 if (graphControler != null) {
-                    graphControler.getDest().getContextMenu().setVisible(true);
+                    graphControler.getDisplayer().getContextMenu().setVisible(true);
                 }
                 break;
             }
@@ -165,7 +165,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                 }
                 // TODO rewrite in a clean way
                 if (graphControler != null) {
-                    ((GraphControler) graphControler).getDest().getContextMenu().setVisible(true);
+                    ((GraphControler) graphControler).getDisplayer().getContextMenu().setVisible(true);
                 }
                 break;
             }
