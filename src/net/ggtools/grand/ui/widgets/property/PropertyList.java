@@ -1,4 +1,4 @@
-//$Id$
+// $Id$
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
@@ -48,9 +48,9 @@ class PropertyList {
      * Logger for this class
      */
     private static final Log log = LogFactory.getLog(PropertyList.class);
-    
+
     final LinkedHashSet pairList = new LinkedHashSet();
-    
+
     EventManager eventManager;
 
     private Dispatcher propertyChangedDispatcher;
@@ -58,6 +58,8 @@ class PropertyList {
     private Dispatcher propertyAddedDispatcher;
 
     private Dispatcher propertyRemovedDispatcher;
+
+    private Dispatcher clearedPropertiesDispatcher;
 
     public PropertyList() {
         eventManager = new EventManager("PropertyList event manager");
@@ -68,6 +70,9 @@ class PropertyList {
                     .getDeclaredMethod("propertyAdded", new Class[]{PropertyPair.class}));
             propertyRemovedDispatcher = eventManager.createDispatcher(PropertyChangedListener.class
                     .getDeclaredMethod("propertyRemoved", new Class[]{PropertyPair.class}));
+            clearedPropertiesDispatcher = eventManager
+                    .createDispatcher(PropertyChangedListener.class.getDeclaredMethod(
+                            "clearedProperties", new Class[0]));
         } catch (SecurityException e) {
             log.fatal("Caught exception initializing PropertyList", e);
             throw new RuntimeException("Cannot instanciate PropertyList", e);
@@ -80,9 +85,9 @@ class PropertyList {
     public PropertyPair[] toArray() {
         return (PropertyPair[]) pairList.toArray(new PropertyPair[pairList.size()]);
     }
-    
+
     public void addProperty() {
-        add(new PropertyPair("",""));
+        add(new PropertyPair("", ""));
     }
 
     /**
@@ -92,18 +97,18 @@ class PropertyList {
         pairList.add(pair);
         propertyAddedDispatcher.dispatch(pair);
     }
-    
+
     public void addPropertyChangedListener(final PropertyChangedListener listener) {
         eventManager.subscribe(listener);
     }
-    
+
     /**
      * @param pair
      */
     public void update(final PropertyPair pair) {
         propertyChangedDispatcher.dispatch(pair);
     }
-    
+
     public String toString() {
         final StringBuffer strBuff = new StringBuffer();
         for (Iterator iter = pairList.iterator(); iter.hasNext();) {
@@ -120,6 +125,7 @@ class PropertyList {
 
     public void clear() {
         pairList.clear();
+        clearedPropertiesDispatcher.dispatch(null);
     }
 
     public void addAll(Properties properties) {
@@ -133,7 +139,7 @@ class PropertyList {
         final Properties props = new Properties();
         for (Iterator iter = pairList.iterator(); iter.hasNext();) {
             PropertyPair pair = (PropertyPair) iter.next();
-            props.setProperty(pair.getName(),pair.getValue());
+            props.setProperty(pair.getName(), pair.getValue());
         }
         return props;
     }

@@ -36,4 +36,6 @@ public interface PropertyChangedListener {
     void propertyAdded(PropertyPair propertyPair);
 
     void propertyRemoved(PropertyPair propertyPair);
+    
+    void clearedProperties();
 }

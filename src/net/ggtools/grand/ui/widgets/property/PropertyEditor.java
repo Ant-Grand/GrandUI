@@ -48,6 +48,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -57,6 +58,8 @@ import org.eclipse.swt.widgets.TableItem;
  * @author Christophe Labouisse
  */
 public class PropertyEditor {
+    private static final int BUTTON_WIDTH = 80;
+    private static final int GRID_LAYOUT_COLUMNS = 4;
     /**
      * Logger for this class
      */
@@ -110,6 +113,14 @@ public class PropertyEditor {
         }
 
         public void propertyRemoved(final PropertyPair propertyPair) {
+            tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
+                public void run() {
+                    tableViewer.refresh();
+                }
+            });
+        }
+
+        public void clearedProperties() {
             tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
                 public void run() {
                     tableViewer.refresh();
@@ -176,14 +187,30 @@ public class PropertyEditor {
      * @param parent
      *            the parent composite
      */
-    private void createButtons(Composite parent) {
+    private void createButtons(final Composite parent) {
 
-        // Create and configure the "Add" button
-        Button add = new Button(parent, SWT.PUSH | SWT.CENTER);
+        final Button clear = new Button(parent,SWT.PUSH|SWT.CENTER);
+        clear.setText("Clear");
+        
+        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+        gridData.widthHint = BUTTON_WIDTH;
+        clear.setLayoutData(gridData);
+        clear.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                propertyList.clear();
+            }
+        });
+        
+        final Label filler = new Label(parent,SWT.NO_BACKGROUND);
+        gridData= new GridData(SWT.CENTER,SWT.CENTER,true,false);
+        filler.setLayoutData(gridData);
+        
+        final Button add = new Button(parent, SWT.PUSH | SWT.CENTER);
         add.setText("Add");
 
-        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_END);
-        gridData.widthHint = 80;
+        gridData = new GridData(GridData.HORIZONTAL_ALIGN_END);
+        gridData.widthHint = BUTTON_WIDTH;
         add.setLayoutData(gridData);
         add.addSelectionListener(new SelectionAdapter() {
 
@@ -196,11 +223,10 @@ public class PropertyEditor {
             }
         });
 
-        // Create and configure the "Delete" button
-        Button delete = new Button(parent, SWT.PUSH | SWT.CENTER);
+        final Button delete = new Button(parent, SWT.PUSH | SWT.CENTER);
         delete.setText("Delete");
         gridData = new GridData(GridData.HORIZONTAL_ALIGN_END);
-        gridData.widthHint = 80;
+        gridData.widthHint = BUTTON_WIDTH;
         delete.setLayoutData(gridData);
 
         delete.addSelectionListener(new SelectionAdapter() {
@@ -220,7 +246,7 @@ public class PropertyEditor {
         final Composite composite = new Composite(parent, SWT.NONE);
         GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH);
         composite.setLayoutData(gridData);
-        GridLayout layout = new GridLayout(2, false);
+        GridLayout layout = new GridLayout(GRID_LAYOUT_COLUMNS, false);
         layout.marginWidth = 4;
         composite.setLayout(layout);
 
@@ -238,7 +264,7 @@ public class PropertyEditor {
         table = new Table(parent, style);
         GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.grabExcessVerticalSpace = true;
-        gridData.horizontalSpan = 2;
+        gridData.horizontalSpan = GRID_LAYOUT_COLUMNS;
         table.setLayoutData(gridData);
 
         table.setLinesVisible(true);
@@ -259,7 +285,6 @@ public class PropertyEditor {
      * Create the TableViewer
      */
     private void createTableViewer() {
-
         tableViewer = new TableViewer(table);
         tableViewer.setUseHashlookup(true);
 
