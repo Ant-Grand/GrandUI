@@ -55,6 +55,21 @@
 		</sequential>
 	</macrodef>
 
+	<selector id="src-dist-selector">
+		<or>
+			<filename name="src/**" />
+			<filename name="etc/**" />
+			<filename name="README.txt" />
+			<filename name="LICENSE" />
+			<filename name="COPYING" />
+			<filename name="LICENSE-Graphviz.txt" />
+			<filename name="cpl-v10.html" />
+			<filename name="scripts/**" />
+			<filename name="build.xml" />
+			<filename name="build.properties" />
+		</or>
+	</selector>
+
 	<target name="init" depends="get-deps">
 		<path id="ext-libs">
 			<fileset dir="${extlibdir}">
@@ -69,18 +84,14 @@
 		<mkdir dir="${distdir}" />
 		<tar destfile="${distdir}/${product.fullname}-src.tar.gz" compression="gzip">
 			<tarfileset dir="." prefix="${product.fullname}-src">
-				<include name="src/**" />
-				<include name="etc/**" />
-				<include name="README.txt" />
-				<include name="LICENSE" />
-				<include name="COPYING" />
-				<include name="LICENSE-Graphviz.txt" />
-				<include name="cpl-v10.html" />
-				<include name="scripts/**" />
-				<include name="build.xml" />
-				<include name="build.properties" />
+				<selector refid="src-dist-selector" />
 			</tarfileset>
 		</tar>
+		<zip destfile="${distdir}/${product.fullname}-src.zip">
+			<zipfileset dir="." prefix="${product.fullname}-src">
+				<selector refid="src-dist-selector" />
+			</zipfileset>
+		</zip>
 	</target>
 
 	<target name="bin-dist" depends="jars,set-swt-properties">
@@ -154,7 +165,7 @@
 		<mkdir dir="${classesdir}" />
 		<javac srcdir="${srcdir}" destdir="${classesdir}" debug="true" optimize="true">
 			<classpath>
-				<path refid="ext-libs"/>
+				<path refid="ext-libs" />
 			</classpath>
 		</javac>
 	</target>
