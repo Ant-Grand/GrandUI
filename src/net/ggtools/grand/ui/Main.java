@@ -31,7 +31,7 @@
 
 package net.ggtools.grand.ui;
 
-import net.ggtools.grand.ui.widgets.*;
+import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,5 +50,7 @@ public class Main {
         Thread.currentThread().setName("Display thread");
         ApplicationWindow mainWindow = new GraphWindow();
         mainWindow.open();
+        log.info("Exiting ...");
+        System.exit(0);
     }
 }

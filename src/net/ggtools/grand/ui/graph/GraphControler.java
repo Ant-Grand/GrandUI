@@ -28,7 +28,6 @@
 
 package net.ggtools.grand.ui.graph;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,19 +65,6 @@ import sf.jzgraph.dot.impl.DotGraph;
  */
 public class GraphControler implements GraphModelListener, DotGraphAttributes, SelectionManager {
     private static final Log log = LogFactory.getLog(GraphControler.class);
-    
-    static {
-        try {
-            SELECTION_CHANGED_METHOD = GraphSelectionListener.class.getDeclaredMethod(
-                    "selectionChanged", new Class[]{Collection.class});
-        } catch (SecurityException e) {
-            log.fatal("Caught exception initializing GraphControler", e);
-        } catch (NoSuchMethodException e) {
-            log.fatal("Caught exception initializing GraphControler", e);
-        }
-    }
-
-    private static Method SELECTION_CHANGED_METHOD;
 
     private final GraphDisplayer dest;
 
@@ -88,7 +74,10 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
 
     private final Set selectedNodes = new HashSet();
 
-    private final EventDispatcher selectionEventDispatcher;
+    private final EventDispatcher selectionEventManager;
+
+    private final EventDispatcher.Dispatcher selectionChangedDispatcher;
+
     public GraphControler(final GraphDisplayer dest) {
         if (log.isDebugEnabled()) log.debug("Creating new controler to " + dest);
         this.dest = dest;
@@ -97,24 +86,35 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         // TODO voir si je peux virer le renderer et laisser le graph faire le
         // boulot tout seul.
         renderer = new Draw2dGraphRenderer();
-        selectionEventDispatcher = new EventDispatcher("Selection Event");
+        selectionEventManager = new EventDispatcher("Selection Event");
+        try {
+            selectionChangedDispatcher = selectionEventManager
+                    .createDispatcher(GraphSelectionListener.class.getDeclaredMethod(
+                            "selectionChanged", new Class[]{Collection.class}));
+        } catch (SecurityException e) {
+            log.fatal("Caught exception initializing GraphControler", e);
+            throw new RuntimeException("Cannot instanciate GraphControler",e);
+        } catch (NoSuchMethodException e) {
+            log.fatal("Caught exception initializing GraphControler", e);
+            throw new RuntimeException("Cannot instanciate GraphControler",e);
+        }
     }
 
     /**
      * @param filter
      */
     public void addFilter(GraphFilter filter) {
-        log.info("Adding filter "+filter);
-        
+        log.info("Adding filter " + filter);
+
         // TODO Add a filter API to the graph model, etc.
         dest.beginUpdate(4);
         filter.setProducer(model.getProducer());
         Graph graph = null;
-        
+
         try {
             graph = filter.getGraph();
         } catch (GrandException e) {
-            log.error("Caught exception",e);
+            log.error("Caught exception", e);
         }
         dest.worked(1);
 
@@ -134,7 +134,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         dest.finished();
         dest.setGraph(figure);
     }
-    
+
     public void clearFilters() {
         if (log.isDebugEnabled()) log.debug("Clearing filters");
         dest.beginUpdate(4);
@@ -160,14 +160,14 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         dest.finished();
         dest.setGraph(figure);
     }
-    
+
     /*
      * (non-Javadoc)
      * 
      * @see net.ggtools.grand.ui.graph.SelectionManager#addSelectionListener(net.ggtools.grand.ui.graph.GraphSelectionListener)
      */
     public void addSelectionListener(GraphSelectionListener listener) {
-        selectionEventDispatcher.subscribe(listener);
+        selectionEventManager.subscribe(listener);
     }
 
     /*
@@ -181,7 +181,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
             currentNode.setSelected(false);
         }
         selectedNodes.clear();
-        selectionEventDispatcher.dispatchEvent(selectedNodes, SELECTION_CHANGED_METHOD);
+        selectionChangedDispatcher.dispatch(selectedNodes);
     }
 
     /*
@@ -195,7 +195,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
             selectedNodes.remove(node);
             node.setSelected(false);
         }
-        selectionEventDispatcher.dispatchEvent(selectedNodes, SELECTION_CHANGED_METHOD);
+        selectionChangedDispatcher.dispatch(selectedNodes);
     }
 
     /**
@@ -248,7 +248,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      * @see net.ggtools.grand.ui.graph.SelectionManager#removeSelectionListener(net.ggtools.grand.ui.graph.GraphSelectionListener)
      */
     public void removeSelectionListener(GraphSelectionListener listener) {
-        selectionEventDispatcher.unSubscribe(listener);
+        selectionEventManager.unSubscribe(listener);
     }
 
     /*
@@ -266,7 +266,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
             selectedNodes.add(node);
             node.setSelected(true);
         }
-        selectionEventDispatcher.dispatchEvent(selectedNodes, SELECTION_CHANGED_METHOD);
+        selectionChangedDispatcher.dispatch(selectedNodes);
     }
 
     private final IVertex addNode(final IDotGraph dotGraph, final Map vertexLUT,
@@ -357,7 +357,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
                         .getName()), (IVertex) vertexLUT.get(link.getEndNode().getName()), name,
                         link);
                 if (link.hasAttributes(Link.ATTR_WEAK_LINK)) {
-                   edge.setAttr(DRAW2DFGCOLOR_ATTR,ColorConstants.lightGray);
+                    edge.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.lightGray);
                 }
 
             }

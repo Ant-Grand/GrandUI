@@ -38,17 +38,74 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * @author clabouisse
+ * @author Christophe Labouisse
  */
 public class EventDispatcher implements Runnable {
-    private final class DispatchEventAction implements Runnable {
-        private final Object event;
 
+    /**
+     * A simple dispatcher implementation of InternalDispatcher using
+     * <code>invoke</code> to actually dispatch the events.
+     * 
+     * @author Christophe Labouisse
+     */
+    private class BasicDispatcher implements Dispatcher, InternalDispatcher {
         private final Method method;
 
-        public DispatchEventAction(Object event, Method method) {
-            this.event = event;
+        private BasicDispatcher(Method method) {
             this.method = method;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see net.ggtools.grand.ui.event.EventDispatcher.Dispatcher#dispatch(java.lang.Object)
+         */
+        public void dispatch(final Object eventData) {
+            dispatchEvent(eventData, this);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see net.ggtools.grand.ui.event.EventDispatcher.Dispatcher#sendEventToSubscriber(java.lang.Object,
+         *      java.lang.Object)
+         */
+        public void sendEventToSubscriber(Object subscriber, Object eventData) {
+            try {
+                method.invoke(subscriber, new Object[]{eventData});
+            } catch (IllegalAccessException e) {
+                log.fatal(name + " dispatchOneEvent", e);
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                log.error(name + " dispatchOneEvent", e);
+                throw new RuntimeException(e.getCause());
+            }
+        }
+    }
+
+    /**
+     * Interface for class implementing event dispatching on the client side.
+     * 
+     * @author Christophe Labouisse
+     */
+    public interface Dispatcher {
+        /**
+         * Dispatch an event to the subscribers throught the EventManager.
+         * 
+         * @param eventData
+         */
+        void dispatch(final Object eventData);
+    }
+
+    private final class DispatchEventAction implements Runnable {
+
+        private final InternalDispatcher dispatcher;
+
+        private final Object event;
+
+        public DispatchEventAction(final Object event, final InternalDispatcher dispatcher) {
+            this.event = event;
+            this.dispatcher = dispatcher;
         }
 
         /**
@@ -58,8 +115,25 @@ public class EventDispatcher implements Runnable {
          * @see java.lang.Runnable#run()
          */
         public void run() {
-            dispatchOneEvent(event, method);
+            dispatchOneEvent(event, dispatcher);
         }
+    }
+
+    /**
+     * Internal interface to be implemented by objects actually dispatching the
+     * events to the subscribers.
+     * 
+     * @author Christophe Labouisse
+     */
+    private interface InternalDispatcher {
+        /**
+         * Send one event to one subscriber.
+         * 
+         * @param subscriber
+         * @param eventData
+         */
+        void sendEventToSubscriber(final Object subscriber, final Object eventData);
+
     }
 
     private final class SubscriptionAction implements Runnable {
@@ -129,61 +203,8 @@ public class EventDispatcher implements Runnable {
         dispatcherThread.start();
     }
 
-    /**
-     * Dispatch an event. The dispatching will be either synchronous or
-     * asynchronous depending of the <code>defaultDispatchAnsynchronous</code>
-     * attributes. The default is to use synchronous event dispatching.
-     * 
-     * @param event
-     * @param method
-     */
-    public void dispatchEvent(final Object event, final Method method) {
-        if (defaultDispatchAsynchronous) {
-            asynchronousDispatchEvent(event, method);
-        } else {
-            synchronousDispatchEvent(event, method);
-        }
-    }
-
-    /**
-     * Dispatch an event asynchronously. This method garanties that the events
-     * will be processed in the order of reception.
-     * 
-     * @param event
-     * @param method
-     */
-    public void asynchronousDispatchEvent(final Object event, final Method method) {
-        synchronized (eventQueue) {
-            eventQueue.add(new DispatchEventAction(event, method));
-            eventQueue.notify();
-        }
-    }
-
-    /**
-     * Add a new listener.
-     * 
-     * @param listener
-     */
-    public void subscribe(Object listener) {
-        synchronized (eventQueue) {
-            eventQueue.add(new SubscriptionAction(listener));
-        }
-    }
-
-    public void unSubscribe(Object listener) {
-        synchronized (eventQueue) {
-            eventQueue.add(new UnsubscriptionAction(listener));
-        }
-    }
-
-    /**
-     * Dispatch an event synchronously.
-     * 
-     * @param event
-     * @param method
-     */
-    public void synchronousDispatchEvent(final Object event, final Method method) {
-        dispatchOneEvent(event, method);
+    public Dispatcher createDispatcher(final Method method) {
+        return new BasicDispatcher(method);
     }
 
     /**
@@ -251,31 +272,72 @@ public class EventDispatcher implements Runnable {
     }
 
     /**
-     * Dispatch one event to the current subscriber.
+     * Add a new listener.
+     * 
+     * @param listener
+     */
+    public void subscribe(Object listener) {
+        synchronized (eventQueue) {
+            eventQueue.add(new SubscriptionAction(listener));
+        }
+    }
+
+    public void unSubscribe(Object listener) {
+        synchronized (eventQueue) {
+            eventQueue.add(new UnsubscriptionAction(listener));
+        }
+    }
+
+    /**
+     * Dispatch an event asynchronously. This method garanties that the events
+     * will be processed in the order of reception.
      * 
      * @param event
      * @param method
      */
-    private void dispatchOneEvent(Object event, Method method) {
-        log.trace("Dispatching "+event+" to "+method);
+    private final void asynchronousDispatchEvent(final Object event,
+            final InternalDispatcher dispatcher) {
+        synchronized (eventQueue) {
+            eventQueue.add(new DispatchEventAction(event, dispatcher));
+            eventQueue.notify();
+        }
+    }
+
+    /**
+     * Dispatch an event. The dispatching will be either synchronous or
+     * asynchronous depending of the <code>defaultDispatchAnsynchronous</code>
+     * attributes. The default is to use synchronous event dispatching.
+     * 
+     * @param eventData
+     * @param dispatcher
+     */
+    private final void dispatchEvent(final Object eventData, final InternalDispatcher dispatcher) {
+        if (defaultDispatchAsynchronous) {
+            asynchronousDispatchEvent(eventData, dispatcher);
+        } else {
+            synchronousDispatchEvent(eventData, dispatcher);
+        }
+    }
+
+    /**
+     * Dispatch one event to the current subscriber.
+     * 
+     * @param eventData
+     * @param method
+     */
+    private void dispatchOneEvent(final Object eventData, final InternalDispatcher dispatcher) {
+        log.trace("Dispatching " + eventData + " to " + dispatcher);
         synchronized (listenerList) {
             for (Iterator iterator = listenerList.iterator(); iterator.hasNext();) {
                 WeakReference weakReference = (WeakReference) iterator.next();
-                Object element = weakReference.get();
+                Object subscriber = weakReference.get();
 
-                if (element != null) {
-                    try {
-                        method.invoke(element, new Object[]{event});
-                    } catch (IllegalAccessException e) {
-                        log.fatal(name + " dispatchOneEvent", e);
-                        throw new RuntimeException(e);
-                    } catch (InvocationTargetException e) {
-                        log.error(name + " dispatchOneEvent", e);
-                        throw new RuntimeException(e.getCause());
-                    }
+                if (subscriber != null) {
+                    dispatcher.sendEventToSubscriber(subscriber, eventData);
                 } else {
                     // Remove the listener since it has been garbage collected.
-                    if (log.isDebugEnabled()) log.debug("Removing weak reference " + weakReference);
+                    if (log.isDebugEnabled())
+                            log.debug("Removing weak reference " + weakReference);
                     iterator.remove();
                 }
             }
@@ -315,6 +377,17 @@ public class EventDispatcher implements Runnable {
                 }
             }
         }
+    }
+
+    /**
+     * Dispatch an event synchronously.
+     * 
+     * @param event
+     * @param method
+     */
+    private final void synchronousDispatchEvent(final Object event,
+            final InternalDispatcher dispatcher) {
+        dispatchOneEvent(event, dispatcher);
     }
 
 }
