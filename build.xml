@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="jars" name="grand" basedir=".">
+<project default="jars" name="grand-ui" basedir=".">
     <property file="build-local.properties" />
     <property file="build.properties" />
 
@@ -40,7 +40,9 @@
                  usetimestamp="true"
                  ignoreerrors="true"
                  src="@{url}" />
-            <copy file="${dlcachedir}/@{dest}" todir="${extlibdir}" preservelastmodified="true"/>
+            <copy file="${dlcachedir}/@{dest}"
+                  todir="${extlibdir}"
+                  preservelastmodified="true" />
         </sequential>
     </macrodef>
 
@@ -60,7 +62,10 @@
                 <select />
             </unzip>
             <mkdir dir="@{libdir}" />
-            <copy todir="@{libdir}" flatten="true" includeemptydirs="no" preservelastmodified="true">
+            <copy todir="@{libdir}"
+                  flatten="true"
+                  includeemptydirs="no"
+                  preservelastmodified="true">
                 <fileset dir="${dlcachedir}/@{dest}" />
             </copy>
         </sequential>
@@ -90,7 +95,7 @@
     </target>
 
     <target name="dist"
-            depends="bin-dist,src-dist"
+            depends="deploy, bin-dist,src-dist"
             description="Create source and binary distributions" />
 
 
@@ -100,23 +105,37 @@
     <target name="deploy"
             depends="clean, jars, get-alien-swt"
             description="Deploys the application to be used with SWT.">
-        <!-- Signer les Jars !!! -->
+        <!-- TODO: les swt-lib.jar ne devraient pas être écrasés -->
         <fail message="You must define jnlp.deploydir" unless="jnlp.deploydir" />
         <copy tofile="${jnlp.deploydir}/grand-ui.jar"
               file="${libdir}/${product.fullname}.jar" />
         <copy todir="${jnlp.deploydir}">
             <fileset dir="${extlibdir}">
                 <exclude name="*swt*.*" />
+                <exclude name="**/*.so" />
+                <exclude name="**/*.dll" />
             </fileset>
             <fileset dir="${jnlpdir}" />
         </copy>
         <copy todir="${jnlp.deploydir}/${dist.nativedir}">
             <fileset dir="${extlibdir}">
                 <include name="*swt*.*" />
+                <exclude name="**/*.so" />
+                <exclude name="**/*.dll" />
             </fileset>
         </copy>
+        <fail message="keystore.location must be defined" unless="keystore.location" />
+        <fail message="keystore.alias must be defined" unless="keystore.alias" />
+        <fail message="keystore.password must be defined" unless="keystore.password" />
+        <signjar keystore="${keystore.location}"
+                 alias="${keystore.alias}"
+                 storepass="${keystore.password}"
+                 lazy="yes">
+            <fileset dir="${jnlp.deploydir}">
+                <include name="**/*.jar" />
+            </fileset>
+        </signjar>
     </target>
-
 
 
     <target name="src-dist">
@@ -148,6 +167,7 @@
         <copy todir="tmp/${product.fullname}/lib/${dist.nativedir}">
             <fileset dir="${extlibdir}">
                 <include name="*swt*.*" />
+                <exclude name="swt-lib.jar" />
             </fileset>
         </copy>
         <copy todir="tmp/${product.fullname}" flatten="true">
@@ -183,20 +203,6 @@
              includes="${product.fullname}/**" />
     </target>
 
-    <target name="sign-jars" description="Sign the jars for JNLP">
-        <fail message="keystore.location must be defined" unless="keystore.location" />
-        <fail message="keystore.alias must be defined" unless="keystore.alias" />
-        <fail message="keystore.password must be defined" unless="keystore.password" />
-        <signjar keystore="${keystore.location}"
-                 alias="${keystore.alias}"
-                 storepass="${keystore.password}"
-                 lazy="yes">
-            <fileset dir="${jnlp.deploydir}">
-                <include name="**/*.jar" />
-            </fileset>
-        </signjar>
-    </target>
-
     <target name="jars"
             depends="compile.java,incbuildnum"
             description="Create the application jar(s)">
@@ -222,7 +228,7 @@
     <target name="incbuildnum">
         <taskdef resource="svntask.properties" />
         <svn>
-            <update file="${buildnum-file}"/>
+            <update file="${buildnum-file}" />
         </svn>
         <propertyfile file="${buildnum-file}">
             <entry key="build.date" type="date" value="now" pattern="yyyy-MM-dd" />
@@ -233,7 +239,8 @@
         <property file="${buildnum-file}" />
         <echo message="build number set to ${build.number}" />
         <svn>
-            <commit file="${buildnum-file}" message="Setting buildnum to ${build.number}"/>
+            <commit file="${buildnum-file}"
+                    message="Setting buildnum to ${build.number} for ${product.name}" />
         </svn>
     </target>
 
@@ -282,6 +289,14 @@
                 </patternset>
             </select>
         </get-extract-zip>
+        <!-- Creates a swt-lib.jar for JNLP -->
+        <jar destfile="${dlcachedir}/rcp/swt-lib.jar" index="true">
+            <fileset dir="${dlcachedir}/rcp">
+                <include name="**/*.so" />
+                <include name="**/*.dll" />
+            </fileset>
+        </jar>
+        <copy todir="${extlibdir}" file="${dlcachedir}/rcp/swt-lib.jar" />
     </target>
 
 
@@ -300,6 +315,14 @@
                 </patternset>
             </select>
         </get-extract-zip>
+        <!-- Creates a swt-lib.jar for JNLP -->
+        <jar destfile="${dlcachedir}/alien-swt/swt-lib.jar" index="true">
+            <fileset dir="${dlcachedir}/alien-swt">
+                <include name="**/*.so" />
+                <include name="**/*.dll" />
+            </fileset>
+        </jar>
+        <copy todir="${extlibdir}/${dist.aliendir}" file="${dlcachedir}/alien-swt/swt-lib.jar" />
     </target>
 
 
