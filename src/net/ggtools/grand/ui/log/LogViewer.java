@@ -27,15 +27,14 @@
  */
 package net.ggtools.grand.ui.log;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -53,11 +52,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 /**
  * @author Christophe Labouisse
@@ -82,6 +83,59 @@ public class LogViewer extends Composite {
     static final int CI_CLASS = 2;
 
     static final int CI_MESSAGE = 3;
+
+    private static final class LogEventTooltipListener extends TableTooltipListener {
+        private final Table table;
+
+        private final int CI_CLASS;
+
+        private final int CI_MESSAGE;
+
+        private LogEventTooltipListener(Table table, int CI_CLASS, int CI_MESSAGE) {
+            super(table);
+            this.table = table;
+            this.CI_CLASS = CI_CLASS;
+            this.CI_MESSAGE = CI_MESSAGE;
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see net.ggtools.grand.ui.log.LogViewer.TableTooltipListener#createTooltipContents(org.eclipse.swt.widgets.Composite,
+         *      org.eclipse.swt.widgets.TableItem)
+         */
+        protected Control createTooltipContents(Composite tooltipParent, TableItem item) {
+            final Composite composite = (Composite) super.createTooltipContents(tooltipParent,
+                    item);
+
+            final GridLayout parentGridLayout = ((GridLayout) composite.getLayout());
+            parentGridLayout.numColumns = 2;
+
+            final Display display = table.getShell().getDisplay();
+
+            final Label icon = new Label(composite, SWT.NONE);
+            icon.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+            icon.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+            icon.setImage(item.getImage());
+
+            final Label date = new Label(composite, SWT.NO_BACKGROUND);
+            date.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+            date.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+            date.setText(item.getText(CI_CLASS));
+
+            final Label message = new Label(composite, SWT.READ_ONLY | SWT.WRAP);
+            message.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+            message.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+            message.setText(item.getText(CI_MESSAGE));
+            final GridData msgGridData = new GridData(GridData.GRAB_HORIZONTAL);
+            msgGridData.horizontalSpan = 2;
+            msgGridData.widthHint = Math.min(400,
+                    message.computeSize(SWT.DEFAULT, SWT.DEFAULT).x
+                            + parentGridLayout.marginWidth);
+            message.setLayoutData(msgGridData);
+
+            return composite;
+        }
+    }
 
     private final class LogEventFilter extends ViewerFilter {
         /**
@@ -248,7 +302,7 @@ public class LogViewer extends Composite {
         refreshListener = new LogEventRefreshListener();
     }
 
-private void createViewer(final Composite parent) {
+    private void createViewer(final Composite parent) {
         viewer = new TableViewer(parent, SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL
                 | SWT.HIDE_SELECTION);
         final LogLabelProvider logLabelProvider = new LogLabelProvider();
@@ -263,6 +317,9 @@ private void createViewer(final Composite parent) {
         final GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.heightHint = table.getHeaderHeight() * DEFAULT_NUM_LINES;
         table.setLayoutData(gridData);
+
+        final TableTooltipListener tableListener = new LogEventTooltipListener(table, CI_CLASS, CI_MESSAGE);
+        tableListener.activateTooltips();
 
         final GC gc = new GC(table);
         gc.setFont(table.getFont());
@@ -312,10 +369,12 @@ private void createViewer(final Composite parent) {
                 }
             }
         });
-    }    /**
-             * @param comboIndex
-             * @return
-             */
+    }
+
+    /**
+     * @param comboIndex
+     * @return
+     */
     protected int comboIndexToLogLevel(int comboIndex) {
         return comboIndex + LogEvent.INFO.value;
     }
