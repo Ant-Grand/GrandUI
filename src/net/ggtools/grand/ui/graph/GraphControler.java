@@ -152,12 +152,14 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      * @see net.ggtools.grand.ui.graph.SelectionManager#deselectAllNodes()
      */
     public void deselectAllNodes() {
-        for (final Iterator iter = selectedNodes.iterator(); iter.hasNext();) {
-            final Draw2dNode currentNode = (Draw2dNode) iter.next();
-            currentNode.setSelected(false);
+        if (!selectedNodes.isEmpty()) {
+            for (final Iterator iter = selectedNodes.iterator(); iter.hasNext();) {
+                final Draw2dNode currentNode = (Draw2dNode) iter.next();
+                currentNode.setSelected(false);
+            }
+            selectedNodes.clear();
+            selectionChangedDispatcher.dispatch(selectedNodes);
         }
-        selectedNodes.clear();
-        selectionChangedDispatcher.dispatch(selectedNodes);
     }
 
     /*
@@ -170,8 +172,8 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         if (node.isSelected()) {
             selectedNodes.remove(node);
             node.setSelected(false);
+            selectionChangedDispatcher.dispatch(selectedNodes);
         }
-        selectionChangedDispatcher.dispatch(selectedNodes);
     }
 
     /**
@@ -273,8 +275,10 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     /**
      * Opens a new graph.
      * 
-     * @param file the file to open.
-     * @param wait wait for graph loading to be complete if <code>true</code>.
+     * @param file
+     *            the file to open.
+     * @param wait
+     *            wait for graph loading to be complete if <code>true</code>.
      */
     public void openFile(final File file, boolean wait) {
         if (log.isInfoEnabled()) log.info("Opening " + file);
@@ -283,11 +287,11 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         clearFiltersOnNextLoad = true;
         model.openFile(file);
         if (wait) {
-            synchronized(this) {
+            synchronized (this) {
                 try {
                     this.wait();
                 } catch (InterruptedException e) {
-                    log.debug("Wait interrupted",e);
+                    log.debug("Wait interrupted", e);
                 }
             }
         }
@@ -330,15 +334,15 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      *      boolean)
      */
     public void selectNode(final Draw2dNode node, final boolean addToSelection) {
-        log.debug("Select node " + node);
+        if (log.isTraceEnabled()) log.trace("Select node " + node);
         if (!node.isSelected()) {
             if (!addToSelection) {
                 deselectAllNodes();
             }
             selectedNodes.add(node);
             node.setSelected(true);
+            selectionChangedDispatcher.dispatch(selectedNodes);
         }
-        selectionChangedDispatcher.dispatch(selectedNodes);
     }
 
     /**
@@ -369,7 +373,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
             graphName = "Graph";
         }
         getDest().setGraph(figure, graphName);
-        synchronized(this) {
+        synchronized (this) {
             this.notifyAll();
         }
     }
@@ -380,8 +384,10 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     public final IProgressMonitor getProgressMonitor() {
         return progressMonitor;
     }
+
     /**
-     * @param progressMonitor The progressMonitor to set.
+     * @param progressMonitor
+     *            The progressMonitor to set.
      */
     public final void setProgressMonitor(IProgressMonitor progressMonitor) {
         this.progressMonitor = progressMonitor;
