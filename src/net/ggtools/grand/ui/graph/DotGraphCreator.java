@@ -98,7 +98,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
 
         for (Iterator iter = graph.getNodes(); iter.hasNext();) {
             final Node node = (Node) iter.next();
-            if (node.getName().equals("") || (node == startNode)) {
+            if ("".equals(node.getName()) || (node == startNode)) {
                 continue;
             }
             node.accept(this);
