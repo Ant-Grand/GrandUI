@@ -172,14 +172,13 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
      * 
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#setGraph(net.ggtools.grand.ui.graph.Graph)
      */
-    public void setGraph(final IFigure figure, final String name) {
+    public void setGraph(final IFigure figure, final String name, final String toolTip) {
         Display.getDefault().asyncExec(new Runnable() {
 
             public void run() {
                 canvas.setContents(figure);
                 setText(name);
-                // TODO Display the file name in the tooltip.
-                //setToolTipText(filename);
+                setToolTipText(toolTip);
             }
         });
     }

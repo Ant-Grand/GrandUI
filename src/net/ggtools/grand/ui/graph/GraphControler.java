@@ -372,7 +372,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         if (graphName == null) {
             graphName = "Graph";
         }
-        getDest().setGraph(figure, graphName);
+        getDest().setGraph(figure, graphName, model.getLastLoadedFile().getAbsolutePath());
         synchronized (this) {
             this.notifyAll();
         }

@@ -46,15 +46,12 @@ import org.apache.commons.logging.LogFactory;
  * @author Christophe Labouisse
  */
 public class GraphModel implements GraphProducer {
-    static {
-        // disable logs in Grand core
-        net.ggtools.grand.Log.setLogLevel(net.ggtools.grand.Log.MSG_ERR);
-    }
 
     private final class LoadFileRunnable implements Runnable {
-        private final Log log = LogFactory.getLog(LoadFileRunnable.class);
 
         private final File file;
+
+        private final Log log = LogFactory.getLog(LoadFileRunnable.class);
 
         private LoadFileRunnable(final File file) {
             this.file = file;
@@ -76,15 +73,20 @@ public class GraphModel implements GraphProducer {
         }
     }
 
+    static {
+        // disable logs in Grand core
+        net.ggtools.grand.Log.setLogLevel(net.ggtools.grand.Log.MSG_ERR);
+    }
+
     private static final Log log = LogFactory.getLog(GraphModel.class);
 
-    private GraphProducer producer = null;
-
-    private File lastLoadedFile;
+    private final Dispatcher eventDispatcher;
 
     private final EventManager eventManager;
 
-    private final Dispatcher eventDispatcher;
+    private File lastLoadedFile;
+
+    private GraphProducer producer = null;
 
     public GraphModel() {
         eventManager = new EventManager("GraphModel");
@@ -97,21 +99,6 @@ public class GraphModel implements GraphProducer {
         } catch (NoSuchMethodException e) {
             log.fatal("Caught exception initializing GraphModel", e);
             throw new RuntimeException("Cannot instanciate GraphModel", e);
-        }
-    }
-
-    public void openFile(final File file) {
-        final Thread thread = new Thread(new LoadFileRunnable(file), "File loading");
-        thread.start();
-    }
-    
-    public void reload() {
-        if (lastLoadedFile != null) {
-            if (log.isDebugEnabled()) log.debug("Reloading last file");
-            openFile(lastLoadedFile);
-        }
-        else {
-            log.info("No file previously loaded, skipping reload");
         }
     }
 
@@ -136,8 +123,30 @@ public class GraphModel implements GraphProducer {
         return graph;
     }
 
+    public void openFile(final File file) {
+        final Thread thread = new Thread(new LoadFileRunnable(file), "File loading");
+        thread.start();
+    }
+
+    public void reload() {
+        if (lastLoadedFile != null) {
+            if (log.isDebugEnabled()) log.debug("Reloading last file");
+            openFile(lastLoadedFile);
+        }
+        else {
+            log.info("No file previously loaded, skipping reload");
+        }
+    }
+
     protected void notifyGraphLoaded() {
         final GraphEvent event = new GraphEvent(this);
         eventDispatcher.dispatch(event);
+    }
+
+    /**
+     * @return Returns the lastLoadedFile.
+     */
+    final File getLastLoadedFile() {
+        return lastLoadedFile;
     }
 }

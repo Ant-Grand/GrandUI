@@ -44,9 +44,10 @@ public interface GraphDisplayer extends GraphControlerProvider {
     /**
      * Ask to display the supplied figure.
      * @param graph
-     * @param name TODO
+     * @param name
+     * @param toolTip
      */
-    void setGraph(IFigure graph, String name);
+    void setGraph(IFigure graph, String name, String toolTip);
     
     /**
      * Get the widget context menu.
