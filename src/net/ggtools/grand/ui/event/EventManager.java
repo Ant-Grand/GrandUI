@@ -133,6 +133,26 @@ public class EventManager implements Runnable {
         dispatcherFactory = DispatcherFactory.getInstance();
     }
 
+    /**
+     * Remove all subscribers and all pending actions from the queue.
+     */
+    public void clear() {
+        if (log.isInfoEnabled()) log.info("Clearing event manager");
+        synchronized (eventQueue) {
+            eventQueue.clear();
+        }
+
+        synchronized (listenerList) {
+            listenerList.clear();
+        }
+
+    }
+
+    /**
+     * Creates a new dispatcher calling a specific method when invoked.
+     * @param method method to call on invokation
+     * @return a new dispatcher.
+     */
     public Dispatcher createDispatcher(final Method method) {
         return dispatcherFactory.createDispatcher(this, method);
     }

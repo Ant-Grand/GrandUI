@@ -106,25 +106,25 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     private Draw2dGraph figure;
 
-    private final FilterChainModel filterChain;
+    private FilterChainModel filterChain;
 
     private Graph graph;
 
-    private final EventManager graphEventManager;
+    private EventManager graphEventManager;
 
-    private final GraphModel model;
+    private GraphModel model;
 
-    private final Dispatcher parameterChangedEvent;
+    private Dispatcher parameterChangedEvent;
 
     private IProgressMonitor progressMonitor;
 
-    private final Draw2dGraphRenderer renderer;
+    private Draw2dGraphRenderer renderer;
 
     private final Set selectedNodes = new HashSet();
 
-    private final Dispatcher selectionChangedDispatcher;
+    private Dispatcher selectionChangedDispatcher;
 
-    private final GraphWindow window;
+    private GraphWindow window;
 
     public GraphControler(final GraphWindow window) {
         if (log.isInfoEnabled()) log.info("Creating new controler to " + window);
@@ -170,6 +170,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @see net.ggtools.grand.ui.graph.SelectionManager#addSelectionListener(net.ggtools.grand.ui.graph.GraphListener)
      */
     public void addListener(GraphListener listener) {
+        if (graphEventManager != null)
         graphEventManager.subscribe(listener);
     }
 
@@ -316,11 +317,32 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             RecentFilesMenu.addNewFile(file);
         } catch (final GrandException e) {
             reportError("Cannot open graph", e);
+            stopControler();
         } catch (final BuildException e) {
             reportError("Cannot open graph", e);
+            stopControler();
         } finally {
             progressMonitor.done();
         }
+    }
+
+    /**
+     * Puts the controler in a pre-mortem state where it does not receive or send
+     * event.
+     */
+    private void stopControler() {
+        // Stop send & receiving events.
+        graphEventManager.clear();
+        Application.getInstance().getPreferenceStore().removePropertyChangeListener(this);
+        
+        // Help garbage collector.
+        window = null;
+        model = null;
+        filterChain = null;
+        renderer = null;
+        graphEventManager = null;
+        selectionChangedDispatcher = null;
+        parameterChangedEvent = null;
     }
 
     /**
