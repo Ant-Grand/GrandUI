@@ -72,6 +72,7 @@ public class ShowLogAction extends Action {
         super(DEFAULT_ACTION_NAME);
         setChecked(false);
         window = parent;
+        setAccelerator('l');
     }
 
     /*
