@@ -1,4 +1,4 @@
-//$Id$
+// $Id$
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
@@ -29,16 +29,27 @@ package net.ggtools.grand.ui.prefs;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.StringTokenizer;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -48,6 +59,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * A {@link org.eclipse.jface.preference.PreferenceStore} featuring higher level
@@ -56,6 +69,20 @@ import org.eclipse.swt.graphics.RGB;
  * @author Christophe Labouisse
  */
 public class ComplexPreferenceStore extends PreferenceStore {
+
+    /**
+     * An interface used to save properties like structure. It is used to save
+     * either a PreferenceStore or a Properties.
+     * @author Christophe Labouisse
+     */
+    private interface PropertySaver {
+
+        String get(final String key);
+
+        Collection getKeys();
+
+        boolean needSaving(final String key);
+    }
 
     /**
      * @param unEscapeString(item)
@@ -78,8 +105,6 @@ public class ComplexPreferenceStore extends PreferenceStore {
     private final ColorRegistry colorRegistry = new ColorRegistry();
 
     private final FontRegistry fontRegistry = new FontRegistry();
-
-    private final Set pendingPropertiesRemoval = new HashSet();
 
     private final Map propertiesTable = new HashMap();
 
@@ -175,8 +200,90 @@ public class ComplexPreferenceStore extends PreferenceStore {
             if (!baseDir.isDirectory()) { throw new FileNotFoundException("Cannot find/create "
                     + baseDir); }
         }
-        super.save();
-        // TODO save properties
+
+        FileOutputStream os = null;
+        try {
+            os = new FileOutputStream(new File(baseDir, "temp.xml"));
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = null;
+            try {
+                db = dbf.newDocumentBuilder();
+            } catch (ParserConfigurationException pce) {
+                assert (false);
+            }
+
+            Document doc = db.newDocument();
+            final Element propertyElement = (Element) doc.appendChild(doc
+                    .createElement("properties"));
+
+            final PropertySaver prefStoreSaver = new PropertySaver() {
+
+                public String get(String key) {
+                    return getString(key);
+                }
+
+                public Collection getKeys() {
+                    return Arrays.asList(preferenceNames());
+                }
+
+                public boolean needSaving(String key) {
+                    return !isDefault(key);
+                }
+            };
+
+            saveProperties(doc, propertyElement, prefStoreSaver);
+
+            for (Iterator iter = propertiesTable.entrySet().iterator(); iter.hasNext();) {
+                final Map.Entry entry = (Map.Entry) iter.next();
+                final String propKey = (String) entry.getKey();
+                final Properties props = (Properties) entry.getValue();
+                Element propElement = (Element) propertyElement.appendChild(doc
+                        .createElement("properties"));
+                propElement.setAttribute("key", propKey);
+                final PropertySaver propertySaver = new PropertySaver() {
+
+                    public String get(String key) {
+                        return props.getProperty(key);
+                    }
+
+                    public Collection getKeys() {
+                        return props.keySet();
+                    }
+
+                    public boolean needSaving(String key) {
+                        return true;
+                    }
+                };
+                saveProperties(doc, propElement, propertySaver);
+
+                // TODO save properties
+            }
+
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer t = null;
+            try {
+                t = tf.newTransformer();
+                // t.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
+                // PROPS_DTD_URI);
+                t.setOutputProperty(OutputKeys.INDENT, "yes");
+                t.setOutputProperty(OutputKeys.METHOD, "xml");
+                t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            } catch (TransformerConfigurationException tce) {
+                assert (false);
+            }
+            DOMSource doms = new DOMSource(doc);
+            StreamResult sr = new StreamResult(os);
+            try {
+                t.transform(doms, sr);
+            } catch (TransformerException te) {
+                IOException ioe = new IOException();
+                ioe.initCause(te);
+                throw ioe;
+            }
+        } finally {
+            if (os != null) os.close();
+        }
+        // super.save();
     }
 
     /**
@@ -186,9 +293,9 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * @param key
      */
     public void setPropertiesToDefault(final String key) {
+        // TODO fire listeners
         if (propertiesTable.containsKey(key)) {
             propertiesTable.remove(key);
-            pendingPropertiesRemoval.add(key);
         }
     }
 
@@ -220,6 +327,25 @@ public class ComplexPreferenceStore extends PreferenceStore {
         myProperties.putAll(props);
         propertiesTable.remove(key);
         propertiesTable.put(key, myProperties);
+        // TODO fire listeners
+    }
+
+    /**
+     * @param doc
+     * @param properties
+     * @param saver
+     */
+    private void saveProperties(Document doc, Element properties, final PropertySaver saver) {
+        final Collection keys = saver.getKeys();
+        final Iterator i = keys.iterator();
+        while (i.hasNext()) {
+            final String key = (String) i.next();
+            if (saver.needSaving(key)) {
+                Element entry = (Element) properties.appendChild(doc.createElement("entry"));
+                entry.setAttribute("key", key);
+                entry.appendChild(doc.createTextNode(saver.get(key)));
+            }
+        }
     }
 
 }
