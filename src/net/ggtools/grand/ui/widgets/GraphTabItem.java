@@ -129,11 +129,11 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
 
     private final StyledText textDisplayer;
 
-    private final float ZOOM_MAX = 3.0f;
+    private final static float ZOOM_MAX = 3.0f;
 
-    private final float ZOOM_MIN = 0.25f;
+    private final static float ZOOM_MIN = 0.25f;
 
-    private final float ZOOM_STEP = 1.1f;
+    private final static float ZOOM_STEP = 1.1f;
 
     // To be set to <code>true</code> when the next selection change do no
     // requires jumping to the selected node.

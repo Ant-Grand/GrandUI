@@ -42,7 +42,8 @@ public class GrandUiPreferenceManager extends PreferenceManager {
 
     public GrandUiPreferenceManager() {
         final PreferencePage generalPage = new GeneralPreferencePage();
-        final IPersistentPreferenceStore preferenceStore = Application.getInstance().getPreferenceStore();
+        final IPersistentPreferenceStore preferenceStore = Application.getInstance()
+                .getPreferenceStore();
         generalPage.setPreferenceStore(preferenceStore);
         final IPreferenceNode generalPageNode = new PreferenceNode("General", generalPage);
         addToRoot(generalPageNode);

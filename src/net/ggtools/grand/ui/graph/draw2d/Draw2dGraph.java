@@ -89,6 +89,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
         /*
          * (non-Javadoc)
+         * 
          * @see org.eclipse.draw2d.MouseListener.Stub#mouseReleased(org.eclipse.draw2d.MouseEvent)
          */
         public void mouseReleased(MouseEvent me) {
@@ -116,6 +117,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
         /*
          * (non-Javadoc)
+         * 
          * @see org.eclipse.draw2d.MouseListener#mouseDoubleClicked(org.eclipse.draw2d.MouseEvent)
          */
         public void mouseDoubleClicked(MouseEvent me) {
@@ -172,6 +174,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
         /*
          * (non-Javadoc)
+         * 
          * @see org.eclipse.draw2d.MouseListener.Stub#mouseReleased(org.eclipse.draw2d.MouseEvent)
          */
         public void mouseReleased(MouseEvent me) {
@@ -220,6 +223,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.eclipse.draw2d.IFigure#addNotify()
      */
     public void addNotify() {
@@ -286,6 +290,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.eclipse.draw2d.IFigure#getMinimumSize(int, int)
      */
     public Dimension getMinimumSize(int wHint, int hHint) {
@@ -311,6 +316,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     /*
      * (non-Javadoc)
+     * 
      * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
      */
     public Collection getSelection() {
@@ -327,6 +333,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.eclipse.draw2d.IFigure#removeNotify()
      */
     public void removeNotify() {
@@ -353,6 +360,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     /*
      * (non-Javadoc)
+     * 
      * @see net.ggtools.grand.ui.graph.SelectionManager#selectNodeByName(java.lang.String,
      *      boolean)
      */

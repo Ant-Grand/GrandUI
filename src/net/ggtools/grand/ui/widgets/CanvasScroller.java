@@ -69,7 +69,7 @@ public final class CanvasScroller implements MouseMoveListener {
     }
 
     /**
-     *  
+     * 
      */
     public void leaveDragMode() {
         if (inDragMode) {

@@ -139,6 +139,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
 
     /**
      * Return the underlying node.
+     * 
      * @return
      */
     public Node getNode() {

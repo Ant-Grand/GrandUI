@@ -66,6 +66,7 @@ public class AboutDialog extends Dialog {
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     protected void configureShell(Shell newShell) {
@@ -75,6 +76,7 @@ public class AboutDialog extends Dialog {
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
      */
     protected void createButtonsForButtonBar(Composite parent) {
@@ -83,6 +85,7 @@ public class AboutDialog extends Dialog {
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     protected Control createDialogArea(Composite parent) {
@@ -98,9 +101,9 @@ public class AboutDialog extends Dialog {
                 "Grand ©2004 Christophe Labouisse, distributed under BSD License\nUi: ");
         messageBuffer.append(Application.getInstance().getVersionString());
         if (coreConfiguration != null)
-                messageBuffer.append("\nCore: ").append(coreConfiguration.getVersionString());
+            messageBuffer.append("\nCore: ").append(coreConfiguration.getVersionString());
         messageBuffer.append("\nJRE: ").append(System.getProperty("java.vm.name")).append(" ")
-        .append(System.getProperty("java.vm.version"));
+                .append(System.getProperty("java.vm.version"));
         message.setText(messageBuffer.toString());
         return composite;
     }

@@ -65,7 +65,7 @@ public class Splash {
         shell.setBounds(displayBounds.x + ((displayBounds.width - imageBounds.width) / 2),
                 displayBounds.y + ((displayBounds.height - imageBounds.height) / 2),
                 imageBounds.width, imageBounds.height);
-        //shell.addPaintListener(this);
+        // shell.addPaintListener(this);
     }
 
     public void close() {

@@ -28,7 +28,6 @@
 package net.ggtools.grand.ui.log;
 
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogConfigurationException;
 import org.apache.commons.logging.impl.LogFactoryImpl;
 
 /**
@@ -46,7 +45,7 @@ public class UILogFactory extends LogFactoryImpl {
     /* (non-Javadoc)
      * @see org.apache.commons.logging.impl.LogFactoryImpl#newInstance(java.lang.String)
      */
-    protected Log newInstance(String name) throws LogConfigurationException {
+    protected Log newInstance(String name) {
         Log log = super.newInstance(name);
         return new UILogger(name,log);
     }
