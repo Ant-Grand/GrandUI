@@ -69,7 +69,7 @@ public class LogViewer extends Composite {
             if (e.widget instanceof Button) {
                 final Button button = (Button) e.widget;
                 final FileDialog dialog = new FileDialog(viewer.getTable().getShell(),SWT.SAVE);
-                dialog.setFilterExtensions(new String [] {".log","*"});
+                dialog.setFilterExtensions(new String [] {"*.log","*"});
                 final String logFileName = dialog.open();
                 if (logFileName != null) {
                     ObjectOutputStream oos = null;
