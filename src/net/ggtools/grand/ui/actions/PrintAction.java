@@ -73,7 +73,7 @@ public class PrintAction extends GraphControlerAction {
     }
 
     /**
-     * Creates a new OpenFileAction object.
+     * Creates a new PrintAction object.
      * 
      * @param parent
      */
@@ -82,7 +82,7 @@ public class PrintAction extends GraphControlerAction {
     }
 
     /**
-     * Creates a new OpenFileAction object with specific name.
+     * Creates a new QuickOpenFileAction object with specific name.
      * 
      * @param name
      * @param parent

@@ -54,7 +54,7 @@ public class ReloadGraphAction extends GraphControlerAction {
     }
 
     /**
-     * Creates a new OpenFileAction object.
+     * Creates a new ReloadGraphAction object.
      * 
      * @param parent
      */
@@ -63,7 +63,7 @@ public class ReloadGraphAction extends GraphControlerAction {
     }
 
     /**
-     * Creates a new OpenFileAction object with specific name.
+     * Creates a new QuickOpenFileAction object with specific name.
      * 
      * @param name
      * @param parent

@@ -60,7 +60,7 @@ public class PreferenceAction extends Action {
     }
 
     /**
-     * Creates a new OpenFileAction object.
+     * Creates a new PreferenceAction object.
      * 
      * @param parent
      */
