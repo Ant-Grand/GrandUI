@@ -28,6 +28,8 @@
 
 package net.ggtools.grand.ui.widgets;
 
+import java.io.File;
+
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
@@ -191,6 +193,14 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
         graphTabItem.setProgressMonitor(this);
         return graphTabItem;
     }
+    
+    public void openGraphInNewDisplayer(final File buildFile) {
+        final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE);
+        tabFolder.setSelection(graphTabItem);
+        controlerAvailableDispatcher.dispatch(graphTabItem.getControler());
+        graphTabItem.setProgressMonitor(this);
+        graphTabItem.getControler().openFile(buildFile);
+    }
 
     /*
      * (non-Javadoc)
@@ -273,7 +283,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
     protected Control createContents(Composite parent) {
-        log.debug("Creating contents");
+        if (log.isDebugEnabled()) log.debug("Creating contents");
         tabFolder = new CTabFolder(parent, SWT.BORDER | SWT.TOP);
         tabFolder.addCTabFolder2Listener(new CTabFolder2Adapter() {
             /*

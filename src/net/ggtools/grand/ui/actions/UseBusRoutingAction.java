@@ -27,11 +27,11 @@
  */
 package net.ggtools.grand.ui.actions;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import net.ggtools.grand.ui.graph.GraphControler;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Christophe Labouisse

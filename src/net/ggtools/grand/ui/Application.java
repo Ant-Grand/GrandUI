@@ -31,6 +31,7 @@ package net.ggtools.grand.ui;
 import java.util.Iterator;
 
 import net.ggtools.grand.ui.widgets.GraphWindow;
+import net.ggtools.grand.ui.widgets.Splash;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -130,6 +131,7 @@ public class Application {
      *  
      */
     final private void initResources() {
+        if (log.isDebugEnabled()) log.debug("Initializing application resources");
         fontRegistry = new FontRegistry("net.ggtools.grand.ui.resource.fonts");
         for (Iterator iter = fontRegistry.getKeySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
@@ -149,10 +151,14 @@ public class Application {
      *  
      */
     final private void run() {
-        Display.getDefault();
+        final Display display = Display.getDefault();
+        final Splash splash = new Splash(display);
+        splash.open();
         initResources();
         ApplicationWindow mainWindow = new GraphWindow();
         mainWindow.setBlockOnOpen(true);
+        splash.close();
+        splash.dispose();
         mainWindow.open();
     }
 }

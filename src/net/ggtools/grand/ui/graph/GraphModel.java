@@ -63,7 +63,12 @@ public class GraphModel implements GraphProducer {
         public void run() {
             if (log.isDebugEnabled()) log.debug("Loading " + file);
             lastLoadedFile = file;
-            final GraphProducer p = new AntProject(file);
+            final GraphProducer p;
+            try {
+                p = new AntProject(file);
+            } catch (GrandException e) {
+                throw new RuntimeException(e);
+            }
             synchronized (GraphModel.this) {
                 producer = p;
             }
