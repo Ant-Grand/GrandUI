@@ -289,12 +289,15 @@
             </select>
         </get-extract-zip>
         <!-- Creates a swt-lib.jar for JNLP -->
-        <jar destfile="${dlcachedir}/rcp/swt-lib.jar" index="true">
+	<delete dir="tmp" />
+	<mkdir dir="tmp/rcp" />
+	<copy todir="tmp/rcp" preservelastmodified="true" flatten="true">
             <fileset dir="${dlcachedir}/rcp">
                 <include name="**/*.so" />
                 <include name="**/*.dll" />
             </fileset>
-        </jar>
+	</copy>
+        <jar destfile="${dlcachedir}/rcp/swt-lib.jar" basedir="tmp/rcp" index="true" />
         <copy todir="${extlibdir}" file="${dlcachedir}/rcp/swt-lib.jar" />
     </target>
 
@@ -315,12 +318,15 @@
             </select>
         </get-extract-zip>
         <!-- Creates a swt-lib.jar for JNLP -->
-        <jar destfile="${dlcachedir}/alien-swt/swt-lib.jar" index="true">
+	<delete dir="tmp" />
+	<mkdir dir="tmp/alien-swt" />
+	<copy todir="tmp/alien-swt" preservelastmodified="true" flatten="true">
             <fileset dir="${dlcachedir}/alien-swt">
                 <include name="**/*.so" />
                 <include name="**/*.dll" />
             </fileset>
-        </jar>
+	</copy>
+        <jar destfile="${dlcachedir}/alien-swt/swt-lib.jar" basedir="tmp/alien-swt" index="true" />
         <copy todir="${extlibdir}/${dist.aliendir}" file="${dlcachedir}/alien-swt/swt-lib.jar" />
     </target>
 
