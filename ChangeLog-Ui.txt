@@ -1,5 +1,15 @@
 $Id$
 
+Release 0.5 (build number 146):
+
+* Upgraded to Grand core 1.6 &amp; and Eclipse 3.0.1,
+* Added special tooltip for subant genericantfile mode,
+* Added an outline panel,
+* Both outline &amp; source panels are now maskable,
+* When double clicking on an external node, the corresponding build file now opens centered on that node,
+* Minor bugfixes.
+
+
 Release 0.4 (build number 66):
 
 * Fix a NPE when toggling bus routing,
