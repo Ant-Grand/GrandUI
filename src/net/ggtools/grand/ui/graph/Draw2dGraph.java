@@ -28,6 +28,8 @@
 
 package net.ggtools.grand.ui.graph;
 
+import net.ggtools.grand.ui.AppData;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.InputEvent;
@@ -136,6 +138,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     public Draw2dNode createNode(IVertex vertex) {
         final Draw2dNode node = new Draw2dNode(this, vertex);
         add(node, node.getBounds());
+        node.setFont(AppData.getInstance().getFont(AppData.NODE_FONT));
         node.addMouseListener(new NodeMouseListener(node));
 
         return node;

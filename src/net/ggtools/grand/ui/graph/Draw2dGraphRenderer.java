@@ -34,6 +34,8 @@ import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.ggtools.grand.ui.AppData;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.AbsoluteBendpoint;
@@ -145,13 +147,14 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
             label.setOpaque(true);
             label.setBackgroundColor(ColorConstants.buttonLightest);
             label.setBorder(new LineBorder());
+            label.setFont(AppData.getInstance().getFont(AppData.LINK_FONT));
             final ConnectionLocator locator = new MidpointLocator(conn, bends.size() / 2);
             locator.setRelativePosition(PositionConstants.CENTER);
             conn.add(label, locator);
         }
 
         // TODO better tooltip
-        addTooltip(conn, "From: " + edge.getTail().getName() + "\nTo: " + edge.getHead().getName());
+        conn.setToolTip(new LinkTooltip(edge));
 
         contents.add(conn,conn.getBounds());
     }

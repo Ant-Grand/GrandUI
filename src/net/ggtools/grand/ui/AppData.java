@@ -54,6 +54,8 @@ public class AppData {
 
     final public static String TOOLTIP_MONOSPACE_FONT = "net.ggtools.grand.ui.tooltipmonospacefont";
 
+    final public static String LINK_ICON = "net.ggtools.grand.ui.linkicon";
+
     final public static String NODE_ICON = "net.ggtools.grand.ui.nodeicon";
 
     private static AppData singleton;
@@ -85,6 +87,7 @@ public class AppData {
             fontRegistry.get(key);
         }
         imageRegistry = new ImageRegistry();
+        imageRegistry.put(LINK_ICON,ImageDescriptor.createFromFile(AppData.class,"resource/link-icon.png"));
         imageRegistry.put(NODE_ICON,ImageDescriptor.createFromFile(AppData.class,"resource/node-icon.png"));
     }
 

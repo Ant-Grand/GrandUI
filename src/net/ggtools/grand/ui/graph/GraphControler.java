@@ -30,39 +30,24 @@ package net.ggtools.grand.ui.graph;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import net.ggtools.grand.ant.AntTargetNode;
-import net.ggtools.grand.ant.AntTaskLink;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
-import net.ggtools.grand.graph.Link;
-import net.ggtools.grand.graph.Node;
 import net.ggtools.grand.output.DotWriter;
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.PrintFigureOperation;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.printing.Printer;
-import org.eclipse.swt.widgets.Display;
 
 import sf.jzgraph.IDotGraph;
-import sf.jzgraph.IEdge;
-import sf.jzgraph.IGraph;
-import sf.jzgraph.IVertex;
 import sf.jzgraph.dot.impl.Dot;
-import sf.jzgraph.dot.impl.DotGraph;
 
 /**
  * A class responsible of interfacing the Grand graph objects to the GrandUi
@@ -217,124 +202,10 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         selectionChangedDispatcher.dispatch(selectedNodes);
     }
 
-    private final IVertex addNode(final IDotGraph dotGraph, final Map vertexLUT,
-            final Map nameDimensions, final Node node, boolean isStartNode) {
-        final String name = node.getName();
-        final IVertex vertex = dotGraph.newVertex(name, node);
-
-        vertex.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.black);
-        vertex.setAttr(DRAW2DLINEWIDTH_ATTR, 1);
-
-        if (isStartNode) {
-            vertex.setAttr(SHAPE_ATTR, "octagon");
-            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.yellow);
-            vertex.setAttr(DRAW2DLINEWIDTH_ATTR, 2);
-        } else if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
-            vertex.setAttr(SHAPE_ATTR, "box");
-            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.cyan);
-        } else {
-            vertex.setAttr(SHAPE_ATTR, "oval");
-            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.white);
-        }
-
-        if (node.hasAttributes(Node.ATTR_MISSING_NODE)) {
-            vertex.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.gray);
-            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.lightGray);
-        }
-
-        if (node.getDescription() != null) {
-            vertex.setAttr(DESCRIPTION_ATTR, node.getDescription());
-        }
-
-        vertexLUT.put(name, vertex);
-        nameDimensions.put(name, vertex);
-        return vertex;
-    }
-
     private final IDotGraph createDotGraph(Graph graph) {
         if (log.isDebugEnabled()) log.debug("Creating DotGraph");
-        final IDotGraph dotGraph = new DotGraph(IGraph.GRAPH, graph.getName());
-
-        final Map vertexLUT = new HashMap();
-        final Node startNode = graph.getStartNode();
-
-        final Map nameDimensions = new HashMap();
-
-        if (startNode != null) {
-            final IVertex vertex = addNode(dotGraph, vertexLUT, nameDimensions, startNode, true);
-        }
-
-        for (Iterator iter = graph.getNodes(); iter.hasNext();) {
-            final Node node = (net.ggtools.grand.graph.Node) iter.next();
-            if (node.getName().equals("") || node == startNode) {
-                continue;
-            }
-
-            final IVertex vertex = addNode(dotGraph, vertexLUT, nameDimensions, node, false);
-            if (node instanceof AntTargetNode) {
-                final AntTargetNode antNode = (AntTargetNode) node;
-                final String ifCondition = antNode.getIfCondition();
-                if (ifCondition != null) {
-                   vertex.setAttr(IF_CONDITION_ATTR,ifCondition);
-                }
-
-                final String unlessCondition = antNode.getUnlessCondition();
-                if (unlessCondition != null) {
-                   vertex.setAttr(UNLESS_CONDITION_ATTR,unlessCondition);
-                }
-                
-                final String buildFile = antNode.getBuildFile();
-                if (buildFile != null) {
-                    vertex.setAttr(BUILD_FILE_ATTR,buildFile);
-                }
-            }
-        }
-
-        // Update width and height in nodes.
-        Display.getDefault().syncExec(new Runnable() {
-            public void run() {
-                // TODO add a font registry.
-                final Font systemFont = Display.getDefault().getSystemFont();
-                for (Iterator iter = nameDimensions.entrySet().iterator(); iter.hasNext();) {
-                    final Map.Entry entry = (Map.Entry) iter.next();
-                    final String name = (String) entry.getKey();
-                    final IVertex vertex = (IVertex) entry.getValue();
-
-                    final Dimension dim = FigureUtilities.getTextExtents(name, systemFont);
-                    vertex.setAttr(MINWIDTH_ATTR, Math.max(dim.width, 50));
-                    vertex.setAttr(MINHEIGHT_ATTR, Math.max(dim.height, 25));
-                }
-            }
-        });
-
-        for (Iterator iter = graph.getNodes(); iter.hasNext();) {
-            net.ggtools.grand.graph.Node node = (net.ggtools.grand.graph.Node) iter.next();
-            final Collection deps = node.getLinks();
-            int index = 1;
-            final int numDeps = deps.size();
-            for (Iterator iterator = deps.iterator(); iterator.hasNext();) {
-                final Link link = (Link) iterator.next();
-                String name = "";
-                if (numDeps > 1) {
-                    name += index++;
-                }
-                final IEdge edge = dotGraph.newEdge((IVertex) vertexLUT.get(link.getStartNode()
-                        .getName()), (IVertex) vertexLUT.get(link.getEndNode().getName()), name,
-                        link);
-                if (link.hasAttributes(Link.ATTR_WEAK_LINK)) {
-                    edge.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.lightGray);
-                }
-
-                if (link instanceof AntTaskLink) {
-                    AntTaskLink taskLink = (AntTaskLink) link;
-                    
-                    edge.setAttr(LINK_TASK_ATTR,taskLink.getTaskName());
-                    edge.setAttr(LINK_PARAMETERS_ATTR,taskLink.getParameterMap());
-                }
-            }
-        }
-
-        return dotGraph;
+        final DotGraphCreator creator = new DotGraphCreator(graph);
+        return creator.getGraph();
     }
 
     /*
