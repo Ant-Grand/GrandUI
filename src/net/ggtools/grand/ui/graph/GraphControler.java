@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import net.ggtools.grand.ant.AntTargetNode;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.Link;
@@ -269,6 +270,18 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
             }
 
             final IVertex vertex = addNode(dotGraph, vertexLUT, nameDimensions, node, false);
+            if (node instanceof AntTargetNode) {
+                final AntTargetNode antNode = (AntTargetNode) node;
+                final String ifCondition = antNode.getIfCondition();
+                if (ifCondition != null) {
+                   vertex.setAttr(IF_CONDITION_ATTR,ifCondition);
+                }
+
+                final String unlessCondition = antNode.getUnlessCondition();
+                if (unlessCondition != null) {
+                   vertex.setAttr(UNLESS_CONDITION_ATTR,unlessCondition);
+                }
+            }
         }
 
         // Update width and height in nodes.
