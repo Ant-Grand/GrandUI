@@ -76,8 +76,20 @@ import org.xml.sax.SAXException;
 public class ComplexPreferenceStore extends PreferenceStore {
 
     /**
+     * An interface used to load properties like structure. It is used to save
+     * either a {@link PreferenceStore} or a {@link Properties}.
+     * 
+     * @author Christophe Labouisse
+     */
+    private interface PropertyLoader {
+        void addEntry(final String key, final String value);
+
+        void addProperties(final String key, final Element propertiesElement);
+    }
+
+    /**
      * An interface used to save properties like structure. It is used to save
-     * either a PreferenceStore or a Properties.
+     * either a {@link PreferenceStore} or a {@link Properties}.
      * 
      * @author Christophe Labouisse
      */
@@ -207,20 +219,31 @@ public class ComplexPreferenceStore extends PreferenceStore {
             final Element rootElement = doc.getDocumentElement();
             // TODO check version
 
-            NodeList entries = rootElement.getChildNodes();
-            for (int i = 0; i < entries.getLength(); i++) {
-                final Node item = entries.item(i);
-                if ("entry".equals(item.getNodeName())) {
-                    final Element entryElement = (Element) item;
-                    if (entryElement.hasAttribute("key")) {
-                        final Node n = entryElement.getFirstChild();
-                        final String val = (n == null) ? "" : n.getNodeValue();
-                        putValue(entryElement.getAttribute("key"), val);
-                    }
-                }
-            }
+            final PropertyLoader loader = new PropertyLoader() {
 
-            // TODO load properties
+                public void addEntry(String key, String value) {
+                    putValue(key, value);
+                }
+
+                public void addProperties(final String key, final Element propertiesElement) {
+                    final Properties properties = new Properties();
+                    final PropertyLoader loader = new PropertyLoader() {
+
+                        public void addEntry(String key, String value) {
+                            properties.setProperty(key, value);
+                        }
+
+                        public void addProperties(final String key, final Element propertiesElement) {
+                            // DO nothing, no nested properties
+                        }
+                    };
+
+                    loadProperties(propertiesElement, loader);
+                    propertiesTable.put(key, properties);
+                }
+            };
+
+            loadProperties(rootElement, loader);
         } finally {
             if (is != null) is.close();
         }
@@ -264,7 +287,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 final Map.Entry entry = (Map.Entry) iter.next();
                 final String propKey = (String) entry.getKey();
                 final Properties props = (Properties) entry.getValue();
-                Element currentElement = (Element) rootElement.appendChild(doc
+                final Element currentElement = (Element) rootElement.appendChild(doc
                         .createElement("properties"));
                 currentElement.setAttribute("key", propKey);
                 final PropertySaver propertySaver = new PropertySaver() {
@@ -354,6 +377,30 @@ public class ComplexPreferenceStore extends PreferenceStore {
         propertiesTable.remove(key);
         propertiesTable.put(key, myProperties);
         // TODO fire listeners
+    }
+
+    /**
+     * @param propElement
+     */
+    private void loadProperties(final Element propElement, final PropertyLoader loader) {
+        NodeList entries = propElement.getChildNodes();
+        for (int i = 0; i < entries.getLength(); i++) {
+            final Node item = entries.item(i);
+            if ("entry".equals(item.getNodeName())) {
+                final Element entryElement = (Element) item;
+                if (entryElement.hasAttribute("key")) {
+                    final Node n = entryElement.getFirstChild();
+                    final String val = (n == null) ? "" : n.getNodeValue();
+                    loader.addEntry(entryElement.getAttribute("key"), val);
+                }
+            }
+            else if ("properties".equals(item.getNodeName())) {
+                final Element entryElement = (Element) item;
+                if (entryElement.hasAttribute("key")) {
+                    loader.addProperties(entryElement.getAttribute("key"), entryElement);
+                }
+            }
+        }
     }
 
     /**
