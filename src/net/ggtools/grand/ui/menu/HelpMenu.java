@@ -31,26 +31,20 @@
 
 package net.ggtools.grand.ui.menu;
 
-import net.ggtools.grand.ui.actions.OpenFileAction;
-import net.ggtools.grand.ui.actions.PrintAction;
-import net.ggtools.grand.ui.actions.QuitAction;
+import net.ggtools.grand.ui.actions.AboutAction;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 
 /**
  * 
  * 
  * @author Christophe Labouisse
  */
-public class FileMenuManager extends MenuManager {
-    public FileMenuManager(GraphWindow window) {
-        super("File");
-        add(new OpenFileAction(window));
-        add(new Separator());
-        add(new PrintAction(window));
-        add(new Separator());
-        add(new QuitAction());
+public class HelpMenu extends MenuManager {
+
+    public HelpMenu(GraphWindow window) {
+        super("Help");
+        add(new AboutAction(window));
     }
 }

@@ -54,6 +54,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class Application {
 
+    final public static String ABOUT_DIALOG_IMAGE = "net.ggtools.grand.ui.aboutimage";
+
     final public static String APPLICATION_ICON = "net.ggtools.grand.ui.appicon";
 
     final public static String GRAPH_FONT = "net.ggtools.grand.ui.graphfont";
@@ -159,6 +161,8 @@ public class Application {
         
         imageRegistry = new ImageRegistry();
 
+        imageRegistry.put(ABOUT_DIALOG_IMAGE, ImageDescriptor.createFromFile(Application.class,
+        "resource/about.png"));
         imageRegistry.put(APPLICATION_ICON, ImageDescriptor.createFromFile(Application.class,
                 "resource/application.png"));
         imageRegistry.put(LINK_ICON, ImageDescriptor.createFromFile(Application.class,
@@ -189,14 +193,14 @@ public class Application {
     /**
      * @return Returns the buildProperties.
      */
-    final Properties getBuildProperties() {
+    final public Properties getBuildProperties() {
         return buildProperties;
     }
 
     /**
      * @return Returns the versionString.
      */
-    final String getVersionString() {
+    final public String getVersionString() {
         return versionString;
     }
 }

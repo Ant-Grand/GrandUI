@@ -28,7 +28,7 @@
 
 package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.widgets.GraphWindow;
+import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,7 +58,7 @@ public class ReloadGraphAction extends GraphControlerAction {
      * 
      * @param parent
      */
-    public ReloadGraphAction(final GraphWindow parent) {
+    public ReloadGraphAction(final GraphControlerProvider parent) {
         this(parent, DEFAULT_ACTION_NAME);
     }
 
@@ -68,7 +68,7 @@ public class ReloadGraphAction extends GraphControlerAction {
      * @param name
      * @param parent
      */
-    public ReloadGraphAction(final GraphWindow parent, final String name) {
+    public ReloadGraphAction(final GraphControlerProvider parent, final String name) {
         super(parent, name);
     }
 

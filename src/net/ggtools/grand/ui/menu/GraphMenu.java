@@ -37,6 +37,7 @@ import net.ggtools.grand.ui.actions.FilterFromNodeAction;
 import net.ggtools.grand.ui.actions.FilterIsolatedNodesAction;
 import net.ggtools.grand.ui.actions.FilterMissingNodesAction;
 import net.ggtools.grand.ui.actions.FilterToNodeAction;
+import net.ggtools.grand.ui.actions.ReloadGraphAction;
 import net.ggtools.grand.ui.actions.UseBusRoutingAction;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
@@ -52,6 +53,7 @@ public class GraphMenu extends MenuManager {
 
     public GraphMenu(GraphControlerProvider controlerProvider) {
         super("Graph");
+        add(new ReloadGraphAction(controlerProvider));
         add(new Separator("general filters"));
         add(new FilterIsolatedNodesAction(controlerProvider));
         add(new FilterMissingNodesAction(controlerProvider));
