@@ -50,6 +50,7 @@ import net.ggtools.grand.graph.Node;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.BorderLayout;
@@ -265,13 +266,15 @@ public class Draw2dGrapher implements GraphConsumer {
         final String name = edge.getName();
         if (!"".equals(name)) {
             Label label = new Label(name);
-            //label.setOpaque(true);
-            //label.setBackgroundColor(ColorConstants.buttonLightest);
-            //label.setBorder(new LineBorder());
-            final ConnectionLocator locator = new ConnectionLocator(conn, ConnectionLocator.SOURCE);
-            locator.setRelativePosition(PositionConstants.SOUTH_WEST);
+            label.setOpaque(true);
+            label.setBackgroundColor(ColorConstants.buttonLightest);
+            label.setBorder(new LineBorder());
+            //final ConnectionLocator locator = new ConnectionLocator(conn, ConnectionLocator.SOURCE);
+            final ConnectionLocator locator = new MidpointLocator(conn, bends.size()/2);
+            locator.setRelativePosition(PositionConstants.CENTER);
             conn.add(label, locator);
         }
+        // TODO Tooltip sur les edges ?
         contents.add(conn);
     }
 
