@@ -73,9 +73,9 @@ public class PropertyEditor {
          */
         private static final Log log = LogFactory.getLog(PropertyListContentProvider.class);
 
-        private TableViewer tableViewer;
-
         private PropertyList currentPropertyList;
+
+        private TableViewer tableViewer;
 
         public void clearedProperties(Object fillerParameter) {
             tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
@@ -140,6 +140,8 @@ public class PropertyEditor {
     }
 
     private static final int BUTTON_WIDTH = 80;
+
+    private static final int DEFAULT_NUM_LINES = 10;
 
     private static final String[] FILTER_EXTENSIONS = new String[]{"*.properties", "*"};
 
@@ -340,9 +342,9 @@ public class PropertyEditor {
 
     private void createContents(Composite parent, int style) {
         final Composite composite = new Composite(parent, SWT.NONE);
-        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH);
+        final GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH);
         composite.setLayoutData(gridData);
-        GridLayout layout = new GridLayout(GRID_LAYOUT_COLUMNS, false);
+        final GridLayout layout = new GridLayout(GRID_LAYOUT_COLUMNS, false);
         layout.marginWidth = 4;
         composite.setLayout(layout);
 
@@ -358,13 +360,15 @@ public class PropertyEditor {
                 | SWT.HIDE_SELECTION;
 
         table = new Table(parent, style);
-        GridData gridData = new GridData(GridData.FILL_BOTH);
-        gridData.grabExcessVerticalSpace = true;
-        gridData.horizontalSpan = GRID_LAYOUT_COLUMNS;
-        table.setLayoutData(gridData);
-
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
+        table.pack(); // Required as it makes table compute the header size.
+
+        final GridData gridData = new GridData(GridData.FILL_BOTH);
+        gridData.grabExcessVerticalSpace = true;
+        gridData.horizontalSpan = GRID_LAYOUT_COLUMNS;
+        gridData.heightHint = table.getHeaderHeight() * DEFAULT_NUM_LINES;
+        table.setLayoutData(gridData);
 
         TableColumn column;
         column = new TableColumn(table, SWT.LEFT);
