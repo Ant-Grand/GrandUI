@@ -31,25 +31,15 @@
 
 package net.ggtools.grand.ui.graph;
 
-
 /**
- * 
+ * Event send by the model to the controler.
  * 
  * @author Christophe Labouisse
  */
-public class Graph {
-    String fileName;
+public class GraphEvent {
+    public final GraphModel model;
     
-    /**
-     * @return Returns the fileName.
-     */
-    public String getFileName() {
-        return fileName;
+    public GraphEvent(GraphModel model) {
+        this.model = model;
     }
-    
-    public Graph(String str) {
-        fileName = str;
-    }
-    
-    
 }

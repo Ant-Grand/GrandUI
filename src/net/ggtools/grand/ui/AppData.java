@@ -31,7 +31,6 @@
 
 package net.ggtools.grand.ui;
 
-import net.ggtools.grand.ui.graph.GraphCreator;
 
 /**
  * Singleton holding the application data.
@@ -39,12 +38,6 @@ import net.ggtools.grand.ui.graph.GraphCreator;
  * @author Christophe Labouisse
  */
 public class AppData {
-    private static final GraphCreator gCreator = new GraphCreator();
-    
     private AppData() {
-    }
-
-    public static GraphCreator getGraphCreator() {
-        return gCreator;
     }
 }

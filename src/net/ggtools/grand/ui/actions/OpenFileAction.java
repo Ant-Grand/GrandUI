@@ -31,7 +31,6 @@
 
 package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.AppData;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.apache.commons.logging.Log;
@@ -67,7 +66,7 @@ public class OpenFileAction extends Action {
         String buildFileName = dialog.open();
         log.debug("Dialog returned " + buildFileName);
         if (buildFileName != null) {
-            AppData.getGraphCreator().asyncCreateGraph(buildFileName,window);
+            window.getControler().openFile(buildFileName);
             previousPath = dialog.getFilterPath();
         }
     }

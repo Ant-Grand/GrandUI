@@ -31,6 +31,7 @@
 
 package net.ggtools.grand.ui.widgets;
 
+import net.ggtools.grand.ui.graph.GraphControler;
 import net.ggtools.grand.ui.graph.GraphDisplayer;
 import net.ggtools.grand.ui.menu.FileMenuManager;
 
@@ -49,7 +50,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -68,8 +68,9 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
     private Composite drawingArea;
 
     private FigureCanvas canvas;
+    
+    private final GraphControler controler = new GraphControler(this);
 
-    private Image image;
 
     private final static class CanvasScroller extends MouseAdapter implements
             MouseMoveListener {
@@ -128,6 +129,7 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
     protected Control createContents(Composite parent) {
+        log.debug("Creating contents");
         final Composite comp = new Composite(parent, SWT.BORDER);
         comp.setLayout(new FillLayout());
         canvas = new FigureCanvas(comp);
@@ -137,7 +139,6 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
         canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
         final CanvasScroller synchronizer = new CanvasScroller(canvas);
         canvas.addMouseListener(synchronizer);
-        //canvas.addMouseMoveListener(synchronizer);
         log.info("Default font: "
                 + parent.getDisplay().getSystemFont().getFontData()[0].toString());
         return canvas;
@@ -209,6 +210,13 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
         });
     }
 
+    /**
+     * @return Returns the controler.
+     */
+    public final GraphControler getControler() {
+        return controler;
+    }
+    
     /* (non-Javadoc)
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
