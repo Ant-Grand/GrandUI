@@ -108,7 +108,7 @@
 		<!-- Prepare for bin distribution -->
 		<delete dir="tmp" />
 		<mkdir dir="tmp/${product.fullname}" />
-		<copy tofile="tmp/${product.fullname}/grand-ui.jar" file="${libdir}/${product.fullname}.jar" />
+		<copy tofile="tmp/${product.fullname}/lib/grand-ui.jar" file="${libdir}/${product.fullname}.jar" />
 		<copy todir="tmp/${product.fullname}/lib">
 			<fileset dir="${extlibdir}">
 				<exclude name="*swt*.*" />
