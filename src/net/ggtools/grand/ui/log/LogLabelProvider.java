@@ -28,6 +28,9 @@
 package net.ggtools.grand.ui.log;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,13 +55,7 @@ public class LogLabelProvider implements ITableLabelProvider, ITableColorProvide
      */
     private static final Log log = LogFactory.getLog(LogLabelProvider.class);
 
-    private Image errorImage;
-
-    private Image fatalErrorImage;
-
-    private Image infoImage;
-
-    private Image warningImage;
+    private final Map logLevelIcons = new HashMap();
 
     /**
      * 
@@ -79,10 +76,14 @@ public class LogLabelProvider implements ITableLabelProvider, ITableColorProvide
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
     public void dispose() {
-        if (infoImage != null) infoImage.dispose();
-        if (warningImage != null) warningImage.dispose();
-        if (errorImage != null) errorImage.dispose();
-        if (fatalErrorImage != null) fatalErrorImage.dispose();
+        for (Iterator iter = logLevelIcons.entrySet().iterator(); iter.hasNext();) {
+            final Map.Entry entry = (Map.Entry) iter.next();
+            final Object entryValue = entry.getValue();
+            if (entryValue != null && entryValue instanceof Image) {
+                final Image image = (Image) entryValue;
+                image.dispose();
+            }
+        }
     }
 
     /*
@@ -105,34 +106,18 @@ public class LogLabelProvider implements ITableLabelProvider, ITableColorProvide
         if (element instanceof LogEvent) {
             final LogEvent event = (LogEvent) element;
             if (columnIndex == 0) {
-                final int level = event.getLevel().value;
-                if (level == LogEvent.INFO.value) {
-                    if (infoImage == null) {
-                        infoImage = new Image(Display.getCurrent(), this.getClass()
-                                .getResourceAsStream("resource/info_obj.gif"));
-                    }
-                    rc = infoImage;
+                final LogEvent.Level eventLevel = event.getLevel();
+
+                // As logLevelIcons may contains a null value, with check
+                // with containsKeys rather than get() == null.
+                if (logLevelIcons.containsKey(eventLevel)) {
+                    rc = (Image) logLevelIcons.get(eventLevel);
                 }
-                else if (level == LogEvent.WARNING.value) {
-                    if (warningImage == null) {
-                        warningImage = new Image(Display.getCurrent(), this.getClass()
-                                .getResourceAsStream("resource/warning_obj.gif"));
-                    }
-                    rc = warningImage;
-                }
-                else if (level == LogEvent.ERROR.value) {
-                    if (errorImage == null) {
-                        errorImage = new Image(Display.getCurrent(), this.getClass()
-                                .getResourceAsStream("resource/error_obj.gif"));
-                    }
-                    rc = errorImage;
-                }
-                else if (level == LogEvent.FATAL.value) {
-                    if (fatalErrorImage == null) {
-                        fatalErrorImage = new Image(Display.getCurrent(), this.getClass()
-                                .getResourceAsStream("resource/fatalerror_obj.gif"));
-                    }
-                    rc = fatalErrorImage;
+                else {
+                    final String resourceName = "resource/level_" + eventLevel.name.toLowerCase()
+                            + ".gif";
+                    rc = new Image(Display.getCurrent(), this.getClass().getResourceAsStream(
+                            resourceName));
                 }
             }
         }
@@ -151,7 +136,7 @@ public class LogLabelProvider implements ITableLabelProvider, ITableColorProvide
             switch (columnIndex) {
             case 0:
                 // No label for this one.
-                //rc = event.getLevel().name;
+                // rc = event.getLevel().name;
                 break;
 
             case 1:
