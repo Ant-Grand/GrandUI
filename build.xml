@@ -150,7 +150,7 @@
 		<zip destfile="${distdir}/${product.fullname}.zip" basedir="tmp" includes="${product.fullname}/**" />
 	</target>
 
-	<target name="jars" depends="compile.java" description="Create the application jar(s)">
+	<target name="jars" depends="compile.java,incbuildnum" description="Create the application jar(s)">
 		<mkdir dir="${libdir}" />
 		<jar destfile="${libdir}/${product.fullname}.jar" index="true">
 			<fileset dir="${classesdir}" />
@@ -161,7 +161,7 @@
 		</jar>
 	</target>
 
-	<target name="compile.java" depends="init,incbuildnum" description="Compile the java source files">
+	<target name="compile.java" depends="init" description="Compile the java source files">
 		<mkdir dir="${classesdir}" />
 		<javac srcdir="${srcdir}" destdir="${classesdir}" debug="true" optimize="true">
 			<classpath>
@@ -170,7 +170,7 @@
 		</javac>
 	</target>
 	
-	<target name="incbuildnum" depends="init">
+	<target name="incbuildnum">
 		<propertyfile file="etc/buildnum.properties">
 			<entry key="build.date" type="date" value="now" pattern="yyyy-MM-dd HH:mm:ss"/>
 			<entry key="build.number" type="int" operation="+" default="0"/>
@@ -180,10 +180,13 @@
 		<echo message="build number set to ${build.number}"/>
 	</target>
 
-	<target name="clean" description="Remove intermediate files but not external libs">
-		<delete dir="${distdir}" />
+	<target name="clean" depends="clean.dist" description="Remove intermediate files but not external libs">
 		<delete dir="${libdir}" />
 		<delete dir="${classesdir}" />
+	</target>
+	
+	<target name="clean.dist" description="Clean the dist directory">
+		<delete dir="${distdir}" />
 	</target>
 
 	<target name="real.clean" depends="clean" description="Remove intermediate files ant external libs">
