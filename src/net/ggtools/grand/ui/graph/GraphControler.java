@@ -47,6 +47,7 @@ import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tools.ant.BuildException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -309,6 +310,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
             if (log.isInfoEnabled()) log.info("Graph loaded & rendered");
         } catch (final GrandException e) {
             reportError("Cannot open graph", e);
+        } catch (final BuildException e) {
+            reportError("Cannot open graph", e);
         } finally {
             progressMonitor.done();
         }
@@ -353,6 +356,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
             if (log.isInfoEnabled()) log.info("Graph reloaded");
         } catch (GrandException e) {
             reportError("Cannot reload graph", e);
+        } catch (final BuildException e) {
+            reportError("Cannot open graph", e);
         } finally {
             progressMonitor.done();
         }
@@ -448,7 +453,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager {
     private void reportError(final String message, final Throwable e) {
         log.error(message, e);
         final MultiStatus topStatus = new MultiStatus("GrandUI", 0, message, e);
-        for (Throwable nested = e.getCause(); nested != null; nested = nested.getCause()) {
+        for (Throwable nested = e; nested != null; nested = nested.getCause()) {
             final IStatus status = new Status(IStatus.ERROR, "GraphUI", 0, nested.getMessage(),
                     nested);
             topStatus.add(status);
