@@ -29,39 +29,34 @@ package net.ggtools.grand.ui.actions;
 
 import java.util.Collection;
 
-import net.ggtools.grand.ui.graph.Draw2dNode;
+import net.ggtools.grand.ui.graph.GraphControler;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
 import net.ggtools.grand.ui.graph.GraphSelectionListener;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
- * An abstract class implementing basic features for action listening to a graph
- * selection. The default behavior of this class is to enable itself if there is
- * exactly one item selected.
+ * An abstract class implementing basic features for actions listening to a graph.
+ * This class manages the subscription/unsubscription process whenever the controler
+ * gets available/unavailable and implements do nothing methods on events.
  * 
  * @author Christophe Labouisse
  */
-public abstract class GraphSelectionAction extends GraphListenerAction implements
+public abstract class GraphListenerAction extends GraphControlerAction implements
         GraphSelectionListener {
-
-    private String currentNode;
-
     /**
      * @param parent
      */
-    public GraphSelectionAction(GraphControlerProvider parent) {
+    public GraphListenerAction(GraphControlerProvider parent) {
         super(parent);
-        init();
     }
 
     /**
      * @param parent
      * @param text
      */
-    public GraphSelectionAction(GraphControlerProvider parent, String text) {
+    public GraphListenerAction(GraphControlerProvider parent, String text) {
         super(parent, text);
-        init();
     }
 
     /**
@@ -69,9 +64,8 @@ public abstract class GraphSelectionAction extends GraphListenerAction implement
      * @param text
      * @param image
      */
-    public GraphSelectionAction(GraphControlerProvider parent, String text, ImageDescriptor image) {
+    public GraphListenerAction(GraphControlerProvider parent, String text, ImageDescriptor image) {
         super(parent, text, image);
-        init();
     }
 
     /**
@@ -79,43 +73,47 @@ public abstract class GraphSelectionAction extends GraphListenerAction implement
      * @param text
      * @param style
      */
-    public GraphSelectionAction(GraphControlerProvider parent, String text, int style) {
+    public GraphListenerAction(GraphControlerProvider parent, String text, int style) {
         super(parent, text, style);
-        init();
     }
 
-    /**
-     * @return Returns the currentNode.
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphSelectionListener#parameterChanges(net.ggtools.grand.ui.graph.GraphControler)
      */
-    public final String getCurrentNode() {
-        return currentNode;
+    public void parameterChanged(GraphControler controler) {
     }
 
     /*
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphSelectionListener#selectionChanged(java.util.Collection)
      */
-    public void selectionChanged(Collection selectedNodes) {
-        final boolean isEnabled = selectedNodes.size() == 1;
-        if (isEnabled) {
-            currentNode = ((Draw2dNode) selectedNodes.iterator().next()).getName();
-        }
-        setEnabled(isEnabled);
+    public void selectionChanged(Collection selectedNodes) {}
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.actions.GraphControlerAction#postAddHook()
+     */
+    protected void postAddHook() {
+        getGraphControler().addSelectionListener(this);
     }
 
-    /**
-     *  
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.actions.GraphControlerAction#postInitHook()
      */
-    final private void init() {
-        boolean isEnabled = false;
-
+    protected void postInitHook() {
         if (getGraphControler() != null) {
-            Collection selectedNodes = getGraphControler().getSelection();
-            isEnabled = selectedNodes.size() == 1;
-            if (isEnabled) {
-                currentNode = ((Draw2dNode) selectedNodes.iterator().next()).getName();
-            }
+            getGraphControler().addSelectionListener(this);
         }
-        setEnabled(isEnabled);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.actions.GraphControlerAction#preRemoveHook()
+     */
+    protected void preRemoveHook() {
+        getGraphControler().removeSelectionListener(this);
+        setEnabled(false);
     }
 }

@@ -59,26 +59,33 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         FilterChainModelListener {
     private static final Log log = LogFactory.getLog(GraphControler.class);
 
+    private boolean busRoutingEnabled;
+
+    /**
+     * If <code>true</code> the filter chain will be cleared when the next
+     * graph is loaded.
+     */
+    private boolean clearFiltersOnNextLoad;
+
     private final GraphDisplayer dest;
+
+    private Draw2dGraph figure;
+
+    private final FilterChainModel filterChain;
+
+    private Graph graph;
+
+    private final EventManager graphEventManager;
 
     private final GraphModel model;
 
-    private final FilterChainModel filterChain;
+    private final Dispatcher parameterChangedEvent;
 
     private final Draw2dGraphRenderer renderer;
 
     private final Set selectedNodes = new HashSet();
 
-    private final EventManager selectionEventManager;
-
     private final Dispatcher selectionChangedDispatcher;
-
-    private Draw2dGraph figure;
-    
-    /**
-     * If <code>true</code> the filter chain will be cleared when the next graph is loaded.
-     */
-    private boolean clearFiltersOnNextLoad;
 
     public GraphControler(final GraphDisplayer dest) {
         if (log.isDebugEnabled()) log.debug("Creating new controler to " + dest);
@@ -90,11 +97,14 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         // TODO voir si je peux virer le renderer et laisser le graph faire le
         // boulot tout seul.
         renderer = new Draw2dGraphRenderer();
-        selectionEventManager = new EventManager("Selection Event");
+        graphEventManager = new EventManager("Graph Event");
         try {
-            selectionChangedDispatcher = selectionEventManager
+            selectionChangedDispatcher = graphEventManager
                     .createDispatcher(GraphSelectionListener.class.getDeclaredMethod(
                             "selectionChanged", new Class[]{Collection.class}));
+            parameterChangedEvent = graphEventManager.createDispatcher(GraphSelectionListener.class
+                    .getDeclaredMethod("parameterChanged", new Class[]{GraphControler.class}));
+            ;
         } catch (SecurityException e) {
             log.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
@@ -103,6 +113,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         }
         clearFiltersOnNextLoad = true; // Conservative.
+        busRoutingEnabled = false;
     }
 
     /**
@@ -114,19 +125,19 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         filterChain.addFilterLast(filter);
     }
 
-    public void clearFilters() {
-        log.info("Clearing filters");
-        dest.beginTask("Clearing filters", 4);
-        filterChain.clearFilters();
-    }
-
     /*
      * (non-Javadoc)
      * 
      * @see net.ggtools.grand.ui.graph.SelectionManager#addSelectionListener(net.ggtools.grand.ui.graph.GraphSelectionListener)
      */
     public void addSelectionListener(GraphSelectionListener listener) {
-        selectionEventManager.subscribe(listener);
+        graphEventManager.subscribe(listener);
+    }
+
+    public void clearFilters() {
+        log.info("Clearing filters");
+        dest.beginTask("Clearing filters", 4);
+        filterChain.clearFilters();
     }
 
     /*
@@ -158,10 +169,78 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     }
 
     /**
+     * Hack for gtk: print using the dot command.
+     */
+    public void dotPrint() {
+        if (log.isDebugEnabled()) log.debug("Printing graph using dot");
+        final Properties props = new Properties();
+        props.setProperty("dot.graph.attributes", "");
+        try {
+            final DotWriter dotWriter = new DotWriter(props);
+            dotWriter.setProducer(filterChain);
+            dotWriter.setShowGraphName(true);
+            dotWriter.write(new File("GrandDotPrint.dot"));
+            Process proc = Runtime.getRuntime().exec(
+                    "dot -Tps -Gpage=8,10 -o GrandDotPrint.ps GrandDotPrint.dot");
+            proc.waitFor();
+            proc.destroy();
+            log.info("Graph printed to GrandDotPrint.ps");
+        } catch (Exception e) {
+            log.error("Got execption printing", e);
+        }
+    }
+
+    /**
+     * Enable or disable the use of the bus routing algorithm for graph layout.
+     * @param enabled
+     */
+    public void enableBusRouting(final boolean enabled) {
+        if (busRoutingEnabled != enabled) {
+            busRoutingEnabled = enabled;
+            parameterChangedEvent.dispatch(this);
+            final Thread thread = new Thread(new Runnable() {
+                public void run() {
+                    dest.beginTask("Rerouting graph", 3);
+                    renderFilteredGraph();
+                }
+            }, "Graph Layout");
+            thread.start();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.ggtools.grand.ui.graph.FilterChainModelListener#filteredGraphAvailable(net.ggtools.grand.ui.graph.FilterChainModel)
+     */
+    public void filteredGraphAvailable(final Graph filteredGraph) {
+        if (log.isDebugEnabled()) log.debug("New filtered graph available");
+        graph = filteredGraph;
+        dest.worked(1);
+
+        renderFilteredGraph();
+    }
+
+    /**
      * @return Returns the dest.
      */
     public final GraphDisplayer getDest() {
         return dest;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
+     */
+    public Collection getSelection() {
+        return selectedNodes;
+    }
+
+    /**
+     * @return Returns the busRoutingEnabled.
+     */
+    public final boolean isBusRoutingEnabled() {
+        return busRoutingEnabled;
     }
 
     /*
@@ -183,13 +262,34 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         model.openFile(file);
     }
 
+    /**
+     * Prints the current graph.
+     * @param printer
+     */
+    public void print(Printer printer) {
+        if (log.isDebugEnabled()) log.debug("Printing graph");
+        PrintFigureOperation printOp = new PrintFigureOperation(printer, figure);
+        printOp.setPrintMode(PrintFigureOperation.FIT_PAGE);
+        printOp.run("Grand-Printing");
+    }
+
+    /**
+     * Reload the current graph.
+     */
+    public void reloadGraph() {
+        if (log.isInfoEnabled()) log.info("Reloading current graph");
+        dest.beginTask("Reloading graph", 5);
+        clearFiltersOnNextLoad = false;
+        model.reload();
+    }
+
     /*
      * (non-Javadoc)
      * 
      * @see net.ggtools.grand.ui.graph.SelectionManager#removeSelectionListener(net.ggtools.grand.ui.graph.GraphSelectionListener)
      */
     public void removeSelectionListener(GraphSelectionListener listener) {
-        selectionEventManager.unSubscribe(listener);
+        graphEventManager.unSubscribe(listener);
     }
 
     /*
@@ -210,28 +310,15 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         selectionChangedDispatcher.dispatch(selectedNodes);
     }
 
-    private final IDotGraph createDotGraph(Graph graph) {
-        if (log.isDebugEnabled()) log.debug("Creating DotGraph");
-        final DotGraphCreator creator = new DotGraphCreator(graph);
-        return creator.getGraph();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.FilterChainModelListener#filteredGraphAvailable(net.ggtools.grand.ui.graph.FilterChainModel)
+    /**
+     * Creates a Draw2d graph from a Grand graph. This method will work 3 units
+     * and call <code>dest.done()</code> at the end.
      */
-    public void filteredGraphAvailable(final Graph filteredGraph) {
-        if (log.isDebugEnabled()) log.debug("New filtered graph available");
-        final Graph graph = filteredGraph;
-        dest.worked(1);
-
-        // TODO Creation d'un type de IDotGraph pour moi dans lequel les Vertex
-        // & les Edges
-        // soient aussi des objets draw2d.
+    private void renderFilteredGraph() {
         if (log.isDebugEnabled()) log.debug("Creating dot graph");
         dest.subTask("Laying out graph");
-        final IDotGraph dotGraph = createDotGraph(graph);
+        final DotGraphCreator creator = new DotGraphCreator(graph, busRoutingEnabled);
+        final IDotGraph dotGraph = creator.getGraph();
         dest.worked(1);
 
         if (log.isDebugEnabled()) log.debug("Laying out graph");
@@ -247,55 +334,6 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         if (log.isDebugEnabled()) log.debug("Done");
         dest.done();
         dest.setGraph(figure, graph.getName());
-    }
-
-    /**
-     * Reload the current graph.
-     */
-    public void reloadGraph() {
-        if (log.isInfoEnabled()) log.info("Reloading current graph");
-        dest.beginTask("Reloading graph", 5);
-        clearFiltersOnNextLoad = false;
-        model.reload();
-    }
-
-    /**
-     * Prints the current graph.
-     * @param printer
-     */
-    public void print(Printer printer) {
-        if (log.isDebugEnabled()) log.debug("Printing graph");
-        PrintFigureOperation printOp = new PrintFigureOperation(printer,figure);
-        printOp.setPrintMode(PrintFigureOperation.FIT_PAGE);
-        printOp.run("Grand-Printing");
-    }
-
-    /**
-     * Hack for gtk: print using the dot command.
-     */
-    public void dotPrint() {
-        if (log.isDebugEnabled()) log.debug("Printing graph using dot");
-        final Properties props = new Properties();
-        props.setProperty("dot.graph.attributes","");
-        try {
-            final DotWriter dotWriter = new DotWriter(props);
-            dotWriter.setProducer(filterChain);
-            dotWriter.setShowGraphName(true);
-            dotWriter.write(new File("GrandDotPrint.dot"));
-            Process proc = Runtime.getRuntime().exec("dot -Tps -Gpage=8,10 -o GrandDotPrint.ps GrandDotPrint.dot");
-            proc.waitFor();
-            proc.destroy();
-            log.info("Graph printed to GrandDotPrint.ps");
-        } catch (Exception e) {
-            log.error("Got execption printing",e);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
-     */
-    public Collection getSelection() {
-        return selectedNodes;
     }
 
 }

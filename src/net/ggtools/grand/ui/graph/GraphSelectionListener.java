@@ -31,8 +31,7 @@ package net.ggtools.grand.ui.graph;
 import java.util.Collection;
 
 /**
- * Interface to be implemented by class watch the selection state of the graph
- * objects.
+ * Interface to be implemented by class watch state of graph objects.
  * 
  * @author Christophe Labouisse
  */
@@ -43,4 +42,11 @@ public interface GraphSelectionListener {
      * @param selectedNodes a read-only collection of the selected nodes.
      */
     void selectionChanged(Collection selectedNodes);
+    
+    /**
+     * Method called when a graph paramater such as the layout algorithm has changed.
+     * 
+     * @param controler
+     */
+    void parameterChanged(GraphControler controler);
 }

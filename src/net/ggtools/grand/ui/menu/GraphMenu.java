@@ -37,6 +37,7 @@ import net.ggtools.grand.ui.actions.FilterFromNodeAction;
 import net.ggtools.grand.ui.actions.FilterIsolatedNodesAction;
 import net.ggtools.grand.ui.actions.FilterMissingNodesAction;
 import net.ggtools.grand.ui.actions.FilterToNodeAction;
+import net.ggtools.grand.ui.actions.UseBusRoutingAction;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
 import org.eclipse.jface.action.MenuManager;
@@ -60,5 +61,7 @@ public class GraphMenu extends MenuManager {
         add(new FilterToNodeAction(controlerProvider));
         add(new Separator("clear filters"));
         add(new ClearFiltersAction(controlerProvider));
+        add(new Separator("display"));
+        add(new UseBusRoutingAction(controlerProvider));
     }
 }

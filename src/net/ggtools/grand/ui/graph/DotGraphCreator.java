@@ -77,11 +77,14 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
 
     private final Node startNode;
 
+    private final boolean useBusRouting;
+
     /**
      *  
      */
-    public DotGraphCreator(final Graph graph) {
+    public DotGraphCreator(final Graph graph, final boolean useBusRouting) {
         this.graph = graph;
+        this.useBusRouting = useBusRouting;
         nameDimensions = new HashMap();
         dotGraph = new DotGraph(IGraph.GRAPH, graph.getName());
         vertexLUT = new HashMap();
@@ -92,7 +95,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         if (startNode != null) {
             startNode.accept(this);
         }
-        
+
         for (Iterator iter = graph.getNodes(); iter.hasNext();) {
             final Node node = (net.ggtools.grand.graph.Node) iter.next();
             if (node.getName().equals("") || (node == startNode)) {
@@ -243,9 +246,12 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
             vertex.setAttr(DESCRIPTION_ATTR, node.getDescription());
         }
 
-        vertex.setAttr("inthreshold",5);
-        vertex.setAttr("outthreshold",5);
-        
+        if (useBusRouting) {
+            // FIXME use preferences.
+            vertex.setAttr("inthreshold", 5);
+            vertex.setAttr("outthreshold", 5);
+        }
+
         vertexLUT.put(name, vertex);
         nameDimensions.put(name, vertex);
         return vertex;
