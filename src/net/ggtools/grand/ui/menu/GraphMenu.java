@@ -38,7 +38,6 @@ import net.ggtools.grand.ui.actions.FilterIsolatedNodesAction;
 import net.ggtools.grand.ui.actions.FilterMissingNodesAction;
 import net.ggtools.grand.ui.actions.FilterToNodeAction;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
-import net.ggtools.grand.ui.graph.GraphDisplayer;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;

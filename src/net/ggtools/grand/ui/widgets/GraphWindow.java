@@ -28,8 +28,6 @@
 
 package net.ggtools.grand.ui.widgets;
 
-import java.io.File;
-
 import net.ggtools.grand.ui.AppData;
 import net.ggtools.grand.ui.graph.GraphControler;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
@@ -181,7 +179,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#getControler()
      */
-    public GraphControler getControler(File buildFile) {
+    public GraphControler getControler() {
         final GraphTabItem selectedTab = (GraphTabItem) tabFolder.getSelection();
         if (selectedTab == null) {
             return null;
