@@ -27,57 +27,34 @@
  */
 package net.ggtools.grand.ui;
 
-import net.ggtools.grand.log.Logger;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import net.ggtools.grand.log.LoggerFactory;
+
 /**
- * A logger for Grand's core.
  * @author Christophe Labouisse
  */
-public class CommonLogginsLogger implements Logger {
-    private static final Log log = LogFactory.getLog("core");
+public class CommonsLoggingLoggerFactory implements LoggerFactory {
 
     /**
-     * Package only. 
+     * Package instanciation only.
      */
-    CommonLogginsLogger() {
+    CommonsLoggingLoggerFactory() {
     }
 
     /* (non-Javadoc)
-     * @see net.ggtools.grand.log.Logger#log(java.lang.String, int)
+     * @see net.ggtools.grand.log.LoggerFactory#getLog(java.lang.Class)
      */
-    public void log(String message, int logLevel) {
-        switch (logLevel) {
-        case net.ggtools.grand.Log.MSG_DEBUG:
-            log.trace(message);
-            break;
-
-        case net.ggtools.grand.Log.MSG_VERBOSE:
-            log.debug(message);
-            break;
-
-        case net.ggtools.grand.Log.MSG_INFO:
-            log.info(message);
-            break;
-
-        case net.ggtools.grand.Log.MSG_WARN:
-            log.warn(message);
-            break;
-
-        case net.ggtools.grand.Log.MSG_ERR:
-            log.error(message);
-            break;
-        }
+    public Log getLog(Class clazz) {
+        return LogFactory.getLog(clazz);
     }
 
     /* (non-Javadoc)
-     * @see net.ggtools.grand.log.Logger#setLogLevel(int)
+     * @see net.ggtools.grand.log.LoggerFactory#getLog(java.lang.String)
      */
-    public void setLogLevel(int logLevel) {
-        // TODO Auto-generated method stub
-
+    public Log getLog(String name) {
+        return LogFactory.getLog(name);
     }
 
 }

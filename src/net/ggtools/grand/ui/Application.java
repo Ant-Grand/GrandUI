@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
 
+import net.ggtools.grand.log.LoggerManager;
 import net.ggtools.grand.ui.widgets.ExceptionDialog;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 import net.ggtools.grand.ui.widgets.Splash;
@@ -222,7 +223,7 @@ public class Application {
         // Put the same icons for all windows & dialogs.
         Window.setDefaultImage(getImage(APPLICATION_ICON));
         
-        net.ggtools.grand.Log.setLogger(new CommonLogginsLogger());
+        LoggerManager.setFactory(new CommonsLoggingLoggerFactory());
     }
 
     /**
