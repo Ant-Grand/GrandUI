@@ -43,8 +43,9 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -61,7 +62,7 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
 
     private Composite drawingArea;
 
-    private FigureCanvas graph;
+    private FigureCanvas canvas;
 
     private Image image;
 
@@ -80,42 +81,16 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
     protected Control createContents(Composite parent) {
-       //FillLayout layout = new FillLayout();
-        //parent.setLayout(layout);
-//        final ScrolledComposite sc = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL
-//                | SWT.BORDER);
-//        FillLayout layout = new FillLayout();
-//        sc.setLayout(layout);
-
-        //graph = new Label(sc, SWT.BORDER);
-        //sc.setContent(graph);
-        //final String imageName = "/data/images/moi/xine_snapshot-1.png";
-        //setImage(imageName);
-        //parent.setLayout(new GridLayout(2, false));
-        graph = new FigureCanvas(parent);
-        //graph.setContents(contents = getContents());
-        graph.getViewport().setContentsTracksHeight(true);
-        graph.getViewport().setContentsTracksWidth(true);
-        graph.setLayoutData(new GridData(GridData.FILL_BOTH));
-        //parent.setContent(graph);
-        Object o = ColorConstants.lightGray; // Init ColorConstants.
-        log.info("Default font: "+parent.getDisplay().getSystemFont().getFontData()[0].toString());
-        return graph;
+        final Composite comp = new Composite(parent, SWT.BORDER);
+        comp.setLayout(new FillLayout());
+        canvas = new FigureCanvas(comp);
+        canvas.getViewport().setContentsTracksHeight(true);
+        canvas.getViewport().setContentsTracksWidth(true);
+        canvas.setBackground(ColorConstants.white);
+        log.info("Default font: "
+                + parent.getDisplay().getSystemFont().getFontData()[0].toString());
+        return canvas;
     }
-
-    /**
-     * @param imageName
-     */
-//    private void setImage(final String imageName) {
-//        if (image != null) {
-//            image.dispose();
-//            image = null;
-//        }
-//        log.info("Reading " + imageName);
-//        image = new Image(graph.getDisplay(), imageName);
-//        graph.setImage(image);
-//        graph.setSize(graph.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-//    }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.window.ApplicationWindow#createMenuManager()
@@ -177,7 +152,7 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
         getShell().getDisplay().asyncExec(new Runnable() {
 
             public void run() {
-                graph.setContents(figure);
+                canvas.setContents(figure);
             }
         });
     }
