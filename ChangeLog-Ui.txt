@@ -1,0 +1,14 @@
+$Id$
+
+Release 0.2:
+
+* The UI can now open several graphs in several tabs,
+* Rewritten tootips for both Node & Links,
+* The antcall/ant parameters are now displayed on the link's tooltip,
+* Upgrade to Eclipse RCP 3.0RC2, Draw2d 20040610 and Grand (core) 1.4,
+* The graph can use the bus routing capability of JzGraph.
+
+
+Release 0.1:
+
+* Initial release.
