@@ -50,7 +50,7 @@ public class Splash {
         shell = new Shell(display, SWT.NO_TRIM | SWT.NO_BACKGROUND | SWT.ON_TOP);
         shell.setLayout(new FillLayout());
         final Label label = new Label(shell, SWT.NONE);
-        image = new Image(display, getClass().getResourceAsStream("../resource/splash.png"));
+        image = new Image(display, getClass().getResourceAsStream("/net/ggtools/grand/ui/resource/splash.png"));
         label.setImage(image);
     }
 

@@ -156,7 +156,7 @@
 			<fileset dir="${classesdir}" />
 			<fileset dir="${confdir}" />
 			<manifest>
-				<attribute name="Main-Class" value="net.ggtools.grand.ui.Main" />
+				<attribute name="Main-Class" value="net.ggtools.grand.ui.Application" />
 			</manifest>
 		</jar>
 	</target>
