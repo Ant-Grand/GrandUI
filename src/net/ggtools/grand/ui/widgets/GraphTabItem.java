@@ -63,11 +63,14 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
 
         private int startDragX, startDragY;
 
-        final Viewport viewport;
+        private final Viewport viewport;
+        
+        private boolean inDragMode;
 
         public CanvasScroller(FigureCanvas c) {
             canvas = c;
             viewport = canvas.getViewport();
+            inDragMode = false;
         }
 
         /*
@@ -76,12 +79,14 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
          * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
          */
         public void mouseDown(MouseEvent e) {
-            if (e.button == 2 || e.button == 1) {
+            log.trace("Got mouse down");
+            if (!inDragMode && (e.button == 2 || e.button == 1)) {
                 final Point vpLocation = viewport.getViewLocation();
                 startDragX = vpLocation.x + e.x;
                 startDragY = vpLocation.y + e.y;
                 canvas.addMouseMoveListener(this);
                 getControl().setCursor(Cursors.SIZEALL);
+                inDragMode = true;
             }
         }
 
@@ -100,9 +105,11 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
          * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
          */
         public void mouseUp(MouseEvent e) {
-            if (e.button == 2 || e.button == 1) {
+            log.trace("Got mouse up");
+            if (inDragMode && (e.button == 2 || e.button == 1)) {
                 canvas.removeMouseMoveListener(this);
                 getControl().setCursor(Cursors.ARROW);
+                inDragMode = false;
             }
         }
     }
