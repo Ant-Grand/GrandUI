@@ -35,7 +35,7 @@ import net.ggtools.grand.log.LoggerFactory;
 /**
  * @author Christophe Labouisse
  */
-public class CommonsLoggingLoggerFactory implements LoggerFactory {
+class CommonsLoggingLoggerFactory implements LoggerFactory {
 
     /**
      * Package instanciation only.
