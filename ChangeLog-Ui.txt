@@ -1,5 +1,10 @@
 $Id$
 
+Release 0.3.1 (build number 50):
+
+* Repacking as the 0.3 archives were corrupted.
+
+
 Release 0.3 (build number 48):
 
 * Double clicking on a external target now opens this target's build
