@@ -166,6 +166,7 @@ public class Analyzer extends ApplicationWindow {
         Analyzer analyzer = new Analyzer();
         analyzer.setBlockOnOpen(true);
         analyzer.open();
+        System.exit(0);
     }
 
 }
