@@ -63,16 +63,6 @@ import org.eclipse.swt.widgets.TableItem;
  * @author Christophe Labouisse
  */
 public class PropertyEditor {
-    private static final int BUTTON_WIDTH = 80;
-
-    private static final int GRID_LAYOUT_COLUMNS = 6;
-
-    private static final String[] FILTER_EXTENSIONS = new String[]{"*.properties", "*"};
-
-    /**
-     * Logger for this class
-     */
-    private static final Log log = LogFactory.getLog(PropertyEditor.class);
 
     private static final class PropertyListContentProvider implements IStructuredContentProvider,
             PropertyChangedListener {
@@ -82,6 +72,14 @@ public class PropertyEditor {
         private static final Log log = LogFactory.getLog(PropertyListContentProvider.class);
 
         private TableViewer tableViewer;
+
+        public void clearedProperties(Object fillerParameter) {
+            tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
+                public void run() {
+                    tableViewer.refresh();
+                }
+            });
+        }
 
         public void dispose() {
             // TODO Auto-generated method stub
@@ -128,20 +126,23 @@ public class PropertyEditor {
                 }
             });
         }
-
-        public void clearedProperties(Object fillerParameter) {
-            tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
-                public void run() {
-                    tableViewer.refresh();
-                }
-            });
-        }
     }
+
+    private static final int BUTTON_WIDTH = 80;
+
+    private static final String[] FILTER_EXTENSIONS = new String[]{"*.properties", "*"};
+
+    private static final int GRID_LAYOUT_COLUMNS = 6;
+
+    /**
+     * Logger for this class
+     */
+    private static final Log log = LogFactory.getLog(PropertyEditor.class);
 
     private static final String NAME_COLUMN = "Name";
 
     private static final String VALUE_COLUMN = "Value";
-    
+
     /**
      * Main method to launch the window
      */
@@ -182,6 +183,10 @@ public class PropertyEditor {
         propertyList = new PropertyList();
         createContents(parent, style);
         tableViewer.setInput(propertyList);
+    }
+
+    public Properties getValues() {
+        return propertyList.getAsProperties();
     }
 
     /**
@@ -434,9 +439,5 @@ public class PropertyEditor {
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) display.sleep();
         }
-    }
-
-    public Properties getValues() {
-        return propertyList.getAsProperties();
     }
 }
