@@ -94,7 +94,7 @@
 		</zip>
 	</target>
 
-	<target name="bin-dist" depends="jars,set-swt-properties">
+	<target name="bin-dist" depends="clean,jars,set-swt-properties">
 		<mkdir dir="${distdir}" />
 		<get-extract-zip dest="alien-swt" url="${url.eclipse.alien.swt}" libdir="${extlibdir}/${dist.aliendir}">
 			<select>
