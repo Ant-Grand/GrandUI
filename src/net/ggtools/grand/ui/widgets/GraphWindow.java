@@ -34,6 +34,7 @@ package net.ggtools.grand.ui.widgets;
 import net.ggtools.grand.ui.graph.GraphControler;
 import net.ggtools.grand.ui.graph.GraphDisplayer;
 import net.ggtools.grand.ui.menu.FileMenuManager;
+import net.ggtools.grand.ui.menu.GraphMenu;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,6 +54,7 @@ import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -63,14 +65,17 @@ import org.eclipse.swt.widgets.Shell;
 public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
     private static final Log log = LogFactory.getLog(GraphWindow.class);
 
-    private MenuManager menuManager;
+    private MenuManager contextMenuManager;
 
     private Composite drawingArea;
 
     private FigureCanvas canvas;
     
-    private final GraphControler controler = new GraphControler(this);
+    private final GraphControler controler;
 
+    private Menu contextMenu;
+
+    private MenuManager manager;
 
     private final static class CanvasScroller extends MouseAdapter implements
             MouseMoveListener {
@@ -120,6 +125,7 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
 
     public GraphWindow(Shell parent) {
         super(parent);
+        controler = new GraphControler(this);
         setBlockOnOpen(true);
         addStatusLine();
         addMenuBar();
@@ -139,8 +145,8 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
         canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
         final CanvasScroller synchronizer = new CanvasScroller(canvas);
         canvas.addMouseListener(synchronizer);
-        log.info("Default font: "
-                + parent.getDisplay().getSystemFont().getFontData()[0].toString());
+        manager = new GraphMenu(this);
+        contextMenu = manager.createContextMenu(canvas);
         return canvas;
     }
 
@@ -149,10 +155,11 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
      */
     protected MenuManager createMenuManager() {
         log.debug("Creating menu manager");
-        menuManager = new MenuManager();
-        menuManager.add(new FileMenuManager(this));
-        menuManager.setVisible(true);
-        return menuManager;
+        contextMenuManager = new MenuManager();
+        contextMenuManager.add(new FileMenuManager(this));
+        contextMenuManager.add(new GraphMenu(this));
+        contextMenuManager.setVisible(true);
+        return contextMenuManager;
     }
 
     /* (non-Javadoc)
@@ -215,6 +222,17 @@ public class GraphWindow extends ApplicationWindow implements GraphDisplayer {
      */
     public final GraphControler getControler() {
         return controler;
+    }
+    
+    public final Menu getContextMenu() {
+        return contextMenu;
+    }
+    
+    /**
+     * @return Returns the contextMenuManager.
+     */
+    public final MenuManager getContextMenuManager() {
+        return contextMenuManager;
     }
     
     /* (non-Javadoc)

@@ -66,7 +66,15 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
     private Color selectedBgColor;
 
     private Draw2dGraph graph;
+    
+    private String name;
 
+    /**
+     * @return Returns the name.
+     */
+    public final String getName() {
+        return name;
+    }
     public Draw2dNode(Draw2dGraph graph, IVertex vertex) {
         super();
         
@@ -118,8 +126,8 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
 
         label = new Label();
 
-        final String text = vertex.getAttrString(LABEL_ATTR);
-        label.setText(text);
+        name = vertex.getAttrString(LABEL_ATTR);
+        label.setText(name);
         label.setForegroundColor(nodeFgColor);
         setLayoutManager(new BorderLayout());
         add(label, BorderLayout.CENTER);

@@ -63,7 +63,7 @@ import sf.jzgraph.dot.impl.DotRoute;
 public class Draw2dGraphRenderer implements DotGraphAttributes {
     private static final Log log = LogFactory.getLog(Draw2dGraphRenderer.class);
 
-    public IFigure render(IDotGraph dotGraph) {
+    public Draw2dGraph render(IDotGraph dotGraph) {
         if (log.isDebugEnabled()) log.debug("Rendering Draw2d Graph");
         final Draw2dGraph contents = new Draw2dGraph();
 

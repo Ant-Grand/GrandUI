@@ -1,6 +1,6 @@
 // $Id$
 /* ====================================================================
- * Copyright (c) 2002-2003, Christophe Labouisse
+ * Copyright (c) 2002-2004, Christophe Labouisse
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,22 +31,34 @@
 
 package net.ggtools.grand.ui.graph;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.swt.widgets.Menu;
-
-
 /**
  * 
  * 
  * @author Christophe Labouisse
  */
-public interface GraphDisplayer {
-    final static int UNKOWN_WORK = IProgressMonitor.UNKNOWN;
-    void beginUpdate(int totalWork);
-    void worked(int workDone);
-    void finished();
-    void setGraph(IFigure graph);
-    GraphControler getControler();
-    Menu getContextMenu();
+public interface SelectionManager {
+    void addSelectionListener(GraphSelectionListener listener);
+    
+    void removeSelectionListener(GraphSelectionListener listener);
+    
+    /**
+     * Deselect a node.
+     * 
+     * @param node
+     */
+    void deselectNode(Draw2dNode node);
+
+    /**
+     * Selects a specific node in the graph.
+     * 
+     * @param node node to select
+     * @param addToSelection if <code>true</code> the node is added to the current selection rather than replacing it.
+     */
+    void selectNode(final Draw2dNode node, final boolean addToSelection);
+
+    /**
+     * Deselect all nodes in the graph.
+     */
+    void deselectAllNodes();
+
 }

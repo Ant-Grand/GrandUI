@@ -28,20 +28,25 @@
 
 package net.ggtools.grand.ui.graph;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
+import net.ggtools.grand.exceptions.GrandException;
+import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.Link;
 import net.ggtools.grand.graph.Node;
+import net.ggtools.grand.ui.event.EventDispatcher;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
@@ -59,8 +64,21 @@ import sf.jzgraph.dot.impl.DotGraph;
  * 
  * @author Christophe Labouisse
  */
-public class GraphControler implements GraphModelListener, DotGraphAttributes {
+public class GraphControler implements GraphModelListener, DotGraphAttributes, SelectionManager {
     private static final Log log = LogFactory.getLog(GraphControler.class);
+    
+    static {
+        try {
+            SELECTION_CHANGED_METHOD = GraphSelectionListener.class.getDeclaredMethod(
+                    "selectionChanged", new Class[]{Collection.class});
+        } catch (SecurityException e) {
+            log.fatal("Caught exception initializing GraphControler", e);
+        } catch (NoSuchMethodException e) {
+            log.fatal("Caught exception initializing GraphControler", e);
+        }
+    }
+
+    private static Method SELECTION_CHANGED_METHOD;
 
     private final GraphDisplayer dest;
 
@@ -68,18 +86,123 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes {
 
     private final Draw2dGraphRenderer renderer;
 
+    private final Set selectedNodes = new HashSet();
+
+    private final EventDispatcher selectionEventDispatcher;
     public GraphControler(final GraphDisplayer dest) {
         if (log.isDebugEnabled()) log.debug("Creating new controler to " + dest);
         this.dest = dest;
         model = new GraphModel();
         model.addListener(this);
+        // TODO voir si je peux virer le renderer et laisser le graph faire le
+        // boulot tout seul.
         renderer = new Draw2dGraphRenderer();
+        selectionEventDispatcher = new EventDispatcher("Selection Event");
     }
 
-    public void openFile(final String fileName) {
-        if (log.isInfoEnabled()) log.info("Opening " + fileName);
-        dest.beginUpdate(5);
-        model.openFile(fileName);
+    /**
+     * @param filter
+     */
+    public void addFilter(GraphFilter filter) {
+        log.info("Adding filter "+filter);
+        
+        // TODO Add a filter API to the graph model, etc.
+        dest.beginUpdate(4);
+        filter.setProducer(model.getProducer());
+        Graph graph = null;
+        
+        try {
+            graph = filter.getGraph();
+        } catch (GrandException e) {
+            log.error("Caught exception",e);
+        }
+        dest.worked(1);
+
+        final IDotGraph dotGraph = createDotGraph(graph);
+        dest.worked(1);
+
+        if (log.isDebugEnabled()) log.debug("Laying out graph");
+        final Dot app = new Dot();
+        app.layout(dotGraph, 0, -7);
+        dest.worked(1);
+
+        final Draw2dGraph figure = renderer.render(dotGraph);
+        figure.setSelectionManager(this);
+        dest.worked(1);
+
+        if (log.isDebugEnabled()) log.debug("Done");
+        dest.finished();
+        dest.setGraph(figure);
+    }
+    
+    public void clearFilters() {
+        if (log.isDebugEnabled()) log.debug("Clearing filters");
+        dest.beginUpdate(4);
+        final Graph graph = model.getGraph();
+        dest.worked(1);
+
+        // TODO Creation d'un type de IDotGraph pour moi dans lequel les Vertex
+        // & les Edges
+        // soient aussi des objets draw2d.
+        final IDotGraph dotGraph = createDotGraph(graph);
+        dest.worked(1);
+
+        if (log.isDebugEnabled()) log.debug("Laying out graph");
+        final Dot app = new Dot();
+        app.layout(dotGraph, 0, -7);
+        dest.worked(1);
+
+        final Draw2dGraph figure = renderer.render(dotGraph);
+        figure.setSelectionManager(this);
+        dest.worked(1);
+
+        if (log.isDebugEnabled()) log.debug("Done");
+        dest.finished();
+        dest.setGraph(figure);
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.ggtools.grand.ui.graph.SelectionManager#addSelectionListener(net.ggtools.grand.ui.graph.GraphSelectionListener)
+     */
+    public void addSelectionListener(GraphSelectionListener listener) {
+        selectionEventDispatcher.subscribe(listener);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.ggtools.grand.ui.graph.SelectionManager#deselectAllNodes()
+     */
+    public void deselectAllNodes() {
+        for (final Iterator iter = selectedNodes.iterator(); iter.hasNext();) {
+            final Draw2dNode currentNode = (Draw2dNode) iter.next();
+            currentNode.setSelected(false);
+        }
+        selectedNodes.clear();
+        selectionEventDispatcher.dispatchEvent(selectedNodes, SELECTION_CHANGED_METHOD);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.ggtools.grand.ui.graph.SelectionManager#deselectNode(net.ggtools.grand.ui.graph.Draw2dNode)
+     */
+    public void deselectNode(Draw2dNode node) {
+        log.debug("Deselect node " + node);
+        if (node.isSelected()) {
+            selectedNodes.remove(node);
+            node.setSelected(false);
+        }
+        selectionEventDispatcher.dispatchEvent(selectedNodes, SELECTION_CHANGED_METHOD);
+    }
+
+    /**
+     * @return Returns the dest.
+     */
+    public final GraphDisplayer getDest() {
+        return dest;
     }
 
     /*
@@ -92,24 +215,92 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes {
         dest.worked(1);
         final Graph graph = model.getGraph();
         dest.worked(1);
-        
+
         // TODO Creation d'un type de IDotGraph pour moi dans lequel les Vertex
         // & les Edges
         // soient aussi des objets draw2d.
         final IDotGraph dotGraph = createDotGraph(graph);
         dest.worked(1);
-        
+
         if (log.isDebugEnabled()) log.debug("Laying out graph");
         final Dot app = new Dot();
         app.layout(dotGraph, 0, -7);
         dest.worked(1);
-        
-        final IFigure figure = renderer.render(dotGraph);
+
+        final Draw2dGraph figure = renderer.render(dotGraph);
+        figure.setSelectionManager(this);
         dest.worked(1);
-        
+
         if (log.isDebugEnabled()) log.debug("Done");
         dest.finished();
         dest.setGraph(figure);
+    }
+
+    public void openFile(final String fileName) {
+        if (log.isInfoEnabled()) log.info("Opening " + fileName);
+        dest.beginUpdate(5);
+        model.openFile(fileName);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.ggtools.grand.ui.graph.SelectionManager#removeSelectionListener(net.ggtools.grand.ui.graph.GraphSelectionListener)
+     */
+    public void removeSelectionListener(GraphSelectionListener listener) {
+        selectionEventDispatcher.unSubscribe(listener);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.ggtools.grand.ui.graph.SelectionManager#selectNode(net.ggtools.grand.ui.graph.Draw2dNode,
+     *      boolean)
+     */
+    public void selectNode(final Draw2dNode node, final boolean addToSelection) {
+        log.debug("Select node " + node);
+        if (!node.isSelected()) {
+            if (!addToSelection) {
+                deselectAllNodes();
+            }
+            selectedNodes.add(node);
+            node.setSelected(true);
+        }
+        selectionEventDispatcher.dispatchEvent(selectedNodes, SELECTION_CHANGED_METHOD);
+    }
+
+    private final IVertex addNode(final IDotGraph dotGraph, final Map vertexLUT,
+            final Map nameDimensions, final Node node, boolean isStartNode) {
+        final String name = node.getName();
+        final IVertex vertex = dotGraph.newVertex(name, node);
+
+        vertex.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.black);
+        vertex.setAttr(DRAW2DLINEWIDTH_ATTR, 1);
+
+        if (isStartNode) {
+            vertex.setAttr(SHAPE_ATTR, "octagon");
+            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.yellow);
+            vertex.setAttr(DRAW2DLINEWIDTH_ATTR, 2);
+        } else if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
+            vertex.setAttr(SHAPE_ATTR, "box");
+            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.cyan);
+        } else {
+            vertex.setAttr(SHAPE_ATTR, "oval");
+            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.white);
+        }
+
+        if (node.hasAttributes(Node.ATTR_MISSING_NODE)) {
+            vertex.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.gray);
+            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.lightGray);
+        }
+
+        if (node.getDescription() != null) {
+            vertex.setAttr(DESCRIPTION_ATTR, node.getDescription());
+        }
+
+        vertexLUT.put(name, vertex);
+        nameDimensions.put(name, vertex);
+        return vertex;
     }
 
     private final IDotGraph createDotGraph(Graph graph) {
@@ -172,37 +363,4 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes {
         return dotGraph;
     }
 
-    private final IVertex addNode(final IDotGraph dotGraph, final Map vertexLUT,
-            final Map nameDimensions, final Node node, boolean isStartNode) {
-        final String name = node.getName();
-        final IVertex vertex = dotGraph.newVertex(name, node);
-
-        vertex.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.black);
-        vertex.setAttr(DRAW2DLINEWIDTH_ATTR, 1);
-
-        if (isStartNode) {
-            vertex.setAttr(SHAPE_ATTR, "octagon");
-            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.yellow);
-            vertex.setAttr(DRAW2DLINEWIDTH_ATTR, 2);
-        } else if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
-            vertex.setAttr(SHAPE_ATTR, "box");
-            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.cyan);
-        } else {
-            vertex.setAttr(SHAPE_ATTR, "oval");
-            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.white);
-        }
-
-        if (node.hasAttributes(Node.ATTR_MISSING_NODE)) {
-            vertex.setAttr(DRAW2DFGCOLOR_ATTR, ColorConstants.gray);
-            vertex.setAttr(DRAW2DFILLCOLOR_ATTR, ColorConstants.lightGray);
-        }
-
-        if (node.getDescription() != null) {
-            vertex.setAttr(DESCRIPTION_ATTR, node.getDescription());
-        }
-
-        vertexLUT.put(name, vertex);
-        nameDimensions.put(name, vertex);
-        return vertex;
-    }
 }

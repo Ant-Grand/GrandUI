@@ -53,7 +53,7 @@ public class OpenFileAction extends Action {
     
     private static final String DEFAULT_ACTION_NAME = "Open";
 
-    private GraphWindow window;
+    private final GraphWindow window;
     private String previousPath;
 
     /* (non-Javadoc)

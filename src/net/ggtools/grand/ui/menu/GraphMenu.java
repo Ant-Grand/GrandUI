@@ -29,24 +29,30 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.ggtools.grand.ui.graph;
+package net.ggtools.grand.ui.menu;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.swt.widgets.Menu;
+import net.ggtools.grand.ui.actions.ClearFiltersAction;
+import net.ggtools.grand.ui.actions.FilterConnectedToNodeAction;
+import net.ggtools.grand.ui.actions.FilterFromNodeAction;
+import net.ggtools.grand.ui.actions.FilterToNodeAction;
+import net.ggtools.grand.ui.widgets.GraphWindow;
 
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 
 /**
  * 
  * 
  * @author Christophe Labouisse
  */
-public interface GraphDisplayer {
-    final static int UNKOWN_WORK = IProgressMonitor.UNKNOWN;
-    void beginUpdate(int totalWork);
-    void worked(int workDone);
-    void finished();
-    void setGraph(IFigure graph);
-    GraphControler getControler();
-    Menu getContextMenu();
+public class GraphMenu extends MenuManager {
+
+    public GraphMenu(GraphWindow window) {
+        super("Graph");
+        add(new FilterConnectedToNodeAction(window));
+        add(new FilterFromNodeAction(window));
+        add(new FilterToNodeAction(window));
+        add(new Separator());
+        add(new ClearFiltersAction(window));
+    }
 }

@@ -28,10 +28,6 @@
 
 package net.ggtools.grand.ui.graph;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.InputEvent;
@@ -45,7 +41,7 @@ import sf.jzgraph.IVertex;
 /**
  * @author Christophe Labouisse
  */
-public class Draw2dGraph extends Panel {
+public class Draw2dGraph extends Panel implements SelectionManager {
     private final class NodeMouseListener extends MouseListener.Stub {
         private final Log log = LogFactory.getLog(NodeMouseListener.class);
 
@@ -62,27 +58,79 @@ public class Draw2dGraph extends Panel {
          * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
          */
         public void mousePressed(MouseEvent me) {
-            if (me.button == 1) {
-                log.trace("Button 1 pressed on " + node);
-                boolean addToSelection;
-                if ((me.getState() & InputEvent.CONTROL) == 0) {
-                    addToSelection = false;
-                } else {
-                    addToSelection = true;
+            switch (me.button) {
+            case (1):
+                {
+                    log.trace("Button 1 pressed on " + node);
+                    boolean addToSelection;
+                    if ((me.getState() & InputEvent.CONTROL) == 0) {
+                        addToSelection = false;
+                    } else {
+                        addToSelection = true;
+                    }
+                    toggleSelection(node, addToSelection);
+                    me.consume();
+                    break;
                 }
-                toggleSelection(node, addToSelection);
-                me.consume();
+            case (3):
+                {
+                    log.trace("Button 3 pressed on " + node);
+                    if (!node.isSelected()) {
+                        selectNode(node, false);
+                    }
+                    // TODO rewrite in a clean way
+                    if (selectionManager != null) {
+                        ((GraphControler) selectionManager).getDest().getContextMenu()
+                                .setVisible(true);
+                    }
+                    break;
+                }
             }
         }
+
     }
 
     private static final Log log = LogFactory.getLog(Draw2dGraph.class);
 
-    Set selectedNodes = new HashSet();
+    private SelectionManager selectionManager;
 
     public Draw2dGraph() {
         super();
         setLayoutManager(new XYLayout());
+        addMouseListener(new MouseListener.Stub() {
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
+             */
+            public void mousePressed(MouseEvent me) {
+                switch (me.button) {
+                case (1):
+                    {
+                        log.trace("Button 1 pressed on graph");
+                        deselectAllNodes();
+                        me.consume();
+                        break;
+                    }
+                case (3):
+                    {
+                        log.trace("Button 3 pressed on graph");
+                        // TODO rewrite in a clean way
+                        if (selectionManager != null) {
+                            ((GraphControler) selectionManager).getDest().getContextMenu()
+                                    .setVisible(true);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * @param listener
+     */
+    public void addSelectionListener(GraphSelectionListener listener) {
+        if (selectionManager != null) selectionManager.addSelectionListener(listener);
     }
 
     public Draw2dNode createNode(IVertex vertex) {
@@ -93,30 +141,51 @@ public class Draw2dGraph extends Panel {
         return node;
     }
 
+    /**
+     *  
+     */
+    public void deselectAllNodes() {
+        if (selectionManager != null) selectionManager.deselectAllNodes();
+    }
+
+    /**
+     * @param node
+     */
     public void deselectNode(Draw2dNode node) {
-        log.debug("Deselect node " + node);
-        if (node.isSelected()) {
-            selectedNodes.remove(node);
-            node.setSelected(false);
-        }
+        if (selectionManager != null) selectionManager.deselectNode(node);
     }
 
-    public void selectNode(final Draw2dNode node, final boolean addToSelection) {
-        log.debug("Select node " + node);
-        if (!node.isSelected()) {
-            if (!addToSelection) {
-                for (final Iterator iter = selectedNodes.iterator(); iter.hasNext();) {
-                    Draw2dNode currentNode = (Draw2dNode) iter.next();
-                    currentNode.setSelected(false);
-                    iter.remove();
-                }
-            }
-            selectedNodes.add(node);
-            node.setSelected(true);
-        }
+    /**
+     * @return Returns the controler.
+     */
+    public final SelectionManager getControler() {
+        return selectionManager;
     }
 
-    public void toggleSelection(final Draw2dNode node, final boolean addToSelection) {
+    /**
+     * @param listener
+     */
+    public void removeSelectionListener(GraphSelectionListener listener) {
+        if (selectionManager != null) selectionManager.removeSelectionListener(listener);
+    }
+
+    /**
+     * @param node
+     * @param addToSelection
+     */
+    public void selectNode(Draw2dNode node, boolean addToSelection) {
+        if (selectionManager != null) selectionManager.selectNode(node, addToSelection);
+    }
+
+    /**
+     * @param selectionManager
+     *            The controler to set.
+     */
+    public final void setSelectionManager(SelectionManager selectionManager) {
+        this.selectionManager = selectionManager;
+    }
+
+    private void toggleSelection(final Draw2dNode node, final boolean addToSelection) {
         if (node.isSelected()) {
             deselectNode(node);
         } else {

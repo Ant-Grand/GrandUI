@@ -78,6 +78,13 @@ public class GraphModel {
     
     private Set listeners = new LinkedHashSet();
 
+    /**
+     * TODO for test purpose only, remove.
+     * @return Returns the producer.
+     */
+    public final GraphProducer getProducer() {
+        return producer;
+    }
     public void openFile(final String fileName) {
         final Thread thread = new Thread(new LoadFileRunnable(fileName),"File loading");
         thread.start();
