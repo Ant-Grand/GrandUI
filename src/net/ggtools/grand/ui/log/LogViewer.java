@@ -372,6 +372,7 @@ public class LogViewer extends Composite {
         table = viewer.getTable();
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
+        table.pack();
         final GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.heightHint = table.getHeaderHeight() * DEFAULT_NUM_LINES;
         table.setLayoutData(gridData);
@@ -410,6 +411,7 @@ public class LogViewer extends Composite {
             columnWidth += HEADER_EXTRA_WIDTH;
             column.setText(header);
             column.setWidth(columnWidth);
+            column.setMoveable(true);
         }
         gc.dispose();
 
