@@ -6,7 +6,7 @@
                                                                       -->
 
 
-<project name="nortelnnv41" default="all-upload">
+<project name="nortelnnv41" default="build">
    <!-- environment -->
    <!-- those need to be repeated here: todo: use includes -->
    <property environment="env"/>
