@@ -371,13 +371,12 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     public void dotPrint() {
         if (log.isDebugEnabled()) log.debug("Printing graph using dot");
         final Properties props = new Properties();
-       // <arg line="-Tps -Gsize=11.69,8.27 -Grotate=90 -o build.ps build.dot"/>
-        props.setProperty("dot.graph.attributes","size=8,10");
+        props.setProperty("dot.graph.attributes","");
         try {
             final DotWriter dotWriter = new DotWriter(props);
             dotWriter.setProducer(filterChain);
             dotWriter.write(new File("GrandDotPrint.dot"));
-            Process proc = Runtime.getRuntime().exec("dot -Tps -o GrandDotPrint.ps GrandDotPrint.dot");
+            Process proc = Runtime.getRuntime().exec("dot -Tps -Gpage=8,10 -o GrandDotPrint.ps GrandDotPrint.dot");
             proc.waitFor();
             proc.destroy();
             log.info("Graph printed to GrandDotPrint.ps");
