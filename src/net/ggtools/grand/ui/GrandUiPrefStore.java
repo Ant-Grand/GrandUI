@@ -150,6 +150,17 @@ public class GrandUiPrefStore extends PreferenceStore {
         return list;
     }
 
+   /**
+    * 
+    */
+   private void setDefaults()
+   {
+      setDefault(GeneralPreferencePage.MAX_RECENT_FILES_PREFS_KEY, 4);
+      GraphPreferencePage.setDefaults(this);
+      NodesPreferencePage.setDefaults(this);
+      LinksPreferencePage.setDefaults(this);
+   }
+
     public Color getColor(final String key) {
         final RGB newRGBColor = PreferenceConverter.getColor(this, key);
         final RGB currentRGBColor = colorRegistry.getRGB(key);
