@@ -95,33 +95,35 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
         inline.add(textFlow);
         blockFlow.add(inline);
         page.add(blockFlow);
-        
+
         if (!"".equals(edge.getName())) {
             blockFlow = new BlockFlow();
-            textFlow = new TextFlow("Link #"+edge.getName());
+            textFlow = new TextFlow("Link #" + edge.getName());
             blockFlow.add(textFlow);
             page.add(blockFlow);
         }
 
         if (edge.hasAttr(LINK_PARAMETERS_ATTR)) {
-            BlockFlow outterBlock = new BlockFlow();
             final Map parameters = (Map) edge.getAttr(LINK_PARAMETERS_ATTR);
-            for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
-                Map.Entry entry = (Map.Entry) iter.next();
-                BlockFlow innerBlock = new BlockFlow();
-                textFlow = new TextFlow(((String) entry.getKey()) + ": ");
-                textFlow.setFont(AppData.getInstance().getFont(AppData.TOOLTIP_MONOSPACE_FONT));
-                innerBlock.add(textFlow);
-                inline = new InlineFlow();
-                textFlow = new TextFlow((String) entry.getValue());
-                textFlow.setFont(AppData.getInstance()
-                        .getItalicFont(AppData.TOOLTIP_MONOSPACE_FONT));
-                inline.add(textFlow);
-                innerBlock.add(inline);
-                outterBlock.add(innerBlock);
+            if (!parameters.isEmpty()) {
+                final BlockFlow outterBlock = new BlockFlow();
+                for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
+                    Map.Entry entry = (Map.Entry) iter.next();
+                    BlockFlow innerBlock = new BlockFlow();
+                    textFlow = new TextFlow(((String) entry.getKey()) + ": ");
+                    textFlow.setFont(AppData.getInstance().getFont(AppData.TOOLTIP_MONOSPACE_FONT));
+                    innerBlock.add(textFlow);
+                    inline = new InlineFlow();
+                    textFlow = new TextFlow((String) entry.getValue());
+                    textFlow.setFont(AppData.getInstance().getItalicFont(
+                            AppData.TOOLTIP_MONOSPACE_FONT));
+                    inline.add(textFlow);
+                    innerBlock.add(inline);
+                    outterBlock.add(innerBlock);
+                }
+                outterBlock.setBorder(new SectionBorder());
+                page.add(outterBlock);
             }
-            outterBlock.setBorder(new SectionBorder());
-            page.add(outterBlock);
         }
     }
 }

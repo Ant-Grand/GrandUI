@@ -1,4 +1,4 @@
-//$Id$
+// $Id$
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
@@ -34,6 +34,7 @@ import net.ggtools.grand.ui.menu.GraphMenu;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
@@ -50,9 +51,9 @@ import org.eclipse.swt.widgets.Menu;
 
 /**
  * A CTabItem specialized in displaying graph. Although it implements
- * {@link net.ggtools.grand.ui.graph.GraphControlerProvider} this class
- * only manage a dummy notification system as there won't be any change
- * of the controler during the instances lifetime.
+ * {@link net.ggtools.grand.ui.graph.GraphControlerProvider}this class only
+ * manage a dummy notification system as there won't be any change of the
+ * controler during the instances lifetime.
  * 
  * @author Christophe Labouisse
  */
@@ -109,10 +110,12 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
     private FigureCanvas canvas;
 
     private final Menu contextMenu;
-    
+
     private final MenuManager contextMenuManager;
 
     private final GraphControler controler;
+
+    private IProgressMonitor progressMonitor;
 
     /**
      * @param parent
@@ -131,73 +134,74 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         canvas.addMouseListener(synchronizer);
         contextMenuManager = new GraphMenu(this);
         contextMenu = contextMenuManager.createContextMenu(canvas);
+        setText("Loading ...");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#addControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
     public void addControlerListener(GraphControlerListener listener) {
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#beginTask(java.lang.String, int)
+    /**
+     * @param name
+     * @param totalWork
      */
     public void beginTask(String name, int totalWork) {
-        // TODO Auto-generated method stub
-
+        if (progressMonitor != null) progressMonitor.beginTask(name, totalWork);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#done()
+    /**
+     *  
      */
     public void done() {
-        // TODO Auto-generated method stub
-
+        if (progressMonitor != null) progressMonitor.done();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#getContextMenu()
      */
     public Menu getContextMenu() {
         return contextMenu;
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#getControler()
      */
     public GraphControler getControler() {
         return controler;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
+    /**
+     * @param work
      */
     public void internalWorked(double work) {
-        // TODO Auto-generated method stub
-
+        if (progressMonitor != null) progressMonitor.internalWorked(work);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#isCanceled()
+    /**
+     * @return
      */
     public boolean isCanceled() {
-        // TODO Auto-generated method stub
+        if (progressMonitor != null) return progressMonitor.isCanceled();
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
     public void removeControlerListener(GraphControlerListener listener) {
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
+    /**
+     * @param value
      */
     public void setCanceled(boolean value) {
-        // TODO Auto-generated method stub
-
+        if (progressMonitor != null) progressMonitor.setCanceled(value);
     }
 
     /*
@@ -217,28 +221,32 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
         });
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#setTaskName(java.lang.String)
+    /**
+     * @param name
      */
     public void setTaskName(String name) {
-        // TODO Auto-generated method stub
-
+        if (progressMonitor != null) progressMonitor.setTaskName(name);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#subTask(java.lang.String)
+    /**
+     * @param name
      */
     public void subTask(String name) {
-        // TODO Auto-generated method stub
-
+        if (progressMonitor != null) progressMonitor.subTask(name);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#worked(int)
+    /**
+     * @param work
      */
     public void worked(int work) {
-        // TODO Auto-generated method stub
-
+        if (progressMonitor != null) progressMonitor.worked(work);
     }
 
+    /**
+     * @param progressMonitor
+     *            The progressMonitor to set.
+     */
+    final void setProgressMonitor(IProgressMonitor progressMonitor) {
+        this.progressMonitor = progressMonitor;
+    }
 }

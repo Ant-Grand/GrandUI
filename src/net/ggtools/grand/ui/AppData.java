@@ -42,30 +42,26 @@ import org.eclipse.swt.graphics.Image;
  * @author Christophe Labouisse
  */
 public class AppData {
-    final public static String GRAPH_FONT = "net.ggtools.grand.ui.graphfont";
 
-    final public static String NODE_FONT = "net.ggtools.grand.ui.nodefont";
+    final public static String APPLICATION_ICON = "net.ggtools.grand.ui.appicon";
+
+    final public static String GRAPH_FONT = "net.ggtools.grand.ui.graphfont";
 
     final public static String LINK_FONT = "net.ggtools.grand.ui.linkfont";
 
+    final public static String LINK_ICON = "net.ggtools.grand.ui.linkicon";
+
     final public static String MONOSPACE_FONT = "net.ggtools.grand.ui.linkfont";
+
+    final public static String NODE_FONT = "net.ggtools.grand.ui.nodefont";
+
+    final public static String NODE_ICON = "net.ggtools.grand.ui.nodeicon";
 
     final public static String TOOLTIP_FONT = "net.ggtools.grand.ui.tooltipfont";
 
     final public static String TOOLTIP_MONOSPACE_FONT = "net.ggtools.grand.ui.tooltipmonospacefont";
 
-    final public static String LINK_ICON = "net.ggtools.grand.ui.linkicon";
-
-    final public static String NODE_ICON = "net.ggtools.grand.ui.nodeicon";
-
     private static AppData singleton;
-
-    private FontRegistry fontRegistry;
-
-    private ImageRegistry imageRegistry;
-
-    private AppData() {
-    }
 
     static public AppData getInstance() {
         if (singleton == null) {
@@ -75,28 +71,11 @@ public class AppData {
         return singleton;
     }
 
-    /**
-     * Initializes the application resources. This method must be called from an
-     * active display thread.
-     *  
-     */
-    final public void initResources() {
-        fontRegistry = new FontRegistry("net.ggtools.grand.ui.resource.fonts");
-        for (Iterator iter = fontRegistry.getKeySet().iterator(); iter.hasNext();) {
-            String key = (String) iter.next();
-            fontRegistry.get(key);
-        }
-        imageRegistry = new ImageRegistry();
-        imageRegistry.put(LINK_ICON,ImageDescriptor.createFromFile(AppData.class,"resource/link-icon.png"));
-        imageRegistry.put(NODE_ICON,ImageDescriptor.createFromFile(AppData.class,"resource/node-icon.png"));
-    }
+    private FontRegistry fontRegistry;
 
-    /**
-     * @param symbolicName
-     * @return
-     */
-    final public Font getFont(final String symbolicName) {
-        return fontRegistry.get(symbolicName);
+    private ImageRegistry imageRegistry;
+
+    private AppData() {
     }
 
     /**
@@ -111,8 +90,8 @@ public class AppData {
      * @param symbolicName
      * @return
      */
-    final public Font getItalicFont(final String symbolicName) {
-        return fontRegistry.getItalic(symbolicName);
+    final public Font getFont(final String symbolicName) {
+        return fontRegistry.get(symbolicName);
     }
 
     /**
@@ -121,5 +100,34 @@ public class AppData {
      */
     final public Image getImage(final String key) {
         return imageRegistry.get(key);
+    }
+
+    /**
+     * @param symbolicName
+     * @return
+     */
+    final public Font getItalicFont(final String symbolicName) {
+        return fontRegistry.getItalic(symbolicName);
+    }
+
+    /**
+     * Initializes the application resources. This method must be called from an
+     * active display thread.
+     *  
+     */
+    final public void initResources() {
+        fontRegistry = new FontRegistry("net.ggtools.grand.ui.resource.fonts");
+        for (Iterator iter = fontRegistry.getKeySet().iterator(); iter.hasNext();) {
+            String key = (String) iter.next();
+            fontRegistry.get(key);
+        }
+        imageRegistry = new ImageRegistry();
+        
+        imageRegistry.put(APPLICATION_ICON, ImageDescriptor.createFromFile(AppData.class,
+        "resource/application.gif"));
+        imageRegistry.put(LINK_ICON, ImageDescriptor.createFromFile(AppData.class,
+                "resource/link-icon.png"));
+        imageRegistry.put(NODE_ICON, ImageDescriptor.createFromFile(AppData.class,
+                "resource/node-icon.png"));
     }
 }

@@ -60,21 +60,22 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * @author Christophe Labouisse
  */
-public class GraphWindow extends ApplicationWindow implements GraphControlerProvider {
+public class GraphWindow extends ApplicationWindow implements GraphControlerProvider,
+        IProgressMonitor {
 
     private static final Log log = LogFactory.getLog(GraphWindow.class);
+
+    private final Dispatcher controlerAvailableDispatcher;
+
+    private final EventManager controlerEventManager;
+
+    private final Dispatcher controlerRemovedDispatcher;
 
     private Display display;
 
     private MenuManager manager;
 
     private CTabFolder tabFolder;
-
-    private final EventManager controlerEventManager;
-
-    private final Dispatcher controlerAvailableDispatcher;
-
-    private final Dispatcher controlerRemovedDispatcher;
 
     public GraphWindow() {
         this(null);
@@ -107,6 +108,14 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
 
     /*
      * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#addControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
+     */
+    public void addControlerListener(GraphControlerListener listener) {
+        controlerEventManager.subscribe(listener);
+    }
+
+    /*
+     * (non-Javadoc)
      * 
      * @see org.eclipse.core.runtime.IProgressMonitor#beginTask(java.lang.String,
      *      int)
@@ -134,6 +143,84 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
 
             public void run() {
                 monitor.done();
+            }
+        });
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#getControler()
+     */
+    public GraphControler getControler() {
+        if (tabFolder != null) {
+            final GraphTabItem selectedTab = (GraphTabItem) tabFolder.getSelection();
+            if (selectedTab == null) {
+                return null;
+            }
+            else {
+                return selectedTab.getControler();
+            }
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
+     */
+    public void internalWorked(double work) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.core.runtime.IProgressMonitor#isCanceled()
+     */
+    public boolean isCanceled() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    /**
+     * @return
+     */
+    public GraphDisplayer newDisplayer() {
+        final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE);
+        tabFolder.setSelection(graphTabItem);
+        controlerAvailableDispatcher.dispatch(graphTabItem.getControler());
+        graphTabItem.setProgressMonitor(this);
+        return graphTabItem;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
+     */
+    public void removeControlerListener(GraphControlerListener listener) {
+        controlerEventManager.unSubscribe(listener);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
+     */
+    public void setCanceled(boolean value) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.core.runtime.IProgressMonitor#setTaskName(java.lang.String)
+     */
+    public void setTaskName(final String name) {
+        final StatusLineManager slManager = getStatusLineManager();
+        final IProgressMonitor monitor = slManager.getProgressMonitor();
+        display.asyncExec(new Runnable() {
+
+            public void run() {
+                monitor.setTaskName(name);
             }
         });
     }
@@ -180,6 +267,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
         // We can load the resources since the display is initialized.
         AppData.getInstance().initResources();
         shell.setText("Grand");
+        shell.setImage(AppData.getInstance().getImage(AppData.APPLICATION_ICON));
     }
 
     /*
@@ -215,7 +303,8 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
                     final CTabFolder folder = (CTabFolder) widget;
                     final CTabItem selection = folder.getSelection();
                     if (selection instanceof GraphTabItem) {
-                        controlerAvailableDispatcher.dispatch(((GraphTabItem) selection).getControler());
+                        controlerAvailableDispatcher.dispatch(((GraphTabItem) selection)
+                                .getControler());
                     }
                 }
             }
@@ -236,48 +325,5 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
         manager.add(new GraphMenu(this));
         manager.setVisible(true);
         return manager;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#getControler()
-     */
-    public GraphControler getControler() {
-        if (tabFolder != null) {
-            final GraphTabItem selectedTab = (GraphTabItem) tabFolder.getSelection();
-            if (selectedTab == null) {
-                return null;
-            }
-            else {
-                return selectedTab.getControler();
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @return
-     */
-    public GraphDisplayer newDisplayer() {
-        final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE);
-        tabFolder.setSelection(graphTabItem);
-        controlerAvailableDispatcher.dispatch(graphTabItem.getControler());
-        return graphTabItem;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#addControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
-     */
-    public void addControlerListener(GraphControlerListener listener) {
-        controlerEventManager.subscribe(listener);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
-     */
-    public void removeControlerListener(GraphControlerListener listener) {
-        controlerEventManager.unSubscribe(listener);
     }
 }
