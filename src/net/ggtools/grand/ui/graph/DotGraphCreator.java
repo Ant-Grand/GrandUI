@@ -97,7 +97,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         }
 
         for (Iterator iter = graph.getNodes(); iter.hasNext();) {
-            final Node node = (net.ggtools.grand.graph.Node) iter.next();
+            final Node node = (Node) iter.next();
             if (node.getName().equals("") || (node == startNode)) {
                 continue;
             }

@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+import net.ggtools.grand.ant.AntTargetNode;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.output.DotWriter;
@@ -391,5 +392,16 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
      */
     public final void setProgressMonitor(IProgressMonitor progressMonitor) {
         this.progressMonitor = progressMonitor;
+    }
+
+    /**
+     * @param node
+     */
+    public void openNodeFile(Draw2dNode node) {
+        final AntTargetNode targetNode = (AntTargetNode) node.getVertex().getData();
+        final String buildFile = targetNode.getBuildFile();
+        if (buildFile != null && (buildFile.length() > 0)) {
+            window.openGraphInNewDisplayer(new File(buildFile));
+        }
     }
 }

@@ -59,37 +59,55 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
         /*
          * (non-Javadoc)
+         * @see org.eclipse.draw2d.MouseListener#mouseDoubleClicked(org.eclipse.draw2d.MouseEvent)
+         */
+        public void mouseDoubleClicked(MouseEvent me) {
+            log.trace("Double click on " + me.button);
+            switch (me.button) {
+            case (1): {
+                final boolean addToSelection;
+                if ((me.getState() & InputEvent.CONTROL) == 0) {
+                    addToSelection = false;
+                }
+                else {
+                    addToSelection = true;
+                }
+                selectNode(node, addToSelection);
+                graphControler.openNodeFile(node);
+            }
+            }
+            me.consume();
+        }
+
+        /*
+         * (non-Javadoc)
          * 
          * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
          */
         public void mousePressed(MouseEvent me) {
             switch (me.button) {
-            case (1):
-                {
-                    log.trace("Button 1 pressed on " + node);
-                    boolean addToSelection;
-                    if ((me.getState() & InputEvent.CONTROL) == 0) {
-                        addToSelection = false;
-                    } else {
-                        addToSelection = true;
-                    }
-                    toggleSelection(node, addToSelection);
-                    me.consume();
-                    break;
+            case (1): {
+                final boolean addToSelection;
+                if ((me.getState() & InputEvent.CONTROL) == 0) {
+                    addToSelection = false;
                 }
-            case (3):
-                {
-                    log.trace("Button 3 pressed on " + node);
-                    if (!node.isSelected()) {
-                        selectNode(node, false);
-                    }
-                    // TODO rewrite in a clean way
-                    if (selectionManager != null) {
-                        ((GraphControler) selectionManager).getDest().getContextMenu()
-                                .setVisible(true);
-                    }
-                    break;
+                else {
+                    addToSelection = true;
                 }
+                toggleSelection(node, addToSelection);
+                me.consume();
+                break;
+            }
+            case (3): {
+                if (!node.isSelected()) {
+                    selectNode(node, false);
+                }
+                // TODO rewrite in a clean way
+                if (graphControler != null) {
+                    ((GraphControler) graphControler).getDest().getContextMenu().setVisible(true);
+                }
+                break;
+            }
             }
         }
 
@@ -97,8 +115,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     private static final Log log = LogFactory.getLog(Draw2dGraph.class);
 
-    private SelectionManager selectionManager;
-    
+    private GraphControler graphControler;
+
     public Draw2dGraph() {
         super();
         setLayoutManager(new XYLayout());
@@ -110,22 +128,16 @@ public class Draw2dGraph extends Panel implements SelectionManager {
              */
             public void mousePressed(MouseEvent me) {
                 switch (me.button) {
-                case (1):
-                    {
-                        log.trace("Button 1 pressed on graph");
-                        deselectAllNodes();
-                        me.consume();
-                        break;
+                case (1): {
+                    deselectAllNodes();
+                    me.consume();
+                    break;
+                }
+                case (3): {
+                    if (graphControler != null) {
+                        graphControler.getDest().getContextMenu().setVisible(true);
                     }
-                case (3):
-                    {
-                        log.trace("Button 3 pressed on graph");
-                        // TODO rewrite in a clean way
-                        if (selectionManager != null) {
-                            ((GraphControler) selectionManager).getDest().getContextMenu()
-                                    .setVisible(true);
-                        }
-                    }
+                }
                 }
             }
         });
@@ -135,7 +147,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * @param listener
      */
     public void addListener(GraphListener listener) {
-        if (selectionManager != null) selectionManager.addListener(listener);
+        if (graphControler != null) graphControler.addListener(listener);
     }
 
     public Draw2dNode createNode(IVertex vertex) {
@@ -151,28 +163,28 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      *  
      */
     public void deselectAllNodes() {
-        if (selectionManager != null) selectionManager.deselectAllNodes();
+        if (graphControler != null) graphControler.deselectAllNodes();
     }
 
     /**
      * @param node
      */
     public void deselectNode(Draw2dNode node) {
-        if (selectionManager != null) selectionManager.deselectNode(node);
+        if (graphControler != null) graphControler.deselectNode(node);
     }
 
     /**
      * @return Returns the controler.
      */
     public final SelectionManager getControler() {
-        return selectionManager;
+        return graphControler;
     }
 
     /**
      * @param listener
      */
     public void removeSelectionListener(GraphListener listener) {
-        if (selectionManager != null) selectionManager.removeSelectionListener(listener);
+        if (graphControler != null) graphControler.removeSelectionListener(listener);
     }
 
     /**
@@ -180,30 +192,32 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * @param addToSelection
      */
     public void selectNode(Draw2dNode node, boolean addToSelection) {
-        if (selectionManager != null) selectionManager.selectNode(node, addToSelection);
+        if (graphControler != null) graphControler.selectNode(node, addToSelection);
     }
 
     /**
-     * @param selectionManager
+     * @param graphControler
      *            The controler to set.
      */
-    public final void setSelectionManager(SelectionManager selectionManager) {
-        this.selectionManager = selectionManager;
+    public final void setSelectionManager(GraphControler graphControler) {
+        this.graphControler = graphControler;
     }
 
     private void toggleSelection(final Draw2dNode node, final boolean addToSelection) {
         if (node.isSelected()) {
             deselectNode(node);
-        } else {
+        }
+        else {
             selectNode(node, addToSelection);
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
      */
     public Collection getSelection() {
-        if (selectionManager != null) return selectionManager.getSelection();
+        if (graphControler != null) return graphControler.getSelection();
         return null;
     }
 }

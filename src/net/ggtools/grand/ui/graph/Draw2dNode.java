@@ -146,6 +146,13 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
     }
 
     /**
+     * @return Returns the vertex.
+     */
+    final IVertex getVertex() {
+        return vertex;
+    }
+
+    /**
      * @param selected
      *            The selected to set.
      */
