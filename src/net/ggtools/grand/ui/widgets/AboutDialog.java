@@ -57,6 +57,7 @@ public class AboutDialog extends Dialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("About Grand");
+        newShell.setImage(Application.getInstance().getImage(Application.APPLICATION_ICON));
     }
 
     /*
