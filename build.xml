@@ -232,7 +232,7 @@
 	</target>
 
 	<target name="incbuildnum" depends="setup-svn-macros">
-		<svn-update file="update ${buildnum-file}" />
+		<svn-update file="${buildnum-file}" />
 		<propertyfile file="${buildnum-file}">
 			<entry key="build.date" type="date" value="now" pattern="yyyy-MM-dd" />
 			<entry key="build.time" type="date" value="now" pattern="HH:mm:ss" />
