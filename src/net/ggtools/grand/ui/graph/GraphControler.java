@@ -29,9 +29,6 @@
 package net.ggtools.grand.ui.graph;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -71,11 +68,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.widgets.Display;
 
@@ -408,8 +402,6 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             filterAndRenderGraph(progressMonitor);
             if (log.isInfoEnabled()) log.info("Graph loaded & rendered");
             RecentFilesManager.getInstance().addNewFile(file, properties);
-            // TODO: Remove ...
-            save();
         } catch (final GrandException e) {
             reportError("Cannot open graph", e);
             stopControler();
@@ -688,35 +680,5 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         });
 
         return image;
-    }
-
-    private void save() {
-        FileOutputStream result = null;
-        try {
-            result = new FileOutputStream("/tmp/image.jpg");
-
-            Image image = null;
-            try {
-                image = createImageForGraph();
-                ImageLoader imageLoader = new ImageLoader();
-                imageLoader.data = new ImageData[]{image.getImageData()};
-                imageLoader.save(result, SWT.IMAGE_JPEG);
-            } finally {
-                if (image != null) {
-                    image.dispose();
-                }
-            }
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (result != null) {
-                try {
-                    result.close();
-                } catch (IOException e) {
-                    log.warn("Got exception exporting graph", e);
-                }
-            }
-        }
     }
 }
