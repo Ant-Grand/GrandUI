@@ -91,7 +91,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
 
     public GraphWindow(Shell parent) {
         super(parent);
-        log.debug("Creating new GraphWindow");
+        if (log.isDebugEnabled()) log.debug("Creating new GraphWindow");
 
         controlerEventManager = new EventManager("GraphControler Availability Event");
         try {
@@ -295,7 +295,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      * @see org.eclipse.jface.window.ApplicationWindow#createMenuManager()
      */
     protected MenuManager createMenuManager() {
-        log.debug("Creating menu manager");
+        if (log.isDebugEnabled()) log.debug("Creating menu manager");
         manager = new MenuManager();
         manager.add(new FileMenuManager(this));
         manager.add(new ViewMenu(this));
