@@ -31,7 +31,7 @@ import java.util.Collection;
 
 import net.ggtools.grand.ui.graph.Draw2dNode;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
-import net.ggtools.grand.ui.graph.GraphSelectionListener;
+import net.ggtools.grand.ui.graph.GraphListener;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 
@@ -43,7 +43,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
  * @author Christophe Labouisse
  */
 public abstract class GraphSelectionAction extends GraphListenerAction implements
-        GraphSelectionListener {
+        GraphListener {
 
     private String currentNode;
 
@@ -93,7 +93,7 @@ public abstract class GraphSelectionAction extends GraphListenerAction implement
 
     /*
      * (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphSelectionListener#selectionChanged(java.util.Collection)
+     * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
     public void selectionChanged(Collection selectedNodes) {
         final boolean isEnabled = selectedNodes.size() == 1;

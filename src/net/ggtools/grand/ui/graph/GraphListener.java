@@ -35,7 +35,7 @@ import java.util.Collection;
  * 
  * @author Christophe Labouisse
  */
-public interface GraphSelectionListener {
+public interface GraphListener {
     /**
      * Method called when a graph's selection has changed.
      * 

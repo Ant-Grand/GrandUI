@@ -39,9 +39,9 @@ import java.util.Collection;
  * @author Christophe Labouisse
  */
 public interface SelectionManager {
-    void addSelectionListener(GraphSelectionListener listener);
+    void addListener(GraphListener listener);
     
-    void removeSelectionListener(GraphSelectionListener listener);
+    void removeSelectionListener(GraphListener listener);
     
     /**
      * Returns a collection of the current selection.

@@ -32,7 +32,7 @@ import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.filters.ToNodeFilter;
 import net.ggtools.grand.ui.graph.GraphControlerListener;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
-import net.ggtools.grand.ui.graph.GraphSelectionListener;
+import net.ggtools.grand.ui.graph.GraphListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Christophe Labouisse
  */
 public class FilterToNodeAction extends GraphSelectionAction implements GraphControlerListener,
-        GraphSelectionListener {
+        GraphListener {
     private static final Log log = LogFactory.getLog(FilterToNodeAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Filter to selected node";

@@ -31,7 +31,7 @@ package net.ggtools.grand.ui.actions;
 import net.ggtools.grand.filters.FromNodeFilter;
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
-import net.ggtools.grand.ui.graph.GraphSelectionListener;
+import net.ggtools.grand.ui.graph.GraphListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Christophe Labouisse
  */
-public class FilterFromNodeAction extends GraphSelectionAction implements GraphSelectionListener {
+public class FilterFromNodeAction extends GraphSelectionAction implements GraphListener {
     private static final Log log = LogFactory.getLog(FilterFromNodeAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Filter from selected node";

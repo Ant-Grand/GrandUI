@@ -133,8 +133,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     /**
      * @param listener
      */
-    public void addSelectionListener(GraphSelectionListener listener) {
-        if (selectionManager != null) selectionManager.addSelectionListener(listener);
+    public void addListener(GraphListener listener) {
+        if (selectionManager != null) selectionManager.addListener(listener);
     }
 
     public Draw2dNode createNode(IVertex vertex) {
@@ -170,7 +170,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     /**
      * @param listener
      */
-    public void removeSelectionListener(GraphSelectionListener listener) {
+    public void removeSelectionListener(GraphListener listener) {
         if (selectionManager != null) selectionManager.removeSelectionListener(listener);
     }
 

@@ -51,7 +51,7 @@ public class UseBusRoutingAction extends GraphListenerAction {
 
     /*
      * (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphSelectionListener#parameterChanged(net.ggtools.grand.ui.graph.GraphControler)
+     * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanged(net.ggtools.grand.ui.graph.GraphControler)
      */
     public void parameterChanged(GraphControler controler) {
         boolean newState = getGraphControler().isBusRoutingEnabled();

@@ -100,9 +100,9 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
         graphEventManager = new EventManager("Graph Event");
         try {
             selectionChangedDispatcher = graphEventManager
-                    .createDispatcher(GraphSelectionListener.class.getDeclaredMethod(
+                    .createDispatcher(GraphListener.class.getDeclaredMethod(
                             "selectionChanged", new Class[]{Collection.class}));
-            parameterChangedEvent = graphEventManager.createDispatcher(GraphSelectionListener.class
+            parameterChangedEvent = graphEventManager.createDispatcher(GraphListener.class
                     .getDeclaredMethod("parameterChanged", new Class[]{GraphControler.class}));
             ;
         } catch (SecurityException e) {
@@ -128,9 +128,9 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     /*
      * (non-Javadoc)
      * 
-     * @see net.ggtools.grand.ui.graph.SelectionManager#addSelectionListener(net.ggtools.grand.ui.graph.GraphSelectionListener)
+     * @see net.ggtools.grand.ui.graph.SelectionManager#addSelectionListener(net.ggtools.grand.ui.graph.GraphListener)
      */
-    public void addSelectionListener(GraphSelectionListener listener) {
+    public void addListener(GraphListener listener) {
         graphEventManager.subscribe(listener);
     }
 
@@ -286,9 +286,9 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
     /*
      * (non-Javadoc)
      * 
-     * @see net.ggtools.grand.ui.graph.SelectionManager#removeSelectionListener(net.ggtools.grand.ui.graph.GraphSelectionListener)
+     * @see net.ggtools.grand.ui.graph.SelectionManager#removeSelectionListener(net.ggtools.grand.ui.graph.GraphListener)
      */
-    public void removeSelectionListener(GraphSelectionListener listener) {
+    public void removeSelectionListener(GraphListener listener) {
         graphEventManager.unSubscribe(listener);
     }
 
