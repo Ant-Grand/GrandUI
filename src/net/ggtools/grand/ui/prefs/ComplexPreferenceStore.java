@@ -85,15 +85,17 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
     protected final File prefFile;
 
-    public ComplexPreferenceStore(final String appName, final String filename) throws IOException {
+    /**
+     * Creates a new instance.
+     * 
+     * @param appName
+     * @param storeName
+     * @throws IOException
+     */
+    public ComplexPreferenceStore(final String appName, final String storeName) throws IOException {
         super();
         baseDir = new File(System.getProperty("user.home"), "." + appName);
-        if (!baseDir.isDirectory()) {
-            baseDir.mkdirs();
-            if (!baseDir.isDirectory()) { throw new FileNotFoundException("Cannot find/create "
-                    + baseDir); }
-        }
-        prefFile = new File(baseDir, filename + ".prefs");
+        prefFile = new File(baseDir, storeName + ".prefs");
         setFilename(prefFile.getPath());
     }
 
@@ -168,6 +170,11 @@ public class ComplexPreferenceStore extends PreferenceStore {
     }
 
     public void save() throws IOException {
+        if (!baseDir.isDirectory()) {
+            baseDir.mkdirs();
+            if (!baseDir.isDirectory()) { throw new FileNotFoundException("Cannot find/create "
+                    + baseDir); }
+        }
         super.save();
         // TODO save properties
     }
