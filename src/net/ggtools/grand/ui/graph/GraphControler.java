@@ -356,6 +356,9 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
                 final IEdge edge = dotGraph.newEdge((IVertex) vertexLUT.get(link.getStartNode()
                         .getName()), (IVertex) vertexLUT.get(link.getEndNode().getName()), name,
                         link);
+                if (link.hasAttributes(Link.ATTR_WEAK_LINK)) {
+                   edge.setAttr(DRAW2DFGCOLOR_ATTR,ColorConstants.lightGray);
+                }
 
             }
         }

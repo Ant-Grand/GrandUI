@@ -49,6 +49,7 @@ import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.XYAnchor;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.swt.graphics.Color;
 
 import sf.jzgraph.IDotGraph;
 import sf.jzgraph.IEdge;
@@ -126,6 +127,9 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         final Point targetPoint = new Point(route.getEndPt().getX(), route.getEndPt().getY());
         conn.setSourceAnchor(new XYAnchor(sourcePoint));
         conn.setTargetAnchor(new XYAnchor(targetPoint));
+        if (edge.getAttr(DRAW2DFGCOLOR_ATTR) != null) {
+            conn.setForegroundColor((Color) edge.getAttr(DRAW2DFGCOLOR_ATTR));
+        }
 
         if (bends.isEmpty()) {
             conn.setConnectionRouter(null);
