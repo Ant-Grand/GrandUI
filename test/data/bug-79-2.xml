@@ -1,0 +1,13 @@
+<!-- Test build file for ticket #79 -->
+<project default="init">
+    <import file="bug-79.xml"/>
+    
+    <!-- ================================= 
+          target: init              
+         ================================= -->
+    <target name="init" description="--> description">
+        <echo>Init done</echo>
+    </target>
+
+
+</project>
