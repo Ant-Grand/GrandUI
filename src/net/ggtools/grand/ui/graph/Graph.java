@@ -31,7 +31,6 @@
 
 package net.ggtools.grand.ui.graph;
 
-import org.eclipse.swt.graphics.Image;
 
 /**
  * 
@@ -47,6 +46,7 @@ public class Graph {
     public String getFileName() {
         return fileName;
     }
+    
     public Graph(String str) {
         fileName = str;
     }
