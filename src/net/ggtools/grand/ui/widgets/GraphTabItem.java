@@ -135,6 +135,10 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
 
     private final float ZOOM_STEP = 1.1f;
 
+    // To be set to <code>true</code> when the next selection change do no
+    // requires jumping to the selected node.
+    private boolean skipJumpToNode = false;
+
     /**
      * Creates a tab to display a new graph. The tab will contain two sash forms
      * a vertical one with the source panel as the bottom part and a second
@@ -166,7 +170,8 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
                         if (structuredSelection.size() == 1) {
                             final String nodeName = structuredSelection.getFirstElement()
                                     .toString();
-                            jumpToNode(nodeName);
+                            if (!skipJumpToNode) jumpToNode(nodeName);
+                            skipJumpToNode = false;
                             getControler().selectNodeByName(nodeName, false);
                         }
                     }
@@ -274,10 +279,9 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
         }
 
         Display.getDefault().syncExec(new Runnable() {
-
             public void run() {
-                outlineViewer.setSelection(new StructuredSelection(selection),
-                        true);
+                skipJumpToNode = true;
+                outlineViewer.setSelection(new StructuredSelection(selection), true);
             }
         });
     }
