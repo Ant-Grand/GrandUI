@@ -69,7 +69,7 @@ public class LogViewer extends Composite {
             if (e.widget instanceof Button) {
                 final Button button = (Button) e.widget;
                 final FileDialog dialog = new FileDialog(viewer.getTable().getShell(),SWT.SAVE);
-                dialog.setFilterExtensions(new String [] {"*.log","*"});
+                dialog.setFilterExtensions(new String [] {"*.glg","*.log","*"});
                 final String logFileName = dialog.open();
                 if (logFileName != null) {
                     ObjectOutputStream oos = null;
@@ -155,16 +155,12 @@ public class LogViewer extends Composite {
         Combo combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
         layout.numColumns++;
         combo.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-        combo.add(LogEvent.INFO.name);
-        combo.add(LogEvent.WARNING.name);
-        combo.add(LogEvent.ERROR.name);
-        combo.add(LogEvent.FATAL.name);
-        combo.select(0);
+        fillUpLevelCombo(combo);
         combo.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 if (e.widget instanceof Combo) {
                     Combo selectedCombo = (Combo) e.widget;
-                    minLogLevel = selectedCombo.getSelectionIndex() + LogEvent.INFO.value;
+                    minLogLevel = comboIndexToLogLevel(selectedCombo.getSelectionIndex());
                     viewer.refresh(false);
                 }
             }
@@ -190,6 +186,18 @@ public class LogViewer extends Composite {
                 }
             }
         });
+    }
+
+    /**
+     * Add value to the level selection combo.
+     * @param combo
+     */
+    protected void fillUpLevelCombo(Combo combo) {
+        combo.add(LogEvent.INFO.name);
+        combo.add(LogEvent.WARNING.name);
+        combo.add(LogEvent.ERROR.name);
+        combo.add(LogEvent.FATAL.name);
+        combo.select(0);
     }
 
     private void createViewer(final Composite parent) {
@@ -232,5 +240,13 @@ public class LogViewer extends Composite {
         logBuffer = newLogBuffer;
         logBuffer.addListener(refreshListener);
         viewer.setInput(logBuffer.getEventList());
+    }
+
+    /**
+     * @param comboIndex
+     * @return
+     */
+    protected int comboIndexToLogLevel(int comboIndex) {
+        return comboIndex + LogEvent.INFO.value;
     }
 }
