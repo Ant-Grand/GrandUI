@@ -44,7 +44,7 @@ public interface GraphListener {
     void selectionChanged(Collection selectedNodes);
     
     /**
-     * Method called when a graph paramater such as the layout algorithm has changed.
+     * Method called when a graph parameter such as the layout algorithm has changed.
      * 
      * @param controler
      */
