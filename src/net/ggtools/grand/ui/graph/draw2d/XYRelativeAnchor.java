@@ -25,59 +25,63 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package net.ggtools.grand.ui.graph;
 
-import org.eclipse.draw2d.text.FlowPage;
-import org.eclipse.draw2d.text.LineBox;
-import org.eclipse.draw2d.text.PageFlowLayout;
+package net.ggtools.grand.ui.graph.draw2d;
+
+import org.eclipse.draw2d.ConnectionAnchorBase;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Point;
 
 /**
- * A layout for {@link org.eclipse.draw2d.text.FlowPage}object with a maximum
- * width.
+ * An anchor positionned to a XY position relatively to a
+ * {@link org.eclipse.draw2d.IFigure}.
  * 
  * @author Christophe Labouisse
  */
-public class ConstrainedPageFlowLayout extends PageFlowLayout {
+public class XYRelativeAnchor extends ConnectionAnchorBase {
+    private IFigure owner;
 
-    private int maxFlowWidth = -1; // Default is not to bound lines.
+    private Point location;
 
     /**
-     * Creates a new instance without any constrained width.
-     * @param page
+     *  
      */
-    public ConstrainedPageFlowLayout(FlowPage page) {
-        super(page);
+    public XYRelativeAnchor(IFigure owner, Point location) {
+        this.owner = owner;
+        this.location = location;
     }
 
-    /**
-     * @return Returns the maximum flow width or <code>-1</code> if not set.
-     */
-    public int getMaxFlowWidth() {
-        return maxFlowWidth;
-    }
-
-    /**
-     * Sets the maximum with of the flow. When set to a positive value, the
-     * layout will ensure that the flow lines won't be wider than this value.
+    /*
+     * (non-Javadoc)
      * 
-     * @param maxFlowWidth
-     *            The maxFlowWidth to set or <code>-1</code> not to bound the
-     *            flow width.
+     * @see org.eclipse.draw2d.ConnectionAnchor#getLocation(org.eclipse.draw2d.geometry.Point)
      */
-    public void setMaxFlowWidth(int maxFlowWidth) {
-        this.maxFlowWidth = maxFlowWidth;
-        invalidate();
+    public Point getLocation(Point reference) {
+        Point result = location.getCopy();
+        getOwner().translateToAbsolute(result);
+        return result;
     }
 
-    /**
-     * Override to setup the line's x, remaining, and available width.
-     * @param line
-     *            the LineBox to set up
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.draw2d.ConnectionAnchor#getOwner()
      */
-    protected void setupLine(LineBox line) {
-        super.setupLine(line);
-        final int lineWidth = line.getRecommendedWidth();
-        if ((maxFlowWidth > 0) && ((lineWidth > maxFlowWidth) || (lineWidth == -1)))
-                line.setRecommendedWidth(maxFlowWidth);
+    public IFigure getOwner() {
+        return owner;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.draw2d.ConnectionAnchor#getReferencePoint()
+     */
+    public Point getReferencePoint() {
+        return location;
+    }
+
+    public void setLocation(Point p) {
+        location.setLocation(p);
+        fireAnchorMoved();
     }
 }

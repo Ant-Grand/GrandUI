@@ -26,11 +26,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.ggtools.grand.ui.graph;
+package net.ggtools.grand.ui.graph.draw2d;
 
 import java.util.Collection;
 
 import net.ggtools.grand.ui.Application;
+import net.ggtools.grand.ui.graph.GraphControler;
+import net.ggtools.grand.ui.graph.GraphListener;
+import net.ggtools.grand.ui.graph.SelectionManager;
 import net.ggtools.grand.ui.widgets.CanvasScroller;
 
 import org.apache.commons.logging.Log;

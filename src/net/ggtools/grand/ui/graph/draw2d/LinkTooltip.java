@@ -25,12 +25,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package net.ggtools.grand.ui.graph;
+package net.ggtools.grand.ui.graph.draw2d;
 
 import java.util.Iterator;
 import java.util.Map;
 
 import net.ggtools.grand.ui.Application;
+import net.ggtools.grand.ui.graph.DotGraphAttributes;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -34,7 +34,7 @@ package net.ggtools.grand.ui.graph;
  * 
  * @author Christophe Labouisse
  */
-interface DotGraphAttributes {
+public interface DotGraphAttributes {
 
     static final String _BOUNDS_ATTR = "-bounds";
 

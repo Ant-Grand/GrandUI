@@ -31,6 +31,8 @@
 
 package net.ggtools.grand.ui.graph;
 
+import net.ggtools.grand.ui.graph.draw2d.Draw2dGraph;
+
 import org.eclipse.swt.widgets.Menu;
 
 

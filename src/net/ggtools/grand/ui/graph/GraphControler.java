@@ -43,6 +43,9 @@ import net.ggtools.grand.output.DotWriter;
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
+import net.ggtools.grand.ui.graph.draw2d.Draw2dGraph;
+import net.ggtools.grand.ui.graph.draw2d.Draw2dGraphRenderer;
+import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.apache.commons.logging.Log;

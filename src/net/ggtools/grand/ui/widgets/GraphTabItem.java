@@ -27,10 +27,10 @@
  */
 package net.ggtools.grand.ui.widgets;
 
-import net.ggtools.grand.ui.graph.Draw2dGraph;
 import net.ggtools.grand.ui.graph.GraphControler;
 import net.ggtools.grand.ui.graph.GraphControlerListener;
 import net.ggtools.grand.ui.graph.GraphDisplayer;
+import net.ggtools.grand.ui.graph.draw2d.Draw2dGraph;
 import net.ggtools.grand.ui.menu.GraphMenu;
 
 import org.apache.commons.logging.Log;

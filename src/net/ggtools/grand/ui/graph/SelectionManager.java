@@ -33,6 +33,8 @@ package net.ggtools.grand.ui.graph;
 
 import java.util.Collection;
 
+import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
+
 /**
  * 
  * 

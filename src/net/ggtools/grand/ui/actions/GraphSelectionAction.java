@@ -29,9 +29,9 @@ package net.ggtools.grand.ui.actions;
 
 import java.util.Collection;
 
-import net.ggtools.grand.ui.graph.Draw2dNode;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
 import net.ggtools.grand.ui.graph.GraphListener;
+import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 

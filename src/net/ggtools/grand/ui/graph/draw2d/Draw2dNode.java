@@ -26,12 +26,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.ggtools.grand.ui.graph;
+package net.ggtools.grand.ui.graph.draw2d;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.FlatteningPathIterator;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
+
+import net.ggtools.grand.ui.graph.DotGraphAttributes;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -148,7 +150,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
     /**
      * @return Returns the vertex.
      */
-    final IVertex getVertex() {
+    public final IVertex getVertex() {
         return vertex;
     }
 
@@ -156,7 +158,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
      * @param selected
      *            The selected to set.
      */
-    final void setSelected(boolean selected) {
+    public final void setSelected(boolean selected) {
         if (selected != this.selected) {
             this.selected = selected;
             if (selected) {

@@ -26,7 +26,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.ggtools.grand.ui.graph;
+package net.ggtools.grand.ui.graph.draw2d;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.FlatteningPathIterator;
@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.ggtools.grand.ui.Application;
+import net.ggtools.grand.ui.graph.DotGraphAttributes;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
