@@ -27,7 +27,6 @@
  */
 package net.ggtools.grand.ui.widgets;
 
-import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.graph.GraphControler;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -105,6 +104,5 @@ public class PageSetupDialog extends Dialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Page Setup");
-        newShell.setImage(Application.getInstance().getImage(Application.APPLICATION_ICON));
     }
 }
