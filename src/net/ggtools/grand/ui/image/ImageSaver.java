@@ -55,6 +55,10 @@ public class ImageSaver {
     private static final Log log = LogFactory.getLog(ImageSaver.class);
 
     public void saveImage(final Image image, final String fileName) throws IOException {
+        final int lastDotPosition = fileName.lastIndexOf('.');
+        final String extension = fileName.substring(lastDotPosition+1).toLowerCase();
+        if (log.isDebugEnabled()) log.debug("Saving image to " + fileName + " as " + extension);
+        
         FileOutputStream result = null;
         try {
             /*
@@ -67,7 +71,7 @@ public class ImageSaver {
             result = new FileOutputStream(fileName);
             ImageData imageData = image.getImageData();
             if (imageData.depth > 8) imageData = downSample(image);
-            
+
             final ImageLoader imageLoader = new ImageLoader();
             imageLoader.data = new ImageData[]{imageData};
             imageLoader.save(result, SWT.IMAGE_GIF);
