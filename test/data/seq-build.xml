@@ -1,0 +1,92 @@
+<!-- The tools.gentable tools + some default ddl filesets -->
+<project name="tools.gentable" default="build" basedir=".">
+   
+   <!-- todo: common to all... how to manage ?--> 
+   <property name="build.compiler" value="jikes" />
+   <property environment="env"/>
+   <property name="kernel_root" value="${env.KERNEL_ROOT}"/>
+
+   
+   <!-- default target -->
+   <target name="build" depends="sql"> 
+   </target>
+
+
+   <!-- build the DDL for a set of RDBMSs -->
+   <target name="sql" depends="java"> 
+     <!-- It would seem logical to use "parallel" here, but Gentable is
+          all but thread-safe !! -->
+     <sequential>
+        <antcall target="generate-ddl-ptma"> <param name="rdbms" value="or"/> </antcall>
+        <antcall target="generate-ddl-ptma"> <param name="rdbms" value="je"/> </antcall>
+        <antcall target="generate-ddl-ptma"> <param name="rdbms" value="pg"/> </antcall>
+        <antcall target="generate-ddl-ptma"> <param name="rdbms" value="ms"/> </antcall>
+	<!-- Special syntax (perl checker) for integrity constraint generation from text files -->
+        <antcall target="generate-ddl-ptma"> <param name="rdbms" value="pl"/> </antcall>
+        <antcall target="generate-ddl-coor"> <param name="rdbms" value="or"/> </antcall>
+        <antcall target="generate-ddl-coor"> <param name="rdbms" value="je"/> </antcall>
+        <antcall target="generate-ddl-coor"> <param name="rdbms" value="pg"/> </antcall>
+        <antcall target="generate-ddl-coor"> <param name="rdbms" value="ms"/> </antcall>
+     </sequential>
+   </target>
+
+   <!-- regular java compilation -->
+   <target name="java" depends="all-antlr"> 
+      <javac srcdir="." destdir="${kernel_root}" />
+   </target>
+
+   <!-- antlr -->
+   <target name="all-antlr" > 
+      <antlr target="syntax.g"/>
+   </target>
+
+   <target name="generate-ddl-ptma">
+       <antcall target="generate-ddl">
+	  <param name="rdbms" value="${rdbms}"/>
+	  <param name="database" value="ptma"/>
+	  <param name="merfile" value="proptima/data/proptima.mer"/>
+       </antcall>
+   </target>
+
+   <target name="generate-ddl-coor">
+       <antcall target="generate-ddl">
+	  <param name="rdbms" value="${rdbms}"/>
+	  <param name="database" value="coor"/>
+	  <param name="merfile" value="tools/coords/database/coordsys.mer"/>
+       </antcall>
+   </target>
+
+
+   <!-- creates DDL for the specified RDBMS / database -->
+   <target name="generate-ddl">
+      <mkdir dir="${basedir}/${database}_${rdbms}"/>
+      <java classname="tools.gentable.Gentable" failonerror="true">
+         <arg value="-${rdbms}"/>
+         <arg value="${kernel_root}/${merfile}"/>
+         <arg value="${basedir}/${database}_${rdbms}"/>
+      </java>
+   </target>
+
+   <!-- cleanup -->
+   <target name = "clean">
+      <delete>
+         <fileset dir=".">
+	    <include name="*.class"/>
+	    <include name="ERMLexer.java"/>
+	    <include name="ERMTokenTypes.java"/>
+	    <include name="ERMTokenTypes.txt"/>
+	    <include name="ERMParser.java"/>
+         </fileset>
+      </delete>
+      <delete dir="ptma_or"/>
+      <delete dir="ptma_je"/>
+      <delete dir="ptma_ms"/>
+      <delete dir="ptma_pg"/>
+      <delete dir="ptma_pl"/>
+      <delete dir="coor_or"/>
+      <delete dir="coor_je"/>
+      <delete dir="coor_ms"/>
+      <delete dir="coor_pg"/>
+   </target>
+</project> 
+

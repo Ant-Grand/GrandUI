@@ -1,0 +1,975 @@
+<!--
+
+   Main antfile. Contains build target + other stuff that can be used for setup generation
+
+   TODO:
+   - manage "clean" of dest directory and source tree
+   - manage dependencies/timestamps
+-->
+<!-- Default target is minimal -->
+<project name="proptima" default="build-core">
+
+   <!-- environment -->
+   <property environment="env"/>
+   <property name="kernel_root" value="${env.KERNEL_ROOT}"/>
+   <property name="test_import_root" value="${env.TEST_IMPORT_ROOT}"/>
+   <property name="build.compiler" value="jikes"/>
+   <property name="osfamily" value="${env.OSFAMILY}"/>    <!-- Must be "unix" or "win" -->
+   <property file="${kernel_root}/ant-${osfamily}.properties"/>
+
+   <!-- default package name (for a Solaris standalone install): MYCMptma -->
+   <property name="pkgname" value="ptma"/>
+   <property name="fullpackagename" value="MYCM${pkgname}"/>
+
+   <property name="dest_dir" value="${tmp_dir}/installPTMA"/>
+   <!-- package dir -->
+   <property name="pkg_dest_dir" value="${dest_dir}/${pkgname}"/>
+   <!-- datainterf dir -->
+   <property name="di_dest_dir" value="${dest_dir}/datainterf"/>
+
+   <property name="solaris_host" value="${env.SOLARIS_HOST}"/>
+   <property name="solaris_host_user" value="mycom"/>
+   <property name="solaris_host_password" value="mycom"/>
+   <property name="orglib_dir" value="${devdoc}/Proptima/lib"/>
+   <property name="setup_dir" value="${kernel_root}/tools/setup"/>
+   <property name="std_gendist" value="${setup_dir}/gendist"/>
+   <property name="std_dataset" value="${setup_dir}/dataset"/>
+   <property name="std_ci" value="${setup_dir}/createinstall"/>
+   <property name="jws_dir" value="${setup_dir}"/>
+   <property name="jar_dir" value="${pkg_dest_dir}/jar"/>
+   <property name="jarlib_dir" value="${pkg_dest_dir}/jar/lib"/>
+   <property name="ref-file-dir" value="${pack_src}/gendist"/>
+   
+   
+
+   <!-- scripts for Solaris pkgmk -->
+   <property name="createinstall" value="${pack_src}/createinstall"/>
+   <property file="${kernel_root}/buildnum.txt"/>
+   <property name="build_num" value="${BuildNumber}"/> <!-- as found in buildnum.txt -->
+
+   <!-- upload-dir when accessing using nfs -->
+   <property name="uploaddir" value="/release/Builds/Soft/1.30/${packname}/${build_num}"/>
+   <property name="nfs-uploaddir" value="${uploaddir}"/>
+   <!-- upload-dir when accessing locally on muse -->
+   <property name="local-uploaddir" value="${uploaddir}"/>
+   <property name="uploadarchive" value="ant-genpackage.tgz"/>
+
+   <!-- temporary files (task "tempfile" not working here ?) -->
+   <property name="temp.checkfileout" value="${tmp_dir}/checkfileout.tmp"/>
+   <property name="temp.liblist" value="${tmp_dir}/liblist.tmp"/>
+
+   <!-- packaging propeties : Defaults are for a drop where all the desrciptor files are named same as the apcklage name. 
+        The values my differ if a patch is generated. -->
+   <property name="pkgname_protodef" value="${pkgname}.protodef"/>
+   <property name="scr-file" value="${pkgname}.scr"/>
+   <property name="mac-file" value="${pkgname}.mac"/>
+   <property name="ref-file" value="${pkgname}.ref"/>
+   <property name="prepare_tree" value="prepare-tree"/>
+   <property name="client_sim_dir" value="${tmp_dir}/installPTMA/clientsimu"/>
+   <property name="pack-scr-dir" value="${pack_src}/gendist"/>
+   <property name="pack-mac-dir" value="${pack_src}/gendist"/>
+   <!-- property to get the good online help depending on the specific build , by default get the generic onlinehelp -->
+   <property name="onlinehelp_dir" value="proptima/help/"/>
+   <property name="remotedir" value="/home/mycom"/>
+
+   <target name="print-platform">
+      <echo message="os.name=${os.name}"/>
+      <echo message="os.arch=${os.arch}"/>
+      <echo message="os.version=${os.version}"/>
+      <echo message="os.family=${os.family}"/>
+      <echo message="os-name=${os-name}"/>
+   </target>
+
+   <!-- cleaning -->
+   <target name="build-clean-all" description="Clean all compilation products">
+      <exec executable="${make}" dir="${kernel_root}" failonerror="true">
+         <arg value="clean_all"/>
+      </exec>
+   </target>
+
+   <!-- 
+        COMPILATION TASKS
+   -->
+
+   <target name="build-anttasks">
+      <exec executable="${make}" dir="${kernel_root}/tools/anttasks" output="${tmp_dir}/build-anttasks.log" failonerror="true"/>
+   </target>
+
+   <target name="build-core" description="Compile the core part of the software" unless="skip-jars">
+      <exec executable="${make}" dir="${kernel_root}" output="${tmp_dir}/build.log" failonerror="true"/>
+      <ant target="build-anttasks"/>
+   </target>
+
+   <target name="build-gentable" depends="build-core" description="Compile the GenTable tool" unless="skip-jars">
+      <!--<ant dir="${kernel_root}/tools/gentable"/>   upgrade to ant 1.6.1 broke this, revert to make -->
+      <exec executable="${make}" dir="${kernel_root}/tools/gentable" output="${tmp_dir}/build-gentable.log" failonerror="true"/>
+   </target>
+
+   <target name="build-dataimport" depends="build-core" description="Compile the DAIE" unless="skip-jars">
+      <exec executable="${make}" dir="${kernel_root}/dataimport" output="${tmp_dir}/build-dataimport.log" failonerror="true"/>
+   </target>
+
+   <target name="build-blobfile" unless="skip-jars">
+      <exec executable="${make}" dir="${kernel_root}/tools/blobfile" output="${tmp_dir}/build-anttasks.log" failonerror="true"/>
+   </target>
+
+   <target name="build-admin" unless="skip-jars">
+      <exec executable="${make}" dir="${kernel_root}/tools/admin" output="${tmp_dir}/build-admin.log" failonerror="true"/>
+   </target>
+
+   <target name="build-testimport" depends="build-gentable" unless="skip-jars">
+
+      <echo message="start testimport"/>
+      <exec executable="${make}" dir="${kernel_root}/tools/testimport" output="${tmp_dir}/build-testimport.log" failonerror="true"/>
+   </target>
+
+   <target name="build-datainterf" unless="skip-jars">
+      <exec executable="${make}" dir="${kernel_root}/tools/datainterf" output="${tmp_dir}/build-datainterf.log" failonerror="true"/>
+   </target>
+
+   <target name="build-javadata" unless="skip-jars">
+      <exec executable="${make}" dir="${kernel_root}/tools/javadata" output="${tmp_dir}/build-javadata.log" failonerror="true"/>
+   </target>
+
+   <target name="build-admin-tools" depends="build-dataimport,build-anttasks,build-blobfile,build-admin,build-datainterf,build-javadata,build-testimport" description="Compile the administration GUI (ICM, User Manager)" unless="skip-jars"></target>
+
+   <target name="build-setup" depends="build-core" description="Compile the installation/deployment tools" unless="skip-jars">
+      <exec executable="${make}" dir="${kernel_root}/tools/setup" output="${tmp_dir}/build-setup.log" failonerror="true"/>
+      <exec executable="${make}" dir="${kernel_root}/tools/dataexport" output="${tmp_dir}/build-dataexport.log" failonerror="true"/>
+   </target>
+
+   <target name="build-vendor-common" unless="skip-jars">
+      <exec executable="${make}" dir="${src_root}/vendor/common" output="${tmp_dir}/build-vendor-common.log" failonerror="true"/>
+   </target>
+
+   <target name="build-more" depends="build-admin-tools, build-gentable, build-setup,build-vendor-common" 
+           description="Compile all except data interfaces packages" unless="skip-jars"/>
+
+   <!--
+        JAR CREATION TASKS
+   -->
+   <target name="create-jars" depends="jar-mycom,jar-nims,jar-dataimport,jar-tools,jar-help" 
+           unless="skip-jars" description="Creation of all server jars">
+      <antcall target="sign-jars"/>
+   </target>
+
+   <!-- jar signer. Must supply "jar_dir", directory containing the jars to sign -->
+   <target name="sign-jars" unless="skip-jars">
+      <signjar storepass="MycomFrance" keystore="${kernel_root}/tools/setup/MycomKeyStore" alias="Mycom">
+         <fileset dir="${jar_dir}" includes="*.jar"/>
+      </signjar>
+   </target>
+
+   <selector id="exts">
+      <or>
+         <filename name="**/*.class"/>
+         <filename name="**/*.txt"/>
+         <filename name="**/*.properties"/>
+         <filename name="**/*.queries"/>
+         <filename name="**/*.html"/>
+         <filename name="**/*.gif"/>
+         <filename name="**/*.jpg"/>
+         <filename name="**/*.xml"/>
+         <filename name="**/*.desc"/>
+         <filename name="**/*.hs"/>
+         <filename name="**/*.toc"/>
+         <filename name="**/*.jhm"/>
+         <filename name="**/*.htm"/>
+         <filename name="**/*.png"/>
+         <filename name="**/*.protocol"/>
+      </or>
+   </selector>
+   
+   <!-- nims.jar  -->
+   <target name="jar-nims" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/nims.jar" update="false">
+         <zipfileset dir="${kernel_root}/nims" prefix="nims">
+            <or>
+               <selector refid="exts"/>
+               <filename name="**/*.art"/>
+            </or>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/proptima" prefix="proptima">
+            <selector refid="exts"/>
+            <exclude name="help/"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/scenariobean" prefix="scenariobean">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/drivetest" prefix="drivetest">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/web" prefix="web">
+            <selector refid="exts"/>
+         </zipfileset>
+         <fileset file="buildnum.txt"/>
+         <fileset file="log4j.xml"/>
+      </jar>
+   </target>
+
+   <!--help.jar  -->
+   <target name="jar-help" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/help.jar" update="false">
+         <zipfileset dir="${kernel_root}/proptima/help" prefix="proptima/help">
+            <selector refid="exts"/>
+         </zipfileset>
+      </jar>
+   </target>
+
+   <!-- mycom.jar  -->
+   <target name="jar-mycom" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/mycom.jar" update="false">
+         <zipfileset dir="${kernel_root}/mycom" prefix="mycom">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/gnu" prefix="gnu">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/dil" prefix="dil">
+            <selector refid="exts"/>
+         </zipfileset>
+         <fileset file="log4j.properties"/>
+      </jar>
+   </target>
+
+   <!-- dataimport.jar  -->
+   <target name="jar-dataimport" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/dataimport.jar" update="false">
+         <zipfileset dir="${kernel_root}/dataimport" prefix="dataimport">
+            <selector refid="exts"/>
+         </zipfileset>
+      </jar>
+   </target>
+
+   <!-- tools.jar  -->
+   <target name="jar-tools" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/tools.jar" update="false">
+         <zipfileset dir="${kernel_root}/tools/admin" prefix="tools/admin">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/gentable" prefix="tools/gentable">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/blobfile" prefix="tools/blobfile">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/coords" prefix="tools/coords">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/javadata" prefix="tools/javadata">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/database" prefix="tools/database">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/dataexport" prefix="tools/dataexport">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/setup" prefix="tools/setup">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/myproptima" prefix="tools/myproptima">
+            <selector refid="exts"/>
+         </zipfileset>
+      </jar>
+   </target>
+
+
+   <target name="allvendor-jar-network" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/network.jar" basedir="${src_root}" update="false">
+         <selector refid="exts"/>
+         <selector>
+            <or>
+               <filename name="vendor/"/>
+            </or>
+         </selector>
+      </jar>
+   </target>
+
+
+   <!-- nortelgsm-network.jar  -->
+   <!-- Contains the vendor and operator-specific packages -->
+   <!-- This uses a ref id for the fileset -->
+   <target name="nortelgsm-jar-network" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/network.jar" basedir="${src_root}" update="false">
+         <selector refid="exts"/>
+         <selector refid="gsm-network-jar-files"/>
+      </jar>
+   </target>
+
+   <!-- cegetel : network.jar  -->
+   <!-- Contains the vendor and operator-specific packages -->
+   <!-- This uses a ref id for the fileset -->
+   <target name="cegetel-jar-network" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/network.jar" basedir="${src_root}" update="false">
+         <selector refid="exts"/>
+         <selector>
+            <or>
+               <filename name="vendor/mycom/"/>
+               <filename name="vendor/xml3gpp/"/>
+               <filename name="vendor/siemens/"/>
+               <filename name="network/cegetel/dataimport/"/>
+               <filename name="vendor/omcnokia/"/>
+            </or>
+         </selector>
+      </jar>
+   </target>
+   
+
+   <target name="stc-jar-network" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/network.jar" update="false">
+         <zipfileset dir="${kernel_root}/vendor/mycom" prefix="vendor/mycom">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/vendor/xml3gpp" prefix="vendor/xml3gpp">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/vendor/ericsson" prefix="vendor/ericsson">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/network/stc/ftpmediation" prefix="network/stc/ftpmediation">
+            <selector refid="exts"/>
+         </zipfileset>
+      </jar>
+   </target>
+   
+   <!-- generic target for the "network.jar"           -->
+   <!-- need to define the "network-jar-files selector -->
+   <!-- in the originating antfile                     -->
+   <target name="jar-network">
+      <jar destfile="${jar_dir}/network.jar" basedir="${src_root}" update="false">
+         <selector refid="exts"/>
+         <selector refid="network-jar-files"/>
+      </jar>
+   </target>
+   
+   
+   
+   
+   
+   <!-- cegetel : scenario.jar  -->
+   <target name="cegetel-jar-scenario" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/scenario.jar" basedir="${src_root}" update="false">
+         <selector refid="exts"/>
+         <selector>
+            <or>
+               <filename name="vendor/siemens/umts/acl/"/>
+               <filename name="vendor/siemens/umts/scenariobean/"/>
+            </or>
+         </selector>
+      </jar>
+   </target>
+   
+   <!-- omnitel-network.jar  -->
+   <target name="omnitel-jar-network" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/network.jar" basedir="${src_root}" update="false">
+         <selector refid="exts"/>
+         <selector>
+            <or>
+               <filename name="vendor/omcnokia/"/>
+               <filename name="vendor/nortel/"/>
+               <filename name="vendor/xml3gpp/"/>
+               <filename name="vendor/mycom/"/>
+               <filename name="vendor/snmp/"/>
+               <filename name="network/omnitel/dataimport/"/>
+            </or>
+         </selector>
+      </jar>
+   </target>  
+
+   <!-- The CLIENT jars for JWS -->
+   <target name="create-client-jars" depends="jar-client-mycom,jar-client-nims,jar-client-tools,jar-client-network" description="Creation of all client jars">
+      <antcall target="sign-jars"/>
+   </target>
+
+   <!-- c_nims.jar  -->
+   <target name="jar-client-nims" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/c_nims.jar" update="false">
+         <zipfileset dir="${kernel_root}/nims" prefix="nims">
+            <or>
+               <selector refid="exts"/>
+               <filename name="**/*.art"/>
+            </or>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/proptima" prefix="proptima">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/scenariobean" prefix="scenariobean">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/drivetest" prefix="drivetest">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/web" prefix="web">
+            <selector refid="exts"/>
+         </zipfileset>
+         <fileset file="buildnum.txt"/>
+      </jar>
+   </target>
+
+   <!-- c_mycom.jar  -->
+   <target name="jar-client-mycom" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/c_mycom.jar" update="false">
+         <zipfileset dir="${kernel_root}/mycom" prefix="mycom">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/gnu" prefix="gnu">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/dil" prefix="dil">
+            <selector refid="exts"/>
+         </zipfileset>
+         <fileset file="log4j.properties"/>
+      </jar>
+   </target>
+
+   <!-- c_tools.jar  -->
+   <target name="jar-client-tools" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/c_tools.jar" update="false">
+         <zipfileset dir="${kernel_root}/tools/admin" prefix="tools/admin">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/gentable" prefix="tools/gentable">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/blobfile" prefix="tools/blobfile">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/coords" prefix="tools/coords">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/javadata" prefix="tools/javadata">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/database" prefix="tools/database">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/dataexport" prefix="tools/dataexport">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/tools/setup" prefix="tools/setup">
+            <selector refid="exts"/>
+         </zipfileset>
+      </jar>
+   </target>
+
+   <!-- c_network.jar  -->
+   <target name="jar-client-network" depends="create-dest-dir">
+      <jar destfile="${jar_dir}/c_network.jar" basedir="${src_root}" update="false">
+         <selector refid="exts"/>
+         <or>
+            <filename name="vendor/mycom/"/>
+            <filename name="vendor/xml3gpp/"/>
+            <filename name="vendor/nortel/"/>
+         </or>
+      </jar>
+   </target>
+
+
+   <!-- web.jar
+         This is used for the moment only for demos within development environment
+    -->
+   <target name="jar-web">
+      <jar destfile="${jar_dir}/web.jar" update="false">
+         <zipfileset dir="${kernel_root}/gnu" prefix="gnu">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/mycom" prefix="mycom">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/dil" prefix="dil">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/nims" prefix="nims">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/proptima" prefix="proptima">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/web" prefix="web">
+            <selector refid="exts"/>
+         </zipfileset>
+         <zipfileset dir="${kernel_root}/scenariobean" prefix="scenariobean">
+            <selector refid="exts"/>
+         </zipfileset>
+         <fileset file="buildnum.txt"/>
+      </jar>
+   </target>
+
+   <!-- the jdbc driver for the SQL interface -->
+   <target name="jar-jdbc-driver">
+      <jar destfile="${jar_dir}/lib/MycomJdbc.jar" update="false">
+         <zipfileset dir="${kernel_root}/nims/mddb/sql" prefix="nims/mddb/sql">
+            <selector refid="exts"/>
+         </zipfileset>
+         <fileset file="buildnum.txt"/>
+      </jar>
+   </target>
+
+   <!-- 
+          INSTALLATION TREE TASKS
+   -->
+   <target name="create-tree" description="Creation of deployment tree">
+      <antcall target="prepare-install-scripts"/>
+      <antcall target="deployscript"/>
+      <antcall target="all-lib-ext"/>
+      <antcall target="test-tree"/>
+   </target>
+
+   <target name="create-demo-tree" description="Creation of deployment tree for demos">
+      <antcall target="deployscript"/>
+      <antcall target="all-lib-ext"/>
+   </target>
+
+
+   <!-- Control that the files output by the tree creation match the ptma.ref file -->
+   <target name="test-tree" unless="debian">
+      <exec executable="${perl}" dir="${pkg_dest_dir}" failonerror="true">
+         <arg value="${kernel_root}/tools/setup/createinstall/solaris/genproto.pl"/>
+         <arg value="-r"/>
+         <arg value="${ref-file-dir}/${ref-file}"/>
+         <arg value="-f"/>
+         <arg value="${pkgname_protodef}"/>
+      </exec>
+   </target>
+   
+   <!-- TODO1: DESIGN: this is Solaris specific but must be part of the create-tree task -->
+   <!-- TODO2: IMPL: add condition on dependency (check timestamps) -->
+   <target name="prepare-install-scripts">
+      <property name="inc_dir" value="${kernel_root}/tools/setup/createinstall/solaris"/>
+      <property name="ci_dir" value="${pack_src}/createinstall"/>
+
+      <!-- for the moment, "apply" cannot check depencies other than the targets themselves
+           But here we need to make sure all is rebuilt when the files in tools/setup/createinstall are changed
+      As a precaution, we delete the target all the time
+      -->
+      <dependset>
+         <srcfileset dir="${pack_src}/createinstall" includes="*.shinc"/>
+         <srcfileset dir="${kernel_root}/tools/setup/createinstall/solaris" includes="*.inc"/>
+         <!-- delete all concerned scripts -->
+         <targetfileset dir="${pack_src}/createinstall">
+            <include name="*.postinstall"/>
+            <include name="*.request"/>
+            <include name="*.preinstall"/>
+         </targetfileset>
+      </dependset>
+
+      <apply executable="${perl}" dir="${ci_dir}" dest="${pack_src}/createinstall" failonerror="true">
+         <arg value="${kernel_root}/tools/scripts/procinclude.pl"/>
+         <arg value="-p"/>
+         <arg value="${inc_dir}"/>
+         <arg value="-f"/>
+         <srcfile/>
+         <arg value="-o"/>
+         <targetfile/>
+         <fileset dir="${ci_dir}" includes="*.shinc"/>
+         <mapper type="glob" from="*.shinc" to="*"/>
+      </apply>
+
+   </target>
+
+   <!-- cleans the destination directory -->
+   <target name="clean-dest-dir" unless="noclean">
+      <echo message="Prepare to Clean dest dir : ${dest_dir}"/>
+      <delete failonerror="false" includeEmptyDirs="true">
+         <fileset dir="${dest_dir}" includes="**/*"/>
+      </delete>
+   </target>
+
+   <!-- make sure empty directories are created -->
+   <target name="create-dest-dir">
+      <mkdir dir="${jarlib_dir}"/>
+   </target>
+
+   <target name="all-lib-ext" depends="create-dest-dir" description="Copy all 3rd-party libraries">
+      <property name="target-platform" value="solaris"/> <!-- assumes "sparc"; could be solaris-intel also -->
+      <antcall target="libext">
+         <param name="libfile" value="${kernel_root}/tools/setup/lib_ext.common.txt"/>
+         <param name="destdir" value="${jarlib_dir}"/>
+      </antcall>
+
+      <antcall target="libext">
+         <param name="libfile" value="${kernel_root}/tools/setup/lib_ext.${target-platform}.txt"/>
+         <param name="destdir" value="${pkg_dest_dir}/lib"/>
+      </antcall>
+
+
+      <!-- Kludge for working around CheckFiles -->
+      <move todir="${pkg_dest_dir}/exe" verbose="true">
+         <fileset dir="${pkg_dest_dir}/lib">
+            <include name="LicMgr"/>
+            <include name="LicMgrClient"/>
+         </fileset>
+      </move>
+   </target>
+
+   <!-- pseudo-target, only dependencies -->
+   <target name="libext" depends="check-files,copy-lib"/>
+
+   <!-- Runs the checksum verification tool -->
+   <target name="check-files">
+      <java classname="tools.setup.CheckFiles" fork="true">
+         <arg value="INPUT_FILE=${libfile}"/>
+         <arg value="OUTPUT_FILE=${temp.checkfileout}"/>
+         <arg value="LIB_DIR=${orglib_dir}"/>
+      </java>
+   </target>
+
+   <!-- create the list of libraries from the lib-ext file -->
+   <target name="parse-lib-file" depends="check-files">
+      <exec executable="${perl}" failonerror="true" output="${temp.liblist}">
+          <!-- awk emulation    -->
+         <arg value="-lan"/>
+         <!-- cut third column -->
+         <arg value="-e"/>
+          <!-- process F table with \ to / to a ant wildcard -->
+         <arg value="$F[-3] =~ s/\\/\//g; $F[-3] =~ s/Proptima//g; $F[-2] =~ s/lib//; $F[-2] =~ s/\\/\//g; $F[-1] =~ s/\\/\//g; printf '**/'; print $F[-3] . '/' . $F[-2] . '/' . $F[-1]"/>
+          <!-- column separator -->
+         <arg value="-F'/'"/>
+         <arg value="${temp.checkfileout}"/>
+      </exec>
+   </target>
+
+   <!-- copy the library files, get the list from the file generated by parse-lib-file -->
+   <target name="copy-lib">
+      <antcall target="parse-lib-file"/>
+      <copy todir="${destdir}" verbose="true" flatten="true">
+         <fileset dir="${orglib_dir}">
+            <includesfile name="${temp.liblist}"/>
+         </fileset>
+      </copy>
+   </target>
+
+   <!-- copy and configure all non-jar files -->
+   <target name="deployscript" description="Runs GenConfFile on the main package">
+      <property file="${kernel_root}/buildnum.txt"/>
+      <antcall target="genconffile">
+         <param name="scrfile" value="${scr-file}"/>
+         <param name="macfile" value="${mac-file}"/>
+         <param name="destdir" value="${pkg_dest_dir}"/>
+      </antcall>
+   </target>
+
+   <!-- sub-target to run genconffile -->
+   <target name="genconffile">
+      <echo message="Invoking GenConfFile ${pack-scr-dir}/${scrfile} ${pack-mac-dir}/${macfile}"/>
+      <echo message="PACK_SRC=${pack_src}"/>
+      <java classname="tools.setup.GenConfFile" failonerror="true" fork="true">
+         <!-- <sysproperty key="log4j.configuration"
+         value="file:${kernel_root}/tools/setup/dataset/dataset_templates/server/res/logger.xml"/> -->
+         <sysproperty key="LogLevel" value="WARN"/>
+         <arg value="${pack-scr-dir}/${scrfile}"/>
+         <arg value="${pack-mac-dir}/${macfile}"/>
+         <arg value="STD_JWS_DIR=${jws_dir}"/>
+         <arg value="PACK_SRC=${pack_src}"/>
+         <arg value="INSTALL_DIR=${destdir}"/>
+         <arg value="STD_DATASET=${std_dataset}"/>
+         <arg value="KERNEL_ROOT=${kernel_root}"/>
+         <arg value="SRC_ROOT=${src_root}"/>
+         <arg value="NonInteractive=true"/>
+         <arg value="BUILD_NUM=${BuildNumber}"/>
+         <arg value="MAJOR=${MajorVersion}"/>
+         <arg value="MINOR=${MinorVersion}"/>
+         <arg value="RELEASE=${Release}"/>
+         <arg value="TEST_IMPORT_ROOT=${test_import_root}"/>
+         <arg value="-r"/>
+         <arg value="${destdir}"/>
+         <arg value="LogDir=${tmp_dir}"/>
+      </java>
+   </target>
+   
+
+   <!-- Increments the build number -->
+   <!-- 
+        $pack_rel_path must be provided (e.g. network/motorolatrial) and
+        the corresponding gendist directory must contain the label specification
+    -->
+   <target name="inc_build_num" description="Increments the build number. You must specify -Dcomment=&lt;comment&gt;">
+      <exec executable="${perl}">
+         <arg value="${kernel_root}/tools/setup/IncBuildNum.pl"/>
+         <arg value="-c"/>
+         <arg value="${comment}"/>
+         <arg value="-l"/>
+         <arg value="${src_root}/${pack_rel_path}/gendist/labelspec.txt"/>
+         <arg value="-y"/>
+         <arg value="yes"/>
+      </exec>
+   </target>
+
+
+   <!--
+        SOLARIS PACKAGE CREATION TASKS
+
+   The installation tree has already been generated. It must be uploaded to
+   a Solaris machine, where the "pkgmk" command will be executed using rsh
+   in order to generate the Sun package
+   -->
+
+   <target name="create-package" depends="run-solaris-command" description="Create Sun package on $SOLARIS_HOST"/>
+
+   <!-- Prepare archive for upload -->
+   <target name="prepare-tree" depends="prepare-install-scripts">
+      <property name="soldir" value="${kernel_root}/tools/setup/createinstall/solaris"/>
+      <copy todir="${pkg_dest_dir}" file="${createinstall}/${pkgname_protodef}"/>
+      <copy todir="${pkg_dest_dir}">
+         <fileset dir="${soldir}">
+            <include name="gensolpackage.sh"/>
+            <include name="genproto.pl"/>
+            <include name="*.spaceinname"/>
+            <include name="*.envsubst"/>
+         </fileset>
+      </copy>
+      <!-- todo: does not manage the patch case! -->
+   </target>
+   
+   
+
+   <target name="prepare-tree-patch" depends="prepare-install-scripts">
+      <property name="soldir" value="${kernel_root}/tools/setup/createinstall/solaris"/>
+      <copy todir="${pkg_dest_dir}" file="${createinstall}/${pkgname_protodef}"/>
+      <copy todir="${pkg_dest_dir}">
+         <fileset dir="${soldir}">
+            <include name="gensolpackage.sh"/>
+            <include name="genproto.pl"/>
+            <include name="*.spaceinname"/>
+            <include name="*.envsubst"/>
+         </fileset>
+      </copy>
+      <copy todir="${pkg_dest_dir}">
+         <fileset dir="${soldir}/patch">
+            <include name="checkinstall"/>
+            <include name="i.none"/>
+            <include name="patch_checkinstall"/>
+            <include name="patch_postinstall"/>
+            <include name="postinstall"/>
+            <include name="preinstall"/>
+         </fileset>
+      </copy>
+      <copy file="${soldir}/patch/i.none" tofile="${pkg_dest_dir}/i.envsubst"/>
+      <copy file="${soldir}/i.envsubst" tofile="${pkg_dest_dir}/i.envsubst.for_patch"/>
+   </target>
+
+   <target name="tar-tree">
+      <antcall target="${prepare_tree}"/>
+      <delete file="${tmp_dir}/genpackage.tar"/> <!-- make sure it is deleted -->
+      <tar destfile="${tmp_dir}/genpackage.tar" basedir="${pkg_dest_dir}"/>
+      <gzip zipfile="${tmp_dir}/${uploadarchive}" src="${tmp_dir}/genpackage.tar"/>
+      <chmod file="${tmp_dir}/${uploadarchive}" perm="g+w"/>
+   </target>
+
+
+   <!-- ftp the archive on SOLARIS_HOST -->
+   <!-- ftp ant task doesn't work, to workaround, use ftp-upload (available on debian)-->
+   <target name="upload-tar" depends="tar-tree" unless="win32">
+      <exec executable="${ftpupload}" failonerror="true">
+         <arg value="--host"/>
+         <arg value="${solaris_host}"/>
+         <arg value="--user"/>
+         <arg value="${solaris_host_user}"/>
+         <arg value="--password"/>
+         <arg value="${solaris_host_password}"/>
+         <arg value="--ignore-quit-failure"/>
+         <arg value="--dir"/>
+         <arg value="${remotedir}"/>
+         <arg value="${tmp_dir}/${uploadarchive}"/>
+         <arg value="${kernel_root}/tools/setup/dogensolpackage.sh"/>
+      </exec>
+      <delete file="${tmpfile}"/>
+   </target>
+   
+   <!-- ftp upload for windows -->
+   <target name="upload-tar-win" depends="tar-tree" if="win32">
+      <echo file="${tmp_dir}/win-ftp.rsp" append="false">open ${solaris_host}
+${solaris_host_user}
+${solaris_host_password}
+bin
+cd ${remotedir}
+put ${tmp_dir}/${uploadarchive}
+put ${kernel_root}/tools/setup/dogensolpackage.sh
+quit</echo>
+      <exec executable="ftp" failonerror="true">
+         <arg value="-s:${tmp_dir}/win-ftp.rsp"/>
+      </exec>
+      <delete file="${tmpfile}"/>
+      <delete file="${tmp_dir}/win-ftp.rsp"/>
+   </target>
+   
+   <!-- execute command on solaris host -->
+   <target name="run-solaris-command" depends="upload-tar, upload-tar-win">
+      <property name="remoteTmpDir" value="/tmp/${build_num}"/>
+
+      <exec executable="${rsh}" failonerror="true">
+         <arg value="${solaris_host}"/>
+         <arg value="-l"/>
+         <arg value="${solaris_host_user}"/>
+         <arg value="${perl} -e 's/\r//' -pi dogensolpackage.sh &amp;&amp; sh dogensolpackage.sh ${uploadarchive} ${fullpackagename} ${remoteTmpDir}"/>
+      </exec>
+   </target>
+
+   <!-- Upload onto muse using an ssh session which "wget"s the file on the solaris host -->
+   <!-- not working for windows yet -->
+   <target name="upload-sol-package" unless="win32">
+      <property name="url" value="ftp://${solaris_host_user}:${solaris_host_password}@${solaris_host}//tmp/${build_num}"/>
+      <property name="and" value="&amp;&amp;"/>
+      <exec executable="${ssh}" failonerror="true">
+         <arg value="muse"/>
+         <!-- wget -nv option is "semi-quiet"; -N option is "retrieve only if newer, overriding the current version" -->
+         <arg value="mkdir ${local-uploaddir} ; cd ${local-uploaddir} ${and} wget -nv -N ${url}/${fullpackagename}.pds"/>
+      </exec>
+   </target>
+
+   <target name="upload-sol-patch" depends="create-patch-archive">
+      <property name="url" value="ftp://${solaris_host_user}:${solaris_host_password}@${solaris_host}//tmp/${build_num}/patches"/>
+      <property name="and" value="&amp;&amp;"/>
+      <exec executable="${ssh}" failonerror="true">
+         <arg value="muse"/>
+            <!-- wget -nv option is "semi-quiet"; -N option is "retrieve only if newer, overriding the current version" -->
+         <arg value="mkdir ${local-uploaddir} ; export deliverable=`echo ${PatchId}|sed -e 's/MYCM/MYCM_PATCH/'`; cd ${local-uploaddir} ${and} wget -nv -N ${url}/$deliverable.tar.gz"/>
+      </exec>
+   </target>
+
+   <target name="create-patch-archive">
+      <exec executable="${rsh}" failonerror="true">
+         <arg value="${solaris_host}"/>
+         <arg value="-l"/>
+         <arg value="mycom"/>
+         <arg value="cd /tmp/${build_num}/patches/;export deliverable=`echo ${PatchId}|sed -e 's/MYCM/MYCM_PATCH/'`;tar -cvf $deliverable.tar ${PatchId};gzip $deliverable.tar"/>
+      </exec>
+   </target>
+
+   <!--
+
+        DATAINTERF PACKAGE CREATION TASKS
+
+   Datainterf.zip contains a java tool, its parameter files and a perl wrapper
+   to generate the data corresponding to a particular interface
+   It is multiplatform and does not need a solaris host to generate
+
+   -->
+   <!-- datainterf package generation -->
+   <target name="datainterf" depends="datainterf-zip" description="Create datainterf.zip package"/>
+   <!--     run genconffile  -->
+   <target name="datainterf-deployscript">
+      <antcall target="genconffile">
+         <param name="scrfile" value="datainterf.scr"/>
+         <param name="macfile" value="datainterf.mac"/>
+         <param name="destdir" value="${di_dest_dir}"/>
+      </antcall>
+   </target>
+
+   <!-- datainterf.jar  -->
+   <target name="datainterf-jar">
+      <!-- the "jars" is for genmodule BWD compat. Must be corrected to "jar"-->
+      <mkdir dir="${di_dest_dir}/jars"/>
+      <jar destfile="${di_dest_dir}/jars/datainterf.jar" basedir="${kernel_root}">
+         <selector>
+            <or>
+               <filename name="**/*.class"/>
+               <filename name="**/*.txt"/>
+               <filename name="**/*.properties"/>
+            </or>
+         </selector>
+         <or>
+            <filename name="gnu/"/>
+            <filename name="mycom/"/>
+            <filename name="nims/mddb/shared/"/>
+            <filename name="dataimport/util/"/>
+            <filename name="tools/datainterf/"/>
+            <filename name="tools/propag/"/>
+            <filename name="tools/vectoriser/"/>
+            <filename name="vendor/nortel/datainterf/"/>
+            <filename name="vendor/omcnokia/datainterf/"/>
+         </or>
+      </jar>
+   </target>
+
+   <!-- copy the libraries for datainterf -->
+   <target name="datainterf-lib">
+      <antcall target="libext">
+         <param name="libfile" value="${kernel_root}/tools/setup/lib_ext.common_dev.txt"/>
+         <param name="destdir" value="${di_dest_dir}/lib"/>
+      </antcall>
+   </target>
+
+
+   <!-- create target zipfile  -->
+   <target name="datainterf-zip" depends="datainterf-deployscript,datainterf-jar,datainterf-lib">
+      <zip destfile="${di_dest_dir}/datainterf.zip" basedir="${di_dest_dir}">
+         <exclude name="datainterf.zip"/>
+      </zip>
+   </target>
+
+   <!-- upload to muse -->
+   <target name="datainterf-upload" depends="datainterf-zip" description="Create and install datainterf.zip package">
+      <mkdir dir="${nfs-uploaddir}"/>
+      <copy file="${di_dest_dir}/datainterf.zip" todir="${nfs-uploaddir}"/>
+   </target>
+
+
+
+   <!-- rules to build the client simulator -->
+
+      <!-- compiles the client simulator classes -->
+   <target name="gsm-client-simulator-classes">
+      <exec executable="${make}" dir="${kernel_root}/dil" failonerror="true"/>
+      <exec executable="${make}" dir="${kernel_root}/mycom" failonerror="true"/>
+      <exec executable="${make}" dir="${kernel_root}/nims" failonerror="true"/>
+      <exec executable="${make}" dir="${kernel_root}/tools" failonerror="true"/>
+   </target>
+
+   <!-- creates the simulator package tree -->
+   <target name="gsm-client-simulator-tree">
+      <mkdir dir="${client_sim_dir}"/>
+      <mkdir dir="${client_sim_dir}/lib"/>
+      <mkdir dir="${client_sim_dir}/properties"/>
+      <mkdir dir="${client_sim_dir}/reports"/>
+   </target>
+
+   <!-- jars the needed classes to a simulator.jar  and creates the jar dir-->
+   <target name="gsm-client-simulator-jar" depends="gsm-client-simulator-classes,gsm-client-simulator-tree">
+      <jar destfile="${client_sim_dir}/lib/simulator.jar" basedir="${kernel_root}" 
+           update="false" includesfile="${kernel_root}/nims/tools/client-simu-files.list"/>
+   </target>
+
+   <!-- populate the tree with the scripts, properties and libs -->
+   <target name="gsm-client-simulator-populate-tree" depends="gsm-client-simulator-tree">
+     <!-- copy properties file -->
+      <copy todir="${client_sim_dir}/properties" verbose="true" flatten="true">
+         <fileset dir="${simulator_base_config_dir}/properties">
+            <include name="simulator.properties"/>
+         </fileset>
+      </copy>
+    <!-- copy start scripts -->
+      <copy todir="${client_sim_dir}" verbose="true" flatten="true">
+         <fileset dir="${kernel_root}/nims/tools/simures/scripts">
+            <include name="run.sh"/>
+            <include name="run.bat"/>
+         </fileset>
+      </copy>
+     <!-- copy reports file -->
+      <copy todir="${client_sim_dir}/reports" verbose="true" flatten="true">
+         <fileset dir="${simulator_base_config_dir}/reports">
+            <include name="*.rpt"/>
+            <include name="*.scp"/>
+         </fileset>
+      </copy>
+     <!-- 3rd party libs -->
+      <copy todir="${client_sim_dir}/lib" verbose="true" flatten="true">
+         <fileset dir="${jarlib_dir}">
+            <include name="*.jar"/>
+         </fileset>
+      </copy>
+     <!-- readme file -->
+      <copy todir="${client_sim_dir}" verbose="true" flatten="true">
+         <fileset dir="${kernel_root}/nims/tools/simures/info">
+            <include name="*.*"/>
+         </fileset>
+      </copy>
+   </target>
+
+
+   <!-- zips the whole content of the ${client_sim_dir} -->
+   <target name="gsm-client-simulator-zip-tree" depends="gsm-client-simulator-populate-tree">
+      <zip zipfile="${client_sim_dir}/client-simulator.zip" basedir="${client_sim_dir}"/>
+   </target>
+</project>

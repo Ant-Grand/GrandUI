@@ -1,0 +1,252 @@
+<?xml version="1.0"?>
+
+<!--
+   Build file for Proxifier
+   $Id: build.xml,v 1.8 2003/08/21 12:21:58 moi Exp $
+
+Notes:
+   This is a build file for use with the Jakarta Ant build tool.
+
+Prerequisites:
+
+   jakarta-ant from http://jakarta.apache.org/ant/index.html
+
+Build Instructions:
+   To build, run
+
+   ant <target>
+
+   in the directory where this file is located with the target you want.
+
+Available targets:
+
+ - compile  -> compile source classes and places result in "classes" directory
+ - jar      -> Create file "lib/smartproxy.jar"
+ - test     -> Run junit tests.
+ - docs     -> Build documentation from TeX sources
+ - apidocs  -> Build API documentation (javadoc) in "docs/api"
+-->
+
+<project name="Proxifier" default="jar" basedir=".">
+  
+  <!-- Allow any user specific values to override the defaults -->
+  <property file="${user.home}/build.properties" />
+  <!-- Allow user defaults for this project -->
+  <property file="build.properties" />
+  <!-- Set default values for the build -->
+  <property file="default.properties" />
+  
+  <target name="init">
+    <property name="name"         value="smartproxy"/>
+    <property name="packages"     value="net.ggtools.smartproxy.*"/>
+    <property name="src.dir"      value="${basedir}/source"/>
+    <property name="src.test"     value="${basedir}/test"/>
+    <property name="src.example"  value="${basedir}/example"/>
+    <property name="build.dir"    value="${basedir}/bin"/>
+    <property name="build.dest"   value="${build.dir}/main"/>
+    <property name="build.test"   value="${build.dir}/test"/>
+    <property name="build.example"   value="${build.dir}/example"/>
+    <property name="docs.dir"     value="${basedir}/docs"/>
+    <property name="apidocs.dir"  value="${docs.dir}/api"/>
+    <property name="lib.dir"      value="${basedir}/lib"/>
+    <property name="class.path.base" value="${lib.dir}/bcel-5.1.jar:${lib.dir}/junit.jar:${build.test}:${build.example}"/>
+    <property name="class.path"   value="${build.dest}:${class.path.base}"/>
+    <property name="class.path.jar"  value="${lib.dir}/smartproxy.jar:${class.path.base}"/>
+
+    <!-- Use jikes compiler, if you don't have it comment out the next lines -->
+    <property name="build.compiler.emacs" value="true"/>
+    <property name="build.compiler.pedantic" value="true"/>
+    <property name="build.compiler" value="jikes"/>
+  </target>
+
+  <!-- Compile the sources -->
+  <target name="compile" depends="init" description="Compiles the java source files.">
+    <mkdir dir="${build.dest}"/>
+    <javac srcdir="${src.dir}" destdir="${build.dest}" classpath="${class.path}" debug="false" target="1.4" optimize="true"/>
+  </target>
+
+  <!-- Compile the sources for JUnit tests. -->
+  <target name="compile.test" depends="jar">
+    <mkdir dir="${build.test}"/>
+    <javac srcdir="${src.test}" destdir="${build.test}" classpath="${class.path.jar}" debug="false" target="1.4" optimize="true"/>
+  </target>
+
+  <!-- Compile the sources for examples. -->
+  <target name="compile.example" depends="jar">
+    <mkdir dir="${build.example}"/>
+    <javac srcdir="${src.example}" destdir="${build.example}" classpath="${class.path.jar}" debug="false" target="1.4" optimize="true"/>
+  </target>
+
+  <!-- Jar the library -->
+  <target name="jar" depends="compile" description="Creates the smartproxy.jar and smartproxy-src.zip files.">
+    <jar jarfile="${lib.dir}/${name}.jar" 
+         basedir="${build.dest}"
+	 includes="net/ggtools/smartproxy/**"/>
+    <zip zipfile="${lib.dir}/${name}-src.zip" 
+         basedir="${src.dir}"
+	 includes="net/ggtools/smartproxy/**"/>
+  </target>
+
+  <target name="rebuild" depends="clean,compile"/>
+
+  <!-- Creates the API documentation -->
+  <target name="docs" depends="init" description="Creates the API documentation">
+    <mkdir dir="${apidocs.dir}"/>
+    <javadoc packagenames="${packages}"
+             sourcepath="${src.dir}"
+             classpath="${class.path}"
+             destdir="${apidocs.dir}"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="${name} API"
+             source="1.4"
+             doctitle="${name}">
+             <header><![CDATA[<b>Smartproxy</b><br><font size="-1">${version}</font>]]></header>
+             <link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
+             <link href="http://jakarta.apache.org/bcel/apidocs/"/>
+    </javadoc>
+  </target>
+
+  <target name="examples" depends="compile.example" description="Runs the example programs.">
+    <java classname="net.ggtools.smartproxy.example.Example1" fork="true" classpath="${class.path.jar}" />
+  </target>
+
+  <target name="test" depends="compile.test" description="Runs the JUnit tests.">
+    <junit printsummary="yes" haltonfailure="yes" fork="yes">
+      <classpath>
+        <pathelement path="${class.path.jar}"/>
+      </classpath>
+
+      <formatter type="plain"/>
+
+      <batchtest fork="yes">
+       <fileset dir="${src.test}">
+          <include name="**/*Test*.java"/>
+          <exclude name="**/AllTests.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <!-- Clean everything up -->
+  <target name="clean" depends="init" description="Cleans everything up">
+    <delete dir="${build.dir}"/>
+    <delete dir="${apidocs.dir}"/>
+    <delete>
+      <fileset dir="${basedir}" includes="TEST*.txt,${final.name}.tar.gz,${final.name}.zip,${final.name}-src.tar.gz,${final.name}-src.zip,*~"/>
+      <fileset dir="${lib.dir}" includes="${name}.jar,${name}-src.zip"/>
+   </delete>
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- D I S T R I B U T I O N S                                          -->
+  <!-- ================================================================== -->
+
+  <target name="dist" depends="init,jar,docs" description="Creates the distribution archives">
+
+    <property name="distDir" value="${build.dir}/${final.name}"/>
+
+    <!-- B I N A R Y  D I S T R I B U T I O N -->
+
+    <echo>
+      +-------------------------------------------------------+
+      | C R E A T I N G  B I N A R Y  D I S T R I B U T I O N |
+      +-------------------------------------------------------+
+    </echo>
+    
+    <mkdir dir="${distDir}"/>
+
+    <!-- Copy README and LICENSE -->
+    <copy todir="${distDir}" file="README"/>
+    <copy todir="${distDir}" file="LICENSE"/>
+
+    <!-- Copy lib directory -->
+    <copy todir="${distDir}/lib">
+      <fileset dir="${lib.dir}">
+        <include name="smartproxy*.jar"/>
+        <include name="bcel*.jar"/>
+        <include name="smartproxy*src.zip"/>
+        <include name="bcel*src.zip"/>
+      </fileset>
+    </copy>
+
+    <!-- Copy documentation -->
+    <copy todir="${distDir}/docs">
+      <fileset dir="${docs.dest}">
+        <include name="**"/>
+      </fileset>
+    </copy>
+
+    <!-- Copy Tests -->
+    <copy todir="${distDir}/test">
+      <fileset dir="${src.test}">
+        <include name="**/*.java"/>
+      </fileset>
+    </copy>
+
+    <!-- Copy Examples -->
+    <copy todir="${distDir}/example">
+      <fileset dir="${src.example}">
+        <include name="**/*.java"/>
+      </fileset>
+    </copy>
+
+    <!-- Create a tar.gz file -->
+    <tar longfile="gnu" tarfile="${final.name}.tar.gz" compression="gzip">
+      <tarfileset dir="${build.dir}">
+        <include name="${final.name}/**"/>
+      </tarfileset>
+    </tar>
+    
+    <!-- Create a zip file -->
+    <zip zipfile="${final.name}.zip">
+      <zipfileset dir="${build.dir}">
+        <include name="${final.name}/**"/>
+      </zipfileset>
+    </zip>
+
+    <!-- S O U R C E  D I S T R I B U T I O N -->
+
+    <echo>
+      +-------------------------------------------------------+
+      | C R E A T I N G  S O U R C E  D I S T R I B U T I O N |
+      +-------------------------------------------------------+
+    </echo>
+
+	<!-- Remove jars -->
+    <delete>
+      <fileset dir="${distDir}">
+        <include name="**/smartproxy.jar"/>
+        <include name="**/smartproxy-src.zip"/>
+      </fileset>
+    </delete>
+    
+    <copy todir="${distDir}" file="default.properties"/>
+    <copy todir="${distDir}" file="build.xml"/>
+
+    <!-- Copy Source -->
+    <copy todir="${distDir}/source">
+      <fileset dir="${src.dir}">
+        <include name="**/*.java"/>
+      </fileset>
+    </copy>
+
+    <!-- Create a tar.gz file -->
+    <tar longfile="gnu" tarfile="${final.name}-src.tar.gz" compression="gzip">
+      <tarfileset dir="${build.dir}">
+        <include name="${final.name}/**"/>
+      </tarfileset>
+    </tar>
+    
+    <!-- Create a zip file -->
+    <zip zipfile="${final.name}-src.zip">
+      <zipfileset dir="${build.dir}">
+        <include name="${final.name}/**"/>
+      </zipfileset>
+    </zip>
+
+    <delete dir="${distDir}"/>
+    </target>
+
+</project>

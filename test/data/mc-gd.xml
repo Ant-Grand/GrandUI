@@ -1,0 +1,160 @@
+<!--            Nortel PWI "MYCMnnbss" drop and patch generation      -->
+<!--            This is called from the "runall.sh" script            -->
+<!--  This package is (currently - 10/05/2004) the only one to be
+      generated with ant, the rest use the legacy perl scripts 
+      genmodule.pl/hook.pl
+                                                                      -->
+
+
+<project name="nortelnnv41" default="all-upload">
+   <!-- environment -->
+   <!-- those need to be repeated here: todo: use includes -->
+   <property environment="env"/>
+   <property name="build.compiler" value="jikes"/>
+   <property name="src_root" value="${env.SRC_ROOT}"/>
+   <property name="kernel_root" value="${env.KERNEL_ROOT}"/>
+   <property name="osfamily" value="${env.OSFAMILY}"/>
+   <property file="${kernel_root}/ant-${osfamily}.properties"/>
+   <property file="${kernel_root}/buildnum.txt"/>
+   <property name="build_num" value="${BuildNumber}"/> <!-- as found in buildnum.txt -->
+   <property name="nortel_root" value="/nortel"/> <!-- nfs mount of the nortel directory for the "release" target"-->
+   <!-- project parameters -->
+   <property name="pack_rel_path" value="network/norteltrial"/>
+   <property name="pack_src_pwi" value="${src_root}/network/norteltrial/gendist"/>
+   <property name="pack_src" value="${src_root}/network/norteltrial"/>
+   <property name="pack_src_scr" value="${pack_src_pwi}"/>
+   <property name="pack_src_mac" value="${pack_src_pwi}"/>
+
+
+   <property name="packname" value="${drop}"/>
+   <property name="pkgname" value="nnbss"/>
+   <property name="fullpackagename" value="MYCM${pkgname}"/>
+   <property name="createinstall" value="${src_root}/network/norteltrial/createinstall"/>
+   <property name="solaris_host_user" value="nortel"/>
+   <property name="solaris_host_password" value="nortel"/>
+   <!-- upload-dir when accessing using nfs -->
+   <property name="uploaddir" value="/release/Builds/Soft/1.30/${packname}/${build_num}"/>
+   <property name="nfs-uploaddir" value="${uploaddir}"/>
+   <!-- upload-dir when accessing locally on muse -->
+   <property name="local-uploaddir" value="${uploaddir}"/>
+
+   <property name="remotedir" value="/home/nortel"/>
+
+
+   <!-- selector to pass to the main antfile -->
+   <selector id="gsm-network-jar-files">
+      <or>
+         <filename name="network/nortelgsm/dataimport/"/>
+         <filename name="vendor/xml3gpp/"/>
+         <filename name="vendor/mycom/dataimport/monitor/"/>
+         <filename name="vendor/nortel/sdo/"/>
+         <filename name="vendor/nortel/archiving/"/>
+         <filename name="vendor/nortel/ftpmediation/"/>
+      </or>
+   </selector>
+
+   <!-- Compilation -->
+   <target name="build-kernel">
+      <ant dir="${kernel_root}" target="build-more" inheritrefs="true"/>
+   </target>
+
+   <target name="build" depends="build-kernel" description="Compile all" unless="skip-jars">
+      <!-- the targets below are for the bss package -->
+      <exec executable="${make}" dir="${src_root}/vendor/xml3gpp" output="${tmp_dir}/build-xml3gpp.log" failonerror="true"/>
+      <exec executable="${make}" dir="${src_root}/vendor/common" output="${tmp_dir}/build-common.log" failonerror="true"/>
+      <exec executable="${make}" dir="${src_root}/vendor/nortel/help/" output="${tmp_dir}/build-nortel-help.log" failonerror="true"/>
+   </target>
+
+   <!-- jar generation -->
+   <target name="create-jars" depends="build" description="Creation of all jar files" unless="skip-jars">
+      <echo message="Entering gsm target create-jars"/>
+      <property name="onlinehelp_dir" value="vendor/nortel/help/oam4_1/"/>
+      <!-- <ant dir="${kernel_root}" target="create-jars" inheritrefs="true" /> -->
+      <!-- <ant dir="${kernel_root}" target="nortelgsm-jar-network" inheritrefs="true"/> -->
+   </target>
+
+   <!-- tree creation -->
+   <target name="create-tree" depends="set-patch-properties,create-jars" description="Creation of deployment tree">
+      <echo message="pkgnameprotodef=${pkgname_protodef}"/>
+      <antcall target="create-tree-bss"/>
+   </target>
+   
+   <!-- Does not call "prepare-tree-patch" because the copy of the patch_checkinstall, patch_postinstall
+        scripts is made by the perl-based Nortel scripts (patchadd.sh etc.)
+        But we do need to copy the protodef file, which is normally handled by prepare-tree-patch
+   -->
+   <target name="create-tree-bss" description="Creation of deployment tree">
+      <!-- Warning: the todir below must match pkg_dest_dir, defined in build.xml -->
+      <property name="pkg_dest_dir" value="${tmp_dir}/installPTMA/nnbss"/>
+      <mkdir dir="${pkg_dest_dir}"/>
+      <copy tofile="${pkg_dest_dir}/${pkgname_protodef}" file="${createinstall}/protodef"/>
+      
+      <!-- Copy/pasted from $SRC_ROOT/build.xml:prepare-tree-patch -->
+      <!-- copies package specific files needed to build the patch -->
+      <property name="soldir" value="${kernel_root}/tools/setup/createinstall/solaris"/>
+      <copy todir="${pkg_dest_dir}">
+         <fileset dir="${soldir}/patch">
+            <include name="checkinstall"/>
+            <include name="i.none"/>
+            <include name="patch_checkinstall"/>
+            <include name="patch_postinstall"/>
+            <include name="postinstall"/>
+            <include name="preinstall"/>
+         </fileset>
+      </copy>
+      <copy file="${soldir}/patch/i.none" tofile="${pkg_dest_dir}/i.envsubst"/>
+      <copy file="${soldir}/i.envsubst" tofile="${pkg_dest_dir}/i.envsubst.for_patch"/>
+      <!-- end of copied lines-->
+      
+      <ant dir="${kernel_root}" target="prepare-install-scripts" inheritrefs="true"/>
+      <ant dir="${kernel_root}" target="deployscript" inheritrefs="true"/>
+      <ant dir="${kernel_root}" target="test-tree" inheritrefs="true"/>
+   </target>
+    
+   <!-- Solaris package creation: uploads onto the solaris host and runs "pkgmk"-->
+   <target name="create-sun-package" depends="create-tree" description="Creation of Sun package">
+      <ant dir="${kernel_root}" target="create-package" inheritrefs="true"/>
+   </target>
+
+   
+   <!-- package / patch discrimination -->
+   <!-- This target is executed first when PatchId is defined -->
+   <!-- todo: move to master build.xml and update nortelgsm's antfile -->
+   <target name="set-patch-properties" if="PatchId">
+      <echo message="Building a PATCH !!"/>
+      <property name="scr-file" value="${pkgname}.patch.scr"/>
+      <property name="ref-file" value="${pkgname}.ref"/>
+      <property name="prepare_tree" value="prepare-tree-patch"/>
+      <!-- The mac file used in the same as for the drop (therefore in the gendist/ directory
+           BUT the scr file is specific and is to be found in the patch/ directory -->
+      <property name="pack-scr-dir" value="${src_root}/network/norteltrial/patch"/>
+      <!-- override the location of the .ref filename -->
+      <property name="ref-file-dir" value="${pack_src}/patch"/>
+      <property name="package-scrfile" value="${pkgname}.patch.scr"/>
+      <property name="pkgname_protodef" value="${pkgname}.protodef"/>
+   </target>
+
+   <!-- Solaris package delivery (=copy to directory on muse)-->
+   <target name="deliver-sun-package" depends="create-sun-package" description="Delivery of Sun package">
+      <ant dir="${kernel_root}" target="upload-sol-package" inheritrefs="true"/>
+   </target>
+
+   
+   <!-- entry point target for a   DROP             -->
+   <!--    - build                                  -->
+   <!--    - tree creation                          -->
+   <!--    - upload on solaris host in /tmp/XXX     -->
+   <!--    - upload on  muse in  "builds" directory -->
+   <target name="install-all" depends="deliver-sun-package" description="Compile, generate setup tree, generate setup, install">
+      <ant dir="${kernel_root}" target="upload-sol-package" inheritrefs="true"/>
+   </target>
+
+   
+   <!-- PATCH CREATION / UPLOAD        -->   
+   <!-- Solaris patch creation         -->
+   <!-- Entry point for patch creation -->
+   <target name="create-sun-patch" description="Creation of Sun patch">
+      <antcall target="create-sun-package"/>
+   </target>
+</project>
+
