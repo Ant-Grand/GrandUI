@@ -29,6 +29,7 @@
 package net.ggtools.grand.ui.graph;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -58,6 +59,8 @@ import org.apache.tools.ant.BuildException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.PrintFigureOperation;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -120,7 +123,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     private Dispatcher parameterChangedEvent;
 
-    private IProgressMonitor progressMonitor;
+    private IProgressMonitor defaultProgressMonitor;
 
     private Draw2dGraphRenderer renderer;
 
@@ -164,13 +167,28 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     /**
      * @param filter
      */
-    public void addFilter(GraphFilter filter) {
-        log.info("Adding filter " + filter);
-        progressMonitor.beginTask("Adding filter", 4);
-        filterChain.addFilterLast(filter);
-        progressMonitor.worked(1);
-        renderFilteredGraph();
-        progressMonitor.done();
+    public void addFilter(final GraphFilter filter) {
+        final IProgressMonitor progressMonitor = defaultProgressMonitor;
+        
+        try {
+            ModalContext.run(new IRunnableWithProgress() {
+                public void run(IProgressMonitor monitor) throws InvocationTargetException,
+                        InterruptedException {
+                    log.info("Adding filter " + filter);
+                    progressMonitor.beginTask("Adding filter", 4);
+                    filterChain.addFilterLast(filter);
+                    progressMonitor.worked(1);
+                    renderFilteredGraph(progressMonitor);
+                }
+            }, true, progressMonitor, Display.getCurrent());
+        } catch (InvocationTargetException e) {
+            reportError("Cannot add filter", e);
+        } catch (InterruptedException e) {
+            reportError("Cannot add filter", e);
+        }
+        finally {
+            progressMonitor.done();
+        }
     }
 
     /*
@@ -183,12 +201,28 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     }
 
     public void clearFilters() {
-        log.info("Clearing filters");
-        progressMonitor.beginTask("Clearing filters", 4);
-        filterChain.clearFilters();
-        progressMonitor.worked(1);
-        renderFilteredGraph();
-        progressMonitor.done();
+        final IProgressMonitor progressMonitor = defaultProgressMonitor;
+        
+        try {
+            ModalContext.run(new IRunnableWithProgress() {
+                public void run(IProgressMonitor monitor) throws InvocationTargetException,
+                        InterruptedException {
+                    log.info("Clearing filters");
+                    progressMonitor.beginTask("Clearing filters", 4);
+                    filterChain.clearFilters();
+                    progressMonitor.worked(1);
+                    renderFilteredGraph(progressMonitor);
+                }
+            }, true, progressMonitor, Display.getCurrent());
+        } catch (InvocationTargetException e) {
+            reportError("Cannot clear filters", e);
+        } catch (InterruptedException e) {
+            reportError("Cannot clear filters", e);
+        }
+        finally {
+            progressMonitor.done();
+        }
+
     }
 
     /*
@@ -254,12 +288,14 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @param enabled
      */
     public void enableBusRouting(final boolean enabled) {
+        final IProgressMonitor progressMonitor = defaultProgressMonitor;
+        
         if (busRoutingEnabled != enabled) {
             if (log.isInfoEnabled()) log.info("Using bus routing set to " + enabled);
             busRoutingEnabled = enabled;
             parameterChangedEvent.dispatch(this);
             progressMonitor.beginTask("Rerouting graph", 3);
-            renderFilteredGraph();
+            renderFilteredGraph(progressMonitor);
             progressMonitor.done();
         }
     }
@@ -303,7 +339,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @return Returns the progressMonitor.
      */
     public final IProgressMonitor getProgressMonitor() {
-        return progressMonitor;
+        return defaultProgressMonitor;
     }
 
     /*
@@ -330,6 +366,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      *            wait for graph loading to be complete if <code>true</code>.
      */
     public void openFile(final File file, boolean wait) {
+        final IProgressMonitor progressMonitor = defaultProgressMonitor;
+        
         if (log.isInfoEnabled()) log.info("Opening " + file);
 
         progressMonitor.beginTask("Opening new graph", 5);
@@ -341,7 +379,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             if (log.isDebugEnabled()) log.debug("Model loaded graph");
             progressMonitor.worked(1);
 
-            filterAndRenderGraph();
+            filterAndRenderGraph(progressMonitor);
             if (log.isInfoEnabled()) log.info("Graph loaded & rendered");
             RecentFilesMenu.addNewFile(file);
         } catch (final GrandException e) {
@@ -399,13 +437,15 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * Refreshing (i.e.: rerender) the current graph.
      */
     public void refreshGraph() {
+        final IProgressMonitor progressMonitor = defaultProgressMonitor;
+        
         // FIXME check that there is a graph.
         if (log.isInfoEnabled()) log.info("Refreshing current graph");
         progressMonitor.beginTask("Refreshing graph", 3);
         clearFiltersOnNextLoad = false;
 
         try {
-            renderFilteredGraph();
+            renderFilteredGraph(progressMonitor);
             if (log.isInfoEnabled()) log.info("Graph refreshed");
         } catch (final BuildException e) {
             reportError("Cannot open graph", e);
@@ -418,6 +458,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * Reload the current graph.
      */
     public void reloadGraph() {
+        final IProgressMonitor progressMonitor = defaultProgressMonitor;
+        
         // FIXME Check that there is a model.
         if (log.isInfoEnabled()) log.info("Reloading current graph");
         progressMonitor.beginTask("Reloading graph", 5);
@@ -428,7 +470,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             if (log.isDebugEnabled()) log.debug("Model reloaded graph");
             progressMonitor.worked(1);
 
-            filterAndRenderGraph();
+            filterAndRenderGraph(progressMonitor);
             if (log.isInfoEnabled()) log.info("Graph reloaded");
         } catch (GrandException e) {
             reportError("Cannot reload graph", e);
@@ -482,27 +524,27 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      *            The progressMonitor to set.
      */
     public final void setProgressMonitor(IProgressMonitor progressMonitor) {
-        this.progressMonitor = progressMonitor;
+        defaultProgressMonitor = progressMonitor;
     }
 
     /**
      * Filter the current graph of the model and render it.
      */
-    private void filterAndRenderGraph() {
+    private void filterAndRenderGraph(final IProgressMonitor progressMonitor) {
         progressMonitor.subTask("Filtering graph");
         if (clearFiltersOnNextLoad) filterChain.clearFilters();
         filterChain.filterGraph();
         if (log.isDebugEnabled()) log.debug("Filtering done");
         progressMonitor.worked(1);
 
-        renderFilteredGraph();
+        renderFilteredGraph(progressMonitor);
     }
 
     /**
      * Render the currently load/filtered graph. This method increase the
      * progress monitor by 3.
      */
-    private void renderFilteredGraph() {
+    private void renderFilteredGraph(final IProgressMonitor progressMonitor) {
         if (log.isDebugEnabled()) log.debug("Creating dot graph");
         progressMonitor.subTask("Laying out graph");
         graph = filterChain.getGraph();
@@ -517,12 +559,17 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         progressMonitor.worked(1);
 
         progressMonitor.subTask("Rendering graph");
-        if (figure == null) {
-            figure = renderer.render(dotGraph);
-        }
-        else {
-            renderer.render(figure, dotGraph);
-        }
+        Display.getDefault().syncExec(new Runnable() {
+            public void run() {
+                if (figure == null) {
+                    figure = renderer.render(dotGraph);
+                }
+                else {
+                    renderer.render(figure, dotGraph);
+                }
+
+            }
+        });
         figure.setSelectionManager(this);
         progressMonitor.worked(1);
 
@@ -549,7 +596,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * send event.
      */
     private void stopControler() {
-        // Stop send & receiving events.
+        // Stop sending & receiving events.
         graphEventManager.clear();
         Application.getInstance().getPreferenceStore().removePropertyChangeListener(this);
 
