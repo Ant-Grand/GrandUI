@@ -46,6 +46,7 @@ import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.GraphConsumer;
 import net.ggtools.grand.graph.GraphProducer;
 import net.ggtools.grand.graph.Link;
+import net.ggtools.grand.graph.Node;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -105,7 +106,12 @@ public class Draw2dGrapher implements GraphConsumer {
             }
 
             final IVertex vertex = dotGraph.newVertex(node.getName(), node);
-            vertex.setAttr("shape","box");
+            if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
+               vertex.setAttr("shape","triangle");
+            }
+            else {
+               vertex.setAttr("shape","oval");
+            }
             vertexLUT.put(node.getName(), vertex);
         }
 
@@ -259,7 +265,7 @@ public class Draw2dGrapher implements GraphConsumer {
         final GraphShape shape = (GraphShape) node.getAttr("-shape");
         final float[] coords = new float[6];
         for (final PathIterator ite = new FlatteningPathIterator(shape
-                .getPathIterator(new AffineTransform()), 1.5); !ite.isDone(); ite.next()) {
+                .getPathIterator(new AffineTransform()), 1.0); !ite.isDone(); ite.next()) {
             final int segType = ite.currentSegment(coords);
 
             switch (segType) {
@@ -292,9 +298,10 @@ public class Draw2dGrapher implements GraphConsumer {
 
         String text = node.getAttrString("label"); // + "(" + node.index +","+node.sortValue+ ")";
         label.setText(text);
-        polygon.add(label,polygon.getClientArea());
-        polygon.setLayoutManager(new ToolbarLayout()); // TODO à changer
+        polygon.setLayoutManager(new BorderLayout()); // TODO à changer
         contents.add(polygon,polygon.getBounds());
+        polygon.add(label,BorderLayout.CENTER);
+        //polygon.add(label,polygon.getClientArea());
         //contents.add(label, new Rectangle(x, y, width, height));
     }
 }
