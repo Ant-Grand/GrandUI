@@ -27,7 +27,11 @@
  */
 package net.ggtools.grand.ui;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import net.ggtools.grand.ui.prefs.ComplexPreferenceStore;
@@ -36,13 +40,14 @@ import net.ggtools.grand.ui.prefs.GraphPreferencePage;
 import net.ggtools.grand.ui.prefs.LinksPreferencePage;
 import net.ggtools.grand.ui.prefs.NodesPreferencePage;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * @author Christophe Labouisse
  */
 public class GrandUiPrefStore extends ComplexPreferenceStore {
+    /**
+     * Logger for this class
+     */
+    private static final Log log = LogFactory.getLog(GrandUiPrefStore.class);
 
     /**
      * @param unEscapeString(item)
