@@ -173,13 +173,13 @@
 	</target>
 	
 	<target name="incbuildnum">
-		<propertyfile file="etc/buildnum.properties">
+		<propertyfile file="etc/net/ggtools/grand/ui/buildnum.properties">
 			<entry key="build.date" type="date" value="now" pattern="yyyy-MM-dd"/>
 			<entry key="build.time" type="date" value="now" pattern="HH:mm:ss"/>
 			<entry key="build.number" type="int" operation="+" default="0"/>
 			<entry key="build.version.string" type="string" value="${product.version}"/>
 		</propertyfile>
-		<property file="etc/buildnum.properties"/>
+		<property file="etc/net/ggtools/grand/ui/buildnum.properties"/>
 		<echo message="build number set to ${build.number}"/>
 	</target>
 
