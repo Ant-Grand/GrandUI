@@ -10,5 +10,8 @@
 	<classpathentry kind="var" path="LOG4J_LIB"/>
 	<classpathentry sourcepath="ORG_ECLIPSE_GEF_SOURCE_SRC/org.eclipse.draw2d_3.0.0/draw2dsrc.zip" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.draw2d_3.0.0/draw2d.jar"/>
 	<classpathentry kind="src" path="/JzGraph"/>
+	<classpathentry kind="var" path="ASM_LIB"/>
+	<classpathentry kind="var" path="ASM_SRC"/>
+	<classpathentry output="test/bin" kind="src" path="test/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

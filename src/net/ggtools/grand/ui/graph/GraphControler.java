@@ -40,6 +40,7 @@ import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.Link;
 import net.ggtools.grand.graph.Node;
+import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
 
 import org.apache.commons.logging.Log;
@@ -76,7 +77,7 @@ public class GraphControler implements GraphModelListener, DotGraphAttributes, S
 
     private final EventManager selectionEventManager;
 
-    private final EventManager.Dispatcher selectionChangedDispatcher;
+    private final Dispatcher selectionChangedDispatcher;
 
     public GraphControler(final GraphDisplayer dest) {
         if (log.isDebugEnabled()) log.debug("Creating new controler to " + dest);
