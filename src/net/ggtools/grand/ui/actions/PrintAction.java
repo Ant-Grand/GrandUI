@@ -29,30 +29,67 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.ggtools.grand.ui.menu;
+package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.actions.OpenFileAction;
-import net.ggtools.grand.ui.actions.PrintAction;
-import net.ggtools.grand.ui.actions.QuitAction;
-import net.ggtools.grand.ui.actions.ReloadGraphAction;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.eclipse.jface.action.Action;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.printing.PrintDialog;
+import org.eclipse.swt.printing.Printer;
+import org.eclipse.swt.printing.PrinterData;
 
 /**
  * 
  * 
  * @author Christophe Labouisse
+ * @see org.eclipse.jface.action.Action
  */
-public class FileMenuManager extends MenuManager {
-    public FileMenuManager(GraphWindow window) {
-        super("File");
-        add(new OpenFileAction(window));
-        add(new Separator());
-        add(new ReloadGraphAction(window));
-        add(new PrintAction(window));
-        add(new Separator());
-        add(new QuitAction());
+public class PrintAction extends Action {
+
+    private static final Log log = LogFactory.getLog(PrintAction.class);
+
+    private static final String DEFAULT_ACTION_NAME = "Print";
+
+    private final GraphWindow window;
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.IAction#run()
+     */
+    public void run() {
+        final PrintDialog dialog = new PrintDialog(window.getShell());
+        PrinterData printerData = dialog.open();
+        log.debug("Dialog returned " + printerData);
+        if (printerData == null) {
+            printerData = Printer.getDefaultPrinterData();
+            log.debug("Default printer data is " + printerData);
+        }
+    }
+
+    /**
+     * Creates a new OpenFileAction object.
+     * 
+     * @param parent
+     */
+    public PrintAction(final GraphWindow parent) {
+        super(DEFAULT_ACTION_NAME);
+        window = parent;
+    }
+
+    /**
+     * Creates a new OpenFileAction object with specific name.
+     * 
+     * @param name
+     * @param parent
+     */
+    public PrintAction(final String name, final GraphWindow parent) {
+        super(name);
+        window = parent;
+    }
+
+    public int getAccelerator() {
+        return SWT.CONTROL | 'P';
     }
 }
