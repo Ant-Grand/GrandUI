@@ -32,6 +32,7 @@
 package net.ggtools.grand.ui.graph;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.IFigure;
 
 
 /**
@@ -44,5 +45,5 @@ public interface GraphDisplayer {
     void beginUpdate(int totalWork);
     void worked(int workDone);
     void finished();
-    void setGraph(Graph graph);
+    void setGraph(IFigure graph);
 }

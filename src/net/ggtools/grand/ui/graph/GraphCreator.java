@@ -32,15 +32,28 @@
 package net.ggtools.grand.ui.graph;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.ggtools.grand.ant.AntProject;
 import net.ggtools.grand.exceptions.GrandException;
-import net.ggtools.grand.graph.GraphWriter;
-import net.ggtools.grand.output.DotWriter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.draw2d.AbsoluteBendpoint;
+import org.eclipse.draw2d.BendpointConnectionRouter;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.PolygonDecoration;
+import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.XYAnchor;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.graph.Edge;
+import org.eclipse.draw2d.graph.Node;
+import org.eclipse.draw2d.graph.NodeList;
 
 /**
  * 
@@ -69,36 +82,123 @@ public class GraphCreator {
             dest.beginUpdate(4);
             AntProject project = new AntProject(new File(fileName));
             dest.worked(1);
-            GraphWriter writer;
+            /*GraphFilter filter = new IsolatedNodeFilter();
+            filter.setProducer(project);*/
             try {
-                writer = new DotWriter();
-                writer.setProducer(project);
-                writer.setShowGraphName(true);
-                File output = File.createTempFile("grand-ui-tmp", ".dot");
-                output.deleteOnExit();
-                log.debug("Writing output to " + output);
-                writer.write(output);
+                log.debug("Creating graph");
+                Draw2dGrapher grapher = new Draw2dGrapher();
+                grapher.setProducer(project);
+                /*DirectedGraph dGraph = grapher.drawGraph();
                 dest.worked(1);
-                File imageFile = File.createTempFile("grand-ui-tmp", ".png");
-                imageFile.deleteOnExit();
-                String cmdString = "dot -Tpng -o " + imageFile + " " + output;
-                log.debug("About to exec " + cmdString);
-                Process proc = Runtime.getRuntime().exec(cmdString);
-                proc.waitFor();
-                log.debug("dot completed");
+                log.debug("Layouting graph");
+                new DirectedGraphLayout().visit(dGraph);
                 dest.worked(1);
-                dest.setGraph(new Graph(imageFile.getAbsolutePath()));
+                log.debug("Creating display nodes");
+                Figure contents = new Panel();
+                contents.setLayoutManager(new XYLayout());
+                for (int i = 0; i < dGraph.nodes.size(); i++) {
+                    Node node = dGraph.nodes.getNode(i);
+                    buildNodeFigure(contents, node);
+                }
                 dest.worked(1);
-            } catch (IOException e) {
-                log.error("Caught IOException", e);
+                
+                log.debug("Creating display edge");
+                for (int i = 0; i < dGraph.edges.size(); i++) {
+                    Edge edge = dGraph.edges.getEdge(i);
+                    buildEdgeFigure(contents, edge);
+                }*/
+                IFigure contents = grapher.drawGraph();
+                dest.worked(1);
+                dest.setGraph(contents);
             } catch (GrandException e) {
                 log.error("Caught GrandException", e);
-            } catch (InterruptedException e) {
-                log.error("Caught InterruptedException", e);
             }
             dest.finished();
         }
     }
+    
+    /**
+     * Builds a figure for the given edge and adds it to contents
+     * @param contents the parent figure to add the edge to
+     * @param edge the edge
+     */
+    static void buildEdgeFigure(Figure contents, Edge edge) {
+        PolylineConnection conn = connection(edge);
+        conn.setForegroundColor(ColorConstants.gray);
+        PolygonDecoration dec = new PolygonDecoration();
+        conn.setTargetDecoration(dec);
+        Node s = edge.source;
+        Node t = edge.target;
+            
+        conn.setSourceAnchor(new XYAnchor(edge.start));
+        conn.setTargetAnchor(new XYAnchor(edge.end));
+        conn.setConnectionRouter(null);
+        NodeList nodes = edge.vNodes;
+        if (nodes != null) {
+                List bends = new ArrayList();
+                conn.setConnectionRouter(new BendpointConnectionRouter());
+                for (int i = 0; i < nodes.size(); i++) {
+                    Node vn = nodes.getNode(i);
+                    int x = vn.x;
+                    int y = vn.y;
+                    if (edge.isFeedback) {
+                        bends.add(new AbsoluteBendpoint(x, y + vn.height));
+                        bends.add(new AbsoluteBendpoint(x, y));
+
+                    } else {
+                        bends.add(new AbsoluteBendpoint(x, y));
+                        bends.add(new AbsoluteBendpoint(x, y + vn.height));
+                    }
+                }
+            conn.setRoutingConstraint(bends);
+        }   
+        contents.add(conn);
+    }
+
+    /**
+     * Builds a Figure for the given node and adds it to contents
+     * @param contents the parent Figure to add the node to
+     * @param node the node to add
+     */
+    static void buildNodeFigure(Figure contents, Node node) {
+        log.debug("Creating label for node "+node.data.toString()+" ("+node.x+","+node.y+")");
+        Label label;
+        label = new Label();
+        label.setBackgroundColor(ColorConstants.lightGray);
+        label.setOpaque(true);
+        label.setBorder(new LineBorder());
+        if (node.incoming.isEmpty())
+            label.setBorder(new LineBorder(2));
+        String text = node.data.toString();// + "(" + node.index +","+node.sortValue+ ")";
+        label.setText(text);
+        node.data = label;
+        contents.add(label, new Rectangle(node.x, node.y, node.width, node.height));
+    }
+
+    /**
+     * Builds a connection for the given edge
+     * @param e the edge
+     * @return the connection
+     */
+    static PolylineConnection connection(Edge e) {
+        PolylineConnection conn = new PolylineConnection();
+        conn.setConnectionRouter(new BendpointConnectionRouter());
+        List bends = new ArrayList();
+        NodeList nodes = e.vNodes;
+        if (nodes != null) {
+            for (int i = 0; i < nodes.size(); i++) {
+                Node n = nodes.getNode(i);
+                int x = n.x;
+                int y = n.y;
+                bends.add(new AbsoluteBendpoint(x, y));
+                bends.add(new AbsoluteBendpoint(x, y + n.height));
+            }
+        }
+        conn.setRoutingConstraint(bends);
+        return conn;
+    }
+
+
 
     private final static ThreadGroup threadGroup = new ThreadGroup("Graph creation");
 
