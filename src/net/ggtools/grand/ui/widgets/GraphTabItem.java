@@ -40,6 +40,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureCanvas;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -73,11 +75,13 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
 
     private final GraphControler controler;
 
+    private Draw2dGraph graph;
+
     private SashForm sashForm;
 
-    private StyledText textDisplayer;
-
     private ScrolledComposite textComposite;
+
+    private StyledText textDisplayer;
 
     /**
      * Creates a tab to display a new graph.
@@ -134,6 +138,26 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
 
     /*
      * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphDisplayer#jumpToNode(java.lang.String)
+     */
+    public void jumpToNode(final String nodeName) {
+        if (graph != null) {
+            final Rectangle bounds = graph.getBoundsForNode(nodeName);
+            if (bounds != null) {
+                final Point center = bounds.getCenter();
+                Display.getDefault().asyncExec(new Runnable() {
+                    public void run() {
+                        final org.eclipse.swt.graphics.Point size = canvas.getSize();
+                        canvas.scrollTo(center.x - size.x / 2, center.y - size.y / 2);
+                    }
+                });
+
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
     public void removeControlerListener(GraphControlerListener listener) {
@@ -145,6 +169,8 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#setGraph(net.ggtools.grand.ui.graph.Graph)
      */
     public void setGraph(final Draw2dGraph graph, final String name, final String toolTip) {
+        this.graph = graph;
+
         Display.getDefault().asyncExec(new Runnable() {
 
             public void run() {
@@ -159,24 +185,6 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
 
     /*
      * (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setSourceText(java.lang.String)
-     */
-    public void setSourceText(String text) {
-        textDisplayer.setText(text);
-        textComposite.setMinSize(textDisplayer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-    }
-    
-    /**
-     * @param sourcePanelVisible
-     *            The sourcePanelVisible to set.
-     */
-    public final void setSourcePanelVisible(boolean sourcePanelVisible) {
-        textComposite.setVisible(sourcePanelVisible);
-        sashForm.layout();
-    }
-
-    /*
-     * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#setRichSource(net.ggtools.grand.ant.AntTargetNode.SourceElement[])
      */
     public void setRichSource(SourceElement[] richSource) {
@@ -184,14 +192,14 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
             setSourceText("");
             return;
         }
-        
+
         final StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < richSource.length; i++) {
             AntTargetNode.SourceElement element = richSource[i];
             buffer.append(element.getText());
         }
         setSourceText(buffer.toString());
-        
+
         int start = 0;
         for (int i = 0; i < richSource.length; i++) {
             AntTargetNode.SourceElement element = richSource[i];
@@ -214,9 +222,27 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer {
 
                 break;
             }
-            textDisplayer.setStyleRange(new StyleRange(start, element.getText().length(), textColor,
-                    textDisplayer.getBackground()));
+            textDisplayer.setStyleRange(new StyleRange(start, element.getText().length(),
+                    textColor, textDisplayer.getBackground()));
             start += element.getText().length();
         }
+    }
+
+    /**
+     * @param sourcePanelVisible
+     *            The sourcePanelVisible to set.
+     */
+    public final void setSourcePanelVisible(boolean sourcePanelVisible) {
+        textComposite.setVisible(sourcePanelVisible);
+        sashForm.layout();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setSourceText(java.lang.String)
+     */
+    public void setSourceText(String text) {
+        textDisplayer.setText(text);
+        textComposite.setMinSize(textDisplayer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
     }
 }

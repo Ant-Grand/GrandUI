@@ -79,11 +79,11 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
 
     private MenuManager manager;
 
-    private CTabFolder tabFolder;
+    private boolean outlinePanelVisible = true;
 
     private boolean sourcePanelVisible = true;
 
-    private boolean outlinePanelVisible = true;
+    private CTabFolder tabFolder;
 
     public GraphWindow() {
         this(null);
@@ -160,6 +160,18 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      * @param buildFile
      */
     public void openGraphInNewDisplayer(final File buildFile) {
+        openGraphInNewDisplayer(buildFile, null);
+    }
+
+    /**
+     * Open an ant file in a new window, focusing on a specific target.
+     * 
+     * @param buildFile
+     * @param targetName
+     *            the target to scroll to or <code>null</code> not to focus on
+     *            any target.
+     */
+    public void openGraphInNewDisplayer(final File buildFile, final String targetName) {
         final GraphControler controler = new GraphControler(this);
         try {
             new ProgressMonitorDialog(getShell()).run(true, false, new IRunnableWithProgress() {
@@ -167,6 +179,9 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
                         InterruptedException {
                     controler.setProgressMonitor(monitor);
                     controler.openFile(buildFile, true);
+                    if (targetName != null) {
+                        controler.focusOn(targetName);
+                    }
                 }
             });
         } catch (InvocationTargetException e) {
@@ -182,6 +197,34 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      */
     public void removeControlerListener(GraphControlerListener listener) {
         controlerEventManager.unSubscribe(listener);
+    }
+
+    /**
+     * @param outlinePanelVisible
+     *            The outlinePanelVisible to set.
+     */
+    public final void setOutlinePanelVisible(boolean outlinePanelVisible) {
+        if (outlinePanelVisible != this.outlinePanelVisible) {
+            this.outlinePanelVisible = outlinePanelVisible;
+        }
+    }
+
+    /**
+     * @param sourcePanelVisible
+     *            The sourcePanelVisible to set.
+     */
+    public final void setSourcePanelVisible(boolean sourcePanelVisible) {
+        if (sourcePanelVisible != this.sourcePanelVisible) {
+            this.sourcePanelVisible = sourcePanelVisible;
+            final CTabItem[] children = tabFolder.getItems();
+            for (int i = 0; i < children.length; i++) {
+                final CTabItem current = children[i];
+                if (current instanceof GraphTabItem) {
+                    final GraphTabItem tab = (GraphTabItem) current;
+                    tab.setSourcePanelVisible(sourcePanelVisible);
+                }
+            }
+        }
     }
 
     /*
@@ -251,33 +294,5 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
         manager.add(new HelpMenu(this));
         manager.setVisible(true);
         return manager;
-    }
-
-    /**
-     * @param outlinePanelVisible
-     *            The outlinePanelVisible to set.
-     */
-    public final void setOutlinePanelVisible(boolean outlinePanelVisible) {
-        if (outlinePanelVisible != this.outlinePanelVisible) {
-            this.outlinePanelVisible = outlinePanelVisible;
-        }
-    }
-
-    /**
-     * @param sourcePanelVisible
-     *            The sourcePanelVisible to set.
-     */
-    public final void setSourcePanelVisible(boolean sourcePanelVisible) {
-        if (sourcePanelVisible != this.sourcePanelVisible) {
-            this.sourcePanelVisible = sourcePanelVisible;
-            final CTabItem [] children = tabFolder.getItems();
-            for (int i = 0; i < children.length; i++) {
-                final CTabItem current = children[i];
-                if (current instanceof GraphTabItem) {
-                    final GraphTabItem tab = (GraphTabItem) current;
-                    tab.setSourcePanelVisible(sourcePanelVisible);
-                }
-            }
-        }
     }
 }

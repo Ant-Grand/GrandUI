@@ -131,8 +131,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         this.window = window;
         model = new GraphModel();
         filterChain = new FilterChainModel(model);
-        // TODO voir si je peux virer le renderer et laisser le graph faire le
-        // boulot tout seul.
+        // TODO voir si je peux virer le renderer et laisser le graph faire le boulot tout seul.
         renderer = new Draw2dGraphRenderer();
         graphEventManager = new EventManager("Graph Event");
         try {
@@ -170,8 +169,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @see net.ggtools.grand.ui.graph.SelectionManager#addSelectionListener(net.ggtools.grand.ui.graph.GraphListener)
      */
     public void addListener(GraphListener listener) {
-        if (graphEventManager != null)
-        graphEventManager.subscribe(listener);
+        if (graphEventManager != null) graphEventManager.subscribe(listener);
     }
 
     public void clearFilters() {
@@ -256,6 +254,18 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     }
 
     /**
+     * Focus on a specific target. The current implementation of focusing means
+     * bring the specific target as close as possible from the canvas centre.
+     * @param targetName
+     *            the target to focus on.
+     */
+    public void focusOn(final String targetName) {
+        if (dest != null) {
+            dest.jumpToNode(targetName);
+        }
+    }
+
+    /**
      * @return Returns the dest.
      */
     public final GraphDisplayer getDest() {
@@ -327,32 +337,19 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     }
 
     /**
-     * Puts the controler in a pre-mortem state where it does not receive or send
-     * event.
-     */
-    private void stopControler() {
-        // Stop send & receiving events.
-        graphEventManager.clear();
-        Application.getInstance().getPreferenceStore().removePropertyChangeListener(this);
-        
-        // Help garbage collector.
-        window = null;
-        model = null;
-        filterChain = null;
-        renderer = null;
-        graphEventManager = null;
-        selectionChangedDispatcher = null;
-        parameterChangedEvent = null;
-    }
-
-    /**
      * @param node
      */
     public void openNodeFile(Draw2dNode node) {
         final AntTargetNode targetNode = (AntTargetNode) node.getVertex().getData();
         final String buildFile = targetNode.getBuildFile();
         if (buildFile != null && (buildFile.length() > 0)) {
-            window.openGraphInNewDisplayer(new File(buildFile));
+            String targetName = targetNode.getName();
+            if (targetName != null) {
+                // Remove the surrounding [].
+                // FIXME add a method to get the real target name in AntTargetNode.
+                targetName = targetName.substring(1, targetName.length() - 1);
+            }
+            window.openGraphInNewDisplayer(new File(buildFile), targetName);
         }
     }
 
@@ -365,6 +362,36 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         PrintFigureOperation printOp = new PrintFigureOperation(printer, figure);
         printOp.setPrintMode(printMode);
         printOp.run("Grand:" + graph.getName());
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+     */
+    public void propertyChange(PropertyChangeEvent event) {
+        if (log.isDebugEnabled()) log.debug("Get PropertyChangeEvent " + event.getProperty());
+        if (event.getProperty().startsWith(PreferenceKeys.GRAPH_PREFIX)) {
+            refreshGraph();
+        }
+    }
+
+    /**
+     * Refreshing (i.e.: rerender) the current graph.
+     */
+    public void refreshGraph() {
+        //FIXME check that there is a graph.
+        if (log.isInfoEnabled()) log.info("Refreshing current graph");
+        progressMonitor.beginTask("Refreshing graph", 3);
+        clearFiltersOnNextLoad = false;
+
+        try {
+            renderFilteredGraph();
+            if (log.isInfoEnabled()) log.info("Graph refreshed");
+        } catch (final BuildException e) {
+            reportError("Cannot open graph", e);
+        } finally {
+            progressMonitor.done();
+        }
     }
 
     /**
@@ -385,25 +412,6 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             if (log.isInfoEnabled()) log.info("Graph reloaded");
         } catch (GrandException e) {
             reportError("Cannot reload graph", e);
-        } catch (final BuildException e) {
-            reportError("Cannot open graph", e);
-        } finally {
-            progressMonitor.done();
-        }
-    }
-
-    /**
-     * Refreshing (i.e.: rerender) the current graph.
-     */
-    public void refreshGraph() {
-        //FIXME check that there is a graph.
-        if (log.isInfoEnabled()) log.info("Refreshing current graph");
-        progressMonitor.beginTask("Refreshing graph", 3);
-        clearFiltersOnNextLoad = false;
-
-        try {
-            renderFilteredGraph();
-            if (log.isInfoEnabled()) log.info("Graph refreshed");
         } catch (final BuildException e) {
             reportError("Cannot open graph", e);
         } finally {
@@ -506,14 +514,22 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         ExceptionDialog.openException(window.getShell(), message, e);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+    /**
+     * Puts the controler in a pre-mortem state where it does not receive or
+     * send event.
      */
-    public void propertyChange(PropertyChangeEvent event) {
-        if (log.isDebugEnabled()) log.debug("Get PropertyChangeEvent " + event.getProperty());
-        if (event.getProperty().startsWith(PreferenceKeys.GRAPH_PREFIX)) {
-            refreshGraph();
-        }
+    private void stopControler() {
+        // Stop send & receiving events.
+        graphEventManager.clear();
+        Application.getInstance().getPreferenceStore().removePropertyChangeListener(this);
+
+        // Help garbage collector.
+        window = null;
+        model = null;
+        filterChain = null;
+        renderer = null;
+        graphEventManager = null;
+        selectionChangedDispatcher = null;
+        parameterChangedEvent = null;
     }
 }

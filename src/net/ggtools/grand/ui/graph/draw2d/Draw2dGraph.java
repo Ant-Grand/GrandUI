@@ -29,6 +29,8 @@
 package net.ggtools.grand.ui.graph.draw2d;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.graph.GraphControler;
@@ -194,8 +196,6 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     private final class ZoomListener extends KeyListener.Stub {
 
-        private final Log log;
-
         private final float[] ZOOM_STEPS = {0.134217728f, 0.16777216f, 0.2097152f, 0.262144f,
                 0.32768f, 0.4096f, 0.512f, 0.64f, 0.8f, 1.0f, 1.25f, 1.5625f, 1.953125f,
                 2.44140625f};
@@ -205,6 +205,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         {
             zoom = ZOOM_STEPS[zoomStep];
         }
+
+        private final Log log;
 
         private ZoomListener(Log log) {
             super();
@@ -237,6 +239,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     private GraphControler graphControler;
 
     private GraphMouseListener graphMouseListener;
+
+    private final Map nodeIndex = new HashMap();
 
     private CanvasScroller scroller;
 
@@ -277,6 +281,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         node.setFont(Application.getInstance().getFont(Application.NODE_FONT));
         node.addMouseListener(new NodeMouseListener(node));
         node.setCursor(Cursors.HAND);
+        nodeIndex.put(node.getName(), node);
         return node;
     }
 
@@ -292,6 +297,19 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      */
     public void deselectNode(Draw2dNode node) {
         if (graphControler != null) graphControler.deselectNode(node);
+    }
+
+    /**
+     * Gets the bounding box for a specific node.
+     * 
+     * @param name
+     *            name of the node to look for.
+     * @return the bounds for the node or <code>null</code> if no such node
+     *         exist.
+     */
+    public Rectangle getBoundsForNode(final String name) {
+        final Draw2dNode node = (Draw2dNode) nodeIndex.get(name);
+        return node == null ? null : node.getBounds();
     }
 
     /**
