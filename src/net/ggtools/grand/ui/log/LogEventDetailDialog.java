@@ -111,7 +111,7 @@ public class LogEventDetailDialog extends Dialog {
         GridData layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
         header.setLayoutData(layoutData);
 
-        final Text content = new Text(composite, SWT.READ_ONLY | SWT.WRAP);
+        final Label content = new Label(composite, SWT.WRAP);
         content.setText(value);
         content.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         content.setFont(JFaceResources.getTextFont());
