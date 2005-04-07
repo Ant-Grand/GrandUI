@@ -27,15 +27,15 @@
  */
 package net.ggtools.grand.ui.image;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -49,44 +49,6 @@ import org.eclipse.swt.graphics.RGB;
  * @author Christophe Labouisse
  */
 public class ImageSaver {
-    /**
-     * Logger for this class
-     */
-    private static final Log log = LogFactory.getLog(ImageSaver.class);
-
-    public void saveImage(final Image image, final String fileName) throws IOException {
-        final int lastDotPosition = fileName.lastIndexOf('.');
-        final String extension = fileName.substring(lastDotPosition+1).toLowerCase();
-        if (log.isDebugEnabled()) log.debug("Saving image to " + fileName + " as " + extension);
-        
-        FileOutputStream result = null;
-        try {
-            /*
-             * BufferedImage bi = new
-             * BufferedImage(imageData.width,imageData.height,BufferedImage.TYPE_INT_RGB);
-             * bi.setData(new ImageDataRaster(imageData));
-             * ImageIO.write(bi,"png",new File("/tmp/image.png"));
-             */
-
-            result = new FileOutputStream(fileName);
-            ImageData imageData = image.getImageData();
-            if (imageData.depth > 8) imageData = downSample(image);
-
-            final ImageLoader imageLoader = new ImageLoader();
-            imageLoader.data = new ImageData[]{imageData};
-            imageLoader.save(result, SWT.IMAGE_GIF);
-        } catch (FileNotFoundException e) {
-            throw e;
-        } finally {
-            if (result != null) {
-                try {
-                    result.close();
-                } catch (IOException e) {
-                    log.warn("Got exception saving image", e);
-                }
-            }
-        }
-    }
 
     private static class ColorCounter implements Comparable {
         /**
@@ -102,6 +64,36 @@ public class ImageSaver {
             return ((ColorCounter) o).count - count;
         }
     }
+
+    /**
+     * 
+     * @author Christophe Labouisse
+     */
+    private static class ImageFormat {
+
+        public final String name;
+
+        public final boolean needDownsampling;
+
+        public final int swtId;
+
+        public ImageFormat(final String name, final int swtId, final boolean needDownsampling) {
+            this.name = name;
+            this.swtId = swtId;
+            this.needDownsampling = needDownsampling;
+        }
+    }
+
+    private static boolean formatInitDone = false;
+
+    private final static Map formatRegistry = new HashMap();
+
+    /**
+     * Logger for this class
+     */
+    private static final Log log = LogFactory.getLog(ImageSaver.class);
+
+    private static String[] supportedExtensions;
 
     private static int closest(RGB[] rgbs, int n, RGB rgb) {
         int minDist = 256 * 256 * 3;
@@ -183,6 +175,75 @@ public class ImageSaver {
             newData.setPixels(0, y, width, pixels, 0);
         }
         return newData;
+    }
+
+    private final static void initFormats() {
+        if (!formatInitDone) {
+            final ImageFormat jpegImageFormat = new ImageFormat("jpeg", SWT.IMAGE_JPEG, false);
+            formatRegistry.put("jpg", jpegImageFormat);
+            formatRegistry.put("jpeg", jpegImageFormat);
+            formatRegistry.put("gif", new ImageFormat("gif", SWT.IMAGE_GIF, true));
+            formatRegistry.put("png", new ImageFormat("png", SWT.IMAGE_PNG, false));
+            formatRegistry.put("bmp", new ImageFormat("bmp", SWT.IMAGE_BMP, false));
+            supportedExtensions = (String[]) formatRegistry.keySet().toArray(
+                    new String[formatRegistry.keySet().size()]);
+            formatInitDone = true;
+        }
+    }
+
+    public ImageSaver() {
+        initFormats();
+    }
+
+    public final String[] getSupportedExtensions() {
+        return supportedExtensions;
+    }
+
+    public void saveImage(final Image image, final String fileName) throws IOException,
+            IllegalArgumentException {
+        final int lastDotPosition = fileName.lastIndexOf('.');
+        final String extension = fileName.substring(lastDotPosition + 1).toLowerCase();
+
+        if (!formatRegistry.containsKey(extension)) {
+            final String message = "Unknow extension " + extension;
+            log.error(message);
+            throw new IllegalArgumentException(message);
+        }
+
+        if (log.isDebugEnabled()) log.debug("Saving image to " + fileName + " as " + extension);
+
+        ImageFormat format = (ImageFormat) formatRegistry.get(extension);
+
+        FileOutputStream result = null;
+        try {
+            /*
+             * BufferedImage bi = new
+             * BufferedImage(imageData.width,imageData.height,BufferedImage.TYPE_INT_RGB);
+             * bi.setData(new ImageDataRaster(imageData));
+             * ImageIO.write(bi,"png",new File("/tmp/image.png"));
+             */
+
+            result = new FileOutputStream(fileName);
+            ImageData imageData = image.getImageData();
+            if (format.needDownsampling && (imageData.depth > 8)) {
+                if (log.isDebugEnabled()) log.debug("Downsampling image");
+                imageData = downSample(image);
+            }
+
+            final ImageLoader imageLoader = new ImageLoader();
+            imageLoader.data = new ImageData[]{imageData};
+            imageLoader.save(result, format.swtId);
+        } catch (FileNotFoundException e) {
+            throw e;
+        } finally {
+            if (result != null) {
+                try {
+                    result.close();
+                } catch (IOException e) {
+                    log.warn("Got exception saving image", e);
+                }
+            }
+        }
     }
 
 }

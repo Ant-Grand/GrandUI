@@ -32,12 +32,14 @@ import java.io.IOException;
 
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
 import net.ggtools.grand.ui.image.ImageSaver;
+import net.ggtools.grand.ui.widgets.ExceptionDialog;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Christophe Labouisse
@@ -46,8 +48,6 @@ import org.eclipse.swt.widgets.FileDialog;
 public class ExportGraphAction extends GraphControlerAction {
 
     private static final String DEFAULT_ACTION_NAME = "Export Graph";
-
-    private static final String[] FILTER_EXTENSIONS = new String[]{"*.png", "*.gif", "*.jpg", "*"};
 
     private static final Log log = LogFactory.getLog(ExportGraphAction.class);
 
@@ -76,9 +76,11 @@ public class ExportGraphAction extends GraphControlerAction {
      * @see org.eclipse.jface.action.IAction#run()
      */
     public void run() {
-        final FileDialog dialog = new FileDialog(getGraphControler().getWindow().getShell(),
+        final Shell parentShell = getGraphControler().getWindow().getShell();
+        final FileDialog dialog = new FileDialog(parentShell,
                 SWT.SAVE);
-        dialog.setFilterExtensions(FILTER_EXTENSIONS);
+        final ImageSaver imageSaver = new ImageSaver();
+        dialog.setFilterExtensions(imageSaver.getSupportedExtensions());
         dialog.setText("Export graph as image");
         final String fileName = dialog.open();
         log.debug("Dialog returned " + fileName);
@@ -86,10 +88,12 @@ public class ExportGraphAction extends GraphControlerAction {
             Image image = null;
             try {
                 image = getGraphControler().createImageForGraph();
-                new ImageSaver().saveImage(image,fileName);
+                imageSaver.saveImage(image,fileName);
+            } catch (IllegalArgumentException e) {
+                ExceptionDialog.openException(parentShell,"Cannot export image",e);
+            
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                ExceptionDialog.openException(parentShell,"Cannot export image",e);
             } finally {
                 if (image != null) {
                     image.dispose();
