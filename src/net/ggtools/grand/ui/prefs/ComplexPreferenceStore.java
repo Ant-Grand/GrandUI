@@ -261,7 +261,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                     throw new Error(message);
                 }
                 if (log.isInfoEnabled()) {
-                    log.info("Loading from perference file version " + version);
+                    log.info("Loading from preference file version " + version);
                 }
             }
             else {
