@@ -88,7 +88,7 @@ public class LogViewer extends Composite {
         private final Log log = LogFactory.getLog(LogEventRefreshListener.class);
 
         public void logEventReceived(final LogEvent event) {
-            if (event.getLevel().value >= minLogLevel) {
+            if (refreshEnabled && event.getLevel().value >= minLogLevel) {
                 synchronized (refreshThread) {
                     nextEvent = event;
                     refreshThread.notify();
@@ -198,8 +198,7 @@ public class LogViewer extends Composite {
                 if (myEvent != null) {
                     display.syncExec(new Runnable() {
                         public void run() {
-                            viewer.refresh(false);
-                            table.showItem(table.getItem(table.getItemCount() - 1));
+                            refreshViewer();
                         }
                     });
                 }
@@ -249,6 +248,8 @@ public class LogViewer extends Composite {
     private int minLogLevel = LogEvent.INFO.value;
 
     private LogEvent nextEvent = null;
+
+    private boolean refreshEnabled = true;
 
     private LogEventRefreshListener refreshListener;
 
@@ -327,6 +328,31 @@ public class LogViewer extends Composite {
                 }
             }
 
+        });
+
+        Button refreshToggle = new Button(composite, SWT.CHECK);
+        layout.numColumns++;
+        refreshToggle.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
+        refreshToggle.setText("Auto Refresh");
+        refreshToggle.setSelection(refreshEnabled);
+        refreshToggle.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                if (e.widget instanceof Button) {
+                    Button button = (Button) e.widget;
+                    refreshEnabled = button.getSelection();
+                    if (refreshEnabled) refreshViewer();
+                }
+            }
+        });
+
+        Button refreshButton = new Button(composite, SWT.NONE);
+        layout.numColumns++;
+        refreshButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
+        refreshButton.setText("Refresh");
+        refreshButton.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                refreshViewer();
+            }
         });
 
         Button saveButton = new Button(composite, SWT.NONE);
@@ -430,6 +456,14 @@ public class LogViewer extends Composite {
                 }
             }
         });
+    }
+
+    /**
+     * 
+     */
+    private void refreshViewer() {
+        viewer.refresh(false);
+        table.showItem(table.getItem(table.getItemCount() - 1));
     }
 
     /**
