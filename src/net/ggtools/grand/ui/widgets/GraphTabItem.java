@@ -27,10 +27,14 @@
  */
 package net.ggtools.grand.ui.widgets;
 
+import java.text.CollationKey;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.ggtools.grand.ant.AntTargetNode;
 import net.ggtools.grand.ant.AntTargetNode.SourceElement;
@@ -70,6 +74,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 /**
  * A CTabItem specialized in displaying graph. Although it implements
  * {@link net.ggtools.grand.ui.graph.GraphControlerProvider}this class only
@@ -80,6 +86,11 @@ import org.eclipse.swt.widgets.Menu;
  */
 public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListener {
     private final class MouseWheelZoomListener implements Listener {
+        /**
+         * Logger for this class
+         */
+        private final Log log = LogFactory.getLog(MouseWheelZoomListener.class);
+
         private MouseWheelZoomListener() {
         }
 
@@ -104,7 +115,88 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
         }
     }
 
+    private final static class OutlineViewerCollator extends Collator {
+        /**
+         * Logger for this class
+         */
+        private static final Log log = LogFactory.getLog(OutlineViewerCollator.class);
+        private static final int NODE_INDEX_GROUP_NUM = 4;
+
+        private final static int NODE_NAME_GROUP_NUM = 1;
+
+        private final static Pattern pattern = Pattern.compile(
+                "\\[?(.*?)(\\s*(\\((\\d+)\\))?\\s*\\])?", Pattern.CASE_INSENSITIVE);
+
+        private final Collator underlying;
+
+        public OutlineViewerCollator() {
+            underlying = getInstance();
+        }
+
+        public int compare(final String source, final String target) {
+            final Matcher sourceMatcher = pattern.matcher(source);
+            if (!sourceMatcher.matches()) {
+                final String message = "Source name (" + source + ") not matched by pattern";
+                log.error(message);
+                throw new Error(message);
+            }
+            assert (sourceMatcher.groupCount() == 4);
+
+            final Matcher targetMatcher = pattern.matcher(target);
+            if (!targetMatcher.matches()) {
+                final String message = "Source name (" + source + ") not matched by pattern";
+                log.error(message);
+                throw new Error(message);
+            }
+            assert (targetMatcher.groupCount() == 4);
+
+            int result = underlying.compare(sourceMatcher.group(NODE_NAME_GROUP_NUM), targetMatcher
+                    .group(NODE_NAME_GROUP_NUM));
+
+            if (result == 0) {
+                int sourceIndex;
+                final String sourceIndexGroup = sourceMatcher.group(NODE_INDEX_GROUP_NUM);
+                try {
+                    sourceIndex = Integer.parseInt(sourceIndexGroup);
+                } catch (NumberFormatException e) {
+                    log.debug("Index group" + sourceIndexGroup
+                            + " is not an integer treating as 0");
+                    sourceIndex = 0;
+                }
+                
+                int targetIndex;
+                final String targetIndexGroup = targetMatcher.group(NODE_INDEX_GROUP_NUM);
+                try {
+                    targetIndex = Integer.parseInt(targetIndexGroup);
+                } catch (NumberFormatException e) {
+                    log.debug("Index group" + targetIndexGroup
+                            + " is not an integer treating as 0");
+                    targetIndex = 0;
+                }
+                
+                result = sourceIndex < targetIndex ? -1 : (sourceIndex == targetIndex ? 0 : 1);
+            }
+
+            return result;
+        }
+
+        public CollationKey getCollationKey(String source) {
+            throw new NotImplementedException();
+        }
+
+        public int hashCode() {
+            return underlying.hashCode();
+        }
+
+    }
+
     private static final Log log = LogFactory.getLog(GraphTabItem.class);
+
+    private final static float ZOOM_MAX = 3.0f;
+
+    private final static float ZOOM_MIN = 0.25f;
+
+    private final static float ZOOM_STEP = 1.1f;
 
     private final FigureCanvas canvas;
 
@@ -123,21 +215,15 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
     // TableViewer is richer than ListViewer
     private final TableViewer outlineViewer;
 
+    // To be set to <code>true</code> when the next selection change do no
+    // requires jumping to the selected node.
+    private boolean skipJumpToNode = false;
+
     private final SashForm sourceSashForm;
 
     private final ScrolledComposite textComposite;
 
     private final StyledText textDisplayer;
-
-    private final static float ZOOM_MAX = 3.0f;
-
-    private final static float ZOOM_MIN = 0.25f;
-
-    private final static float ZOOM_STEP = 1.1f;
-
-    // To be set to <code>true</code> when the next selection change do no
-    // requires jumping to the selected node.
-    private boolean skipJumpToNode = false;
 
     /**
      * Creates a tab to display a new graph. The tab will contain two sash forms
@@ -159,7 +245,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
                 | SWT.V_SCROLL);
         outlineViewer.setContentProvider(controler.getNodeContentProvider());
         outlineViewer.setLabelProvider(controler.getNodeLabelProvider());
-        outlineViewer.setSorter(new ViewerSorter());
+        outlineViewer.setSorter(new ViewerSorter(new OutlineViewerCollator()));
         outlineViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(SelectionChangedEvent event) {
                 final ISelection selection = event.getSelection();
