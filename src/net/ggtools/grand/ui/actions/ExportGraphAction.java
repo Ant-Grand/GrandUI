@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class ExportGraphAction extends GraphControlerAction {
 
-    private static final String DEFAULT_ACTION_NAME = "Export Graph";
+    private static final String DEFAULT_ACTION_NAME = "Export Graph as Image";
 
     private static final Log log = LogFactory.getLog(ExportGraphAction.class);
 
