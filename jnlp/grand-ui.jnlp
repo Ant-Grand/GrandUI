@@ -29,6 +29,7 @@
 		<jar href="oro.jar"/>
 		<jar href="osgi.jar"/>
 		<jar href="runtime.jar"/>
+		<jar href="core.jar"/>
   </resources>
   <resources os="Windows"> 
     <jar href="win32/swt.jar"/>
