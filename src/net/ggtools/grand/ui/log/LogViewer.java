@@ -330,30 +330,33 @@ public class LogViewer extends Composite {
 
         });
 
-        Button refreshToggle = new Button(composite, SWT.CHECK);
+        final Button refreshToggle = new Button(composite, SWT.CHECK);
         layout.numColumns++;
-        refreshToggle.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
+        refreshToggle.setLayoutData(new GridData(SWT.END, SWT.CENTER, true, false));
         refreshToggle.setText("Auto Refresh");
         refreshToggle.setSelection(refreshEnabled);
-        refreshToggle.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                if (e.widget instanceof Button) {
-                    Button button = (Button) e.widget;
-                    refreshEnabled = button.getSelection();
-                    if (refreshEnabled) refreshViewer();
-                }
-            }
-        });
 
-        Button refreshButton = new Button(composite, SWT.NONE);
+        final Button refreshButton = new Button(composite, SWT.NONE);
         layout.numColumns++;
-        refreshButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
+        refreshButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false));
         refreshButton.setText("Refresh");
+        refreshButton.setEnabled(!refreshEnabled);
         refreshButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 refreshViewer();
             }
         });
+        refreshToggle.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                if (e.widget instanceof Button) {
+                    Button button = (Button) e.widget;
+                    refreshEnabled = button.getSelection();
+                    refreshButton.setEnabled(!refreshEnabled);
+                    if (refreshEnabled) refreshViewer();
+                }
+            }
+        });
+
 
         Button saveButton = new Button(composite, SWT.NONE);
         layout.numColumns++;
@@ -363,7 +366,7 @@ public class LogViewer extends Composite {
 
         Button clearButton = new Button(composite, SWT.NONE);
         layout.numColumns++;
-        clearButton.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
+        clearButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
         clearButton.setText("Clear log");
         clearButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
