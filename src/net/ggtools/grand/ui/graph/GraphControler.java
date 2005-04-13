@@ -266,14 +266,32 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     public void dotPrint() {
         if (log.isDebugEnabled()) log.debug("Printing graph using dot");
         final Properties props = new Properties();
-        props.setProperty("dot.graph.attributes", "");
+        props.setProperty("dot.graph.attributes", "rankdir=\"TB\"");
+        String dotParameters;
+        switch (printMode) {
+        case PrintFigureOperation.FIT_WIDTH:
+            dotParameters = "-Gpage=8,11 -Gsize=10,65536 -Grotate=90 -Gmargin=0.45";
+            break;
+
+        case PrintFigureOperation.FIT_HEIGHT:
+            dotParameters = "-Gpage=8,11 -Gsize=65536,7 -Grotate=90 -Gmargin=0.45";
+            break;
+
+        case PrintFigureOperation.FIT_PAGE:
+            dotParameters = "-Gpage=8,11 -Gsize=10,7 -Grotate=90 -Gmargin=0.45";
+            break;
+
+        default:
+            dotParameters = "-Gpage=8,11 -Grotate=90";
+            break;
+        }
         try {
             final DotWriter dotWriter = new DotWriter(props);
             dotWriter.setProducer(filterChain);
             dotWriter.setShowGraphName(true);
             dotWriter.write(new File("GrandDotPrint.dot"));
             Process proc = Runtime.getRuntime().exec(
-                    "dot -Tps -Gpage=8,10 -o GrandDotPrint.ps GrandDotPrint.dot");
+                    "dot -Tps " + dotParameters + " -o GrandDotPrint.ps GrandDotPrint.dot");
             proc.waitFor();
             proc.destroy();
             log.info("Graph printed to GrandDotPrint.ps");

@@ -51,6 +51,7 @@
 		<element name="select" optional="yes" />
 		<sequential>
 			<get dest="${dlcachedir}/@{dest}.zip" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}" />
+            <delete dir="${dlcachedir}/@{dest}" />
 			<mkdir dir="${dlcachedir}/@{dest}" />
 			<unzip dest="${dlcachedir}/@{dest}" src="${dlcachedir}/@{dest}.zip">
 				<select />
@@ -69,6 +70,7 @@
 		<element name="select" optional="yes" />
 		<sequential>
 			<get dest="${dlcachedir}/@{dest}.tgz" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}" />
+            <delete dir="${dlcachedir}/@{dest}" />
 			<mkdir dir="${dlcachedir}/@{dest}" />
 			<untar compression="gzip" dest="${dlcachedir}/@{dest}" src="${dlcachedir}/@{dest}.tgz">
 				<select />
