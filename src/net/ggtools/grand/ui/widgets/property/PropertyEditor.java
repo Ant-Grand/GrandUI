@@ -30,6 +30,7 @@ package net.ggtools.grand.ui.widgets.property;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -48,15 +49,12 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -65,6 +63,62 @@ import org.eclipse.swt.widgets.TableItem;
  * @author Christophe Labouisse
  */
 public class PropertyEditor {
+
+    private final class CellModifier implements ICellModifier {
+        public boolean canModify(Object element, String property) {
+            if (columnExists(property)) {
+                final int columnNumber = getColumnNumber(property);
+                switch (columnNumber) {
+                case STATUS_COLUMN_NUM:
+                    return false;
+
+                default:
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public Object getValue(Object element, String property) {
+
+            if (columnExists(property) && element instanceof PropertyPair) {
+                final int columnNumber = getColumnNumber(property);
+                final PropertyPair pair = (PropertyPair) element;
+                switch (columnNumber) {
+                case NAME_COLUMN_NUM:
+                    return pair.getName();
+
+                case VALUE_COLUMN_NUM:
+                    return pair.getValue();
+                }
+            }
+            return null;
+        }
+
+        public void modify(Object element, String property, Object value) {
+            if (columnExists(property)) {
+                final PropertyPair pair = (PropertyPair) ((TableItem) element).getData();
+
+                if (log.isDebugEnabled()) {
+                    log.debug("modify() - Modifying property : pair = " + pair);
+                }
+
+                final int columnNumber = getColumnNumber(property);
+                switch (columnNumber) {
+                case NAME_COLUMN_NUM:
+                    pair.setName(value.toString());
+                    propertyList.update(pair);
+                    break;
+
+                case VALUE_COLUMN_NUM:
+                    pair.setValue(value.toString());
+                    propertyList.update(pair);
+                    break;
+                }
+            }
+        }
+    }
 
     private static final class PropertyListContentProvider implements IStructuredContentProvider,
             PropertyChangedListener {
@@ -203,36 +257,22 @@ public class PropertyEditor {
      */
     private static final Log log = LogFactory.getLog(PropertyEditor.class);
 
+    private static final String STATUS_COLUMN = "Status";
+
     private static final String NAME_COLUMN = "Name";
 
     private static final String VALUE_COLUMN = "Value";
 
-    /**
-     * Main method to launch the window
-     */
-    public static void main(String[] args) {
+    static final int STATUS_COLUMN_NUM = 0;
 
-        Shell shell = new Shell();
-        shell.setText("Property List - TableViewer Example");
-        shell.setLayout(new FillLayout());
-        Composite composite = new Composite(shell, SWT.NONE);
-        composite.setLayout(new FillLayout());
-        final PropertyEditor propertyViewer = new PropertyEditor(composite, SWT.NONE);
-        Properties props = new Properties();
-        props.setProperty("ga", "azerty");
-        props.setProperty("bu", "aqsdfzerty");
-        props.setProperty("zo", "12345");
-        propertyViewer.setInput(props);
+    static final int NAME_COLUMN_NUM = 1;
 
-        // Ask the shell to display its content
-        shell.open();
-        propertyViewer.run(shell);
-        System.err.println(propertyViewer.propertyList);
-        System.exit(0);
-    }
+    static final int VALUE_COLUMN_NUM = 2;
+
+    private static Map columnNamesToNumMap = null;
 
     // Set column names
-    private String[] columnNames = new String[]{NAME_COLUMN, VALUE_COLUMN};
+    private String[] columnNames = new String[]{STATUS_COLUMN, NAME_COLUMN, VALUE_COLUMN};
 
     private final PropertyList propertyList;
 
@@ -246,6 +286,13 @@ public class PropertyEditor {
      * 
      */
     public PropertyEditor(final Composite parent, final int style) {
+        if (columnNamesToNumMap == null) {
+            columnNamesToNumMap = new HashMap();
+            columnNamesToNumMap.put(STATUS_COLUMN, new Integer(STATUS_COLUMN_NUM));
+            columnNamesToNumMap.put(NAME_COLUMN, new Integer(NAME_COLUMN_NUM));
+            columnNamesToNumMap.put(VALUE_COLUMN, new Integer(VALUE_COLUMN_NUM));
+        }
+
         propertyList = new PropertyList();
         viewerSorter = new Sorter();
         createContents(parent, style);
@@ -254,6 +301,10 @@ public class PropertyEditor {
 
     public Properties getValues() {
         return propertyList.getAsProperties();
+    }
+    
+    PropertyList getPropertyList() {
+        return propertyList;
     }
 
     /**
@@ -426,12 +477,22 @@ public class PropertyEditor {
 
         TableColumn column;
         column = new TableColumn(table, SWT.LEFT);
+        // column.setText(STATUS_COLUMN);
+        column.setWidth(20);
+        column.setMoveable(true);
+        column.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                // viewerSorter.sortByName();
+                if (tableViewer != null) tableViewer.refresh(false);
+            }
+        });
+
+        column = new TableColumn(table, SWT.LEFT);
         column.setText(NAME_COLUMN);
         column.setWidth(200);
         column.setMoveable(true);
         column.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                log.info("First column");
                 viewerSorter.sortByName();
                 if (tableViewer != null) tableViewer.refresh(false);
             }
@@ -443,7 +504,6 @@ public class PropertyEditor {
         column.setMoveable(true);
         column.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                log.info("Second column");
                 viewerSorter.sortByValue();
                 if (tableViewer != null) tableViewer.refresh(false);
             }
@@ -463,65 +523,38 @@ public class PropertyEditor {
         // Create the cell editors
         CellEditor[] editors = new CellEditor[columnNames.length];
 
-        // Column 1 : Name (Free text)
-        TextCellEditor textEditor = new TextCellEditor(table);
-        editors[0] = textEditor;
+        // Column 1: Not editable
+        editors[STATUS_COLUMN_NUM] = null;
 
-        // Column 2 : Value (Free text)
+        // Column 2: Name (Free text)
+        TextCellEditor textEditor = new TextCellEditor(table);
+        editors[NAME_COLUMN_NUM] = textEditor;
+
+        // Column 3: Value (Free text)
         textEditor = new TextCellEditor(table);
-        editors[1] = textEditor;
+        editors[VALUE_COLUMN_NUM] = textEditor;
 
         // Assign the cell editors to the viewer
         tableViewer.setCellEditors(editors);
         // Set the cell modifier for the viewer
-        tableViewer.setCellModifier(new ICellModifier() {
-
-            public boolean canModify(Object element, String property) {
-                return true;
-            }
-
-            public Object getValue(Object element, String property) {
-                if (element instanceof PropertyPair) {
-                    PropertyPair pair = (PropertyPair) element;
-                    if (NAME_COLUMN.equals(property)) {
-                        return pair.getName();
-                    }
-                    else {
-                        return pair.getValue();
-                    }
-                }
-                return null;
-            }
-
-            public void modify(Object element, String property, Object value) {
-                final PropertyPair pair = (PropertyPair) ((TableItem) element).getData();
-
-                if (log.isDebugEnabled()) {
-                    log.debug("modify() - Modifying property : pair = " + pair);
-                }
-
-                if (NAME_COLUMN.equals(property)) {
-                    pair.setName(value.toString());
-                }
-                else {
-                    pair.setValue(value.toString());
-                }
-                propertyList.update(pair);
-            }
-        });
+        tableViewer.setCellModifier(new CellModifier());
         tableViewer.setSorter(viewerSorter);
     }
 
     /**
-     * Run and wait for a close event
-     * 
-     * @param shell
-     *            Instance of Shell
+     * @param columnName
+     * @return
      */
-    private void run(Shell shell) {
-        Display display = shell.getDisplay();
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()) display.sleep();
-        }
+    int getColumnNumber(String columnName) {
+        return ((Integer) columnNamesToNumMap.get(columnName)).intValue();
     }
+
+    /**
+     * @param columnName
+     * @return
+     */
+    boolean columnExists(String columnName) {
+        return columnNamesToNumMap.containsKey(columnName);
+    }
+
 }

@@ -45,14 +45,28 @@ final class PropertyListLabelProvider extends LabelProvider implements ITableLab
     }
 
     public String getColumnText(Object element, int columnIndex) {
+        String rc = null;
+        
         if (element instanceof PropertyPair) {
             final PropertyPair pair = (PropertyPair) element;
-            if (columnIndex == 0)
-                return pair.getName();
-            else
-                return pair.getValue();
+            switch (columnIndex) {
+            case PropertyEditor.STATUS_COLUMN_NUM:
+                rc = null;
+                break;
+
+            case PropertyEditor.NAME_COLUMN_NUM:
+                rc = pair.getName();
+                break;
+
+            case PropertyEditor.VALUE_COLUMN_NUM:
+                rc = pair.getValue();
+                break;
+
+            default:
+                break;
+            }
         }
-        return null;
+        return rc;
     }
 
     public String getText(Object element) {

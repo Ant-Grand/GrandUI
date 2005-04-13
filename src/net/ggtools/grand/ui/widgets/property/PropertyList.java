@@ -27,10 +27,11 @@
  */
 package net.ggtools.grand.ui.widgets.property;
 
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
@@ -61,7 +62,7 @@ class PropertyList {
 
     EventManager eventManager;
 
-    final LinkedHashSet pairList = new LinkedHashSet();
+    final Set pairList = new HashSet();
 
     public PropertyList() {
         eventManager = new EventManager("PropertyList event manager");
@@ -96,7 +97,7 @@ class PropertyList {
     }
 
     public void addProperty() {
-        add(new PropertyPair("", ""));
+        add(new PropertyPair("new property", ""));
     }
 
     public void addPropertyChangedListener(final PropertyChangedListener listener) {
