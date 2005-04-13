@@ -5,7 +5,7 @@ Release 0.7 (build number xxx):
 * Upgraded to Grand core 1.8,
 * Added a new export as image feature,
 * Improved sorting in the outline pane,
-* Minor improvements to the log viewer,
+* Minor improvements to the log viewer.
 
 
 Release 0.6 (build number 172):
