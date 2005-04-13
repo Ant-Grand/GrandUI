@@ -27,7 +27,6 @@
 		<jar href="jface.jar"/>
 		<jar href="jzgraph.jar"/>
 		<jar href="oro.jar"/>
-		<jar href="osgi.jar"/>
 		<jar href="runtime.jar"/>
 		<jar href="core.jar"/>
   </resources>
