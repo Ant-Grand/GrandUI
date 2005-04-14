@@ -58,7 +58,7 @@
 			</unzip>
 			<mkdir dir="@{libdir}" />
 			<copy todir="@{libdir}" flatten="true" includeemptydirs="no" preservelastmodified="true">
-				<fileset dir="${dlcachedir}/@{dest}" />
+				<fileset dir="${dlcachedir}/@{dest}" includes="**/*.jar" />
 			</copy>
 		</sequential>
 	</macrodef>
@@ -77,7 +77,7 @@
 			</untar>
 			<mkdir dir="@{libdir}" />
 			<copy todir="@{libdir}" flatten="true" includeemptydirs="no" preservelastmodified="true">
-				<fileset dir="${dlcachedir}/@{dest}" />
+				<fileset dir="${dlcachedir}/@{dest}" includes="**/*.jar" />
 			</copy>
 		</sequential>
 	</macrodef>
@@ -350,8 +350,8 @@
 				<include name="**/*.dll" />
 			</fileset>
 		</copy>
-		<jar destfile="${dlcachedir}/rcp/swt-lib.jar" basedir="tmp/rcp" index="true" />
-		<copy todir="${extlibdir}" file="${dlcachedir}/rcp/swt-lib.jar" />
+		<jar destfile="${dlcachedir}/swt-lib.jar" basedir="tmp/rcp" index="true" />
+		<copy todir="${extlibdir}" file="${dlcachedir}/swt-lib.jar" preservelastmodified="true" />
 	</target>
 
 
@@ -377,8 +377,8 @@
 				<include name="**/*.dll" />
 			</fileset>
 		</copy>
-		<jar destfile="${dlcachedir}/alien-swt/swt-lib.jar" basedir="tmp/alien-swt" index="true" />
-		<copy todir="${extlibdir}/${dist.aliendir}" file="${dlcachedir}/alien-swt/swt-lib.jar" />
+		<jar destfile="${dlcachedir}/swt-lib-alien.jar" basedir="tmp/alien-swt" index="true" />
+		<copy tofile="${extlibdir}/${dist.aliendir}/swt-lib.jar" file="${dlcachedir}/swt-lib-alien.jar" preservelastmodified="true" />
 	</target>
 
 
