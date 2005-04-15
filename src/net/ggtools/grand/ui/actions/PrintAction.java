@@ -90,9 +90,6 @@ public class PrintAction extends GraphControlerAction {
     public PrintAction(final GraphWindow parent,final String name) {
         super(parent,name);
         window = parent;
-    }
-
-    public int getAccelerator() {
-        return SWT.CONTROL | 'P';
+        setAccelerator(SWT.CONTROL|'P');
     }
 }

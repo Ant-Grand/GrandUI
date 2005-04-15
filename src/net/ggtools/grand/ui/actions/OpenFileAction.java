@@ -74,6 +74,7 @@ public class OpenFileAction extends Action {
     public OpenFileAction(final GraphWindow parent) {
         super(DEFAULT_ACTION_NAME);
         window = parent;
+        setAccelerator(SWT.SHIFT | SWT.CONTROL | 'O');
     }
 
     /**
@@ -85,9 +86,5 @@ public class OpenFileAction extends Action {
     public OpenFileAction(final String name, final GraphWindow parent) {
         super(name);
         window = parent;
-    }
-
-    public int getAccelerator() {
-        return SWT.SHIFT | SWT.CONTROL | 'O';
     }
 }

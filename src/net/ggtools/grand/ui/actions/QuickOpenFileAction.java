@@ -81,6 +81,7 @@ public class QuickOpenFileAction extends Action {
     public QuickOpenFileAction(final GraphWindow parent) {
         super(DEFAULT_ACTION_NAME);
         window = parent;
+        setAccelerator(SWT.CONTROL | 'O');
     }
 
     /**
@@ -92,9 +93,5 @@ public class QuickOpenFileAction extends Action {
     public QuickOpenFileAction(final String name, final GraphWindow parent) {
         super(name);
         window = parent;
-    }
-
-    public int getAccelerator() {
-        return SWT.CONTROL | 'O';
     }
 }

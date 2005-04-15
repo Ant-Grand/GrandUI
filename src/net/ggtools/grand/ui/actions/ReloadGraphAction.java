@@ -70,9 +70,6 @@ public class ReloadGraphAction extends GraphControlerAction {
      */
     public ReloadGraphAction(final GraphControlerProvider parent, final String name) {
         super(parent, name);
-    }
-
-    public int getAccelerator() {
-        return SWT.F5;
+        setAccelerator(SWT.F5);
     }
 }

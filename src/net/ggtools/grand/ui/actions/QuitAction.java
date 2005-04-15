@@ -45,6 +45,7 @@ public class QuitAction extends Action {
 
     public QuitAction() {
         super(DEFAULT_ACTION_NAME);
+        setAccelerator(SWT.CONTROL | 'Q');
     }
     
     /* (non-Javadoc)
@@ -52,9 +53,5 @@ public class QuitAction extends Action {
      */
     public void run() {
         System.exit(0);
-    }
-
-    public int getAccelerator() {
-        return SWT.CONTROL | 'Q';
     }
 }
