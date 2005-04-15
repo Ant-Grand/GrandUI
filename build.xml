@@ -131,8 +131,21 @@
 				<exclude name="**/*.so" />
 				<exclude name="**/*.dll" />
 			</fileset>
-			<fileset dir="${jnlpdir}" />
+			<fileset dir="${jnlpdir}">
+                <exclude name="*.jnlp" />
+            </fileset>
 		</copy>
+        <!-- Substitute the tokens in the jnlp files -->   
+        <copy todir="${jnlp.deploydir}">
+            <fileset dir="${jnlpdir}">
+                <include name="*.jnlp" />
+            </fileset>
+            <filterset>
+                <filter token="ECLIPSE_VERSION" value="${eclipse.version}"/>
+                <filter token="CODEBASE" value="${jnlp.codebase}"/>
+                <filter token="TITLE" value="${jnlp.title}"/>
+            </filterset>
+        </copy>
 		<copy todir="${jnlp.deploydir}/${dist.nativedir}">
 			<fileset dir="${extlibdir}">
 				<include name="*swt*.*" />
