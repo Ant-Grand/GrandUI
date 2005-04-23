@@ -74,8 +74,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 /**
  * A CTabItem specialized in displaying graph. Although it implements
  * {@link net.ggtools.grand.ui.graph.GraphControlerProvider}this class only
@@ -181,7 +179,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
         }
 
         public CollationKey getCollationKey(String source) {
-            throw new NotImplementedException();
+            throw new Error("getCollationKey is not implemented");
         }
 
         public int hashCode() {
