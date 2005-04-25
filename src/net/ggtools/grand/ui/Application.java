@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
 
+import net.ggtools.grand.Configuration;
 import net.ggtools.grand.log.LoggerManager;
 import net.ggtools.grand.ui.log.CommonsLoggingLoggerFactory;
 import net.ggtools.grand.ui.widgets.ExceptionDialog;
@@ -88,7 +89,6 @@ public class Application {
 
     public static void main(String[] args) {
         try {
-            log.info("Starting application");
             Thread.currentThread().setName("Display thread");
             final Application application = new Application();
             application.run();
@@ -110,6 +110,7 @@ public class Application {
     final private String versionString;
 
     private Application() throws IOException {
+        log.trace("Creating new application");
         singleton = this;
         buildProperties = new Properties();
         buildProperties.load(getClass().getResourceAsStream("buildnum.properties"));
@@ -189,7 +190,7 @@ public class Application {
      * Initializes the application resources. This method must be called from an
      * active display thread.
      * @throws IOException
-     *  
+     * 
      */
     final private void initResources() throws IOException {
         if (log.isInfoEnabled()) log.info("Initializing application resources");
@@ -223,15 +224,29 @@ public class Application {
 
         // Put the same icons for all windows & dialogs.
         Window.setDefaultImage(getImage(APPLICATION_ICON));
-        
+
         LoggerManager.setFactory(new CommonsLoggingLoggerFactory());
     }
 
     /**
      * @throws IOException
-     *  
+     * 
      */
     final private void run() {
+        log.info("Starting application");
+        if (log.isDebugEnabled()) {
+            log.debug("Version: " + versionString);
+            Configuration coreConfiguration = null;
+            try {
+                coreConfiguration = Configuration.getConfiguration();
+            } catch (IOException e) {
+                log.error("Error getting core configuration", e);
+            }
+            if (coreConfiguration != null)
+                log.debug("Core: " + coreConfiguration.getVersionString());
+            log.debug("JRE: " + System.getProperty("java.vm.name") + " "
+                    + System.getProperty("java.vm.version"));
+        }
         final Display display = Display.getDefault();
         final Splash splash = new Splash(display, versionString);
         splash.open();
@@ -240,9 +255,9 @@ public class Application {
         } catch (IOException e) {
             splash.close();
             splash.dispose();
-            log.error("Caught exception initializing ressources",e);
-            ExceptionDialog.openException(null,"Cannot load preferences",e);
-            throw new RuntimeException("Cannot initialize resources",e);
+            log.error("Caught exception initializing ressources", e);
+            ExceptionDialog.openException(null, "Cannot load preferences", e);
+            throw new RuntimeException("Cannot initialize resources", e);
         }
         ApplicationWindow mainWindow = new GraphWindow();
         mainWindow.setBlockOnOpen(true);
