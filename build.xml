@@ -62,7 +62,7 @@
 			</unzip>
 			<mkdir dir="@{libdir}" />
 			<copy todir="@{libdir}" flatten="true" includeemptydirs="no" preservelastmodified="true">
-				<fileset dir="${dlcachedir}/@{dest}" includes="**/*.jar" />
+				<fileset dir="${dlcachedir}/@{dest}"/>
 			</copy>
 		</sequential>
 	</macrodef>
@@ -81,7 +81,7 @@
 			</untar>
 			<mkdir dir="@{libdir}" />
 			<copy todir="@{libdir}" flatten="true" includeemptydirs="no" preservelastmodified="true">
-				<fileset dir="${dlcachedir}/@{dest}" includes="**/*.jar" />
+				<fileset dir="${dlcachedir}/@{dest}"/>
 			</copy>
 		</sequential>
 	</macrodef>
