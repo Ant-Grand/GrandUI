@@ -312,10 +312,13 @@
 	</target>
 
 
-	<target name="clean" depends="clean.dist" description="Remove intermediate files but not external libs">
-		<delete dir="${extlibdir}" />
+	<target name="clean" depends="clean.dist,clean.deps" description="Remove intermediate files but not external libs">
 		<delete dir="${libdir}" />
 		<delete dir="${classesdir}" />
+	</target>
+
+	<target name="clean.deps" description="Clean the dependencies directory">
+		<delete dir="${extlibdir}" />
 	</target>
 
 	<target name="clean.dist" description="Clean the dist directory">
