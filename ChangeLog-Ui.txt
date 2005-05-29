@@ -1,5 +1,10 @@
 $Id$
 
+Release 0.7.3 (build number xxx):
+
+* Upgraded to Ant 1.6.4,
+
+
 Release 0.7.2 (build number 234):
 
 * Upgraded to Ant 1.6.3,
