@@ -100,8 +100,10 @@ public class AboutDialog extends Dialog {
         final StringBuffer messageBuffer = new StringBuffer(
                 "Grand ©2004 Christophe Labouisse, distributed under BSD License\nUi: ");
         messageBuffer.append(Application.getInstance().getVersionString());
-        if (coreConfiguration != null)
+        if (coreConfiguration != null) {
             messageBuffer.append("\nCore: ").append(coreConfiguration.getVersionString());
+            messageBuffer.append("\nAnt: ").append(coreConfiguration.getAntVersionString());
+        }
         messageBuffer.append("\nJRE: ").append(System.getProperty("java.vm.name")).append(" ")
                 .append(System.getProperty("java.vm.version"));
         message.setText(messageBuffer.toString());

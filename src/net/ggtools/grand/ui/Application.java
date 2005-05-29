@@ -243,7 +243,10 @@ public class Application {
                 log.error("Error getting core configuration", e);
             }
             if (coreConfiguration != null)
+            {
                 log.debug("Core: " + coreConfiguration.getVersionString());
+                log.debug("Ant: " + coreConfiguration.getAntVersionString());
+            }
             log.debug("JRE: " + System.getProperty("java.vm.name") + " "
                     + System.getProperty("java.vm.version"));
         }
