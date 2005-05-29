@@ -55,14 +55,14 @@
 		<element name="select" optional="yes" />
 		<sequential>
 			<get dest="${dlcachedir}/@{dest}.zip" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}" />
-            <delete dir="${dlcachedir}/@{dest}" />
+			<delete dir="${dlcachedir}/@{dest}" />
 			<mkdir dir="${dlcachedir}/@{dest}" />
 			<unzip dest="${dlcachedir}/@{dest}" src="${dlcachedir}/@{dest}.zip">
 				<select />
 			</unzip>
 			<mkdir dir="@{libdir}" />
 			<copy todir="@{libdir}" flatten="true" includeemptydirs="no" preservelastmodified="true">
-				<fileset dir="${dlcachedir}/@{dest}"/>
+				<fileset dir="${dlcachedir}/@{dest}" />
 			</copy>
 		</sequential>
 	</macrodef>
@@ -74,14 +74,14 @@
 		<element name="select" optional="yes" />
 		<sequential>
 			<get dest="${dlcachedir}/@{dest}.tgz" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}" />
-            <delete dir="${dlcachedir}/@{dest}" />
+			<delete dir="${dlcachedir}/@{dest}" />
 			<mkdir dir="${dlcachedir}/@{dest}" />
 			<untar compression="gzip" dest="${dlcachedir}/@{dest}" src="${dlcachedir}/@{dest}.tgz">
 				<select />
 			</untar>
 			<mkdir dir="@{libdir}" />
 			<copy todir="@{libdir}" flatten="true" includeemptydirs="no" preservelastmodified="true">
-				<fileset dir="${dlcachedir}/@{dest}"/>
+				<fileset dir="${dlcachedir}/@{dest}" />
 			</copy>
 		</sequential>
 	</macrodef>
@@ -102,13 +102,12 @@
 	</selector>
 
 	<patternset id="get-rcp-patterns">
-		<include name="**/runtime.jar" />
-		<include name="**/core.jar" />
-		<include name="**/jface.jar" />
-		<include name="**/osgi.jar" />
-		<include name="**/swt*.jar" />
-		<include name="**/swt*.dll" if="isWin32" />
-		<include name="**/libswt*.so" if="isLinux" />
+		<include name="**/org.eclipse.core.runtime_${eclipse.version}.jar" />
+		<include name="**/org.eclipse.osgi_${eclipse.version}.jar" />
+		<include name="**/org.eclipse.jface_${eclipse.version}.jar" />
+		<!--include name="**/org.eclipse.swt_${eclipse.version}.jar" /-->
+		<include name="**/org.eclipse.swt.win32_${eclipse.version}.jar" if="isWin32" />
+		<include name="**/org.eclipse.swt.gtk.linux.x86_${eclipse.version}.jar" if="isLinux" />
 	</patternset>
 
 
@@ -136,20 +135,20 @@
 				<exclude name="**/*.dll" />
 			</fileset>
 			<fileset dir="${jnlpdir}">
-                <exclude name="*.jnlp" />
-            </fileset>
+				<exclude name="*.jnlp" />
+			</fileset>
 		</copy>
-        <!-- Substitute the tokens in the jnlp files -->   
-        <copy todir="${jnlp.deploydir}">
-            <fileset dir="${jnlpdir}">
-                <include name="*.jnlp" />
-            </fileset>
-            <filterset>
-                <filter token="ECLIPSE_VERSION" value="${eclipse.version}"/>
-                <filter token="CODEBASE" value="${jnlp.codebase}"/>
-                <filter token="TITLE" value="${jnlp.title}"/>
-            </filterset>
-        </copy>
+		<!-- Substitute the tokens in the jnlp files -->
+		<copy todir="${jnlp.deploydir}">
+			<fileset dir="${jnlpdir}">
+				<include name="*.jnlp" />
+			</fileset>
+			<filterset>
+				<filter token="ECLIPSE_VERSION" value="${eclipse.version}" />
+				<filter token="CODEBASE" value="${jnlp.codebase}" />
+				<filter token="TITLE" value="${jnlp.title}" />
+			</filterset>
+		</copy>
 		<copy todir="${jnlp.deploydir}/${dist.nativedir}">
 			<fileset dir="${extlibdir}">
 				<include name="*swt*.*" />
@@ -250,7 +249,7 @@
 		</javac>
 	</target>
 
-	<target name="incbuildnum" depends="setup-svn-macros">
+	<target name="incbuildnum" depends="setup-svn-macros" unless="noincbuildnum">
 		<svn-update file="${buildnum-file}" />
 		<propertyfile file="${buildnum-file}">
 			<entry key="build.date" type="date" value="now" pattern="yyyy-MM-dd" />
@@ -264,7 +263,7 @@
 	</target>
 
 
-	<target name="setup-svn-macros" depends="setup-svn-macros-svn, setup-svn-macros-svk"/>
+	<target name="setup-svn-macros" depends="setup-svn-macros-svn, setup-svn-macros-svk" />
 
 	<target name="setup-svn-macros-svn" unless="USE_SVK">
 		<taskdef resource="svntask.properties" />
@@ -361,13 +360,27 @@
 
 	<target name="get-rcp" depends="set-swt-properties" unless="noget">
 		<antcall target="${get-rcp-target}" inheritall="true" inheritrefs="true" />
-		<!-- Creates a swt-lib.jar for JNLP -->
-		<delete dir="tmp" />
-		<mkdir dir="tmp/rcp" />
-		<copy todir="tmp/rcp" preservelastmodified="true" flatten="true">
+		<move file="${extlibdir}/org.eclipse.swt.${swt.archive.tag}_${eclipse.version}.jar" tofile="${extlibdir}/swt.jar" />
+		<!-- extract dll from the bundle jar -->
+		<unjar src="${extlibdir}/swt.jar" dest="${dlcachedir}/rcp">
+			<patternset>
+				<include name="**/*.so" />
+				<include name="**/*.dll" />
+			</patternset>
+		</unjar>
+		<copy todir="${extlibdir}" preservelastmodified="true" flatten="true">
 			<fileset dir="${dlcachedir}/rcp">
 				<include name="**/*.so" />
 				<include name="**/*.dll" />
+			</fileset>
+		</copy>
+		<!-- Creates a swt-lib.jar for JNLP -->
+		<delete dir="tmp" />
+		<mkdir dir="tmp/rcp" />
+		<copy todir="tmp/rcp" preservelastmodified="true">
+			<fileset dir="${extlibdir}">
+				<include name="*.so" />
+				<include name="*.dll" />
 			</fileset>
 		</copy>
 		<jar destfile="${dlcachedir}/swt-lib.jar" basedir="tmp/rcp" index="true" />
@@ -426,6 +439,7 @@
 		<property name="dist.nativedir" value="linux-gtk" />
 		<property name="dist.aliendir" value="win32" />
 		<property name="get-rcp-target" value="get-rcp-tgz" />
+		<property name="swt.archive.tag" value="gtk.linux.x86" />
 	</target>
 
 	<target name="set-swt-properties-win32" if="isWin32">
@@ -434,5 +448,6 @@
 		<property name="dist.nativedir" value="win32" />
 		<property name="dist.aliendir" value="linux-gtk" />
 		<property name="get-rcp-target" value="get-rcp-zip" />
+		<property name="swt.archive.tag" value="win32" />
 	</target>
 </project>

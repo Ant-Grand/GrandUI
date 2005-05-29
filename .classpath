@@ -10,14 +10,11 @@
 	<classpathentry kind="var" path="ASM_SRC"/>
 	<classpathentry output="test/bin" kind="src" path="test/src"/>
 	<classpathentry kind="lib" path="deps/commons-logging.jar"/>
-	<classpathentry kind="lib" path="deps/core.jar"/>
 	<classpathentry kind="lib" path="deps/draw2d.jar"/>
-	<classpathentry kind="lib" path="deps/jface.jar"/>
 	<classpathentry kind="lib" path="deps/jzgraph.jar"/>
-	<classpathentry kind="lib" path="deps/runtime.jar"/>
-	<classpathentry kind="lib" path="deps/swt.jar"/>
-	<classpathentry kind="lib" path="deps/swt-cairo.jar"/>
-	<classpathentry kind="lib" path="deps/swt-mozilla.jar"/>
-	<classpathentry kind="lib" path="deps/swt-pi.jar"/>
+	<classpathentry sourcepath="/usr/share/eclipse-3.1/plugins/org.eclipse.platform.source.linux.gtk.x86_3.1.0/src/org.eclipse.swt.gtk.linux.x86_3.1.0/src.zip" kind="lib" path="deps/swt.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.core.runtime_3.1.0.jar"/>
+	<classpathentry sourcepath="/usr/share/eclipse-3.1/plugins/org.eclipse.platform.source_3.1.0/src/org.eclipse.jface_3.1.0/src.zip" kind="lib" path="deps/org.eclipse.jface_3.1.0.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

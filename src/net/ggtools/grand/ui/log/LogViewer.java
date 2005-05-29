@@ -1,4 +1,4 @@
-// $Id$
+// $Id: $
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
@@ -44,6 +44,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
@@ -209,8 +211,7 @@ public class LogViewer extends Composite {
                         wait();
                     }
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    if (log.isDebugEnabled()) log.debug("Thread interrupted", e);
                 }
             }
         }
@@ -270,13 +271,8 @@ public class LogViewer extends Composite {
     }
 
     public void dispose() {
-        refreshThread.stopThread();
-        try {
-            refreshThread.join();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        if (log.isDebugEnabled()) log.debug("Disposing LogViewer");
+        stopRefreshThread();
         super.dispose();
     }
 
@@ -356,7 +352,6 @@ public class LogViewer extends Composite {
                 }
             }
         });
-
 
         Button saveButton = new Button(composite, SWT.NONE);
         layout.numColumns++;
@@ -444,6 +439,14 @@ public class LogViewer extends Composite {
         }
         gc.dispose();
 
+        table.addDisposeListener(new DisposeListener() {
+
+            public void widgetDisposed(DisposeEvent e) {
+                if (log.isTraceEnabled()) log.trace("Table disposed");
+                stopRefreshThread();
+            }
+        });
+
         viewer.addDoubleClickListener(new IDoubleClickListener() {
             public void doubleClick(DoubleClickEvent event) {
                 final ISelection s = event.getSelection();
@@ -465,8 +468,25 @@ public class LogViewer extends Composite {
      * 
      */
     private void refreshViewer() {
-        viewer.refresh(false);
-        table.showItem(table.getItem(table.getItemCount() - 1));
+        if (!table.isDisposed()) {
+            viewer.refresh(false);
+            table.showItem(table.getItem(table.getItemCount() - 1));
+        }
+        else
+            log.warn("Table is disposed");
+    }
+
+    /**
+     * 
+     */
+    private void stopRefreshThread() {
+        if (log.isDebugEnabled()) log.debug("Stopping refresh thread");
+        refreshThread.stopThread();
+        try {
+            refreshThread.join();
+        } catch (InterruptedException e) {
+            log.warn("Caught exception stopping refresh thread", e);
+        }
     }
 
     /**

@@ -1,4 +1,5 @@
-// $Id$
+// $Id: /grand/local/GrandUi/src/net/ggtools/grand/ui/Application.java 944
+// 2005-05-20T11:00:42.144348Z clabouisse $
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
@@ -47,6 +48,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -233,17 +235,19 @@ public class Application {
      * 
      */
     final private void run() {
-        log.info("Starting application");
+        if (log.isInfoEnabled()) {
+            log.info("Starting application");
+            log.info("Version: " + versionString);
+        }
         if (log.isDebugEnabled()) {
-            log.debug("Version: " + versionString);
+            log.debug("SWT: " + SWT.getVersion());
             Configuration coreConfiguration = null;
             try {
                 coreConfiguration = Configuration.getConfiguration();
             } catch (IOException e) {
                 log.error("Error getting core configuration", e);
             }
-            if (coreConfiguration != null)
-            {
+            if (coreConfiguration != null) {
                 log.debug("Core: " + coreConfiguration.getVersionString());
                 log.debug("Ant: " + coreConfiguration.getAntVersionString());
             }

@@ -98,14 +98,11 @@ public class AboutDialog extends Dialog {
         image.setImage(Application.getInstance().getImage(Application.ABOUT_DIALOG_IMAGE));
         Label message = new Label(composite, SWT.NONE);
         final StringBuffer messageBuffer = new StringBuffer(
-                "Grand ©2004 Christophe Labouisse, distributed under BSD License\nUi: ");
+                "Grand ©2004,2005 Christophe Labouisse, distributed under BSD License\nUi: ");
         messageBuffer.append(Application.getInstance().getVersionString());
         if (coreConfiguration != null) {
             messageBuffer.append("\nCore: ").append(coreConfiguration.getVersionString());
-            messageBuffer.append("\nAnt: ").append(coreConfiguration.getAntVersionString());
         }
-        messageBuffer.append("\nJRE: ").append(System.getProperty("java.vm.name")).append(" ")
-                .append(System.getProperty("java.vm.version"));
         message.setText(messageBuffer.toString());
         return composite;
     }

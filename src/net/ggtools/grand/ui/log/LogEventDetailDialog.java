@@ -1,4 +1,6 @@
-// $Id$
+// $Id:
+// /grand/local/GrandUi/src/net/ggtools/grand/ui/log/LogEventDetailDialog.java
+// 535 2005-02-11T23:13:05.074023Z moi $
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
@@ -31,6 +33,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
@@ -58,6 +62,11 @@ public class LogEventDetailDialog extends Dialog {
     private static final int[] ICONS_FOR_LEVELS = {SWT.ICON_INFORMATION, SWT.ICON_INFORMATION,
             SWT.ICON_INFORMATION, SWT.ICON_INFORMATION, SWT.ICON_WARNING, SWT.ICON_ERROR,
             SWT.ICON_ERROR};
+
+    /**
+     * Logger for this class
+     */
+    private static final Log log = LogFactory.getLog(LogEventDetailDialog.class);
 
     private Control details;
 
@@ -104,6 +113,11 @@ public class LogEventDetailDialog extends Dialog {
      */
     private void addKeyValue(final Composite composite, final String key, final String value,
             int valueColumnSpan) {
+        if (value == null) {
+            log.warn("Value is null, skipping");
+            return;
+        }
+        
         final Label header = new Label(composite, SWT.BOLD);
         header.setText(key);
         header.setFont(JFaceResources.getDefaultFont());

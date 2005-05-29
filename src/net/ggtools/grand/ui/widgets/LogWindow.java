@@ -32,7 +32,7 @@ import net.ggtools.grand.ui.log.LogViewer;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -69,7 +69,7 @@ public class LogWindow extends Window {
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     protected Control createContents(final Composite parent) {
-        final FillLayout layout = new FillLayout();
+        final GridLayout layout = new GridLayout();
         parent.setLayout(layout);
         viewer = new LogViewer(parent,SWT.BORDER);
         viewer.setLogBuffer(LogEventBufferImpl.getInstance());
