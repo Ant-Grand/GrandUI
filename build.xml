@@ -125,7 +125,7 @@
 	<!-- ================================= 
           target: deploy              
          ================================= -->
-	<target name="deploy" depends="clean, jars, get-alien-swt" description="Deploys the application to be used with SWT.">
+	<target name="deploy" depends="clean, jars, get-alien-swt" description="Deploys the application to be used with Java Web Start.">
 		<fail message="You must define jnlp.deploydir" unless="jnlp.deploydir" />
 		<copy tofile="${jnlp.deploydir}/grand-ui.jar" file="${libdir}/${product.fullname}.jar" />
 		<copy todir="${jnlp.deploydir}">
@@ -133,6 +133,7 @@
 				<exclude name="*swt*.*" />
 				<exclude name="**/*.so" />
 				<exclude name="**/*.dll" />
+				<exclude name="**/*.jnilib" />
 			</fileset>
 			<fileset dir="${jnlpdir}">
 				<exclude name="*.jnlp" />
@@ -147,6 +148,8 @@
 				<filter token="ECLIPSE_VERSION" value="${eclipse.version}" />
 				<filter token="CODEBASE" value="${jnlp.codebase}" />
 				<filter token="TITLE" value="${jnlp.title}" />
+				<filter token="WIN32_SWT_LIB" value="${jnlp.win32.swt-lib}" />
+				<filter token="LINUX_SWT_LIB" value="${jnlp.linux.swt-lib}" />
 			</filterset>
 		</copy>
 		<copy todir="${jnlp.deploydir}/${dist.nativedir}">
@@ -154,6 +157,7 @@
 				<include name="*swt*.*" />
 				<exclude name="**/*.so" />
 				<exclude name="**/*.dll" />
+				<exclude name="**/*.jnilib" />
 			</fileset>
 		</copy>
 		<fail message="keystore.location must be defined" unless="keystore.location" />
@@ -366,12 +370,14 @@
 			<patternset>
 				<include name="**/*.so" />
 				<include name="**/*.dll" />
+				<include name="**/*.jnilib" />
 			</patternset>
 		</unjar>
 		<copy todir="${extlibdir}" preservelastmodified="true" flatten="true">
 			<fileset dir="${dlcachedir}/rcp">
 				<include name="**/*.so" />
 				<include name="**/*.dll" />
+				<include name="**/*.jnilib" />
 			</fileset>
 		</copy>
 		<!-- Creates a swt-lib.jar for JNLP -->
@@ -381,6 +387,7 @@
 			<fileset dir="${extlibdir}">
 				<include name="*.so" />
 				<include name="*.dll" />
+				<include name="**/*.jnilib" />
 			</fileset>
 		</copy>
 		<jar destfile="${dlcachedir}/swt-lib.jar" basedir="tmp/rcp" index="true" />
@@ -392,28 +399,40 @@
           target: get-alien-swt                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="get-alien-swt" depends="set-swt-properties">
-		<get-extract-zip dest="alien-swt" url="${url.eclipse.alien.swt}" libdir="${extlibdir}/${dist.aliendir}">
-			<select>
-				<patternset>
-					<include name="**/swt*.jar" />
-					<include name="**/swt*.dll" />
-					<include name="**/libswt*.so" />
-				</patternset>
-			</select>
-		</get-extract-zip>
-		<!-- Creates a swt-lib.jar for JNLP -->
-		<delete dir="tmp" />
-		<mkdir dir="tmp/alien-swt" />
-		<copy todir="tmp/alien-swt" preservelastmodified="true" flatten="true">
-			<fileset dir="${dlcachedir}/alien-swt">
-				<include name="**/*.so" />
-				<include name="**/*.dll" />
-			</fileset>
-		</copy>
-		<jar destfile="${dlcachedir}/swt-lib-alien.jar" basedir="tmp/alien-swt" index="true" />
-		<copy tofile="${extlibdir}/${dist.aliendir}/swt-lib.jar" file="${dlcachedir}/swt-lib-alien.jar" preservelastmodified="true" />
+		<get-swt url="${url.eclipse.alien.swt}" name="${dist.aliendir}" />
+		<get-swt url="${url.eclipse.swt.macosx}" name="macosx" />
 	</target>
 
+
+	<macrodef name="get-swt">
+		<attribute name="url" />
+		<attribute name="name" />
+		<sequential>
+			<get-extract-zip dest="alien-swt-@{name}" url="@{url}" libdir="${extlibdir}/@{name}">
+				<select>
+					<patternset>
+						<include name="**/swt*.jar" />
+						<include name="**/swt*.dll" />
+						<include name="**/libswt*.so" />
+						<include name="**/libswt*.jnilib" />
+					</patternset>
+				</select>
+			</get-extract-zip>
+			<!-- Creates a swt-lib.jar for JNLP -->
+			<delete dir="tmp" />
+			<mkdir dir="tmp/alien-swt-@{name}" />
+			<copy todir="tmp/alien-swt-@{name}" preservelastmodified="true" flatten="true">
+				<fileset dir="${dlcachedir}/alien-swt-@{name}">
+					<include name="**/*.so" />
+					<include name="**/*.dll" />
+					<include name="**/*.jnilib" />
+				</fileset>
+			</copy>
+			<jar destfile="${dlcachedir}/swt-lib-alien-@{name}.jar" basedir="tmp/alien-swt-@{name}" index="true" />
+			<copy tofile="${extlibdir}/@{name}/swt-lib.jar" file="${dlcachedir}/swt-lib-alien-@{name}.jar" preservelastmodified="true" />
+			<delete dir="tmp/alien-swt-@{name}" />
+		</sequential>
+	</macrodef>
 
 
 	<target name="get-draw2d" unless="noget">
@@ -440,6 +459,8 @@
 		<property name="dist.aliendir" value="win32" />
 		<property name="get-rcp-target" value="get-rcp-tgz" />
 		<property name="swt.archive.tag" value="gtk.linux.x86" />
+		<property name="jnlp.linux.swt-lib" value="swt-lib" />
+		<property name="jnlp.win32.swt-lib" value="swt-lib" />
 	</target>
 
 	<target name="set-swt-properties-win32" if="isWin32">
@@ -449,5 +470,7 @@
 		<property name="dist.aliendir" value="linux-gtk" />
 		<property name="get-rcp-target" value="get-rcp-zip" />
 		<property name="swt.archive.tag" value="win32" />
+		<property name="jnlp.linux.swt-lib" value="swt-lib" />
+		<property name="jnlp.win32.swt-lib" value="swt-lib" />
 	</target>
 </project>

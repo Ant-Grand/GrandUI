@@ -24,21 +24,23 @@
 		<jar href="commons-logging.jar"/>
 		<jar href="draw2d.jar"/>
 		<jar href="grand.jar"/>
-		<jar href="jface.jar"/>
+		<jar href="org.eclipse.jface_@ECLIPSE_VERSION@.jar"/>
 		<jar href="jzgraph.jar"/>
 		<jar href="oro.jar"/>
-		<jar href="runtime.jar"/>
-		<jar href="core.jar"/>
+		<jar href="org.eclipse.core.runtime_@ECLIPSE_VERSION@.jar"/>
+		<jar href="org.eclipse.osgi_@ECLIPSE_VERSION@.jar"/>
   </resources>
   <resources os="Windows"> 
     <jar href="win32/swt.jar"/>
-    <nativelib href="win32/swt-lib.jar"/>
+    <nativelib href="win32/@WIN32_SWT_LIB@.jar"/>
   </resources>
   <resources os="Linux" arch="i386"> 
-	<jar href="linux-gtk/swt.jar"/>
-	<jar href="linux-gtk/swt-mozilla.jar"/>
-	<jar href="linux-gtk/swt-pi.jar"/>
-    <nativelib href="linux-gtk/swt-lib.jar"/>
+    <jar href="linux-gtk/swt.jar"/>
+    <nativelib href="linux-gtk/@LINUX_SWT_LIB@.jar"/>
+  </resources> 
+  <resources os="Mac OS X" arch="ppc"> 
+    <jar href="macosx/swt.jar"/>
+    <nativelib href="macosx/swt-lib.jar"/>
   </resources> 
   <application-desc main-class="net.ggtools.grand.ui.Application"/>
 </jnlp>
