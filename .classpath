@@ -6,8 +6,6 @@
 	<classpathentry kind="src" path="/Grand"/>
 	<classpathentry sourcepath="/LOG4J_SRC" kind="var" path="LOG4J_LIB"/>
 	<classpathentry kind="src" path="/JzGraph"/>
-	<classpathentry kind="var" path="ASM_LIB"/>
-	<classpathentry kind="var" path="ASM_SRC"/>
 	<classpathentry output="test/bin" kind="src" path="test/src"/>
 	<classpathentry kind="lib" path="deps/commons-logging.jar"/>
 	<classpathentry kind="lib" path="deps/draw2d.jar"/>
