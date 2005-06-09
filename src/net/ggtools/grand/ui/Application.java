@@ -112,7 +112,7 @@ public class Application {
     final private String versionString;
 
     private Application() throws IOException {
-        log.trace("Creating new application");
+        if (log.isTraceEnabled()) log.trace("Creating new application");
         singleton = this;
         buildProperties = new Properties();
         buildProperties.load(getClass().getResourceAsStream("buildnum.properties"));
@@ -238,20 +238,16 @@ public class Application {
         if (log.isInfoEnabled()) {
             log.info("Starting application");
             log.info("Version: " + versionString);
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("SWT: " + SWT.getVersion());
+            log.info("SWT: " + SWT.getPlatform() + " v" + SWT.getVersion());
             Configuration coreConfiguration = null;
             try {
                 coreConfiguration = Configuration.getConfiguration();
+                log.info("Core: " + coreConfiguration.getVersionString());
+                log.info("Ant: " + coreConfiguration.getAntVersionString());
             } catch (IOException e) {
                 log.error("Error getting core configuration", e);
             }
-            if (coreConfiguration != null) {
-                log.debug("Core: " + coreConfiguration.getVersionString());
-                log.debug("Ant: " + coreConfiguration.getAntVersionString());
-            }
-            log.debug("JRE: " + System.getProperty("java.vm.name") + " "
+            log.info("JRE: " + System.getProperty("java.vm.name") + " "
                     + System.getProperty("java.vm.version"));
         }
         final Display display = Display.getDefault();
