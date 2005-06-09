@@ -387,7 +387,7 @@
 			<fileset dir="${extlibdir}">
 				<include name="*.so" />
 				<include name="*.dll" />
-				<include name="**/*.jnilib" />
+				<include name="*.jnilib" />
 			</fileset>
 		</copy>
 		<jar destfile="${dlcachedir}/swt-lib.jar" basedir="tmp/rcp" index="true" />
