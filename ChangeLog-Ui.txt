@@ -2,7 +2,8 @@ $Id$
 
 Release 0.7.3 (build number xxx):
 
-* Upgraded to Ant 1.6.4,
+* Upgraded to Ant 1.6.5,
+* Upgraded to Eclipse 3.1 RC4.
 
 
 Release 0.7.2 (build number 234):
