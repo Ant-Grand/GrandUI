@@ -1,0 +1,28 @@
+<project>
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+    <if>
+        <istrue value="true"/>
+    <then>
+    <echo>Building UNIX COE Bundle </echo>
+        <import file="bug-79.xml"/>
+    </then>
+    </if>
+    <target name="clean" depends="clean.dist,clean.deps" description="Remove intermediate files but not external libs">
+        <delete dir="${libdir}" />
+        <delete dir="${classesdir}" />
+    </target>
+
+    <target name="clean.deps" description="Clean the dependencies directory">
+        <delete dir="${extlibdir}" />
+    </target>
+
+    <target name="clean.dist" description="Clean the dist directory">
+        <delete dir="${distdir}" />
+    </target>
+
+    <target name="real.clean" depends="clean" description="Remove intermediate files ant external libs">
+        <delete dir="${dlcachedir}" />
+    </target>
+
+
+</project>

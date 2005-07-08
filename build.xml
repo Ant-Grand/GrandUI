@@ -22,15 +22,7 @@
 	</condition>
 
 	<condition property="isWin32">
-		<os name="Windows" />
-	</condition>
-
-	<condition property="isWin32">
-		<os name="Windows 2000" />
-	</condition>
-
-	<condition property="isWin32">
-		<os name="Windows XP" />
+        <os family="windows" />
 	</condition>
 
 

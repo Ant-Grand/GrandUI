@@ -17,4 +17,5 @@ done
 
 BASEDIR=`dirname "$PRG"`
 
-java -Djava.ext.dirs=$BASEDIR/lib:$BASEDIR/lib/linux-gtk -Djava.library.path=$BASEDIR/lib/linux-gtk -jar $BASEDIR/lib/grand-ui.jar
+ant -f $BASEDIR/grand-ui-launcher.xml
+

@@ -1,0 +1,48 @@
+<project name="Grand UI Launcher" default="start">
+    
+    <!-- ================================= 
+          target: start              
+         ================================= -->
+    <target name="start"  depends="setup" description="--> Start Grand UI using the current ant">
+        <java classname="net.ggtools.grand.ui.Application" fork="yes" spawn="${background}">
+            <classpath>
+                <path path="${java.class.path}"></path>
+                <fileset dir="${libdir}" includes="*.jar"/>
+                <fileset dir="${swtlibdir}" includes="*.jar"/>
+            </classpath>
+            <jvmarg value="-Djava.library.path=${swtlibdir}"/>
+        </java>
+    </target>
+
+    
+    <!-- ================================= 
+          target: help              
+         ================================= -->
+    <target name="help" depends="setup" description="--> Display a help message">
+        <echo>
+Launcher for GrandUI. The following properties can be set:
+    libdir: location of the pure java jars (${libdir}),
+    swtlibdir: location of the swt jar/libraries (${swtlibdir}),
+    background: run GrandUI in background.
+        </echo>
+    </target>
+
+    
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: setup                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="setup">
+        <property name="libdir" value="${basedir}/lib" />
+        <condition property="swtlibdir" value="${libdir}/linux-gtk">
+            <os name="Linux" />
+        </condition>
+
+        <condition property="swtlibdir" value="${libdir}/win32">
+            <os family="windows" />
+        </condition>
+
+        <condition property="swtlibdir" value="${libdir}/macosx">
+            <os family="mac" />
+        </condition>
+    </target>
+</project>
