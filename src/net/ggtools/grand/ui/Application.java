@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Display;
  * 
  * @author Christophe Labouisse
  */
-public class Application {
+public class Application implements Runnable {
 
     final public static String ABOUT_DIALOG_IMAGE = "net.ggtools.grand.ui.aboutimage";
 
@@ -111,7 +111,7 @@ public class Application {
 
     final private String versionString;
 
-    private Application() throws IOException {
+    public Application() throws IOException {
         if (log.isTraceEnabled()) log.trace("Creating new application");
         singleton = this;
         buildProperties = new Properties();
@@ -234,7 +234,7 @@ public class Application {
      * @throws IOException
      * 
      */
-    final private void run() {
+    final public void run() {
         if (log.isInfoEnabled()) {
             log.info("Starting application");
             log.info("Version: " + versionString);
@@ -262,7 +262,7 @@ public class Application {
             ExceptionDialog.openException(null, "Cannot load preferences", e);
             throw new RuntimeException("Cannot initialize resources", e);
         }
-        ApplicationWindow mainWindow = new GraphWindow();
+        final ApplicationWindow mainWindow = new GraphWindow();
         mainWindow.setBlockOnOpen(true);
         splash.close();
         splash.dispose();
