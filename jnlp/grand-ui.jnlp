@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp
-  spec="1.0+"
-  codebase="@CODEBASE@"
-  href="grand-ui.jnlp">
+<!DOCTYPE installation SYSTEM "jnlp.dtd">
+<jnlp spec="1.0+" codebase="@CODEBASE@" href="grand-ui.jnlp">
   <information>
     <title>@TITLE@</title>
     <vendor>ggTools</vendor>
@@ -42,6 +40,6 @@
     <jar href="macosx/swt.jar"/>
     <nativelib href="macosx/swt-lib.jar"/>
   </resources> 
-  <application-desc main-class="net.ggtools.grand.ui.Application"/>
+  <application-desc main-class="net.ggtools.grand.ui.Launcher"/>
 </jnlp>
 

@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.

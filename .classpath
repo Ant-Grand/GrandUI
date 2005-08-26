@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src/main"/>
+	<classpathentry output="bin/launcher" kind="src" path="src/launcher"/>
 	<classpathentry kind="src" path="etc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/Grand"/>
 	<classpathentry sourcepath="/LOG4J_SRC" kind="var" path="LOG4J_LIB"/>
 	<classpathentry kind="src" path="/JzGraph"/>
-	<classpathentry output="test/bin" kind="src" path="test/src"/>
 	<classpathentry kind="lib" path="deps/commons-logging.jar"/>
 	<classpathentry kind="lib" path="deps/draw2d.jar"/>
 	<classpathentry kind="lib" path="deps/jzgraph.jar"/>
@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="deps/org.eclipse.core.runtime_3.1.0.jar"/>
 	<classpathentry sourcepath="/usr/share/eclipse-3.1/plugins/org.eclipse.platform.source_3.1.0/src/org.eclipse.jface_3.1.0/src.zip" kind="lib" path="deps/org.eclipse.jface_3.1.0.jar"/>
 	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.1.0.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="src" path="src/test"/>
+	<classpathentry kind="output" path="bin/main"/>
 </classpath>

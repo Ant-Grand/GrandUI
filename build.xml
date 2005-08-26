@@ -8,12 +8,14 @@
 	<property name="libdir" value="lib" />
 	<property name="extlibdir" value="deps" />
 	<property name="dlcachedir" value="cache" />
-	<property name="classesdir" value="bin" />
+	<property name="classdir.main" value="bin/main" />
 	<property name="distdir" value="dist" />
-	<property name="srcdir" value="src" />
+	<property name="srcdir.main" value="src/main" />
 	<property name="confdir" value="etc" />
 	<property name="jnlpdir" value="jnlp" />
 	<property name="buildnum-file" value="etc/net/ggtools/grand/ui/buildnum.properties" />
+    <property name="classdir.launcher" value="bin/launcher" />
+    <property name="srcdir.launcher" value="src/launcher" />
 
 	<property name="verbose-get" value="false" />
 
@@ -119,7 +121,8 @@
          ================================= -->
 	<target name="deploy" depends="clean, jars, get-alien-swt" description="Deploys the application to be used with Java Web Start.">
 		<fail message="You must define jnlp.deploydir" unless="jnlp.deploydir" />
-		<copy tofile="${jnlp.deploydir}/grand-ui.jar" file="${libdir}/${product.fullname}.jar" />
+		<copy tofile="${jnlp.deploydir}/${product.name}.jar" file="${libdir}/${product.fullname}.jar" />
+        <copy tofile="${jnlp.deploydir}/${product.name}-launcher.jar" file="${libdir}/${product.fullname}-launcher.jar" />
 		<copy todir="${jnlp.deploydir}">
 			<fileset dir="${extlibdir}">
 				<exclude name="*swt*.*" />
@@ -183,6 +186,7 @@
 		<delete dir="tmp" />
 		<mkdir dir="tmp/${product.fullname}" />
 		<copy tofile="tmp/${product.fullname}/lib/grand-ui.jar" file="${libdir}/${product.fullname}.jar" />
+        <copy tofile="tmp/${product.fullname}/grand-ui-launcher.jar" file="${libdir}/${product.fullname}-launcher.jar" />
 		<copy todir="tmp/${product.fullname}/lib">
 			<fileset dir="${extlibdir}">
 				<exclude name="*swt*.*" />
@@ -228,21 +232,34 @@
 	<target name="jars" depends="compile.java,incbuildnum" description="Create the application jar(s)">
 		<mkdir dir="${libdir}" />
 		<jar destfile="${libdir}/${product.fullname}.jar" index="true">
-			<fileset dir="${classesdir}" />
+			<fileset dir="${classdir.main}" />
 			<fileset dir="${confdir}" />
 			<manifest>
 				<attribute name="Main-Class" value="net.ggtools.grand.ui.Application" />
 			</manifest>
 		</jar>
+        <jar destfile="${libdir}/${product.fullname}-launcher.jar" index="true">
+            <fileset dir="${classdir.launcher}" />
+            <!--fileset dir="${confdir}" /-->
+            <manifest>
+                <attribute name="Main-Class" value="net.ggtools.grand.ui.launcher.Launcher" />
+            </manifest>
+        </jar>
 	</target>
 
 	<target name="compile.java" depends="init" description="Compile the java source files">
-		<mkdir dir="${classesdir}" />
-		<javac srcdir="${srcdir}" destdir="${classesdir}" debug="true" optimize="true" source="1.4" target="1.4">
+		<mkdir dir="${classdir.main}" />
+		<javac srcdir="${srcdir.main}" destdir="${classdir.main}" debug="true" optimize="true" source="1.4" target="1.4">
 			<classpath>
 				<path refid="ext-libs" />
 			</classpath>
 		</javac>
+        <mkdir dir="${classdir.launcher}" />
+        <javac srcdir="${srcdir.launcher}" destdir="${classdir.launcher}" debug="true" optimize="true" source="1.4" target="1.4">
+            <classpath>
+                <path refid="ext-libs" />
+            </classpath>
+        </javac>
 	</target>
 
 	<target name="incbuildnum" depends="setup-svn-macros" unless="noincbuildnum">
@@ -309,7 +326,8 @@
 
 	<target name="clean" depends="clean.dist,clean.deps" description="Remove intermediate files but not external libs">
 		<delete dir="${libdir}" />
-		<delete dir="${classesdir}" />
+		<delete dir="${classdir.main}" />
+        <delete dir="${classdir.launcher}" />
 	</target>
 
 	<target name="clean.deps" description="Clean the dependencies directory">
