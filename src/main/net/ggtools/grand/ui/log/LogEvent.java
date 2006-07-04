@@ -97,7 +97,7 @@ public class LogEvent implements Serializable {
         this.originator = originator;
         this.message = message;
         this.exception = exception;
-        this.time = System.currentTimeMillis();
+        time = System.currentTimeMillis();
     }
 
     /**
@@ -139,7 +139,7 @@ public class LogEvent implements Serializable {
      * @param exception
      *            The exception to set.
      */
-    final void setException(Throwable exception) {
+    final void setException(final Throwable exception) {
         this.exception = exception;
     }
 
@@ -147,7 +147,7 @@ public class LogEvent implements Serializable {
      * @param level
      *            The level to set.
      */
-    final void setLevel(Level level) {
+    final void setLevel(final Level level) {
         this.level = level;
     }
 
@@ -155,7 +155,7 @@ public class LogEvent implements Serializable {
      * @param message
      *            The message to set.
      */
-    final void setMessage(String message) {
+    final void setMessage(final String message) {
         this.message = message;
     }
 
@@ -163,7 +163,7 @@ public class LogEvent implements Serializable {
      * @param originator
      *            The originator to set.
      */
-    final void setOriginator(String originator) {
+    final void setOriginator(final String originator) {
         this.originator = originator;
     }
 
@@ -171,7 +171,7 @@ public class LogEvent implements Serializable {
      * @param time
      *            The time to set.
      */
-    final void setTime(long time) {
+    final void setTime(final long time) {
         this.time = time;
     }
 }

@@ -52,7 +52,7 @@ public class PageSetupDialog extends Dialog {
     /**
      * @param parentShell
      */
-    public PageSetupDialog(Shell parentShell) {
+    public PageSetupDialog(final Shell parentShell) {
         super(parentShell);
     }
 
@@ -60,6 +60,7 @@ public class PageSetupDialog extends Dialog {
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
      */
+    @Override
     protected void cancelPressed() {
         super.cancelPressed();
     }
@@ -68,8 +69,9 @@ public class PageSetupDialog extends Dialog {
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
-    protected Control createDialogArea(Composite parent) {
-        Composite composite = (Composite) super.createDialogArea(parent);
+    @Override
+    protected Control createDialogArea(final Composite parent) {
+        final Composite composite = (Composite) super.createDialogArea(parent);
         final GridLayout layout = new GridLayout();
         layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
         layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
@@ -92,6 +94,7 @@ public class PageSetupDialog extends Dialog {
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
+    @Override
     protected void okPressed() {
         GraphControler.setPrintMode(combo.getSelectionIndex()+1);
         super.okPressed();
@@ -101,7 +104,8 @@ public class PageSetupDialog extends Dialog {
      * (non-Javadoc)
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
-    protected void configureShell(Shell newShell) {
+    @Override
+    protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Page Setup");
     }

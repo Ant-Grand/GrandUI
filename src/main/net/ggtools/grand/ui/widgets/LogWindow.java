@@ -49,7 +49,7 @@ public class LogWindow extends Window {
     /**
      * @param parentShell
      */
-    public LogWindow(Shell parentShell) {
+    public LogWindow(final Shell parentShell) {
         super(parentShell);
         setShellStyle(SWT.SHELL_TRIM);
         setBlockOnOpen(false);
@@ -59,7 +59,8 @@ public class LogWindow extends Window {
      * (non-Javadoc)
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
-    protected void configureShell(Shell newShell) {
+    @Override
+    protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Logs");
     }
@@ -68,6 +69,7 @@ public class LogWindow extends Window {
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     protected Control createContents(final Composite parent) {
         final GridLayout layout = new GridLayout();
         parent.setLayout(layout);

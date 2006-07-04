@@ -73,10 +73,13 @@ public class LogViewer extends Composite {
          */
         private final Log log = LogFactory.getLog(LogEventFilter.class);
 
-        public boolean select(Viewer v, Object parentElement, Object element) {
+        @Override
+        public boolean select(final Viewer v, final Object parentElement, final Object element) {
             if (element instanceof LogEvent) {
                 final LogEvent event = (LogEvent) element;
-                if (event.getLevel().value >= minLogLevel) return true;
+                if (event.getLevel().value >= minLogLevel) {
+                    return true;
+                }
             }
             return false;
         }
@@ -90,7 +93,7 @@ public class LogViewer extends Composite {
         private final Log log = LogFactory.getLog(LogEventRefreshListener.class);
 
         public void logEventReceived(final LogEvent event) {
-            if (refreshEnabled && event.getLevel().value >= minLogLevel) {
+            if (refreshEnabled && (event.getLevel().value >= minLogLevel)) {
                 synchronized (refreshThread) {
                     nextEvent = event;
                     refreshThread.notify();
@@ -107,7 +110,7 @@ public class LogViewer extends Composite {
 
         private final Table table;
 
-        private LogEventTooltipListener(Table table, int CI_CLASS, int CI_MESSAGE) {
+        private LogEventTooltipListener(final Table table, final int CI_CLASS, final int CI_MESSAGE) {
             super(table);
             this.table = table;
             this.CI_CLASS = CI_CLASS;
@@ -119,7 +122,8 @@ public class LogViewer extends Composite {
          * @see net.ggtools.grand.ui.log.LogViewer.TableTooltipListener#createTooltipContents(org.eclipse.swt.widgets.Composite,
          *      org.eclipse.swt.widgets.TableItem)
          */
-        protected Control createTooltipContents(Composite tooltipParent, TableItem item) {
+        @Override
+        protected Control createTooltipContents(final Composite tooltipParent, final TableItem item) {
             final Composite composite = (Composite) super
                     .createTooltipContents(tooltipParent, item);
 
@@ -158,9 +162,9 @@ public class LogViewer extends Composite {
          */
         private final Log log = LogFactory.getLog(LogSaver.class);
 
-        public void widgetSelected(SelectionEvent e) {
+        @Override
+        public void widgetSelected(final SelectionEvent e) {
             if (e.widget instanceof Button) {
-                final Button button = (Button) e.widget;
                 final FileDialog dialog = new FileDialog(viewer.getTable().getShell(), SWT.SAVE);
                 dialog.setFilterExtensions(new String[]{"*.glg", "*.log", "*"});
                 final String logFileName = dialog.open();
@@ -169,13 +173,15 @@ public class LogViewer extends Composite {
                     try {
                         oos = new ObjectOutputStream(new FileOutputStream(logFileName));
                         oos.writeObject(LogEventBufferImpl.getInstance());
-                    } catch (IOException exception) {
+                    } catch (final IOException exception) {
                         throw new RuntimeException("Cannot save log to " + logFileName, exception);
                     } finally {
-                        if (oos != null) try {
-                            oos.close();
-                        } catch (IOException exception) {
-                            throw new RuntimeException("Cannot close " + logFileName, exception);
+                        if (oos != null) {
+                            try {
+                                oos.close();
+                            } catch (final IOException exception) {
+                                throw new RuntimeException("Cannot close " + logFileName, exception);
+                            }
                         }
                     }
                 }
@@ -185,10 +191,11 @@ public class LogViewer extends Composite {
 
     private final class ViewerRefreshThread extends Thread {
 
-        private final Display display = LogViewer.this.getDisplay();
+        private final Display display = getDisplay();
 
         private boolean keepRunning = true;
 
+        @Override
         public void run() {
             while (keepRunning) {
                 final LogEvent myEvent;
@@ -210,8 +217,10 @@ public class LogViewer extends Composite {
                     synchronized (this) {
                         wait();
                     }
-                } catch (InterruptedException e) {
-                    if (log.isDebugEnabled()) log.debug("Thread interrupted", e);
+                } catch (final InterruptedException e) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Thread interrupted", e);
+                    }
                 }
             }
         }
@@ -264,14 +273,17 @@ public class LogViewer extends Composite {
      * @param parent
      * @param style
      */
-    public LogViewer(Composite parent, int style) {
+    public LogViewer(final Composite parent, final int style) {
         super(parent, style);
         refreshThread = new ViewerRefreshThread();
         createContents(this);
     }
 
+    @Override
     public void dispose() {
-        if (log.isDebugEnabled()) log.debug("Disposing LogViewer");
+        if (log.isDebugEnabled()) {
+            log.debug("Disposing LogViewer");
+        }
         stopRefreshThread();
         super.dispose();
     }
@@ -287,7 +299,7 @@ public class LogViewer extends Composite {
      * @param newLogBuffer
      *            The logBuffer to set.
      */
-    public final void setLogBuffer(LogEventBuffer newLogBuffer) {
+    public final void setLogBuffer(final LogEventBuffer newLogBuffer) {
         if (logBuffer != null) {
             logBuffer.removeListener(refreshListener);
         }
@@ -300,25 +312,26 @@ public class LogViewer extends Composite {
     /**
      * @param composite
      */
-    private void createCommands(Composite parent) {
+    private void createCommands(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         final GridLayout layout = new GridLayout();
         composite.setLayout(layout);
         composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        Label label = new Label(composite, SWT.NONE);
+        final Label label = new Label(composite, SWT.NONE);
         layout.numColumns++;
         label.setText("Minimum log level: ");
         label.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 
-        Combo combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
+        final Combo combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
         layout.numColumns++;
         combo.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
         fillUpLevelCombo(combo);
         combo.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
                 if (e.widget instanceof Combo) {
-                    Combo selectedCombo = (Combo) e.widget;
+                    final Combo selectedCombo = (Combo) e.widget;
                     minLogLevel = comboIndexToLogLevel(selectedCombo.getSelectionIndex());
                     viewer.refresh(false);
                 }
@@ -338,35 +351,39 @@ public class LogViewer extends Composite {
         refreshButton.setText("Refresh");
         refreshButton.setEnabled(!refreshEnabled);
         refreshButton.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
                 refreshViewer();
             }
         });
         refreshToggle.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
                 if (e.widget instanceof Button) {
-                    Button button = (Button) e.widget;
+                    final Button button = (Button) e.widget;
                     refreshEnabled = button.getSelection();
                     refreshButton.setEnabled(!refreshEnabled);
-                    if (refreshEnabled) refreshViewer();
+                    if (refreshEnabled) {
+                        refreshViewer();
+                    }
                 }
             }
         });
 
-        Button saveButton = new Button(composite, SWT.NONE);
+        final Button saveButton = new Button(composite, SWT.NONE);
         layout.numColumns++;
         saveButton.setLayoutData(new GridData(SWT.END, SWT.CENTER, true, false));
         saveButton.setText("Save log");
         saveButton.addSelectionListener(new LogSaver());
 
-        Button clearButton = new Button(composite, SWT.NONE);
+        final Button clearButton = new Button(composite, SWT.NONE);
         layout.numColumns++;
         clearButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
         clearButton.setText("Clear log");
         clearButton.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
                 if (e.widget instanceof Button) {
-                    Button button = (Button) e.widget;
                     logBuffer.clearLogEvents();
                     viewer.refresh();
                 }
@@ -441,18 +458,20 @@ public class LogViewer extends Composite {
 
         table.addDisposeListener(new DisposeListener() {
 
-            public void widgetDisposed(DisposeEvent e) {
-                if (log.isTraceEnabled()) log.trace("Table disposed");
+            public void widgetDisposed(final DisposeEvent e) {
+                if (log.isTraceEnabled()) {
+                    log.trace("Table disposed");
+                }
                 stopRefreshThread();
             }
         });
 
         viewer.addDoubleClickListener(new IDoubleClickListener() {
-            public void doubleClick(DoubleClickEvent event) {
+            public void doubleClick(final DoubleClickEvent event) {
                 final ISelection s = event.getSelection();
                 if (s instanceof IStructuredSelection) {
-                    IStructuredSelection selection = (IStructuredSelection) s;
-                    for (Iterator iter = selection.iterator(); iter.hasNext();) {
+                    final IStructuredSelection selection = (IStructuredSelection) s;
+                    for (final Iterator iter = selection.iterator(); iter.hasNext();) {
                         final LogEvent logEvent = (LogEvent) iter.next();
                         final LogEventDetailDialog window = new LogEventDetailDialog(getShell(),
                                 logEvent);
@@ -472,19 +491,22 @@ public class LogViewer extends Composite {
             viewer.refresh(false);
             table.showItem(table.getItem(table.getItemCount() - 1));
         }
-        else
+        else {
             log.warn("Table is disposed");
+        }
     }
 
     /**
      * 
      */
     private void stopRefreshThread() {
-        if (log.isDebugEnabled()) log.debug("Stopping refresh thread");
+        if (log.isDebugEnabled()) {
+            log.debug("Stopping refresh thread");
+        }
         refreshThread.stopThread();
         try {
             refreshThread.join();
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             log.warn("Caught exception stopping refresh thread", e);
         }
     }
@@ -493,7 +515,7 @@ public class LogViewer extends Composite {
      * @param comboIndex
      * @return
      */
-    protected int comboIndexToLogLevel(int comboIndex) {
+    protected int comboIndexToLogLevel(final int comboIndex) {
         return comboIndex + LogEvent.TRACE.value;
     }
 
@@ -501,7 +523,7 @@ public class LogViewer extends Composite {
      * Add value to the level selection combo.
      * @param combo
      */
-    protected void fillUpLevelCombo(Combo combo) {
+    protected void fillUpLevelCombo(final Combo combo) {
         combo.add(LogEvent.TRACE.name);
         combo.add(LogEvent.DEBUG.name);
         combo.add(LogEvent.INFO.name);

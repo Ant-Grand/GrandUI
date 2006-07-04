@@ -65,8 +65,11 @@ public class Draw2dGraph extends Panel implements SelectionManager {
          * 
          * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
          */
-        public void mousePressed(MouseEvent me) {
-            if (log.isTraceEnabled()) log.trace("Graph got mousePressed " + me.button);
+        @Override
+        public void mousePressed(final MouseEvent me) {
+            if (log.isTraceEnabled()) {
+                log.trace("Graph got mousePressed " + me.button);
+            }
             switch (me.button) {
             case (1):
                 deselectAllNodes();
@@ -92,8 +95,11 @@ public class Draw2dGraph extends Panel implements SelectionManager {
          * 
          * @see org.eclipse.draw2d.MouseListener.Stub#mouseReleased(org.eclipse.draw2d.MouseEvent)
          */
-        public void mouseReleased(MouseEvent me) {
-            if (log.isTraceEnabled()) log.trace("Graph got mouseReleased " + me.button);
+        @Override
+        public void mouseReleased(final MouseEvent me) {
+            if (log.isTraceEnabled()) {
+                log.trace("Graph got mouseReleased " + me.button);
+            }
             switch (me.button) {
             case (1):
             case (2):
@@ -110,7 +116,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
         private final Draw2dNode node;
 
-        private NodeMouseListener(Draw2dNode node) {
+        private NodeMouseListener(final Draw2dNode node) {
             super();
             this.node = node;
         }
@@ -120,8 +126,11 @@ public class Draw2dGraph extends Panel implements SelectionManager {
          * 
          * @see org.eclipse.draw2d.MouseListener#mouseDoubleClicked(org.eclipse.draw2d.MouseEvent)
          */
-        public void mouseDoubleClicked(MouseEvent me) {
-            if (log.isTraceEnabled()) log.trace("Node got mouseDoubleClicked " + me.button);
+        @Override
+        public void mouseDoubleClicked(final MouseEvent me) {
+            if (log.isTraceEnabled()) {
+                log.trace("Node got mouseDoubleClicked " + me.button);
+            }
             switch (me.button) {
             case (1): {
                 final boolean addToSelection;
@@ -143,8 +152,11 @@ public class Draw2dGraph extends Panel implements SelectionManager {
          * 
          * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
          */
-        public void mousePressed(MouseEvent me) {
-            if (log.isTraceEnabled()) log.trace("Node got mousePressed " + me.button);
+        @Override
+        public void mousePressed(final MouseEvent me) {
+            if (log.isTraceEnabled()) {
+                log.trace("Node got mousePressed " + me.button);
+            }
             switch (me.button) {
             case (1): {
                 final boolean addToSelection;
@@ -164,7 +176,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                 }
                 // TODO rewrite in a clean way
                 if (graphControler != null) {
-                    ((GraphControler) graphControler).getDisplayer().getContextMenu().setVisible(
+                    (graphControler).getDisplayer().getContextMenu().setVisible(
                             true);
                 }
                 break;
@@ -177,8 +189,11 @@ public class Draw2dGraph extends Panel implements SelectionManager {
          * 
          * @see org.eclipse.draw2d.MouseListener.Stub#mouseReleased(org.eclipse.draw2d.MouseEvent)
          */
-        public void mouseReleased(MouseEvent me) {
-            if (log.isTraceEnabled()) log.trace("Node got mouseReleased " + me.button);
+        @Override
+        public void mouseReleased(final MouseEvent me) {
+            if (log.isTraceEnabled()) {
+                log.trace("Node got mouseReleased " + me.button);
+            }
 
             // Hack, the graph do not get this event if the mouse button is
             // released
@@ -201,7 +216,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     private GraphMouseListener graphMouseListener;
 
-    private final Map nodeIndex = new HashMap();
+    private final Map<String, Draw2dNode> nodeIndex = new HashMap<String, Draw2dNode>();
 
     private CanvasScroller scroller;
 
@@ -217,8 +232,10 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     /**
      * @param listener
      */
-    public void addListener(GraphListener listener) {
-        if (graphControler != null) graphControler.addListener(listener);
+    public void addListener(final GraphListener listener) {
+        if (graphControler != null) {
+            graphControler.addListener(listener);
+        }
     }
 
     /*
@@ -226,15 +243,18 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * 
      * @see org.eclipse.draw2d.IFigure#addNotify()
      */
+    @Override
     public void addNotify() {
-        if (log.isTraceEnabled()) log.trace("Adding listeners");
+        if (log.isTraceEnabled()) {
+            log.trace("Adding listeners");
+        }
         super.addNotify();
         graphMouseListener = new GraphMouseListener();
         addMouseListener(graphMouseListener);
         setFocusTraversable(true);
     }
 
-    public Draw2dNode createNode(IVertex vertex) {
+    public Draw2dNode createNode(final IVertex vertex) {
         final Draw2dNode node = new Draw2dNode(this, vertex);
         add(node, node.getBounds());
         node.setFont(Application.getInstance().getFont(Application.NODE_FONT));
@@ -248,14 +268,18 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * 
      */
     public void deselectAllNodes() {
-        if (graphControler != null) graphControler.deselectAllNodes();
+        if (graphControler != null) {
+            graphControler.deselectAllNodes();
+        }
     }
 
     /**
      * @param node
      */
-    public void deselectNode(Draw2dNode node) {
-        if (graphControler != null) graphControler.deselectNode(node);
+    public void deselectNode(final Draw2dNode node) {
+        if (graphControler != null) {
+            graphControler.deselectNode(node);
+        }
     }
 
     /**
@@ -267,14 +291,15 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      *         exist.
      */
     public Rectangle getBoundsForNode(final String name) {
-        final Draw2dNode node = (Draw2dNode) nodeIndex.get(name);
+        final Draw2dNode node = nodeIndex.get(name);
         return node == null ? null : node.getBounds();
     }
 
     /**
      * @see org.eclipse.draw2d.Figure#getClientArea()
      */
-    public Rectangle getClientArea(Rectangle rect) {
+    @Override
+    public Rectangle getClientArea(final Rectangle rect) {
         super.getClientArea(rect);
         rect.width /= zoom;
         rect.height /= zoom;
@@ -293,14 +318,16 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * 
      * @see org.eclipse.draw2d.IFigure#getMinimumSize(int, int)
      */
-    public Dimension getMinimumSize(int wHint, int hHint) {
+    @Override
+    public Dimension getMinimumSize(final int wHint, final int hHint) {
         final Dimension d = super.getMinimumSize(wHint, hHint);
         int w = getInsets().getWidth();
         int h = getInsets().getHeight();
         return d.getExpanded(-w, -h).scale(zoom).expand(w, h);
     }
 
-    public Dimension getPreferredSize(int wHint, int hHint) {
+    @Override
+    public Dimension getPreferredSize(final int wHint, final int hHint) {
         final Dimension d = super.getPreferredSize(wHint, hHint);
         int w = getInsets().getWidth();
         int h = getInsets().getHeight();
@@ -319,8 +346,10 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * 
      * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
      */
-    public Collection getSelection() {
-        if (graphControler != null) return graphControler.getSelection();
+    public Collection<Draw2dNode> getSelection() {
+        if (graphControler != null) {
+            return graphControler.getSelection();
+        }
         return null;
     }
 
@@ -336,26 +365,35 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * 
      * @see org.eclipse.draw2d.IFigure#removeNotify()
      */
+    @Override
     public void removeNotify() {
-        if (log.isTraceEnabled()) log.trace("Removing listeners");
+        if (log.isTraceEnabled()) {
+            log.trace("Removing listeners");
+        }
         super.removeNotify();
-        if (graphMouseListener != null) removeMouseListener(graphMouseListener);
+        if (graphMouseListener != null) {
+            removeMouseListener(graphMouseListener);
+        }
         setFocusTraversable(false);
     }
 
     /**
      * @param listener
      */
-    public void removeSelectionListener(GraphListener listener) {
-        if (graphControler != null) graphControler.removeSelectionListener(listener);
+    public void removeSelectionListener(final GraphListener listener) {
+        if (graphControler != null) {
+            graphControler.removeSelectionListener(listener);
+        }
     }
 
     /**
      * @param node
      * @param addToSelection
      */
-    public void selectNode(Draw2dNode node, boolean addToSelection) {
-        if (graphControler != null) graphControler.selectNode(node, addToSelection);
+    public void selectNode(final Draw2dNode node, final boolean addToSelection) {
+        if (graphControler != null) {
+            graphControler.selectNode(node, addToSelection);
+        }
     }
 
     /*
@@ -364,16 +402,18 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * @see net.ggtools.grand.ui.graph.SelectionManager#selectNodeByName(java.lang.String,
      *      boolean)
      */
-    public void selectNodeByName(String nodeName, boolean addToSelection) {
-        final Draw2dNode node = (Draw2dNode) nodeIndex.get(nodeName);
-        if (node != null) selectNode(node, addToSelection);
+    public void selectNodeByName(final String nodeName, final boolean addToSelection) {
+        final Draw2dNode node = nodeIndex.get(nodeName);
+        if (node != null) {
+            selectNode(node, addToSelection);
+        }
     }
 
     /**
      * @param scroller
      *            The scroller to set.
      */
-    public final void setScroller(CanvasScroller scroller) {
+    public final void setScroller(final CanvasScroller scroller) {
         this.scroller = scroller;
     }
 
@@ -381,11 +421,11 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * @param graphControler
      *            The controler to set.
      */
-    public final void setSelectionManager(GraphControler graphControler) {
+    public final void setSelectionManager(final GraphControler graphControler) {
         this.graphControler = graphControler;
     }
 
-    public void setZoom(float zoom) {
+    public void setZoom(final float zoom) {
         this.zoom = zoom;
         revalidate();
         repaint();
@@ -394,7 +434,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     /**
      * @see org.eclipse.draw2d.Figure#translateFromParent(Translatable)
      */
-    public void translateFromParent(Translatable t) {
+    @Override
+    public void translateFromParent(final Translatable t) {
         super.translateFromParent(t);
         t.performScale(1 / zoom);
     }
@@ -402,7 +443,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     /**
      * @see org.eclipse.draw2d.Figure#translateToParent(Translatable)
      */
-    public void translateToParent(Translatable t) {
+    @Override
+    public void translateToParent(final Translatable t) {
         t.performScale(zoom);
         super.translateToParent(t);
     }
@@ -419,14 +461,19 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     /**
      * @see org.eclipse.draw2d.Figure#paintClientArea(Graphics)
      */
-    protected void paintClientArea(Graphics graphics) {
-        if (getChildren().isEmpty()) return;
+    @Override
+    protected void paintClientArea(final Graphics graphics) {
+        if (getChildren().isEmpty()) {
+            return;
+        }
 
-        boolean optimizeClip = getBorder() == null || getBorder().isOpaque();
+        boolean optimizeClip = (getBorder() == null) || getBorder().isOpaque();
 
-        ScaledGraphics g = new ScaledGraphics(graphics);
+        final ScaledGraphics g = new ScaledGraphics(graphics);
 
-        if (!optimizeClip) g.clipRect(getBounds().getCropped(getInsets()));
+        if (!optimizeClip) {
+            g.clipRect(getBounds().getCropped(getInsets()));
+        }
         g.translate(getBounds().x + getInsets().left, getBounds().y + getInsets().top);
         g.scale(zoom);
         g.pushState();
@@ -439,6 +486,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     /**
      * @see org.eclipse.draw2d.Figure#useLocalCoordinates()
      */
+    @Override
     protected boolean useLocalCoordinates() {
         return true;
     }

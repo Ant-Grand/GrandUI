@@ -41,8 +41,8 @@ import org.eclipse.swt.widgets.Shell;
  * @author Christophe Labouisse
  */
 public class ExceptionDialog extends ErrorDialog {
-    private ExceptionDialog(Shell parentShell, String dialogTitle, String message, IStatus status,
-            int displayMask) {
+    private ExceptionDialog(final Shell parentShell, final String dialogTitle, final String message, final IStatus status,
+            final int displayMask) {
         super(parentShell, dialogTitle, message, status, displayMask);
     }
 

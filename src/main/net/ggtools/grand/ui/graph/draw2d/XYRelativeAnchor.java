@@ -46,7 +46,7 @@ public class XYRelativeAnchor extends ConnectionAnchorBase {
     /**
      *  
      */
-    public XYRelativeAnchor(IFigure owner, Point location) {
+    public XYRelativeAnchor(final IFigure owner, final Point location) {
         this.owner = owner;
         this.location = location;
     }
@@ -56,8 +56,8 @@ public class XYRelativeAnchor extends ConnectionAnchorBase {
      * 
      * @see org.eclipse.draw2d.ConnectionAnchor#getLocation(org.eclipse.draw2d.geometry.Point)
      */
-    public Point getLocation(Point reference) {
-        Point result = location.getCopy();
+    public Point getLocation(final Point reference) {
+        final Point result = location.getCopy();
         getOwner().translateToAbsolute(result);
         return result;
     }
@@ -80,7 +80,7 @@ public class XYRelativeAnchor extends ConnectionAnchorBase {
         return location;
     }
 
-    public void setLocation(Point p) {
+    public void setLocation(final Point p) {
         location.setLocation(p);
         fireAnchorMoved();
     }

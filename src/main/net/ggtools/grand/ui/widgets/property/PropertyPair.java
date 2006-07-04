@@ -34,7 +34,7 @@ class PropertyPair {
 
     String value;
 
-    public PropertyPair(String name, String value) {
+    public PropertyPair(final String name, final String value) {
         this.name = name;
         this.value = value;
 
@@ -46,7 +46,7 @@ class PropertyPair {
      * 
      * @param entry
      */
-    public PropertyPair(Entry entry) {
+    public PropertyPair(final Entry entry) {
         this((String) entry.getKey(), (String) entry.getValue());
     }
 
@@ -54,7 +54,7 @@ class PropertyPair {
         return name;
     }
 
-    public final void setName(String name) {
+    public final void setName(final String name) {
         this.name = name;
     }
 
@@ -62,7 +62,7 @@ class PropertyPair {
         return value;
     }
 
-    public final void setValue(String value) {
+    public final void setValue(final String value) {
         this.value = value;
     }
 

@@ -66,7 +66,7 @@ public class RecentFilesMenu extends MenuManager implements RecentFilesListener 
         public OpenRecentFileAction(final GraphWindow window, final String fileName) {
             super(fileName);
             this.window = window;
-            this.file = new File(fileName);
+            file = new File(fileName);
         }
 
         /*
@@ -74,6 +74,7 @@ public class RecentFilesMenu extends MenuManager implements RecentFilesListener 
          * 
          * @see org.eclipse.jface.action.Action#run()
          */
+        @Override
         public void run() {
             window.openGraphInNewDisplayer(file, RecentFilesManager.getInstance().getProperties(
                     file));
@@ -106,7 +107,7 @@ public class RecentFilesMenu extends MenuManager implements RecentFilesListener 
      * @param recentFiles
      *            list of files to put in the menu.
      */
-    public void refreshRecentFiles(final Collection recentFiles) {
+    public void refreshRecentFiles(final Collection<String> recentFiles) {
         final Runnable runnable = new Runnable() {
             public void run() {
                 // Clear the previous items.
@@ -114,13 +115,15 @@ public class RecentFilesMenu extends MenuManager implements RecentFilesListener 
 
                 for (int i = indexOf(RECENT_FILES_GROUP) + 1; i < items.length; i++) {
                     IContributionItem item = items[i];
-                    if (item.isGroupMarker()) break;
+                    if (item.isGroupMarker()) {
+                        break;
+                    }
                     remove(item);
                 }
 
                 // Re-add the contents.
-                for (final Iterator iter = recentFiles.iterator(); iter.hasNext();) {
-                    final String fileName = (String) iter.next();
+                for (final Iterator<String> iter = recentFiles.iterator(); iter.hasNext();) {
+                    final String fileName = iter.next();
                     appendToGroup(RECENT_FILES_GROUP, new OpenRecentFileAction(window, fileName));
                 }
             }

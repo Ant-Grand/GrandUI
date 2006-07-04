@@ -47,7 +47,7 @@ public abstract class GraphListenerAction extends GraphControlerAction implement
     /**
      * @param parent
      */
-    public GraphListenerAction(GraphControlerProvider parent) {
+    public GraphListenerAction(final GraphControlerProvider parent) {
         super(parent);
     }
 
@@ -55,7 +55,7 @@ public abstract class GraphListenerAction extends GraphControlerAction implement
      * @param parent
      * @param text
      */
-    public GraphListenerAction(GraphControlerProvider parent, String text) {
+    public GraphListenerAction(final GraphControlerProvider parent, final String text) {
         super(parent, text);
     }
 
@@ -64,7 +64,7 @@ public abstract class GraphListenerAction extends GraphControlerAction implement
      * @param text
      * @param image
      */
-    public GraphListenerAction(GraphControlerProvider parent, String text, ImageDescriptor image) {
+    public GraphListenerAction(final GraphControlerProvider parent, final String text, final ImageDescriptor image) {
         super(parent, text, image);
     }
 
@@ -73,7 +73,7 @@ public abstract class GraphListenerAction extends GraphControlerAction implement
      * @param text
      * @param style
      */
-    public GraphListenerAction(GraphControlerProvider parent, String text, int style) {
+    public GraphListenerAction(final GraphControlerProvider parent, final String text, final int style) {
         super(parent, text, style);
     }
 
@@ -81,19 +81,20 @@ public abstract class GraphListenerAction extends GraphControlerAction implement
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanges(net.ggtools.grand.ui.graph.GraphControler)
      */
-    public void parameterChanged(GraphControler controler) {
+    public void parameterChanged(final GraphControler controler) {
     }
 
     /*
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
-    public void selectionChanged(Collection selectedNodes) {}
+    public void selectionChanged(final Collection selectedNodes) {}
 
     /*
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.actions.GraphControlerAction#postAddHook()
      */
+    @Override
     protected void postAddHook() {
         getGraphControler().addListener(this);
     }
@@ -102,6 +103,7 @@ public abstract class GraphListenerAction extends GraphControlerAction implement
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.actions.GraphControlerAction#postInitHook()
      */
+    @Override
     protected void postInitHook() {
         if (getGraphControler() != null) {
             getGraphControler().addListener(this);
@@ -112,6 +114,7 @@ public abstract class GraphListenerAction extends GraphControlerAction implement
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.actions.GraphControlerAction#preRemoveHook()
      */
+    @Override
     protected void preRemoveHook() {
         getGraphControler().removeSelectionListener(this);
         setEnabled(false);

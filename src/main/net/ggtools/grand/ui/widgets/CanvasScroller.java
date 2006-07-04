@@ -49,7 +49,7 @@ public final class CanvasScroller implements MouseMoveListener {
 
     private final Viewport viewport;
 
-    public CanvasScroller(FigureCanvas c) {
+    public CanvasScroller(final FigureCanvas c) {
         canvas = c;
         viewport = canvas.getViewport();
         inDragMode = false;
@@ -90,7 +90,7 @@ public final class CanvasScroller implements MouseMoveListener {
      * 
      * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
      */
-    public void mouseMove(MouseEvent e) {
+    public void mouseMove(final MouseEvent e) {
         if (gotStartPoint) {
             canvas.scrollTo(startDragX - e.x, startDragY - e.y);
         }

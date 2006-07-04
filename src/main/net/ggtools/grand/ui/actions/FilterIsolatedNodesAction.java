@@ -50,6 +50,7 @@ public class FilterIsolatedNodesAction extends GraphControlerAction {
      * 
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         final GraphFilter filter = new IsolatedNodeFilter();
         getGraphControler().addFilter(filter);

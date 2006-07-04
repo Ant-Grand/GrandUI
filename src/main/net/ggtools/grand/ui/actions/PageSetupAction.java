@@ -59,6 +59,7 @@ public class PageSetupAction extends Action {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         final PageSetupDialog dialog = new PageSetupDialog(window.getShell());
         dialog.open();

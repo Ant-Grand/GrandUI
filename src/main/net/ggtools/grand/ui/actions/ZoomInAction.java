@@ -27,11 +27,11 @@
  */
 package net.ggtools.grand.ui.actions;
 
+import net.ggtools.grand.ui.graph.GraphControlerProvider;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
-
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
 /**
  * @author Christophe Labouisse
@@ -48,7 +48,7 @@ public class ZoomInAction extends GraphControlerAction {
     /**
      * @param provider
      */
-    public ZoomInAction(GraphControlerProvider provider) {
+    public ZoomInAction(final GraphControlerProvider provider) {
         super(provider, DEFAULT_ACTION_NAME);
         setAccelerator(SWT.PAGE_UP);
     }
@@ -56,6 +56,7 @@ public class ZoomInAction extends GraphControlerAction {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.Action#run()
      */
+    @Override
     public void run() {
         getGraphControler().getDisplayer().zoomIn();
     }

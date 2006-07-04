@@ -40,11 +40,11 @@ import org.eclipse.swt.graphics.Image;
  * @author Christophe Labouisse
  */
 final class PropertyListLabelProvider extends LabelProvider implements ITableLabelProvider {
-    public Image getColumnImage(Object element, int columnIndex) {
+    public Image getColumnImage(final Object element, final int columnIndex) {
         return null;
     }
 
-    public String getColumnText(Object element, int columnIndex) {
+    public String getColumnText(final Object element, final int columnIndex) {
         String rc = null;
         
         if (element instanceof PropertyPair) {
@@ -69,7 +69,8 @@ final class PropertyListLabelProvider extends LabelProvider implements ITableLab
         return rc;
     }
 
-    public String getText(Object element) {
+    @Override
+    public String getText(final Object element) {
         if (element instanceof PropertyPair) {
             final PropertyPair pair = (PropertyPair) element;
             return pair.getName();

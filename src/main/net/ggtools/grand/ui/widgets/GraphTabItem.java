@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
 
 import net.ggtools.grand.ant.AntTargetNode;
 import net.ggtools.grand.ant.AntTargetNode.SourceElement;
+import net.ggtools.grand.graph.Node;
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.graph.GraphControler;
 import net.ggtools.grand.ui.graph.GraphControlerListener;
@@ -92,7 +93,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
         private MouseWheelZoomListener() {
         }
 
-        public void handleEvent(Event event) {
+        public void handleEvent(final Event event) {
             final float zoomBefore = getZoom();
             event.doit = false;
             if (event.count > 0) {
@@ -131,6 +132,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
             underlying = getInstance();
         }
 
+        @Override
         public int compare(final String source, final String target) {
             final Matcher sourceMatcher = pattern.matcher(source);
             if (!sourceMatcher.matches()) {
@@ -156,7 +158,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
                 final String sourceIndexGroup = sourceMatcher.group(NODE_INDEX_GROUP_NUM);
                 try {
                     sourceIndex = Integer.parseInt(sourceIndexGroup);
-                } catch (NumberFormatException e) {
+                } catch (final NumberFormatException e) {
                     log.debug("Index group" + sourceIndexGroup
                             + " is not an integer treating as 0");
                     sourceIndex = 0;
@@ -166,7 +168,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
                 final String targetIndexGroup = targetMatcher.group(NODE_INDEX_GROUP_NUM);
                 try {
                     targetIndex = Integer.parseInt(targetIndexGroup);
-                } catch (NumberFormatException e) {
+                } catch (final NumberFormatException e) {
                     log.debug("Index group" + targetIndexGroup
                             + " is not an integer treating as 0");
                     targetIndex = 0;
@@ -178,10 +180,12 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
             return result;
         }
 
-        public CollationKey getCollationKey(String source) {
+        @Override
+        public CollationKey getCollationKey(final String source) {
             throw new Error("getCollationKey is not implemented");
         }
 
+        @Override
         public int hashCode() {
             return underlying.hashCode();
         }
@@ -245,7 +249,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
         outlineViewer.setLabelProvider(controler.getNodeLabelProvider());
         outlineViewer.setSorter(new ViewerSorter(new OutlineViewerCollator()));
         outlineViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 final ISelection selection = event.getSelection();
 
                 if (!selection.isEmpty()) {
@@ -254,7 +258,9 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
                         if (structuredSelection.size() == 1) {
                             final String nodeName = structuredSelection.getFirstElement()
                                     .toString();
-                            if (!skipJumpToNode) jumpToNode(nodeName);
+                            if (!skipJumpToNode) {
+                                jumpToNode(nodeName);
+                            }
                             skipJumpToNode = false;
                             getControler().selectNodeByName(nodeName, false);
                         }
@@ -291,7 +297,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#addControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
-    public void addControlerListener(GraphControlerListener listener) {
+    public void addControlerListener(final GraphControlerListener listener) {
     }
 
     /*
@@ -340,14 +346,14 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanged(net.ggtools.grand.ui.graph.GraphControler)
      */
-    public void parameterChanged(GraphControler graphControler) {
+    public void parameterChanged(final GraphControler graphControler) {
     }
 
     /*
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
-    public void removeControlerListener(GraphControlerListener listener) {
+    public void removeControlerListener(final GraphControlerListener listener) {
     }
 
     /*
@@ -356,9 +362,9 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      */
     public void selectionChanged(final Collection selectedNodes) {
 
-        final List selection = new ArrayList(selectedNodes.size());
-        for (Iterator iter = selectedNodes.iterator(); iter.hasNext();) {
-            Draw2dNode node = (Draw2dNode) iter.next();
+        final List<Node> selection = new ArrayList<Node>(selectedNodes.size());
+        for (final Iterator iter = selectedNodes.iterator(); iter.hasNext();) {
+            final Draw2dNode node = (Draw2dNode) iter.next();
             selection.add(node.getNode());
         }
 
@@ -395,7 +401,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * @param outlinePanelVisible
      *            The sourcePanelVisible to set.
      */
-    public final void setOutlinePanelVisible(boolean outlinePanelVisible) {
+    public final void setOutlinePanelVisible(final boolean outlinePanelVisible) {
         outlineViewer.getControl().setVisible(outlinePanelVisible);
         outlineSashForm.layout();
     }
@@ -404,22 +410,20 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#setRichSource(net.ggtools.grand.ant.AntTargetNode.SourceElement[])
      */
-    public void setRichSource(SourceElement[] richSource) {
+    public void setRichSource(final SourceElement[] richSource) {
         if (richSource == null) {
             setSourceText("");
             return;
         }
 
         final StringBuffer buffer = new StringBuffer();
-        for (int i = 0; i < richSource.length; i++) {
-            AntTargetNode.SourceElement element = richSource[i];
+        for (final AntTargetNode.SourceElement element : richSource) {
             buffer.append(element.getText());
         }
         setSourceText(buffer.toString());
 
         int start = 0;
-        for (int i = 0; i < richSource.length; i++) {
-            AntTargetNode.SourceElement element = richSource[i];
+        for (final AntTargetNode.SourceElement element : richSource) {
             Color textColor;
             switch (element.getStyle()) {
             case AntTargetNode.SOURCE_ATTRIBUTE:
@@ -449,7 +453,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * @param sourcePanelVisible
      *            The sourcePanelVisible to set.
      */
-    public final void setSourcePanelVisible(boolean sourcePanelVisible) {
+    public final void setSourcePanelVisible(final boolean sourcePanelVisible) {
         textComposite.setVisible(sourcePanelVisible);
         sourceSashForm.layout();
     }
@@ -458,7 +462,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#setSourceText(java.lang.String)
      */
-    public void setSourceText(String text) {
+    public void setSourceText(final String text) {
         textDisplayer.setText(text);
         textComposite.setMinSize(textDisplayer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
     }
@@ -509,7 +513,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#setZoom(float)
      */
-    private final void setZoom(float zoom) {
+    private final void setZoom(final float zoom) {
         if (graph != null) {
             if (log.isTraceEnabled()) {
                 log.trace("setZoom(zoom = " + zoom + ")");

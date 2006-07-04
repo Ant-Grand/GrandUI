@@ -64,7 +64,8 @@ public class Analyzer extends ApplicationWindow {
      * 
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
-    protected void configureShell(Shell shell) {
+    @Override
+    protected void configureShell(final Shell shell) {
         super.configureShell(shell);
         shell.setText("ggTools log analyzer");
     }
@@ -73,15 +74,18 @@ public class Analyzer extends ApplicationWindow {
      * (non-Javadoc)
      * @see org.eclipse.jface.window.ApplicationWindow#createMenuManager()
      */
+    @Override
     protected MenuManager createMenuManager() {
         final MenuManager manager = new MenuManager();
         final MenuManager fileMenu = new MenuManager("File");
         manager.add(fileMenu);
         fileMenu.add(new Action("Load") {
+            @Override
             public int getAccelerator() {
                 return SWT.CONTROL | 'L';
             }
 
+            @Override
             public void run() {
                 if (logViewer != null) {
                     final FileDialog dialog = new FileDialog(getShell(), SWT.NONE);
@@ -92,23 +96,24 @@ public class Analyzer extends ApplicationWindow {
                         try {
                             ois = new ObjectInputStream(new FileInputStream(logFileName));
                             logViewer.setLogBuffer((LogEventBuffer) ois.readObject());
-                        } catch (FileNotFoundException e) {
+                        } catch (final FileNotFoundException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
-                        } catch (IOException e) {
+                        } catch (final IOException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
+                        } catch (final ClassNotFoundException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
                         } finally {
-                            if (ois != null)
+                            if (ois != null) {
                                 try {
                                     ois.close();
-                                } catch (IOException exception) {
+                                } catch (final IOException exception) {
                                     throw new RuntimeException("Cannot close " + logFileName,
                                             exception);
                                 }
+                            }
                         }
                     }
 
@@ -117,10 +122,12 @@ public class Analyzer extends ApplicationWindow {
         });
 
         fileMenu.add(new Action("Quit") {
+            @Override
             public int getAccelerator() {
                 return SWT.CONTROL | 'Q';
             }
 
+            @Override
             public void run() {
                 System.exit(0);
             }
@@ -133,14 +140,15 @@ public class Analyzer extends ApplicationWindow {
      * (non-Javadoc)
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
-    protected Control createContents(Composite parent) {
+    @Override
+    protected Control createContents(final Composite parent) {
         // Allow the LogViewer to display trace & debug events.
         logViewer = new LogViewer(parent, SWT.NONE);
         return logViewer;
     }
 
-    public static void main(String[] args) {
-        Analyzer analyzer = new Analyzer();
+    public static void main(final String[] args) {
+        final Analyzer analyzer = new Analyzer();
         analyzer.setBlockOnOpen(true);
         analyzer.open();
         System.exit(0);

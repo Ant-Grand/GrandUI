@@ -48,7 +48,7 @@ public class ZoomOutAction extends GraphControlerAction {
     /**
      * @param provider
      */
-    public ZoomOutAction(GraphControlerProvider provider) {
+    public ZoomOutAction(final GraphControlerProvider provider) {
         super(provider, DEFAULT_ACTION_NAME);
         setAccelerator(SWT.PAGE_DOWN);
     }
@@ -56,6 +56,7 @@ public class ZoomOutAction extends GraphControlerAction {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.Action#run()
      */
+    @Override
     public void run() {
         getGraphControler().getDisplayer().zoomOut();
     }

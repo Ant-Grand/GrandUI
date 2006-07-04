@@ -46,6 +46,7 @@ public class GeneralPreferencePage extends FieldEditorPreferencePage implements 
      * (non-Javadoc)
      * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
      */
+    @Override
     protected void createFieldEditors() {
         final Composite parent = getFieldEditorParent();
         final IntegerFieldEditor maxFiles = new IntegerFieldEditor(MAX_RECENT_FILES_PREFS_KEY,

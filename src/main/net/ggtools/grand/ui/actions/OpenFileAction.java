@@ -54,11 +54,11 @@ public class OpenFileAction extends Action {
     private static final String DEFAULT_ACTION_NAME = "Open with properties";
 
     private final GraphWindow window;
-    private String previousPath;
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         final IWizard wizard = new OpenFileWizard(window);
         final WizardDialog dialog = new WizardDialog(window.getShell(), wizard);

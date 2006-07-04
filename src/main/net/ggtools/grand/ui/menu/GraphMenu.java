@@ -53,7 +53,7 @@ import org.eclipse.jface.action.Separator;
  */
 public class GraphMenu extends MenuManager {
 
-    public GraphMenu(GraphControlerProvider controlerProvider) {
+    public GraphMenu(final GraphControlerProvider controlerProvider) {
         super("Graph");
         add(new ReloadGraphAction(controlerProvider));
         add(new EditGraphPropertiesAction(controlerProvider));

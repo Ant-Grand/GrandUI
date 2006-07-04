@@ -33,17 +33,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class Launcher {
     private static final class JarFilenameFilter implements FilenameFilter {
-        public boolean accept(File dir, String name) {
+        public boolean accept(final File dir, final String name) {
             return name.endsWith(".jar");
         }
     }
@@ -61,9 +58,9 @@ public class Launcher {
     /**
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         try {
-            final ArrayList urlList = new ArrayList(20);
+            final ArrayList<URL> urlList = new ArrayList<URL>(20);
             addDirectoryJars("/home/moi/prog/Eclipse/GrandUi/dist/grand-ui-0.8pre/lib", urlList);
 
             final String osName = System.getProperty("os.name").toLowerCase(Locale.US);
@@ -72,14 +69,14 @@ public class Launcher {
                 addDirectoryJars("/home/moi/prog/Eclipse/GrandUi/dist/grand-ui-0.8pre/lib/linux-gtk", urlList);
             }
             
-            URLClassLoader cl = new URLClassLoader((URL[]) urlList.toArray(new URL[0]),Launcher.class.getClassLoader());
+            final URLClassLoader cl = new URLClassLoader(urlList.toArray(new URL[0]),Launcher.class.getClassLoader());
             Thread.currentThread().setName("Display thread");
             Thread.currentThread().setContextClassLoader(cl);
-            Class clazz = cl.loadClass("net.ggtools.grand.ui.Application");
+            final Class clazz = cl.loadClass("net.ggtools.grand.ui.Application");
             log.info("Classloader: " + clazz.getClassLoader());
             final Runnable application = (Runnable) clazz.newInstance();
             application.run();
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             log.fatal("Cannot run application", e);
         }
         log.info("Exiting ...");
@@ -91,12 +88,12 @@ public class Launcher {
      * @param jarList
      * @throws MalformedURLException
      */
-    private static void addDirectoryJars(final String directory, final ArrayList jarList) throws MalformedURLException {
+    private static void addDirectoryJars(final String directory, final ArrayList<URL> jarList) throws MalformedURLException {
         final File libDir = new File(directory);
-        File[] jars = libDir.listFiles(new JarFilenameFilter());
+        final File[] jars = libDir.listFiles(new JarFilenameFilter());
 
-        for (int i = 0; i < jars.length; i++) {
-            jarList.add(jars[i].toURL());
+        for (File element : jars) {
+            jarList.add(element.toURL());
         }
     }
 

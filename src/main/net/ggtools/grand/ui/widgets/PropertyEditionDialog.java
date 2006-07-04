@@ -49,13 +49,14 @@ public class PropertyEditionDialog extends Dialog {
     private PropertyEditor propertyEditor;
     private Map propertiesToLoad;
 
-    public PropertyEditionDialog(Shell parentShell) {
+    public PropertyEditionDialog(final Shell parentShell) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
     }
 
-    protected Control createDialogArea(Composite parent) {
-        Composite composite = (Composite) super.createDialogArea(parent);
+    @Override
+    protected Control createDialogArea(final Composite parent) {
+        final Composite composite = (Composite) super.createDialogArea(parent);
         composite.setLayout(new FillLayout());
         propertyEditor = new PropertyEditor(composite, SWT.NONE);
         if (propertiesToLoad != null) {
@@ -70,12 +71,13 @@ public class PropertyEditionDialog extends Dialog {
      * 
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
-    protected void configureShell(Shell newShell) {
+    @Override
+    protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Property Edition");
     }
 
-    public void setProperties(Map properties) {
+    public void setProperties(final Map properties) {
         if (propertyEditor == null) {
             propertiesToLoad = properties;
         }
@@ -85,7 +87,9 @@ public class PropertyEditionDialog extends Dialog {
     }
     
     public Properties getProperties() {
-        if (propertyEditor == null) return null;
+        if (propertyEditor == null) {
+            return null;
+        }
         
         return propertyEditor.getValues();
     }

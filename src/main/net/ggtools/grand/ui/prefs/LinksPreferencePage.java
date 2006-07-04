@@ -59,6 +59,7 @@ public class LinksPreferencePage extends FieldEditorPreferencePage implements Pr
      * (non-Javadoc)
      * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
      */
+    @Override
     protected void createFieldEditors() {
         final Composite parent = getFieldEditorParent();
         final ColorFieldEditor defaultLinkColor = new ColorFieldEditor(LINK_DEFAULT_COLOR,

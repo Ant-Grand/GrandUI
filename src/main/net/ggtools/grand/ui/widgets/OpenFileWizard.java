@@ -68,6 +68,7 @@ public class OpenFileWizard extends Wizard {
      * (non-Javadoc)
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
+    @Override
     public void addPages() {
         fileSelectionPage = new FileSelectionPage();
         addPage(fileSelectionPage);
@@ -79,6 +80,7 @@ public class OpenFileWizard extends Wizard {
      * (non-Javadoc)
      * @see org.eclipse.jface.wizard.IWizard#performFinish()
      */
+    @Override
     public boolean performFinish() {
         boolean rc = false;
         final File selectedFile = fileSelectionPage.getSelectedFile();
@@ -90,6 +92,7 @@ public class OpenFileWizard extends Wizard {
         return rc;
     }
 
+    @Override
     public boolean canFinish() {
         return fileSelectionPage.getSelectedFile() != null;
     }

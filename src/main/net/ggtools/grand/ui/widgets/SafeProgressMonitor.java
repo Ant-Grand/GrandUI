@@ -47,7 +47,7 @@ public class SafeProgressMonitor implements IProgressMonitor {
      * @param monitor
      * @param display
      */
-    public SafeProgressMonitor(IProgressMonitor monitor, Display display) {
+    public SafeProgressMonitor(final IProgressMonitor monitor, final Display display) {
         this.monitor = monitor;
         this.display = display;
     }

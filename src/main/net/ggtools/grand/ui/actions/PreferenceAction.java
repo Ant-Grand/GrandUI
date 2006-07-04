@@ -53,9 +53,10 @@ public class PreferenceAction extends Action {
      * 
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         final GrandUiPreferenceManager pm = new GrandUiPreferenceManager();
-        PreferenceDialog dialog = new PreferenceDialog(window.getShell(), pm);
+        final PreferenceDialog dialog = new PreferenceDialog(window.getShell(), pm);
         dialog.open();
     }
 

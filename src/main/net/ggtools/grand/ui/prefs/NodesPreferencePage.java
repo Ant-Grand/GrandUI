@@ -93,7 +93,7 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
 
     }
 
-    private List fields = new ArrayList();
+    private final List<FieldEditor> fields = new ArrayList<FieldEditor>();
 
     /**
      * Creates a new NodesPreferencePage instance using the default
@@ -112,10 +112,11 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
      * 
      * @see FieldEditor#store()
      */
+    @Override
     public boolean performOk() {
         if (fields != null) {
-            for (Iterator iter = fields.iterator(); iter.hasNext();) {
-                final FieldEditor fieldEditor = (FieldEditor) iter.next();
+            for (final Iterator<FieldEditor> iter = fields.iterator(); iter.hasNext();) {
+                final FieldEditor fieldEditor = iter.next();
                 fieldEditor.store();
             }
         }
@@ -127,12 +128,12 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
      * 
      * @return the number of columns
      */
-    private int calcNumberOfColumns(final List tabFields) {
+    private int calcNumberOfColumns(final List<FieldEditor> tabFields) {
         int result = 0;
         if (tabFields != null) {
-            Iterator e = tabFields.iterator();
+            final Iterator<FieldEditor> e = tabFields.iterator();
             while (e.hasNext()) {
-                FieldEditor pe = (FieldEditor) e.next();
+                final FieldEditor pe = e.next();
                 result = Math.max(result, pe.getNumberOfControls());
             }
         }
@@ -150,7 +151,7 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
         final Composite parent = new Composite(tabFolder, SWT.NONE);
         tabItem.setControl(parent);
 
-        final List tabFields = new LinkedList();
+        final List<FieldEditor> tabFields = new LinkedList<FieldEditor>();
         final ColorFieldEditor fgcolorField = new ColorFieldEditor(prefix + "fgcolor",
                 "Foreground", parent);
         tabFields.add(fgcolorField);
@@ -171,10 +172,11 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
 
         layout.numColumns = calcNumberOfColumns(tabFields);
         if (tabFields != null) {
-            for (Iterator iter = tabFields.iterator(); iter.hasNext();) {
-                final FieldEditor fieldEditor = (FieldEditor) iter.next();
-                if (fieldEditor.getNumberOfControls() < layout.numColumns)
-                        fieldEditor.fillIntoGrid(parent, layout.numColumns);
+            for (final Iterator<FieldEditor> iter = tabFields.iterator(); iter.hasNext();) {
+                final FieldEditor fieldEditor = iter.next();
+                if (fieldEditor.getNumberOfControls() < layout.numColumns) {
+                    fieldEditor.fillIntoGrid(parent, layout.numColumns);
+                }
                 fieldEditor.setPage(this);
                 //pe.setPropertyChangeListener(this);
                 fieldEditor.setPreferenceStore(getPreferenceStore());
@@ -189,7 +191,8 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
      * (non-Javadoc)
      * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
      */
-    protected Control createContents(Composite parent) {
+    @Override
+    protected Control createContents(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(new FillLayout());
         final TabFolder tabFolder = new TabFolder(composite, SWT.TOP);
@@ -207,11 +210,12 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
      * <code>PreferencePage</code> method loads all the field editors with
      * their default values.
      */
+    @Override
     protected void performDefaults() {
         if (fields != null) {
-            Iterator e = fields.iterator();
+            final Iterator<FieldEditor> e = fields.iterator();
             while (e.hasNext()) {
-                FieldEditor pe = (FieldEditor) e.next();
+                final FieldEditor pe = e.next();
                 pe.loadDefault();
             }
         }

@@ -73,13 +73,13 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
 
     private Graph graph;
 
-    private final Map nameDimensions;
+    private final Map<String, IVertex> nameDimensions;
 
     private final Node startNode;
 
     private final boolean useBusRouting;
 
-    private final Map vertexLUT;
+    private final Map<String, IVertex> vertexLUT;
 
     /**
      *  
@@ -87,9 +87,9 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
     public DotGraphCreator(final Graph graph, final boolean useBusRouting) {
         this.graph = graph;
         this.useBusRouting = useBusRouting;
-        nameDimensions = new HashMap();
+        nameDimensions = new HashMap<String, IVertex>();
         dotGraph = new DotGraph(IGraph.GRAPH, graph.getName());
-        vertexLUT = new HashMap();
+        vertexLUT = new HashMap<String, IVertex>();
         startNode = graph.getStartNode();
     }
 
@@ -98,7 +98,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
             startNode.accept(this);
         }
 
-        for (Iterator iter = graph.getNodes(); iter.hasNext();) {
+        for (final Iterator iter = graph.getNodes(); iter.hasNext();) {
             final Node node = (Node) iter.next();
             if ("".equals(node.getName()) || (node == startNode)) {
                 continue;
@@ -110,7 +110,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         Display.getDefault().syncExec(new Runnable() {
             public void run() {
                 final Font systemFont = Application.getInstance().getFont(Application.NODE_FONT);
-                for (Iterator iter = nameDimensions.entrySet().iterator(); iter.hasNext();) {
+                for (final Iterator iter = nameDimensions.entrySet().iterator(); iter.hasNext();) {
                     final Map.Entry entry = (Map.Entry) iter.next();
                     final String name = (String) entry.getKey();
                     final IVertex vertex = (IVertex) entry.getValue();
@@ -122,12 +122,12 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
             }
         });
 
-        for (Iterator iter = graph.getNodes(); iter.hasNext();) {
-            Node node = (Node) iter.next();
+        for (final Iterator iter = graph.getNodes(); iter.hasNext();) {
+            final Node node = (Node) iter.next();
             final Collection deps = node.getLinks();
             int index = 1;
             final int numDeps = deps.size();
-            for (Iterator iterator = deps.iterator(); iterator.hasNext();) {
+            for (final Iterator iterator = deps.iterator(); iterator.hasNext();) {
                 final Link link = (Link) iterator.next();
                 currentLinkName = "";
                 if (numDeps > 1) {
@@ -144,7 +144,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * (non-Javadoc)
      * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.AntLink)
      */
-    public void visitLink(AntLink link) {
+    public void visitLink(final AntLink link) {
         addLink(link);
     }
 
@@ -152,7 +152,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * (non-Javadoc)
      * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.AntTaskLink)
      */
-    public void visitLink(AntTaskLink link) {
+    public void visitLink(final AntTaskLink link) {
         final IEdge edge = addLink(link);
         edge.setAttr(LINK_TASK_ATTR, link.getTaskName());
         edge.setAttr(LINK_PARAMETERS_ATTR, link.getParameterMap());
@@ -162,7 +162,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * (non-Javadoc)
      * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.graph.Link)
      */
-    public void visitLink(Link link) {
+    public void visitLink(final Link link) {
         addLink(link);
     }
 
@@ -170,7 +170,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * (non-Javadoc)
      * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.SubantTaskLink)
      */
-    public void visitLink(SubantTaskLink link) {
+    public void visitLink(final SubantTaskLink link) {
         final IEdge edge = addLink(link);
         edge.setAttr(LINK_TASK_ATTR, link.getTaskName());
         edge.setAttr(LINK_PARAMETERS_ATTR, link.getParameterMap());
@@ -187,8 +187,8 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * (non-Javadoc)
      * @see net.ggtools.grand.graph.visit.NodeVisitor#visitNode(net.ggtools.grand.ant.AntTargetNode)
      */
-    public void visitNode(AntTargetNode node) {
-        IVertex vertex = addNode(node);
+    public void visitNode(final AntTargetNode node) {
+        final IVertex vertex = addNode(node);
         final String ifCondition = node.getIfCondition();
         if (ifCondition != null) {
             vertex.setAttr(IF_CONDITION_ATTR, ifCondition);
@@ -209,7 +209,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * (non-Javadoc)
      * @see net.ggtools.grand.graph.visit.NodeVisitor#visitNode(net.ggtools.grand.graph.Node)
      */
-    public void visitNode(Node node) {
+    public void visitNode(final Node node) {
         addNode(node);
     }
 
@@ -220,8 +220,8 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * @return
      */
     private IEdge addLink(final Link link) {
-        final IEdge edge = dotGraph.newEdge((IVertex) vertexLUT.get(link.getStartNode().getName()),
-                (IVertex) vertexLUT.get(link.getEndNode().getName()), currentLinkName, link);
+        final IEdge edge = dotGraph.newEdge(vertexLUT.get(link.getStartNode().getName()),
+                vertexLUT.get(link.getEndNode().getName()), currentLinkName, link);
         final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
         if (link.hasAttributes(Link.ATTR_WEAK_LINK)) {
             edge.setAttr(DRAW2DFGCOLOR_ATTR, preferenceStore

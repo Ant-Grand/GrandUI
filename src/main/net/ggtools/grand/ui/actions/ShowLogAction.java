@@ -48,12 +48,12 @@ public class ShowLogAction extends Action {
     private final class DialogDisposeListener implements DisposeListener {
         private final Shell shell;
 
-        private DialogDisposeListener(Shell shell) {
+        private DialogDisposeListener(final Shell shell) {
             super();
             this.shell = shell;
         }
 
-        public void widgetDisposed(DisposeEvent e) {
+        public void widgetDisposed(final DisposeEvent e) {
             setChecked(false);
             shell.removeDisposeListener(this);
             dialog = null;
@@ -79,9 +79,12 @@ public class ShowLogAction extends Action {
      * (non-Javadoc)
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         if (isChecked()) {
-            if (dialog != null && dialog.getShell().isDisposed()) dialog = null;
+            if ((dialog != null) && dialog.getShell().isDisposed()) {
+                dialog = null;
+            }
 
             if (dialog == null) {
                 dialog = new LogWindow(window.getShell());

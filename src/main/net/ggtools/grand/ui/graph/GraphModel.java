@@ -70,16 +70,21 @@ public class GraphModel implements GraphProducer {
 
     public void openFile(final File file, final Properties properties) throws GrandException {
         lastLoadedFileProperties = properties;
-        if (log.isDebugEnabled()) log.debug("Loading " + file);
+        if (log.isDebugEnabled()) {
+            log.debug("Loading " + file);
+        }
         lastLoadedFile = file;
         producer = new AntProject(file,properties);
     }
 
     public void reload(final Properties properties) throws GrandException {
         if (lastLoadedFile != null) {
-            if (log.isDebugEnabled()) log.debug("Reloading last file");
-            if (properties != null)
+            if (log.isDebugEnabled()) {
+                log.debug("Reloading last file");
+            }
+            if (properties != null) {
                 lastLoadedFileProperties = properties;
+            }
             openFile(lastLoadedFile, lastLoadedFileProperties);
         }
         else {

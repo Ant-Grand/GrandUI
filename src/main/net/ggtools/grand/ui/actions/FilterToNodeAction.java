@@ -57,6 +57,7 @@ public class FilterToNodeAction extends GraphSelectionAction implements GraphCon
      * 
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         final GraphFilter filter = new ToNodeFilter(getCurrentNode());
         getGraphControler().addFilter(filter);

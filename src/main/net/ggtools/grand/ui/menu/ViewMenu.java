@@ -50,7 +50,7 @@ import org.eclipse.jface.action.Separator;
  */
 public class ViewMenu extends MenuManager {
 
-    public ViewMenu(GraphWindow window) {
+    public ViewMenu(final GraphWindow window) {
         super("View");
         add(new Separator("panels"));
         add(new ShowSourcePanelAction(window));

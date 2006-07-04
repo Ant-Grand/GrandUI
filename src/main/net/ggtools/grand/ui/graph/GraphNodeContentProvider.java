@@ -72,7 +72,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void addListener(ILabelProviderListener listener) {
+    public void addListener(final ILabelProviderListener listener) {
         // TODO Auto-generated method stub
 
     }
@@ -89,17 +89,20 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
      */
-    public Color getBackground(Object element) {
+    public Color getBackground(final Object element) {
         if (element instanceof Node) {
             final Node node = (Node) element;
             final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
-            if (node.equals(graph.getStartNode()))
-                    return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "start.fillcolor");
-            if (node.hasAttributes(Node.ATTR_MISSING_NODE))
-                    return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX
-                            + "missing.fillcolor");
-            if (node.hasAttributes(Node.ATTR_MAIN_NODE))
-                    return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "main.fillcolor");
+            if (node.equals(graph.getStartNode())) {
+                return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "start.fillcolor");
+            }
+            if (node.hasAttributes(Node.ATTR_MISSING_NODE)) {
+                return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX
+                        + "missing.fillcolor");
+            }
+            if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
+                return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "main.fillcolor");
+            }
 
             return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "default.fillcolor");
         }
@@ -111,12 +114,15 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements(Object inputElement) {
-        if (graph == null) return null;
+    public Object[] getElements(final Object inputElement) {
+        if (graph == null) {
+            return null;
+        }
 
         final LinkedList list = new LinkedList();
-        for (Iterator iter = graph.getNodes(); iter.hasNext();)
+        for (final Iterator iter = graph.getNodes(); iter.hasNext();) {
             list.add(iter.next());
+        }
 
         return list.toArray();
     }
@@ -125,16 +131,19 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
      */
-    public Color getForeground(Object element) {
+    public Color getForeground(final Object element) {
         if (element instanceof Node) {
             final Node node = (Node) element;
             final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
-            if (node.equals(graph.getStartNode()))
-                    return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "start.fgcolor");
-            if (node.hasAttributes(Node.ATTR_MISSING_NODE))
-                    return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "missing.fgcolor");
-            if (node.hasAttributes(Node.ATTR_MAIN_NODE))
-                    return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "main.fgcolor");
+            if (node.equals(graph.getStartNode())) {
+                return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "start.fgcolor");
+            }
+            if (node.hasAttributes(Node.ATTR_MISSING_NODE)) {
+                return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "missing.fgcolor");
+            }
+            if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
+                return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "main.fgcolor");
+            }
 
             return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "default.fgcolor");
         }
@@ -146,7 +155,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
-    public Image getImage(Object element) {
+    public Image getImage(final Object element) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -155,8 +164,10 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      */
-    public String getText(Object element) {
-        if (element == null) return null;
+    public String getText(final Object element) {
+        if (element == null) {
+            return null;
+        }
 
         if (element instanceof Node) {
             final Node node = (Node) element;
@@ -171,7 +182,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
      *      java.lang.Object, java.lang.Object)
      */
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
         // TODO Auto-generated method stub
 
     }
@@ -181,7 +192,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
      *      java.lang.String)
      */
-    public boolean isLabelProperty(Object element, String property) {
+    public boolean isLabelProperty(final Object element, final String property) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -190,7 +201,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void removeListener(ILabelProviderListener listener) {
+    public void removeListener(final ILabelProviderListener listener) {
         // TODO Auto-generated method stub
 
     }

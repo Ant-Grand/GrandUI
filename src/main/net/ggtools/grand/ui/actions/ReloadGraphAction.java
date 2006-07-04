@@ -49,6 +49,7 @@ public class ReloadGraphAction extends GraphControlerAction {
      * 
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         getGraphControler().reloadGraph();
     }

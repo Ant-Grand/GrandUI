@@ -28,7 +28,6 @@
 package net.ggtools.grand.ui.actions;
 
 import net.ggtools.grand.ui.RecentFilesManager;
-import net.ggtools.grand.ui.menu.RecentFilesMenu;
 
 import org.eclipse.jface.action.Action;
 
@@ -36,8 +35,6 @@ import org.eclipse.jface.action.Action;
  * @author Christophe Labouisse
  */
 public class ClearRecentFilesAction extends Action {
-    private RecentFilesMenu menu;
-
     public ClearRecentFilesAction() {
         super("Remove recent files");
     }
@@ -45,6 +42,7 @@ public class ClearRecentFilesAction extends Action {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.Action#run()
      */
+    @Override
     public void run() {
         RecentFilesManager.getInstance().clear();
     }

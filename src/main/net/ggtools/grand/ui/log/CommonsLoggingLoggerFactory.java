@@ -27,10 +27,10 @@
  */
 package net.ggtools.grand.ui.log;
 
+import net.ggtools.grand.log.LoggerFactory;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import net.ggtools.grand.log.LoggerFactory;
 
 /**
  * Logger factory used to make Grand's core log using the same mechanism than
@@ -50,7 +50,7 @@ public class CommonsLoggingLoggerFactory implements LoggerFactory {
      * (non-Javadoc)
      * @see net.ggtools.grand.log.LoggerFactory#getLog(java.lang.Class)
      */
-    public Log getLog(Class clazz) {
+    public Log getLog(final Class clazz) {
         return LogFactory.getLog(clazz);
     }
 
@@ -58,7 +58,7 @@ public class CommonsLoggingLoggerFactory implements LoggerFactory {
      * (non-Javadoc)
      * @see net.ggtools.grand.log.LoggerFactory#getLog(java.lang.String)
      */
-    public Log getLog(String name) {
+    public Log getLog(final String name) {
         return LogFactory.getLog(name);
     }
 

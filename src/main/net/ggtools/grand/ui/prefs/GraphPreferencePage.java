@@ -54,6 +54,7 @@ public class GraphPreferencePage extends FieldEditorPreferencePage implements Pr
      * (non-Javadoc)
      * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
      */
+    @Override
     protected void createFieldEditors() {
         final Composite parent = getFieldEditorParent();
         final BooleanFieldEditor enableBusRouting = new BooleanFieldEditor(

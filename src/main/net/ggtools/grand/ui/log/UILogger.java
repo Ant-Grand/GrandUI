@@ -52,7 +52,7 @@ final class UILogger implements Log {
     /**
      * @param message
      */
-    public void debug(Object message) {
+    public void debug(final Object message) {
         underlying.debug(message);
         logBuffer.addLogEvent(LogEvent.DEBUG, name, message);
     }
@@ -61,7 +61,7 @@ final class UILogger implements Log {
      * @param message
      * @param t
      */
-    public void debug(Object message, Throwable t) {
+    public void debug(final Object message, final Throwable t) {
         underlying.debug(message, t);
         logBuffer.addLogEvent(LogEvent.DEBUG, name, message, t);
     }
@@ -69,7 +69,7 @@ final class UILogger implements Log {
     /**
      * @param message
      */
-    public void error(Object message) {
+    public void error(final Object message) {
         underlying.error(message);
         logBuffer.addLogEvent(LogEvent.ERROR, name, message);
     }
@@ -78,7 +78,7 @@ final class UILogger implements Log {
      * @param message
      * @param t
      */
-    public void error(Object message, Throwable t) {
+    public void error(final Object message, final Throwable t) {
         underlying.error(message, t);
         logBuffer.addLogEvent(LogEvent.ERROR, name, message, t);
     }
@@ -86,7 +86,7 @@ final class UILogger implements Log {
     /**
      * @param message
      */
-    public void fatal(Object message) {
+    public void fatal(final Object message) {
         underlying.fatal(message);
         logBuffer.addLogEvent(LogEvent.FATAL, name, message);
     }
@@ -95,7 +95,7 @@ final class UILogger implements Log {
      * @param message
      * @param t
      */
-    public void fatal(Object message, Throwable t) {
+    public void fatal(final Object message, final Throwable t) {
         underlying.fatal(message, t);
         logBuffer.addLogEvent(LogEvent.FATAL, name, message, t);
     }
@@ -103,7 +103,7 @@ final class UILogger implements Log {
     /**
      * @param message
      */
-    public void info(Object message) {
+    public void info(final Object message) {
         underlying.info(message);
         logBuffer.addLogEvent(LogEvent.INFO, name, message);
     }
@@ -112,7 +112,7 @@ final class UILogger implements Log {
      * @param message
      * @param t
      */
-    public void info(Object message, Throwable t) {
+    public void info(final Object message, final Throwable t) {
         underlying.info(message, t);
         logBuffer.addLogEvent(LogEvent.INFO, name, message, t);
     }
@@ -162,7 +162,7 @@ final class UILogger implements Log {
     /**
      * @param message
      */
-    public void trace(Object message) {
+    public void trace(final Object message) {
         underlying.trace(message);
         logBuffer.addLogEvent(LogEvent.TRACE, name, message);
     }
@@ -171,7 +171,7 @@ final class UILogger implements Log {
      * @param message
      * @param t
      */
-    public void trace(Object message, Throwable t) {
+    public void trace(final Object message, final Throwable t) {
         underlying.trace(message, t);
         logBuffer.addLogEvent(LogEvent.TRACE, name, message, t);
     }
@@ -179,7 +179,7 @@ final class UILogger implements Log {
     /**
      * @param message
      */
-    public void warn(Object message) {
+    public void warn(final Object message) {
         underlying.warn(message);
         logBuffer.addLogEvent(LogEvent.WARNING, name, message);
     }
@@ -188,7 +188,7 @@ final class UILogger implements Log {
      * @param message
      * @param t
      */
-    public void warn(Object message, Throwable t) {
+    public void warn(final Object message, final Throwable t) {
         underlying.warn(message, t);
         logBuffer.addLogEvent(LogEvent.WARNING, name, message, t);
     }

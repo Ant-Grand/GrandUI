@@ -48,7 +48,7 @@ import org.eclipse.jface.action.Separator;
  * @author Christophe Labouisse
  */
 public class FileMenuManager extends MenuManager {
-    public FileMenuManager(GraphWindow window) {
+    public FileMenuManager(final GraphWindow window) {
         super("File");
         add(new QuickOpenFileAction(window));
         add(new OpenFileAction(window));

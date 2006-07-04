@@ -45,7 +45,7 @@ public class ConstrainedPageFlowLayout extends PageFlowLayout {
      * Creates a new instance without any constrained width.
      * @param page
      */
-    public ConstrainedPageFlowLayout(FlowPage page) {
+    public ConstrainedPageFlowLayout(final FlowPage page) {
         super(page);
     }
 
@@ -64,7 +64,7 @@ public class ConstrainedPageFlowLayout extends PageFlowLayout {
      *            The maxFlowWidth to set or <code>-1</code> not to bound the
      *            flow width.
      */
-    public void setMaxFlowWidth(int maxFlowWidth) {
+    public void setMaxFlowWidth(final int maxFlowWidth) {
         this.maxFlowWidth = maxFlowWidth;
         invalidate();
     }
@@ -74,10 +74,12 @@ public class ConstrainedPageFlowLayout extends PageFlowLayout {
      * @param line
      *            the LineBox to set up
      */
-    protected void setupLine(LineBox line) {
+    @Override
+    protected void setupLine(final LineBox line) {
         super.setupLine(line);
         final int lineWidth = line.getRecommendedWidth();
-        if ((maxFlowWidth > 0) && ((lineWidth > maxFlowWidth) || (lineWidth == -1)))
-                line.setRecommendedWidth(maxFlowWidth);
+        if ((maxFlowWidth > 0) && ((lineWidth > maxFlowWidth) || (lineWidth == -1))) {
+            line.setRecommendedWidth(maxFlowWidth);
+        }
     }
 }

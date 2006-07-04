@@ -66,7 +66,7 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void addListener(ILabelProviderListener listener) {
+    public void addListener(final ILabelProviderListener listener) {
     }
 
     /*
@@ -74,10 +74,10 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
     public void dispose() {
-        for (Iterator iter = logLevelIcons.entrySet().iterator(); iter.hasNext();) {
+        for (final Iterator iter = logLevelIcons.entrySet().iterator(); iter.hasNext();) {
             final Map.Entry entry = (Map.Entry) iter.next();
             final Object entryValue = entry.getValue();
-            if (entryValue != null && entryValue instanceof Image) {
+            if ((entryValue != null) && (entryValue instanceof Image)) {
                 final Image image = (Image) entryValue;
                 image.dispose();
             }
@@ -89,7 +89,7 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
      * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object,
      *      int)
      */
-    public Color getBackground(Object element, int columnIndex) {
+    public Color getBackground(final Object element, final int columnIndex) {
         return null;
     }
 
@@ -98,7 +98,7 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object,
      *      int)
      */
-    public Image getColumnImage(Object element, int columnIndex) {
+    public Image getColumnImage(final Object element, final int columnIndex) {
         Image rc = null;
 
         if (element instanceof LogEvent) {
@@ -127,7 +127,7 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
      *      int)
      */
-    public String getColumnText(Object element, int columnIndex) {
+    public String getColumnText(final Object element, final int columnIndex) {
         String rc = null;
         if (element instanceof LogEvent) {
             final LogEvent event = (LogEvent) element;
@@ -166,7 +166,7 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
      * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object,
      *      int)
      */
-    public Color getForeground(Object element, int columnIndex) {
+    public Color getForeground(final Object element, final int columnIndex) {
         return null;
     }
 
@@ -175,7 +175,7 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
      *      java.lang.String)
      */
-    public boolean isLabelProperty(Object element, String property) {
+    public boolean isLabelProperty(final Object element, final String property) {
         return false;
     }
 
@@ -183,6 +183,6 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
-    public void removeListener(ILabelProviderListener listener) {
+    public void removeListener(final ILabelProviderListener listener) {
     }
 }

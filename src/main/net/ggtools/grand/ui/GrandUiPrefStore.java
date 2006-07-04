@@ -27,9 +27,6 @@
  */
 package net.ggtools.grand.ui;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,10 +34,13 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import net.ggtools.grand.ui.prefs.ComplexPreferenceStore;
-import net.ggtools.grand.ui.prefs.GeneralPreferencePage;
 import net.ggtools.grand.ui.prefs.GraphPreferencePage;
 import net.ggtools.grand.ui.prefs.LinksPreferencePage;
 import net.ggtools.grand.ui.prefs.NodesPreferencePage;
+import net.ggtools.grand.ui.prefs.PreferenceKeys;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Christophe Labouisse
@@ -75,6 +75,7 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
         }
     }
 
+    @Override
     public void save() throws IOException {
         if (!baseDir.isDirectory()) {
             baseDir.mkdirs();
@@ -94,15 +95,14 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
         final String[] keys;
         try {
             keys = node.keys();
-            for (int i = 0; i < keys.length; i++) {
-                String key = keys[i];
+            for (final String key : keys) {
                 putValue(key, node.get(key, "SHOULD NOT APPEAR"));
             }
             save();
             node.removeNode();
-        } catch (BackingStoreException e) {
+        } catch (final BackingStoreException e) {
             log.warn("Cannot retrieve previous preferences", e);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.error("Cannot save preferences after migration", e);
         }
     }
@@ -111,7 +111,7 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
      * 
      */
     private void setDefaults() {
-        setDefault(GeneralPreferencePage.MAX_RECENT_FILES_PREFS_KEY, 4);
+        setDefault(PreferenceKeys.MAX_RECENT_FILES_PREFS_KEY, 4);
         GraphPreferencePage.setDefaults(this);
         NodesPreferencePage.setDefaults(this);
         LinksPreferencePage.setDefaults(this);

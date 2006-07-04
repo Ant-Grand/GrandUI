@@ -29,8 +29,6 @@ package net.ggtools.grand.ui.widgets.property;
 
 import java.util.Properties;
 
-import net.ggtools.grand.ui.widgets.property.PropertyEditor;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -41,14 +39,14 @@ public class PropertyEditorTestApp {
     /**
      * Main method to launch the window
      */
-    public static void main(String[] args) {
-        Shell shell = new Shell();
+    public static void main(final String[] args) {
+        final Shell shell = new Shell();
         shell.setText("Property List - TableViewer Example");
         shell.setLayout(new FillLayout());
-        Composite composite = new Composite(shell, SWT.NONE);
+        final Composite composite = new Composite(shell, SWT.NONE);
         composite.setLayout(new FillLayout());
         final PropertyEditor propertyViewer = new PropertyEditor(composite, SWT.NONE);
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.setProperty("ga", "azerty");
         props.setProperty("bu", "aqsdfzerty");
         props.setProperty("zo", "12345");
@@ -56,9 +54,11 @@ public class PropertyEditorTestApp {
 
         // Ask the shell to display its content
         shell.open();
-        Display display = shell.getDisplay();
+        final Display display = shell.getDisplay();
         while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()) display.sleep();
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
         }
         System.err.println(propertyViewer.getPropertyList());
         System.exit(0);

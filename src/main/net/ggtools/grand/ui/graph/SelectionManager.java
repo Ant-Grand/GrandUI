@@ -57,7 +57,7 @@ public interface SelectionManager {
      * 
      * @return a read-only collection of the selected nodes.
      */
-    Collection getSelection();
+    Collection<Draw2dNode> getSelection();
 
     void removeSelectionListener(GraphListener listener);
 

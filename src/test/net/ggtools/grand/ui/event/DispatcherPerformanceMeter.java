@@ -45,7 +45,7 @@ public class DispatcherPerformanceMeter {
         /**
          * @param manager
          */
-        ManualDispatcher(EventManager manager) {
+        ManualDispatcher(final EventManager manager) {
             super(manager);
         }
 
@@ -55,7 +55,7 @@ public class DispatcherPerformanceMeter {
          * @see net.ggtools.grand.ui.event.EventManager.InternalDispatcher#sendEventToSubscriber(java.lang.Object,
          *      java.lang.Object)
          */
-        public void sendEventToSubscriber(Object subscriber, Object eventData) {
+        public void sendEventToSubscriber(final Object subscriber, final Object eventData) {
             ((Listener) subscriber).listen(eventData);
         }
 
@@ -67,11 +67,11 @@ public class DispatcherPerformanceMeter {
      * @author Christophe Labouisse
      */
     public static class Listener {
-        public void listen(Object o) {
+        public void listen(final Object o) {
         }
     }
 
-    public static void main(String[] args) throws SecurityException, NoSuchMethodException {
+    public static void main(final String[] args) throws SecurityException, NoSuchMethodException {
         final StopWatch timer = new StopWatch();
         final Listener subscriber = new Listener();
         System.out.println("Testing manual dispatcher");

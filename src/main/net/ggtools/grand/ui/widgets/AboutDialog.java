@@ -54,11 +54,11 @@ public class AboutDialog extends Dialog {
     /**
      * @param parentShell
      */
-    public AboutDialog(Shell parentShell) {
+    public AboutDialog(final Shell parentShell) {
         super(parentShell);
         try {
             coreConfiguration = Configuration.getConfiguration();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.error("Cannot load core configuration", e);
             coreConfiguration = null;
         }
@@ -69,7 +69,8 @@ public class AboutDialog extends Dialog {
      * 
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
-    protected void configureShell(Shell newShell) {
+    @Override
+    protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("About Grand");
     }
@@ -79,7 +80,8 @@ public class AboutDialog extends Dialog {
      * 
      * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
      */
-    protected void createButtonsForButtonBar(Composite parent) {
+    @Override
+    protected void createButtonsForButtonBar(final Composite parent) {
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
     }
 
@@ -88,7 +90,8 @@ public class AboutDialog extends Dialog {
      * 
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
-    protected Control createDialogArea(Composite parent) {
+    @Override
+    protected Control createDialogArea(final Composite parent) {
         final Composite composite = (Composite) super.createDialogArea(parent);
         final RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
         rowLayout.justify = true;
@@ -96,7 +99,7 @@ public class AboutDialog extends Dialog {
         composite.setLayout(rowLayout);
         final Label image = new Label(composite, SWT.NONE);
         image.setImage(Application.getInstance().getImage(Application.ABOUT_DIALOG_IMAGE));
-        Label message = new Label(composite, SWT.NONE);
+        final Label message = new Label(composite, SWT.NONE);
         final StringBuffer messageBuffer = new StringBuffer(
                 "Grand ©2004,2005 Christophe Labouisse, distributed under BSD License\nUi: ");
         messageBuffer.append(Application.getInstance().getVersionString());

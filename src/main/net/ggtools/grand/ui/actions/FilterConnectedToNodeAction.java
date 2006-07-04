@@ -51,6 +51,7 @@ public class FilterConnectedToNodeAction extends GraphSelectionAction implements
      * 
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         final GraphFilter filter = new ConnectedToNodeFilter(getCurrentNode());
         getGraphControler().addFilter(filter);

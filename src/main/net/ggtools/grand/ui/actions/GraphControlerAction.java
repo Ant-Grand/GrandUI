@@ -76,7 +76,7 @@ public abstract class GraphControlerAction extends Action implements GraphContro
      * @param text
      * @param style
      */
-    public GraphControlerAction(final GraphControlerProvider parent, final String text, int style) {
+    public GraphControlerAction(final GraphControlerProvider parent, final String text, final int style) {
         super(text, style);
         init(parent);
     }
@@ -85,7 +85,7 @@ public abstract class GraphControlerAction extends Action implements GraphContro
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerListener#controlerAvailable(net.ggtools.grand.ui.graph.GraphControler)
      */
-    final public void controlerAvailable(GraphControler controler) {
+    final public void controlerAvailable(final GraphControler controler) {
         if (graphControler != null) {
             removeGraphControler();
         }
@@ -97,7 +97,7 @@ public abstract class GraphControlerAction extends Action implements GraphContro
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerListener#controlerRemoved(net.ggtools.grand.ui.graph.GraphControler)
      */
-    final public void controlerRemoved(GraphControler controler) {
+    final public void controlerRemoved(final GraphControler controler) {
         if (controler == graphControler) {
             removeGraphControler();
         }

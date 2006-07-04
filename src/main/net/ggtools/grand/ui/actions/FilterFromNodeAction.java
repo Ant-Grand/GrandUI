@@ -56,6 +56,7 @@ public class FilterFromNodeAction extends GraphSelectionAction implements GraphL
      * 
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         final GraphFilter filter = new FromNodeFilter(getCurrentNode());
         getGraphControler().addFilter(filter);

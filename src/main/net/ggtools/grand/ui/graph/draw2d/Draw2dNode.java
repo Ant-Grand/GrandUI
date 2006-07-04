@@ -72,11 +72,11 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
 
     private IVertex vertex;
 
-    public Draw2dNode(Draw2dGraph graph, IVertex vertex) {
+    public Draw2dNode(final Draw2dGraph graph, final IVertex vertex) {
         super();
 
         this.vertex = vertex;
-        this.selected = false;
+        selected = false;
         this.graph = graph;
 
         nodeFgColor = (Color) vertex.getAttr(DRAW2DFGCOLOR_ATTR);
@@ -84,7 +84,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
         selectedBgColor = FigureUtilities.darker(nodeBgColor);
 
         int x, y, width, height;
-        Rectangle2D rect = (Rectangle2D) vertex.getAttr(_BOUNDS_ATTR);
+        final Rectangle2D rect = (Rectangle2D) vertex.getAttr(_BOUNDS_ATTR);
         x = (int) rect.getX();
         y = (int) rect.getY();
         width = (int) rect.getWidth();
@@ -164,7 +164,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
      * @param selected
      *            The selected to set.
      */
-    public final void setSelected(boolean selected) {
+    public final void setSelected(final boolean selected) {
         if (selected != this.selected) {
             this.selected = selected;
             if (selected) {
@@ -177,6 +177,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
         }
     }
 
+    @Override
     public String toString() {
         return this.getClass().getName() + "@" + vertex.getName();
     }

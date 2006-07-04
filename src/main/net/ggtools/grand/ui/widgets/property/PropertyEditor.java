@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.TableItem;
 public class PropertyEditor {
 
     private final class CellModifier implements ICellModifier {
-        public boolean canModify(Object element, String property) {
+        public boolean canModify(final Object element, final String property) {
             if (columnExists(property)) {
                 final int columnNumber = getColumnNumber(property);
                 switch (columnNumber) {
@@ -80,9 +80,9 @@ public class PropertyEditor {
             return false;
         }
 
-        public Object getValue(Object element, String property) {
+        public Object getValue(final Object element, final String property) {
 
-            if (columnExists(property) && element instanceof PropertyPair) {
+            if (columnExists(property) && (element instanceof PropertyPair)) {
                 final int columnNumber = getColumnNumber(property);
                 final PropertyPair pair = (PropertyPair) element;
                 switch (columnNumber) {
@@ -96,7 +96,7 @@ public class PropertyEditor {
             return null;
         }
 
-        public void modify(Object element, String property, Object value) {
+        public void modify(final Object element, final String property, final Object value) {
             if (columnExists(property)) {
                 final PropertyPair pair = (PropertyPair) ((TableItem) element).getData();
 
@@ -131,7 +131,7 @@ public class PropertyEditor {
 
         private TableViewer tableViewer;
 
-        public void allPropertiesChanged(Object fillerParameter) {
+        public void allPropertiesChanged(final Object fillerParameter) {
             tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
                 public void run() {
                     tableViewer.refresh();
@@ -139,7 +139,7 @@ public class PropertyEditor {
             });
         }
 
-        public void clearedProperties(Object fillerParameter) {
+        public void clearedProperties(final Object fillerParameter) {
             tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
                 public void run() {
                     tableViewer.refresh();
@@ -153,9 +153,9 @@ public class PropertyEditor {
             }
         }
 
-        public Object[] getElements(Object inputElement) {
+        public Object[] getElements(final Object inputElement) {
             if (inputElement instanceof PropertyList) {
-                PropertyList pList = (PropertyList) inputElement;
+                final PropertyList pList = (PropertyList) inputElement;
                 return pList.toArray();
             }
             else {
@@ -163,8 +163,8 @@ public class PropertyEditor {
             }
         }
 
-        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-            this.tableViewer = (TableViewer) viewer;
+        public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
+            tableViewer = (TableViewer) viewer;
 
             if (oldInput != null) {
                 ((PropertyList) oldInput).removePropertyChangedListener(this);
@@ -208,8 +208,9 @@ public class PropertyEditor {
 
         private int column = NAME_COLUMN;
 
-        public int compare(Viewer viewer, Object e1, Object e2) {
-            if (e1 instanceof PropertyPair && e2 instanceof PropertyPair) {
+        @Override
+        public int compare(final Viewer viewer, final Object e1, final Object e2) {
+            if ((e1 instanceof PropertyPair) && (e2 instanceof PropertyPair)) {
                 final PropertyPair p1 = (PropertyPair) e1;
                 final PropertyPair p2 = (PropertyPair) e2;
 
@@ -269,10 +270,10 @@ public class PropertyEditor {
 
     static final int VALUE_COLUMN_NUM = 2;
 
-    private static Map columnNamesToNumMap = null;
+    private static Map<String, Integer> columnNamesToNumMap = null;
 
     // Set column names
-    private String[] columnNames = new String[]{STATUS_COLUMN, NAME_COLUMN, VALUE_COLUMN};
+    private final String[] columnNames = new String[]{STATUS_COLUMN, NAME_COLUMN, VALUE_COLUMN};
 
     private final PropertyList propertyList;
 
@@ -287,7 +288,7 @@ public class PropertyEditor {
      */
     public PropertyEditor(final Composite parent, final int style) {
         if (columnNamesToNumMap == null) {
-            columnNamesToNumMap = new HashMap();
+            columnNamesToNumMap = new HashMap<String, Integer>();
             columnNamesToNumMap.put(STATUS_COLUMN, new Integer(STATUS_COLUMN_NUM));
             columnNamesToNumMap.put(NAME_COLUMN, new Integer(NAME_COLUMN_NUM));
             columnNamesToNumMap.put(VALUE_COLUMN, new Integer(VALUE_COLUMN_NUM));
@@ -312,7 +313,9 @@ public class PropertyEditor {
      */
     public void setInput(final Map properties) {
         propertyList.clear();
-        if (properties != null) propertyList.addAll(properties);
+        if (properties != null) {
+            propertyList.addAll(properties);
+        }
     }
 
     /**
@@ -331,7 +334,8 @@ public class PropertyEditor {
         load.setLayoutData(gridData);
         load.addSelectionListener(new SelectionAdapter() {
 
-            public void widgetSelected(SelectionEvent event) {
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
                 final FileDialog dialog = new FileDialog(table.getShell());
                 dialog.setFilterExtensions(FILTER_EXTENSIONS);
                 final String fileName = dialog.open();
@@ -342,15 +346,17 @@ public class PropertyEditor {
                         fileInputStream = new FileInputStream(fileName);
                         props.load(fileInputStream);
                         setInput(props);
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         final String message = "Cannot load from " + fileName;
                         log.error(message, e);
                         ExceptionDialog.openException(table.getShell(), message, e);
                     } finally {
-                        if (fileInputStream != null) try {
-                            fileInputStream.close();
-                        } catch (IOException e) {
-                            log.warn("Error closing file", e);
+                        if (fileInputStream != null) {
+                            try {
+                                fileInputStream.close();
+                            } catch (final IOException e) {
+                                log.warn("Error closing file", e);
+                            }
                         }
                     }
                 }
@@ -365,7 +371,8 @@ public class PropertyEditor {
         save.setLayoutData(gridData);
         save.addSelectionListener(new SelectionAdapter() {
 
-            public void widgetSelected(SelectionEvent event) {
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
                 final FileDialog dialog = new FileDialog(table.getShell(), SWT.SAVE);
                 dialog.setFilterExtensions(FILTER_EXTENSIONS);
                 final String fileName = dialog.open();
@@ -374,7 +381,7 @@ public class PropertyEditor {
                     try {
                         fileOutputStream = new FileOutputStream(fileName);
                         getValues().store(fileOutputStream, null);
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         final String message = "Cannot save to " + fileName;
                         log.error(message, e);
                         ExceptionDialog.openException(table.getShell(), message, e);
@@ -382,7 +389,7 @@ public class PropertyEditor {
                         if (fileOutputStream != null) {
                             try {
                                 fileOutputStream.close();
-                            } catch (IOException e) {
+                            } catch (final IOException e) {
                                 log.warn("Error closing file", e);
                             }
                         }
@@ -404,7 +411,8 @@ public class PropertyEditor {
         add.addSelectionListener(new SelectionAdapter() {
 
             // Add a task to the ExampleTaskList and refresh the view
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
                 if (log.isDebugEnabled()) {
                     log.debug("widgetSelected() - Adding new element");
                 }
@@ -421,8 +429,9 @@ public class PropertyEditor {
         delete.addSelectionListener(new SelectionAdapter() {
 
             // Remove the selection and refresh the view
-            public void widgetSelected(SelectionEvent e) {
-                PropertyPair pair = (PropertyPair) ((IStructuredSelection) tableViewer
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                final PropertyPair pair = (PropertyPair) ((IStructuredSelection) tableViewer
                         .getSelection()).getFirstElement();
                 if (pair != null) {
                     propertyList.remove(pair);
@@ -438,14 +447,15 @@ public class PropertyEditor {
         clear.setLayoutData(gridData);
         clear.addSelectionListener(new SelectionAdapter() {
 
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
                 propertyList.clear();
             }
         });
 
     }
 
-    private void createContents(Composite parent, int style) {
+    private void createContents(final Composite parent, final int style) {
         final Composite composite = new Composite(parent, SWT.NONE);
         final GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH);
         composite.setLayoutData(gridData);
@@ -460,8 +470,8 @@ public class PropertyEditor {
         createButtons(composite);
     }
 
-    private void createTable(Composite parent) {
-        int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
+    private void createTable(final Composite parent) {
+        final int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
                 | SWT.HIDE_SELECTION;
 
         table = new Table(parent, style);
@@ -481,9 +491,12 @@ public class PropertyEditor {
         column.setWidth(20);
         column.setMoveable(true);
         column.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
                 // viewerSorter.sortByName();
-                if (tableViewer != null) tableViewer.refresh(false);
+                if (tableViewer != null) {
+                    tableViewer.refresh(false);
+                }
             }
         });
 
@@ -492,9 +505,12 @@ public class PropertyEditor {
         column.setWidth(200);
         column.setMoveable(true);
         column.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
                 viewerSorter.sortByName();
-                if (tableViewer != null) tableViewer.refresh(false);
+                if (tableViewer != null) {
+                    tableViewer.refresh(false);
+                }
             }
         });
 
@@ -503,9 +519,12 @@ public class PropertyEditor {
         column.setWidth(200);
         column.setMoveable(true);
         column.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
                 viewerSorter.sortByValue();
-                if (tableViewer != null) tableViewer.refresh(false);
+                if (tableViewer != null) {
+                    tableViewer.refresh(false);
+                }
             }
         });
 
@@ -521,7 +540,7 @@ public class PropertyEditor {
         tableViewer.setColumnProperties(columnNames);
 
         // Create the cell editors
-        CellEditor[] editors = new CellEditor[columnNames.length];
+        final CellEditor[] editors = new CellEditor[columnNames.length];
 
         // Column 1: Not editable
         editors[STATUS_COLUMN_NUM] = null;
@@ -545,15 +564,15 @@ public class PropertyEditor {
      * @param columnName
      * @return
      */
-    int getColumnNumber(String columnName) {
-        return ((Integer) columnNamesToNumMap.get(columnName)).intValue();
+    int getColumnNumber(final String columnName) {
+        return columnNamesToNumMap.get(columnName).intValue();
     }
 
     /**
      * @param columnName
      * @return
      */
-    boolean columnExists(String columnName) {
+    boolean columnExists(final String columnName) {
         return columnNamesToNumMap.containsKey(columnName);
     }
 

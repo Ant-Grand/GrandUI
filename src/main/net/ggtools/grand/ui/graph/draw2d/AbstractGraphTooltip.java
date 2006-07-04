@@ -56,7 +56,7 @@ abstract class AbstractGraphTooltip extends Figure {
          * (non-Javadoc)
          * @see org.eclipse.draw2d.Border#getInsets(org.eclipse.draw2d.IFigure)
          */
-        public Insets getInsets(IFigure figure) {
+        public Insets getInsets(final IFigure figure) {
             return new Insets(1, 0, 0, 0);
         }
 
@@ -65,7 +65,7 @@ abstract class AbstractGraphTooltip extends Figure {
          * @see org.eclipse.draw2d.Border#paint(org.eclipse.draw2d.IFigure,
          *      org.eclipse.draw2d.Graphics, org.eclipse.draw2d.geometry.Insets)
          */
-        public void paint(IFigure figure, Graphics graphics, Insets insets) {
+        public void paint(final IFigure figure, final Graphics graphics, final Insets insets) {
             final Rectangle paintRectangle = getPaintRectangle(figure, insets);
             graphics.drawLine(paintRectangle.getTopLeft(), paintRectangle.getTopRight());
         }

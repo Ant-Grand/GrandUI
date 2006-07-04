@@ -45,7 +45,7 @@ class SimpleDispatcher extends DispatcherAdapter implements Dispatcher {
 
     private final Method method;
 
-    SimpleDispatcher(EventManager manager, Method method) {
+    SimpleDispatcher(final EventManager manager, final Method method) {
         super(manager);
         this.method = method;
     }
@@ -56,13 +56,13 @@ class SimpleDispatcher extends DispatcherAdapter implements Dispatcher {
      * @see net.ggtools.grand.ui.event.EventManager.Dispatcher#sendEventToSubscriber(java.lang.Object,
      *      java.lang.Object)
      */
-    public void sendEventToSubscriber(Object subscriber, Object eventData) {
+    public void sendEventToSubscriber(final Object subscriber, final Object eventData) {
         try {
             method.invoke(subscriber, new Object[]{eventData});
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             log.fatal(getEventManager().getName() + " dispatchOneEvent", e);
             throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             log.error(getEventManager().getName() + " dispatchOneEvent", e);
             throw new RuntimeException(e.getCause());
         }

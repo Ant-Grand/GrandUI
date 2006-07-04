@@ -33,6 +33,7 @@ import net.ggtools.grand.ui.widgets.PropertyEditionDialog;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.jface.window.Window;
 
 /**
  * An action to remove all filters currently enabled.
@@ -49,11 +50,12 @@ public class EditGraphPropertiesAction extends GraphControlerAction {
      * 
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         final PropertyEditionDialog dialog = new PropertyEditionDialog(getGraphControler()
                 .getWindow().getShell());
         dialog.setProperties(getGraphControler().getGraphProperties());
-        if (dialog.open() == PropertyEditionDialog.OK) {
+        if (dialog.open() == Window.OK) {
             getGraphControler().reloadGraph(dialog.getProperties());
         }
     }

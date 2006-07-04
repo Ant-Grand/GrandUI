@@ -43,7 +43,7 @@ import org.eclipse.jface.action.MenuManager;
  */
 public class HelpMenu extends MenuManager {
 
-    public HelpMenu(GraphWindow window) {
+    public HelpMenu(final GraphWindow window) {
         super("Help");
         add(new AboutAction(window));
     }

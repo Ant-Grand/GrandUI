@@ -39,7 +39,7 @@ package net.ggtools.grand.ui.graph;
 public class GraphEvent {
     public final GraphModel model;
     
-    public GraphEvent(GraphModel model) {
+    public GraphEvent(final GraphModel model) {
         this.model = model;
     }
 }

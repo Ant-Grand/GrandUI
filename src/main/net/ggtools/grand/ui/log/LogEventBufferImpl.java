@@ -69,7 +69,7 @@ public class LogEventBufferImpl implements LogEventBuffer {
         return instance;
     }
 
-    private final LinkedList eventList = new LinkedList();
+    private final LinkedList<LogEvent> eventList = new LinkedList<LogEvent>();
 
     private transient LogEventListener listener;
 
@@ -97,12 +97,14 @@ public class LogEventBufferImpl implements LogEventBuffer {
      * 
      * @return
      */
-    public List getEventList() {
+    public List<LogEvent> getEventList() {
         return Collections.unmodifiableList(eventList);
     }
 
     public void removeListener(final LogEventListener toRemove) {
-        if (listener == toRemove) listener = null;
+        if (listener == toRemove) {
+            listener = null;
+        }
     }
 
     void addLogEvent(final Level level, final String originator, final Object message) {
@@ -113,6 +115,8 @@ public class LogEventBufferImpl implements LogEventBuffer {
             final Throwable exception) {
         final LogEvent logEvent = new LogEvent(level, originator, message, exception);
         eventList.addLast(logEvent);
-        if (listener != null) listener.logEventReceived(logEvent);
+        if (listener != null) {
+            listener.logEventReceived(logEvent);
+        }
     }
 }

@@ -54,6 +54,7 @@ public class PrintAction extends GraphControlerAction {
      * 
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         final PrintDialog dialog = new PrintDialog(window.getShell());
         final PrinterData printerData = dialog.open();

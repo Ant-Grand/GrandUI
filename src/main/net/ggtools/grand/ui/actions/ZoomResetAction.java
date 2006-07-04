@@ -48,7 +48,7 @@ public class ZoomResetAction extends GraphControlerAction {
     /**
      * @param provider
      */
-    public ZoomResetAction(GraphControlerProvider provider) {
+    public ZoomResetAction(final GraphControlerProvider provider) {
         super(provider, DEFAULT_ACTION_NAME);
         setAccelerator(SWT.HOME);
     }
@@ -56,6 +56,7 @@ public class ZoomResetAction extends GraphControlerAction {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.Action#run()
      */
+    @Override
     public void run() {
         getGraphControler().getDisplayer().zoomReset();
     }

@@ -31,7 +31,7 @@ abstract class TableTooltipListener implements Listener {
         private ToolTipRemoverListener() {
         }
 
-        public void handleEvent(Event event) {
+        public void handleEvent(final Event event) {
             final Control control = (Control) event.widget;
             final Shell shell = control.getShell();
             switch (event.type) {
@@ -76,12 +76,14 @@ abstract class TableTooltipListener implements Listener {
         table.addListener(SWT.MouseHover, this);
     }
 
-    public void handleEvent(Event event) {
+    public void handleEvent(final Event event) {
         switch (event.type) {
         case SWT.Dispose:
         case SWT.KeyDown:
         case SWT.MouseMove: {
-            if (tip == null) break;
+            if (tip == null) {
+                break;
+            }
             tip.dispose();
             tip = null;
             break;
@@ -89,7 +91,9 @@ abstract class TableTooltipListener implements Listener {
         case SWT.MouseHover: {
             final TableItem item = table.getItem(new Point(event.x, event.y));
             if (item != null) {
-                if (tip != null && !tip.isDisposed()) tip.dispose();
+                if ((tip != null) && !tip.isDisposed()) {
+                    tip.dispose();
+                }
                 tip = new Shell(table.getShell(), SWT.ON_TOP);
                 tip.setLayout(new FillLayout());
                 createTooltipContents(tip, item);
@@ -121,7 +125,7 @@ abstract class TableTooltipListener implements Listener {
      * @param parent
      * @param item
      */
-    protected Control createTooltipContents(Composite parent, final TableItem item) {
+    protected Control createTooltipContents(final Composite parent, final TableItem item) {
         final Composite composite = new Composite(parent, SWT.NONE);
         final Display display = table.getShell().getDisplay();
         composite.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));

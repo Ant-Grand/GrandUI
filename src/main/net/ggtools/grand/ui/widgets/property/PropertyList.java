@@ -62,7 +62,7 @@ class PropertyList {
 
     EventManager eventManager;
 
-    final Set pairList = new HashSet();
+    final Set<PropertyPair> pairList = new HashSet<PropertyPair>();
 
     public PropertyList() {
         eventManager = new EventManager("PropertyList event manager");
@@ -79,18 +79,18 @@ class PropertyList {
             allPropertiesChangedDispatcher = eventManager
                     .createDispatcher(PropertyChangedListener.class.getDeclaredMethod(
                             "allPropertiesChanged", new Class[]{Object.class}));
-        } catch (SecurityException e) {
+        } catch (final SecurityException e) {
             log.fatal("Caught exception initializing PropertyList", e);
             throw new RuntimeException("Cannot instanciate PropertyList", e);
-        } catch (NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             log.fatal("Caught exception initializing PropertyList", e);
             throw new RuntimeException("Cannot instanciate PropertyList", e);
         }
     }
 
     public void addAll(final Map properties) {
-        for (Iterator iter = properties.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry entry = (Map.Entry) iter.next();
+        for (final Iterator iter = properties.entrySet().iterator(); iter.hasNext();) {
+            final Map.Entry entry = (Map.Entry) iter.next();
             pairList.add(new PropertyPair(entry));
         }
 
@@ -111,14 +111,14 @@ class PropertyList {
 
     public Properties getAsProperties() {
         final Properties props = new Properties();
-        for (Iterator iter = pairList.iterator(); iter.hasNext();) {
-            PropertyPair pair = (PropertyPair) iter.next();
+        for (final Iterator<PropertyPair> iter = pairList.iterator(); iter.hasNext();) {
+            final PropertyPair pair = iter.next();
             props.setProperty(pair.getName(), pair.getValue());
         }
         return props;
     }
 
-    public void remove(PropertyPair pair) {
+    public void remove(final PropertyPair pair) {
         pairList.remove(pair);
         propertyRemovedDispatcher.dispatch(pair);
     }
@@ -128,13 +128,14 @@ class PropertyList {
     }
 
     public PropertyPair[] toArray() {
-        return (PropertyPair[]) pairList.toArray(new PropertyPair[pairList.size()]);
+        return pairList.toArray(new PropertyPair[pairList.size()]);
     }
 
+    @Override
     public String toString() {
         final StringBuffer strBuff = new StringBuffer();
-        for (Iterator iter = pairList.iterator(); iter.hasNext();) {
-            PropertyPair pair = (PropertyPair) iter.next();
+        for (final Iterator<PropertyPair> iter = pairList.iterator(); iter.hasNext();) {
+            final PropertyPair pair = iter.next();
             strBuff.append(pair.getName()).append(" => '").append(pair.getValue()).append("'\n");
         }
         return strBuff.toString();

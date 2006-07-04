@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import net.ggtools.grand.ui.RecentFilesManager;
+import net.ggtools.grand.ui.widgets.OpenFileWizard.SelectedFileListener;
 import net.ggtools.grand.ui.widgets.OpenFileWizard.SelectedFileProvider;
 
 import org.apache.commons.logging.Log;
@@ -64,7 +65,7 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
 
     private File selectedFile;
 
-    private final Collection subscribers;
+    private final Collection<SelectedFileListener> subscribers;
 
     /**
      * @param pageName
@@ -72,14 +73,14 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
     public FileSelectionPage() {
         super("fileselect", "Build file selection", null);
         setDescription("Select the build file to be opened");
-        subscribers = new HashSet();
+        subscribers = new HashSet<SelectedFileListener>();
     }
 
     /*
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl(Composite parent) {
+    public void createControl(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         final GridLayout layout = new GridLayout();
         layout.numColumns = 2;
@@ -91,14 +92,14 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
 
         combo.add(""); // Default: no file.
         // Fill up the combo with the recent files
-        for (Iterator iter = RecentFilesManager.getInstance().getRecentFiles().iterator(); iter
+        for (final Iterator<String> iter = RecentFilesManager.getInstance().getRecentFiles().iterator(); iter
                 .hasNext();) {
-            String fileName = (String) iter.next();
+            final String fileName = iter.next();
             combo.add(fileName);
         }
 
         combo.addSelectionListener(new SelectionListener() {
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 updateSelectedFile(combo.getText());
 
                 if (log.isDebugEnabled()) {
@@ -107,9 +108,11 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
                 }
             }
 
-            public void widgetDefaultSelected(SelectionEvent e) {
+            public void widgetDefaultSelected(final SelectionEvent e) {
                 widgetSelected(e);
-                if (combo.indexOf(selectedFileName) == -1) combo.add(selectedFileName);
+                if (combo.indexOf(selectedFileName) == -1) {
+                    combo.add(selectedFileName);
+                }
             }
 
         });
@@ -124,11 +127,12 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
              * (non-Javadoc)
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
                 final FileDialog dialog = new FileDialog(getShell());
                 dialog.setFilterExtensions(FILTER_EXTENSIONS);
                 dialog.setFilterPath(selectedFileName);
-                String buildFileName = dialog.open();
+                final String buildFileName = dialog.open();
                 log.debug("Dialog returned " + buildFileName);
                 if (buildFileName != null) {
                     combo.add(buildFileName);
@@ -151,8 +155,9 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
             selectedFile = new File(selectedFileName);
             final boolean isSelectedFileValid = selectedFile.isFile();
             setPageComplete(isSelectedFileValid);
-            if (isSelectedFileValid)
+            if (isSelectedFileValid) {
                 setErrorMessage(null);
+            }
             else {
                 selectedFile = null;
                 setErrorMessage(selectedFileName + " is not a valid build file");
@@ -165,20 +170,20 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
         return selectedFile;
     }
 
-    public void addListener(OpenFileWizard.SelectedFileListener listener) {
+    public void addListener(final OpenFileWizard.SelectedFileListener listener) {
         if (!subscribers.contains(listener)) {
             subscribers.add(listener);
             listener.fileSelected(selectedFile);
         }
     }
 
-    public void removeListener(OpenFileWizard.SelectedFileListener listener) {
+    public void removeListener(final OpenFileWizard.SelectedFileListener listener) {
         subscribers.remove(listener);
     }
 
     private void notifyListeners() {
-        for (Iterator iter = subscribers.iterator(); iter.hasNext();) {
-            final OpenFileWizard.SelectedFileListener listener = (OpenFileWizard.SelectedFileListener) iter.next();
+        for (final Iterator<SelectedFileListener> iter = subscribers.iterator(); iter.hasNext();) {
+            final OpenFileWizard.SelectedFileListener listener = iter.next();
             listener.fileSelected(selectedFile);
         }
     }

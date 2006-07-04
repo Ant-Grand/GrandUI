@@ -52,7 +52,7 @@ public class PropertySettingPage extends WizardPage implements SelectedFileListe
     /**
      * @param pageName
      */
-    public PropertySettingPage(OpenFileWizard.SelectedFileProvider fileProvider) {
+    public PropertySettingPage(final OpenFileWizard.SelectedFileProvider fileProvider) {
         super("propertySetting", "Property setting", null);
         setDescription("Set the properties for the file");
         this.fileProvider = fileProvider;
@@ -63,7 +63,7 @@ public class PropertySettingPage extends WizardPage implements SelectedFileListe
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl(Composite parent) {
+    public void createControl(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         setControl(composite);
         composite.setLayout(new FillLayout());
@@ -74,15 +74,17 @@ public class PropertySettingPage extends WizardPage implements SelectedFileListe
         return editor.getValues();
     }
     
+    @Override
     public void dispose() {
         fileProvider.removeListener(this);
         super.dispose();
     }
 
-    public void fileSelected(File selectedFile) {
-        if (editor != null)
+    public void fileSelected(final File selectedFile) {
+        if (editor != null) {
             editor.setInput(RecentFilesManager.getInstance().getProperties(
                     selectedFile));
+        }
     }
 
 }

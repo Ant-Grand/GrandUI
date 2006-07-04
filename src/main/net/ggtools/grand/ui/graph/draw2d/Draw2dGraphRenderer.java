@@ -70,8 +70,10 @@ import sf.jzgraph.dot.impl.DotRoute;
 public class Draw2dGraphRenderer implements DotGraphAttributes {
     private static final Log log = LogFactory.getLog(Draw2dGraphRenderer.class);
 
-    public Draw2dGraph render(IDotGraph dotGraph) {
-        if (log.isDebugEnabled()) log.debug("Rendering Draw2d Graph");
+    public Draw2dGraph render(final IDotGraph dotGraph) {
+        if (log.isDebugEnabled()) {
+            log.debug("Rendering Draw2d Graph");
+        }
         final Draw2dGraph contents = new Draw2dGraph();
         // Add a margin on the right & bottom edge.
         // The 24 is a magic number which seems to be the same margin JzGraph is
@@ -89,7 +91,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      * @param dotGraph
      * @return
      */
-    public Draw2dGraph render(Draw2dGraph contents, IDotGraph dotGraph) {
+    public Draw2dGraph render(final Draw2dGraph contents, final IDotGraph dotGraph) {
         contents.removeAll();
         return createGraph(dotGraph, contents);
     }
@@ -99,13 +101,13 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      * @param contents
      * @return
      */
-    private Draw2dGraph createGraph(IDotGraph dotGraph, final Draw2dGraph contents) {
-        for (Iterator iter = dotGraph.allVertices().iterator(); iter.hasNext();) {
+    private Draw2dGraph createGraph(final IDotGraph dotGraph, final Draw2dGraph contents) {
+        for (final Iterator iter = dotGraph.allVertices().iterator(); iter.hasNext();) {
             final IVertex node = (IVertex) iter.next();
             buildNodeFigure(contents, node);
         }
 
-        for (Iterator iter = dotGraph.edgeIterator(); iter.hasNext();) {
+        for (final Iterator iter = dotGraph.edgeIterator(); iter.hasNext();) {
             final IEdge edge = (IEdge) iter.next();
             buildEdgeFigure(contents, edge);
         }
@@ -119,15 +121,23 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      * @param min
      * @param max
      */
-    private final void addBendPoint(final float[] coords, final ArrayList bends, final Point min,
+    private final void addBendPoint(final float[] coords, final ArrayList<AbsoluteBendpoint> bends, final Point min,
             final Point max) {
         final int x = (int) coords[0];
         final int y = (int) coords[1];
         bends.add(new AbsoluteBendpoint(x, y));
-        if (x < min.x) min.x = x;
-        if (x > max.x) max.x = x;
-        if (y < min.y) min.y = y;
-        if (y > max.y) max.y = y;
+        if (x < min.x) {
+            min.x = x;
+        }
+        if (x > max.x) {
+            max.x = x;
+        }
+        if (y < min.y) {
+            min.y = y;
+        }
+        if (y > max.y) {
+            max.y = y;
+        }
     }
 
     /**
@@ -139,7 +149,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     private PolylineConnection addConnectionFromRoute(final IFigure contents, final String name,
             final DotRoute route) {
         final float[] coords = new float[6];
-        final ArrayList bends = new ArrayList();
+        final ArrayList<AbsoluteBendpoint> bends = new ArrayList<AbsoluteBendpoint>();
         boolean isFirstPoint = true;
         final Point min = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
         final Point max = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
@@ -170,16 +180,16 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
             isFirstPoint = false;
         }
 
-        Rectangle bounds = new Rectangle(min, max);
+        final Rectangle bounds = new Rectangle(min, max);
         final PolylineConnection conn = new PolylineConnection();
 
-        final Point sourcePoint = (Point) bends.remove(0);
+        final Point sourcePoint = bends.remove(0);
         final Point targetPoint;
         if (route.getEndPt() != null) {
             targetPoint = new Point(route.getEndPt().getX(), route.getEndPt().getY());
         }
         else {
-            targetPoint = (Point) bends.remove(bends.size() - 1);
+            targetPoint = bends.remove(bends.size() - 1);
         }
         conn.setSourceAnchor(new XYRelativeAnchor(conn, sourcePoint));
         conn.setTargetAnchor(new XYRelativeAnchor(conn, targetPoint));
@@ -193,7 +203,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         }
 
         if (name != null) {
-            Label label = new Label(name);
+            final Label label = new Label(name);
             label.setOpaque(true);
             label.setBackgroundColor(ColorConstants.buttonLightest);
             label.setBorder(new LineBorder());
@@ -221,13 +231,16 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      *            the edge
      */
     private void buildEdgeFigure(final IFigure contents, final IEdge edge) {
-        if (log.isTraceEnabled())
-                log.trace("Building edge from " + edge.getTail().getName() + " to "
-                        + edge.getHead().getName());
+        if (log.isTraceEnabled()) {
+            log.trace("Building edge from " + edge.getTail().getName() + " to "
+                    + edge.getHead().getName());
+        }
         final DotRoute route = (DotRoute) edge.getAttr(POSITION_ATTR);
 
         String name = edge.getName();
-        if ("".equals(name)) name = null;
+        if ("".equals(name)) {
+            name = null;
+        }
 
         final PolylineConnection conn = addConnectionFromRoute(contents, name, route);
 
@@ -254,8 +267,10 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      * @param node
      *            the node to add
      */
-    private void buildNodeFigure(Draw2dGraph contents, IVertex node) {
-        if (log.isDebugEnabled()) log.debug("Building node " + node.getName());
+    private void buildNodeFigure(final Draw2dGraph contents, final IVertex node) {
+        if (log.isDebugEnabled()) {
+            log.debug("Building node " + node.getName());
+        }
         final Draw2dNode polygon = contents.createNode(node);
         polygon.setToolTip(new NodeTooltip(node));
 
@@ -288,8 +303,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      * @param busLabel
      * @return
      */
-    private PolylineConnection createBusConnexion(Draw2dGraph contents, IVertex node, Color color,
-            String busId, String busLabel) {
+    private PolylineConnection createBusConnexion(final Draw2dGraph contents, final IVertex node, final Color color,
+            final String busId, final String busLabel) {
         final PolylineConnection conn = addConnectionFromRoute(contents, null, (DotRoute) node
                 .getAttr(busId));
         conn.setForegroundColor(color);

@@ -54,7 +54,7 @@ public class FilterChainModel implements GraphProducer {
 
     private GraphModel graphModel;
 
-    public FilterChainModel(GraphModel graphModel) {
+    public FilterChainModel(final GraphModel graphModel) {
         filterChain = new FilterChain();
         this.graphModel = graphModel;
         filterChain.setProducer(graphModel);
@@ -63,8 +63,10 @@ public class FilterChainModel implements GraphProducer {
     /**
      * @param newFilter
      */
-    public void addFilterFirst(GraphFilter newFilter) {
-        if (log.isDebugEnabled()) log.debug("Adding new head filter " + newFilter);
+    public void addFilterFirst(final GraphFilter newFilter) {
+        if (log.isDebugEnabled()) {
+            log.debug("Adding new head filter " + newFilter);
+        }
         filterChain.addFilterFirst(newFilter);
         filterGraph();
     }
@@ -72,8 +74,10 @@ public class FilterChainModel implements GraphProducer {
     /**
      * @param newFilter
      */
-    public void addFilterLast(GraphFilter newFilter) {
-        if (log.isDebugEnabled()) log.debug("Adding new tail filter " + newFilter);
+    public void addFilterLast(final GraphFilter newFilter) {
+        if (log.isDebugEnabled()) {
+            log.debug("Adding new tail filter " + newFilter);
+        }
         filterChain.addFilterLast(newFilter);
         filterGraph();
     }
@@ -83,11 +87,15 @@ public class FilterChainModel implements GraphProducer {
      */
     public void clearFilters() {
         if (filterChain.getFilterList().size() > 0) {
-            if (log.isDebugEnabled()) log.debug("Clearing filters");
+            if (log.isDebugEnabled()) {
+                log.debug("Clearing filters");
+            }
             filterChain.clearFilters();
             filterGraph();
         }
-        else if (log.isDebugEnabled()) log.debug("Empty filter chain, not clearing");
+        else if (log.isDebugEnabled()) {
+            log.debug("Empty filter chain, not clearing");
+        }
     }
 
     /**
@@ -105,12 +113,13 @@ public class FilterChainModel implements GraphProducer {
     }
 
     public void filterGraph() {
-        if (log.isDebugEnabled())
-                log.debug("Start filtering, filter chain size is: "
-                        + filterChain.getFilterList().size());
+        if (log.isDebugEnabled()) {
+            log.debug("Start filtering, filter chain size is: "
+                    + filterChain.getFilterList().size());
+        }
         try {
             graph = filterChain.getGraph();
-        } catch (GrandException e) {
+        } catch (final GrandException e) {
             // TODO Proper exception handling.
             log.error("Cannot filter graph", e);
             graph = null;
@@ -120,7 +129,7 @@ public class FilterChainModel implements GraphProducer {
     /**
      * @param producer
      */
-    public void setProducer(GraphProducer producer) {
+    public void setProducer(final GraphProducer producer) {
         filterChain.setProducer(producer);
     }
 }

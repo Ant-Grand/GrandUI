@@ -48,6 +48,7 @@ public class ClearFiltersAction extends GraphControlerAction {
      * 
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         getGraphControler().clearFilters();
     }

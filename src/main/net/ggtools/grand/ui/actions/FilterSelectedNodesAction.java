@@ -27,10 +27,10 @@
  */
 package net.ggtools.grand.ui.actions;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.filters.NodeRemoverFilter;
@@ -52,13 +52,13 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
     /**
      * @param parent
      */
-    public FilterSelectedNodesAction(GraphControlerProvider parent) {
+    public FilterSelectedNodesAction(final GraphControlerProvider parent) {
         super(parent,DEFAULT_ACTION_NAME);
         
         boolean isEnabled = false;
 
         if (getGraphControler() != null) {
-            Collection selectedNodes = getGraphControler().getSelection();
+            final Collection<Draw2dNode> selectedNodes = getGraphControler().getSelection();
             isEnabled = !selectedNodes.isEmpty();
         }
         setEnabled(isEnabled);
@@ -67,15 +67,16 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.Action#run()
      */
+    @Override
     public void run() {
         if (log.isDebugEnabled()) {
             log.debug("run() - start");
         }
 
-        final Collection selection = getGraphControler().getSelection();
-        final List nodeList = new LinkedList();
-        for (final Iterator iter = selection.iterator(); iter.hasNext();) {
-            final Draw2dNode node = (Draw2dNode) iter.next();
+        final Collection<Draw2dNode> selection = getGraphControler().getSelection();
+        final List<String> nodeList = new LinkedList<String>();
+        for (final Iterator<Draw2dNode> iter = selection.iterator(); iter.hasNext();) {
+            final Draw2dNode node = iter.next();
             nodeList.add(node.getName());
         }
         final GraphFilter filter = new NodeRemoverFilter(nodeList);
@@ -90,7 +91,8 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
-    public void selectionChanged(Collection selectedNodes) {
+    @Override
+    public void selectionChanged(final Collection selectedNodes) {
         setEnabled(!selectedNodes.isEmpty());
     }
 

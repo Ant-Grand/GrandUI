@@ -27,9 +27,6 @@
  */
 package net.ggtools.grand.ui.prefs;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -55,6 +52,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
@@ -102,7 +101,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
         String get(final String key);
 
-        Collection getKeys();
+        Collection<?> getKeys();
 
         boolean needSaving(final String key);
     }
@@ -155,7 +154,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
     private File prefFile;
 
-    private final Map propertiesTable = new HashMap();
+    private final Map<String, Properties> propertiesTable = new HashMap<String, Properties>();
 
     /**
      * Get a collection of {@link String}s.
@@ -163,7 +162,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * @param key
      * @return
      */
-    public Collection getCollection(final String key) {
+    public Collection<String> getCollection(final String key) {
         return getCollection(key, COLLECTION_NO_LIMIT);
     }
 
@@ -178,10 +177,12 @@ public class ComplexPreferenceStore extends PreferenceStore {
      *            maximum size of the returned list or -1 for unlimited.
      * @return
      */
-    public Collection getCollection(final String key, int limit) {
-        LinkedList list = new LinkedList();
-        StringTokenizer tokenizer = new StringTokenizer(getString(key), ",");
-        if (limit == COLLECTION_NO_LIMIT) limit = tokenizer.countTokens();
+    public Collection<String> getCollection(final String key, int limit) {
+        final LinkedList<String> list = new LinkedList<String>();
+        final StringTokenizer tokenizer = new StringTokenizer(getString(key), ",");
+        if (limit == COLLECTION_NO_LIMIT) {
+            limit = tokenizer.countTokens();
+        }
         for (int i = 0; (i < limit) && tokenizer.hasMoreTokens(); i++) {
             list.addLast(unEscapeString(tokenizer.nextToken()));
         }
@@ -217,7 +218,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
         Properties properties = null;
         if (propertiesTable.containsKey(key)) {
             properties = new Properties();
-            properties.putAll((Properties) propertiesTable.get(key));
+            properties.putAll(propertiesTable.get(key));
         }
         return properties;
     }
@@ -227,6 +228,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * 
      * @see org.eclipse.jface.preference.PreferenceStore#load()
      */
+    @Override
     public void load() throws IOException {
         FileInputStream is = null;
         try {
@@ -238,13 +240,13 @@ public class ComplexPreferenceStore extends PreferenceStore {
             dbf.setIgnoringComments(true);
             Document doc = null;
             try {
-                DocumentBuilder db = dbf.newDocumentBuilder();
-                InputSource inputSource = new InputSource(is);
+                final DocumentBuilder db = dbf.newDocumentBuilder();
+                final InputSource inputSource = new InputSource(is);
                 doc = db.parse(is);
-            } catch (ParserConfigurationException e) {
+            } catch (final ParserConfigurationException e) {
                 log.error("Got exception while parsing preference file", e);
                 throw new Error(e);
-            } catch (SAXException e) {
+            } catch (final SAXException e) {
                 log.error("Got exception while parsing preference file", e);
                 throw new Error(e);
             }
@@ -294,7 +296,9 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
             loadProperties(rootElement, loader);
         } finally {
-            if (is != null) is.close();
+            if (is != null) {
+                is.close();
+            }
         }
     }
 
@@ -303,15 +307,16 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * 
      * @see org.eclipse.jface.preference.IPersistentPreferenceStore#save()
      */
+    @Override
     public void save() throws IOException {
         FileOutputStream os = null;
         try {
             os = new FileOutputStream(prefFile);
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = null;
             try {
                 db = dbf.newDocumentBuilder();
-            } catch (ParserConfigurationException e) {
+            } catch (final ParserConfigurationException e) {
                 log.error("Cannot create document builder", e);
                 throw new Error("Cannot create document builder", e);
             }
@@ -328,7 +333,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                     return getString(key);
                 }
 
-                public Collection getKeys() {
+                public Collection<String> getKeys() {
                     return Arrays.asList(preferenceNames());
                 }
 
@@ -339,10 +344,10 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
             saveProperties(doc, rootElement, prefStoreSaver);
 
-            for (Iterator iter = propertiesTable.entrySet().iterator(); iter.hasNext();) {
-                final Map.Entry entry = (Map.Entry) iter.next();
-                final String propKey = (String) entry.getKey();
-                final Properties props = (Properties) entry.getValue();
+            for (final Iterator<Map.Entry<String,Properties>> iter = propertiesTable.entrySet().iterator(); iter.hasNext();) {
+                final Map.Entry<String,Properties> entry = iter.next();
+                final String propKey = entry.getKey();
+                final Properties props = entry.getValue();
                 final Element currentElement = (Element) rootElement.appendChild(doc
                         .createElement(PROPERTIES_ELEMENT));
                 currentElement.setAttribute(KEY_ATTRIBUTE, propKey);
@@ -352,7 +357,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                         return props.getProperty(key);
                     }
 
-                    public Collection getKeys() {
+                    public Collection<?> getKeys() {
                         return props.keySet();
                     }
 
@@ -370,7 +375,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 t.setOutputProperty(OutputKeys.INDENT, "yes");
                 t.setOutputProperty(OutputKeys.METHOD, "xml");
                 t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            } catch (TransformerConfigurationException e) {
+            } catch (final TransformerConfigurationException e) {
                 log.error("Cannot configure Tranformer to save preferences", e);
                 throw new RuntimeException("Cannot configure Tranformer to save preferences", e);
             }
@@ -378,18 +383,20 @@ public class ComplexPreferenceStore extends PreferenceStore {
             final StreamResult sr = new StreamResult(os);
             try {
                 t.transform(doms, sr);
-            } catch (TransformerException e) {
+            } catch (final TransformerException e) {
                 log.error("Cannot save preferences", e);
-                IOException ioe = new IOException("Cannot save preferences");
+                final IOException ioe = new IOException("Cannot save preferences");
                 ioe.initCause(e);
                 throw ioe;
             }
         } finally {
-            if (os != null) os.close();
+            if (os != null) {
+                os.close();
+            }
         }
     }
 
-    public final void setPrefFile(File prefFile) {
+    public final void setPrefFile(final File prefFile) {
         this.prefFile = prefFile;
     }
 
@@ -413,12 +420,14 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * @param key
      * @param value
      */
-    public void setValue(final String key, final Collection value) {
+    public void setValue(final String key, final Collection<String> value) {
         final StringBuffer buffer = new StringBuffer();
-        for (final Iterator iter = value.iterator(); iter.hasNext();) {
-            final String item = (String) iter.next();
+        for (final Iterator<String> iter = value.iterator(); iter.hasNext();) {
+            final String item = iter.next();
             buffer.append(escapeString(item));
-            if (iter.hasNext()) buffer.append(",");
+            if (iter.hasNext()) {
+                buffer.append(",");
+            }
         }
         setValue(key, buffer.toString());
     }
@@ -441,7 +450,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * @param propElement
      */
     private void loadProperties(final Element propElement, final PropertyLoader loader) {
-        NodeList entries = propElement.getChildNodes();
+        final NodeList entries = propElement.getChildNodes();
         for (int i = 0; i < entries.getLength(); i++) {
             final Node item = entries.item(i);
             if (ENTRY_ELEMENT.equals(item.getNodeName())) {
@@ -466,13 +475,13 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * @param properties
      * @param saver
      */
-    private void saveProperties(Document doc, Element properties, final PropertySaver saver) {
-        final Collection keys = saver.getKeys();
-        final Iterator i = keys.iterator();
-        while (i.hasNext()) {
-            final String key = (String) i.next();
+    private void saveProperties(final Document doc, final Element properties, final PropertySaver saver) {
+        final Collection<?> keys = saver.getKeys();
+        // TODO Solve the properties problem.
+        for (Object i : keys) {
+            final String key = i instanceof String ? (String) i : i.toString();
             if (saver.needSaving(key)) {
-                Element entry = (Element) properties.appendChild(doc.createElement(ENTRY_ELEMENT));
+                final Element entry = (Element) properties.appendChild(doc.createElement(ENTRY_ELEMENT));
                 entry.setAttribute(KEY_ATTRIBUTE, key);
                 entry.appendChild(doc.createTextNode(saver.get(key)));
             }

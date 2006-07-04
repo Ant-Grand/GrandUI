@@ -64,12 +64,13 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
      * Creates a new tooltip from a Jzgraph node.
      * @param vertex
      */
-    public LinkTooltip(IEdge edge) {
+    public LinkTooltip(final IEdge edge) {
         super();
         this.edge = edge;
         createContents();
     }
 
+    @Override
     protected void createContents() {
         if (log.isDebugEnabled()) {
             log.debug("createContents() - start");
@@ -124,8 +125,8 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
             final Map parameters = (Map) edge.getAttr(LINK_PARAMETERS_ATTR);
             if (!parameters.isEmpty()) {
                 final BlockFlow outterBlock = new BlockFlow();
-                for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
-                    Map.Entry entry = (Map.Entry) iter.next();
+                for (final Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
+                    final Map.Entry entry = (Map.Entry) iter.next();
                     final BlockFlow innerBlock = new BlockFlow();
                     textFlow = new TextFlow(((String) entry.getKey()) + ": ");
                     textFlow.setFont(monospaceFont);
@@ -151,7 +152,7 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
                 for (final Iterator iter = directories.iterator(); iter.hasNext();) {
                     String currentDirectory = (String) iter.next();
 
-                    Dimension dim = FigureUtilities.getTextExtents(currentDirectory, monospaceFont);
+                    final Dimension dim = FigureUtilities.getTextExtents(currentDirectory, monospaceFont);
                     if (dim.width > TOOLTIP_WIDTH) {
                         if (log.isDebugEnabled()) {
                             log.debug("createContents() - Filename too long, truncating : dim = "
@@ -164,8 +165,9 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
                         while (true) {
                             index = currentDirectory.lastIndexOf(File.separatorChar, index - 1);
                             final String tmp = currentDirectory.substring(index);
-                            if (FigureUtilities.getTextExtents(ELLIPSIS + tmp, monospaceFont).width > TOOLTIP_WIDTH)
-                                    break;
+                            if (FigureUtilities.getTextExtents(ELLIPSIS + tmp, monospaceFont).width > TOOLTIP_WIDTH) {
+                                break;
+                            }
                             part = tmp;
                         }
                         currentDirectory = ELLIPSIS + part;

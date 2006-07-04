@@ -59,6 +59,7 @@ public class AboutAction extends Action {
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         final AboutDialog dialog = new AboutDialog(window.getShell());
         dialog.open();

@@ -49,6 +49,7 @@ public class FilterMissingNodesAction extends GraphControlerAction {
      * 
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         final GraphFilter filter = new MissingNodeFilter();
         getGraphControler().addFilter(filter);

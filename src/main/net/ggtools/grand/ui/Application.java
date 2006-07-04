@@ -42,14 +42,12 @@ import net.ggtools.grand.ui.widgets.Splash;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -89,12 +87,12 @@ public class Application implements Runnable {
         return singleton;
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         try {
             Thread.currentThread().setName("Display thread");
             final Application application = new Application();
             application.run();
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             log.fatal("Cannot run application", e);
         }
         log.info("Exiting ...");
@@ -112,7 +110,9 @@ public class Application implements Runnable {
     final private String versionString;
 
     public Application() throws IOException {
-        if (log.isTraceEnabled()) log.trace("Creating new application");
+        if (log.isTraceEnabled()) {
+            log.trace("Creating new application");
+        }
         singleton = this;
         buildProperties = new Properties();
         buildProperties.load(getClass().getResourceAsStream("buildnum.properties"));
@@ -195,20 +195,28 @@ public class Application implements Runnable {
      * 
      */
     final private void initResources() throws IOException {
-        if (log.isInfoEnabled()) log.info("Initializing application resources");
+        if (log.isInfoEnabled()) {
+            log.info("Initializing application resources");
+        }
 
-        if (log.isDebugEnabled()) log.debug("Initializing preferences");
+        if (log.isDebugEnabled()) {
+            log.debug("Initializing preferences");
+        }
         preferenceStore = new GrandUiPrefStore();
         // TODO init with default values.
 
-        if (log.isDebugEnabled()) log.debug("Initializing font registry");
+        if (log.isDebugEnabled()) {
+            log.debug("Initializing font registry");
+        }
         fontRegistry = new FontRegistry("net.ggtools.grand.ui.resource.fonts");
-        for (Iterator iter = fontRegistry.getKeySet().iterator(); iter.hasNext();) {
-            String key = (String) iter.next();
+        for (final Iterator iter = fontRegistry.getKeySet().iterator(); iter.hasNext();) {
+            final String key = (String) iter.next();
             fontRegistry.get(key);
         }
 
-        if (log.isDebugEnabled()) log.debug("Initializing image registry");
+        if (log.isDebugEnabled()) {
+            log.debug("Initializing image registry");
+        }
         imageRegistry = new ImageRegistry();
 
         imageRegistry.put(ABOUT_DIALOG_IMAGE, ImageDescriptor.createFromFile(Application.class,
@@ -220,10 +228,9 @@ public class Application implements Runnable {
         imageRegistry.put(NODE_ICON, ImageDescriptor.createFromFile(Application.class,
                 "resource/node-icon.png"));
 
-        if (log.isDebugEnabled()) log.debug("Initializing colors");
-        // Ensure that ColorConstant is loaded.
-        final Color color = ColorConstants.black;
-
+        if (log.isDebugEnabled()) {
+            log.debug("Initializing colors");
+        }
         // Put the same icons for all windows & dialogs.
         Window.setDefaultImage(getImage(APPLICATION_ICON));
 
@@ -244,7 +251,7 @@ public class Application implements Runnable {
                 coreConfiguration = Configuration.getConfiguration();
                 log.info("Core: " + coreConfiguration.getVersionString());
                 log.info("Ant: " + coreConfiguration.getAntVersionString());
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 log.error("Error getting core configuration", e);
             }
             log.info("JRE: " + System.getProperty("java.vm.name") + " "
@@ -255,7 +262,7 @@ public class Application implements Runnable {
         splash.open();
         try {
             initResources();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             splash.close();
             splash.dispose();
             log.error("Caught exception initializing ressources", e);

@@ -43,15 +43,15 @@ abstract class DispatcherAdapter implements Dispatcher {
     /**
      * @param EventManager
      */
-    protected DispatcherAdapter(EventManager manager) {
-        this.eventManager = manager;
+    protected DispatcherAdapter(final EventManager manager) {
+        eventManager = manager;
     }
 
     /**
      * Ask the EventManager to dispatch an event to the subscribers.
      */
     public final void dispatch(final Object eventData) {
-        this.eventManager.dispatchEvent(eventData, this);
+        eventManager.dispatchEvent(eventData, this);
     }
 
     /**

@@ -75,6 +75,7 @@ public class ExportGraphAction extends GraphControlerAction {
      * 
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         final Shell parentShell = getGraphControler().getWindow().getShell();
         final FileDialog dialog = new FileDialog(parentShell,
@@ -89,10 +90,10 @@ public class ExportGraphAction extends GraphControlerAction {
             try {
                 image = getGraphControler().createImageForGraph();
                 imageSaver.saveImage(image,fileName);
-            } catch (IllegalArgumentException e) {
+            } catch (final IllegalArgumentException e) {
                 ExceptionDialog.openException(parentShell,"Cannot export image",e);
             
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 ExceptionDialog.openException(parentShell,"Cannot export image",e);
             } finally {
                 if (image != null) {

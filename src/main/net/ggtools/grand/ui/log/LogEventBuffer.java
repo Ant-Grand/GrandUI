@@ -53,7 +53,7 @@ public interface LogEventBuffer extends Serializable {
      * 
      * @return the list of events.
      */
-    List getEventList();
+    List<LogEvent> getEventList();
 
     /**
      * Remove a specific listener.

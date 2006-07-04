@@ -38,5 +38,5 @@ public interface RecentFilesListener {
     /**
      * Tell the listener to update the recent files list.
      */
-    void refreshRecentFiles(Collection fileList);
+    void refreshRecentFiles(Collection<String> fileList);
 }

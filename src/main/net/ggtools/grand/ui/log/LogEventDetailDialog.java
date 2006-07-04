@@ -85,7 +85,7 @@ public class LogEventDetailDialog extends Dialog {
      * @param parentShell
      * @param event
      */
-    public LogEventDetailDialog(Shell parentShell, LogEvent event) {
+    public LogEventDetailDialog(final Shell parentShell, final LogEvent event) {
         super(parentShell);
         setShellStyle(SWT.SHELL_TRIM);
         this.event = event;
@@ -112,7 +112,7 @@ public class LogEventDetailDialog extends Dialog {
      * @param valueColumnSpan
      */
     private void addKeyValue(final Composite composite, final String key, final String value,
-            int valueColumnSpan) {
+            final int valueColumnSpan) {
         if (value == null) {
             log.warn("Value is null, skipping");
             return;
@@ -202,7 +202,8 @@ public class LogEventDetailDialog extends Dialog {
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#buttonPressed(int)
      */
-    protected void buttonPressed(int buttonId) {
+    @Override
+    protected void buttonPressed(final int buttonId) {
         if (IDialogConstants.DETAILS_ID == buttonId) {
             toggleExceptionDetail();
         }
@@ -215,7 +216,8 @@ public class LogEventDetailDialog extends Dialog {
      * (non-Javadoc)
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
-    protected void configureShell(Shell newShell) {
+    @Override
+    protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Log event details");
         display = newShell.getDisplay();
@@ -225,18 +227,21 @@ public class LogEventDetailDialog extends Dialog {
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
      */
-    protected void createButtonsForButtonBar(Composite parent) {
+    @Override
+    protected void createButtonsForButtonBar(final Composite parent) {
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
-        if (event.getException() != null)
+        if (event.getException() != null) {
             detailsButton = createButton(parent, IDialogConstants.DETAILS_ID,
                     IDialogConstants.SHOW_DETAILS_LABEL, false);
+        }
     }
 
     /*
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
      */
-    protected Control createContents(Composite parent) {
+    @Override
+    protected Control createContents(final Composite parent) {
         final Control contents = super.createContents(parent);
         getShell().setMinimumSize(getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT));
         return contents;
@@ -246,7 +251,8 @@ public class LogEventDetailDialog extends Dialog {
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
-    protected Control createDialogArea(Composite parent) {
+    @Override
+    protected Control createDialogArea(final Composite parent) {
         final Composite composite = (Composite) super.createDialogArea(parent);
         final GridData compositeLayoutData = new GridData(GridData.FILL_HORIZONTAL);
         composite.setLayoutData(compositeLayoutData);

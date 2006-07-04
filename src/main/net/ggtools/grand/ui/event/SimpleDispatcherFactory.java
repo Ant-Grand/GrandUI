@@ -44,6 +44,7 @@ class SimpleDispatcherFactory extends DispatcherFactory {
      * @see net.ggtools.grand.ui.event.DispatcherFactory#createDispatcher(net.ggtools.grand.ui.event.EventManager,
      *      java.lang.reflect.Method)
      */
+    @Override
     Dispatcher createDispatcher(final EventManager eventManager, final Method method) {
         return new SimpleDispatcher(eventManager, method);
     }

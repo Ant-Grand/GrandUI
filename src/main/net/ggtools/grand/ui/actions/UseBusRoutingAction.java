@@ -45,7 +45,7 @@ public class UseBusRoutingAction extends GraphListenerAction {
     /**
      * @param parent
      */
-    public UseBusRoutingAction(GraphControlerProvider parent) {
+    public UseBusRoutingAction(final GraphControlerProvider parent) {
         super(parent, DEFAULT_ACTION_NAME, AS_CHECK_BOX);
     }
 
@@ -53,8 +53,9 @@ public class UseBusRoutingAction extends GraphListenerAction {
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanged(net.ggtools.grand.ui.graph.GraphControler)
      */
-    public void parameterChanged(GraphControler controler) {
-        boolean newState = getGraphControler().isBusRoutingEnabled();
+    @Override
+    public void parameterChanged(final GraphControler controler) {
+        final boolean newState = getGraphControler().isBusRoutingEnabled();
         if (newState != isChecked()) {
             setChecked(newState);
         }
@@ -64,6 +65,7 @@ public class UseBusRoutingAction extends GraphListenerAction {
      * (non-Javadoc)
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
         getGraphControler().enableBusRouting(isChecked());
     }
@@ -72,6 +74,7 @@ public class UseBusRoutingAction extends GraphListenerAction {
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.actions.GraphControlerAction#postAddHook()
      */
+    @Override
     protected void postAddHook() {
         super.postAddHook();
         setEnabled(true);
@@ -82,6 +85,7 @@ public class UseBusRoutingAction extends GraphListenerAction {
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.actions.GraphControlerAction#postInitHook()
      */
+    @Override
     protected void postInitHook() {
         super.postInitHook();
         if (getGraphControler() != null) {
