@@ -5,7 +5,7 @@
 	<classpathentry kind="src" path="etc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/Grand"/>
-	<classpathentry kind="var" path="LOG4J_LIB"/>
+	<classpathentry sourcepath="/LOG4J_SRC" kind="var" path="LOG4J_LIB"/>
 	<classpathentry kind="src" path="/JzGraph"/>
 	<classpathentry kind="lib" path="deps/commons-logging.jar"/>
 	<classpathentry kind="lib" path="deps/draw2d.jar"/>
