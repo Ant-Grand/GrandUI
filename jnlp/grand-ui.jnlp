@@ -15,6 +15,7 @@
   </security>
   <resources>
     <j2se version="1.4+"/> 
+		<jar href="grand-ui-launcher.jar"/>
 		<jar href="grand-ui.jar"/>
 		<jar href="ant.jar"/>
 		<jar href="ant-launcher.jar"/>
@@ -40,6 +41,6 @@
     <jar href="macosx/swt.jar"/>
     <nativelib href="macosx/swt-lib.jar"/>
   </resources> 
-  <application-desc main-class="net.ggtools.grand.ui.Launcher"/>
+  <application-desc main-class="net.ggtools.grand.ui.launcher.Launcher"/>
 </jnlp>
 

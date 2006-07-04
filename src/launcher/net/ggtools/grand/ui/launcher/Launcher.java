@@ -92,9 +92,13 @@ public class Launcher {
         final File libDir = new File(directory);
         final File[] jars = libDir.listFiles(new JarFilenameFilter());
 
+	if (jars != null) {
         for (File element : jars) {
             jarList.add(element.toURL());
         }
     }
+    }
+
+}
 
 }
