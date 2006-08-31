@@ -28,11 +28,6 @@
 	</condition>
 
 
-	<!-- Comment out the following lines not to use jikes -->
-	<property name="build.compiler.emacs" value="true" />
-	<property name="build.compiler.pedantic" value="true" />
-	<property name="build.compiler" value="jikes" />
-
 	<macrodef name="getjar" description="Download a jar to a the extlib directory">
 		<attribute name="dest" />
 		<attribute name="url" />
@@ -249,13 +244,13 @@
 
 	<target name="compile.java" depends="init" description="Compile the java source files">
 		<mkdir dir="${classdir.main}" />
-		<javac srcdir="${srcdir.main}" destdir="${classdir.main}" debug="true" optimize="true" source="1.4" target="1.4">
+		<javac srcdir="${srcdir.main}" destdir="${classdir.main}" debug="true" optimize="true" source="1.5" target="1.5">
 			<classpath>
 				<path refid="ext-libs" />
 			</classpath>
 		</javac>
         <mkdir dir="${classdir.launcher}" />
-        <javac srcdir="${srcdir.launcher}" destdir="${classdir.launcher}" debug="true" optimize="true" source="1.4" target="1.4">
+        <javac srcdir="${srcdir.launcher}" destdir="${classdir.launcher}" debug="true" optimize="true" source="1.5" target="1.5">
             <classpath>
                 <path refid="ext-libs" />
             </classpath>

@@ -64,12 +64,15 @@ public class Launcher {
             addDirectoryJars("/home/moi/prog/Eclipse/GrandUi/dist/grand-ui-0.8pre/lib", urlList);
 
             final String osName = System.getProperty("os.name").toLowerCase(Locale.US);
-            
+
             if (osName.equals("linux")) {
-                addDirectoryJars("/home/moi/prog/Eclipse/GrandUi/dist/grand-ui-0.8pre/lib/linux-gtk", urlList);
+                addDirectoryJars(
+                        "/home/moi/prog/Eclipse/GrandUi/dist/grand-ui-0.8pre/lib/linux-gtk",
+                        urlList);
             }
-            
-            final URLClassLoader cl = new URLClassLoader(urlList.toArray(new URL[0]),Launcher.class.getClassLoader());
+
+            final URLClassLoader cl = new URLClassLoader(urlList.toArray(new URL[0]),
+                    Launcher.class.getClassLoader());
             Thread.currentThread().setName("Display thread");
             Thread.currentThread().setContextClassLoader(cl);
             final Class clazz = cl.loadClass("net.ggtools.grand.ui.Application");
@@ -88,17 +91,16 @@ public class Launcher {
      * @param jarList
      * @throws MalformedURLException
      */
-    private static void addDirectoryJars(final String directory, final ArrayList<URL> jarList) throws MalformedURLException {
+    private static void addDirectoryJars(final String directory, final ArrayList<URL> jarList)
+            throws MalformedURLException {
         final File libDir = new File(directory);
         final File[] jars = libDir.listFiles(new JarFilenameFilter());
 
-	if (jars != null) {
-        for (File element : jars) {
-            jarList.add(element.toURL());
+        if (jars != null) {
+            for (File element : jars) {
+                jarList.add(element.toURL());
+            }
         }
     }
-    }
-
-}
 
 }

@@ -119,8 +119,8 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
             return null;
         }
 
-        final LinkedList list = new LinkedList();
-        for (final Iterator iter = graph.getNodes(); iter.hasNext();) {
+        final LinkedList<Node> list = new LinkedList<Node>();
+        for (final Iterator<Node> iter = graph.getNodes(); iter.hasNext();) {
             list.add(iter.next());
         }
 

@@ -53,14 +53,6 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
 
     private final File baseDir;
     
-    /**
-     * @param unEscapeString(item)
-     * @return
-     */
-    private static String escapeString(final String item) {
-        return item.replaceAll("%", "%%").replaceAll(",", "%,");
-    }
-
     GrandUiPrefStore() throws IOException {
         super();
         baseDir = new File(System.getProperty("user.home"), ".grandui" );
