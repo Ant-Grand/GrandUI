@@ -43,6 +43,7 @@ public class ZoomOutAction extends GraphControlerAction {
     /**
      * Logger for this class
      */
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(ZoomOutAction.class);
 
     /**
@@ -57,7 +58,7 @@ public class ZoomOutAction extends GraphControlerAction {
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         getGraphControler().getDisplayer().zoomOut();
     }
 }

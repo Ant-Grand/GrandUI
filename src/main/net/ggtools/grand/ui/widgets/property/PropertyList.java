@@ -28,8 +28,7 @@
 package net.ggtools.grand.ui.widgets.property;
 
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
@@ -50,6 +49,7 @@ class PropertyList {
      */
     private static final Log log = LogFactory.getLog(PropertyList.class);
 
+    @SuppressWarnings("unused")
     private Dispatcher allPropertiesChangedDispatcher;
 
     private Dispatcher clearedPropertiesDispatcher;
@@ -88,9 +88,8 @@ class PropertyList {
         }
     }
 
-    public void addAll(final Map properties) {
-        for (final Iterator iter = properties.entrySet().iterator(); iter.hasNext();) {
-            final Map.Entry entry = (Map.Entry) iter.next();
+    public void addAll(final Properties properties) {
+        for (final Entry<Object, Object> entry : properties.entrySet()) {
             pairList.add(new PropertyPair(entry));
         }
 
@@ -111,8 +110,7 @@ class PropertyList {
 
     public Properties getAsProperties() {
         final Properties props = new Properties();
-        for (final Iterator<PropertyPair> iter = pairList.iterator(); iter.hasNext();) {
-            final PropertyPair pair = iter.next();
+        for (final PropertyPair pair : pairList) {
             props.setProperty(pair.getName(), pair.getValue());
         }
         return props;
@@ -134,8 +132,7 @@ class PropertyList {
     @Override
     public String toString() {
         final StringBuffer strBuff = new StringBuffer();
-        for (final Iterator<PropertyPair> iter = pairList.iterator(); iter.hasNext();) {
-            final PropertyPair pair = iter.next();
+        for (final PropertyPair pair : pairList) {
             strBuff.append(pair.getName()).append(" => '").append(pair.getValue()).append("'\n");
         }
         return strBuff.toString();

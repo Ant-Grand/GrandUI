@@ -44,6 +44,7 @@ import org.eclipse.jface.action.Action;
  */
 public class ShowSourcePanelAction extends Action {
     
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(ShowSourcePanelAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Show source panel";
@@ -61,7 +62,7 @@ public class ShowSourcePanelAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         window.setSourcePanelVisible(isChecked());
     }
 }

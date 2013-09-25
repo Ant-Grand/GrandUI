@@ -31,30 +31,30 @@ package net.ggtools.grand.ui.prefs;
  * @author Christophe Labouisse
  */
 public interface PreferenceKeys {
-    public static final String MAX_RECENT_FILES_PREFS_KEY = "max recent files";
+    String MAX_RECENT_FILES_PREFS_KEY = "max recent files";
 
-    public static final String RECENT_FILES_PREFS_KEY = "recent files";
     
-    public static final String GRAPH_PREFIX = "graph.";
+    String RECENT_FILES_PREFS_KEY = "recent files";
 
-    public static final String NODE_PREFIX = GRAPH_PREFIX+"node.";
+    String GRAPH_PREFIX = "graph.";
 
-    public static final String GRAPH_BUS_ENABLED_DEFAULT = GRAPH_PREFIX+"bus.enabled.defaut";
     
-    public static final String GRAPH_BUS_OUT_THRESHOLD = GRAPH_PREFIX+"bus.out.threshold";
+    String NODE_PREFIX = GRAPH_PREFIX + "node.";
 
-    public static final String GRAPH_BUS_IN_THRESHOLD = GRAPH_PREFIX+"bus.in.threshold";
+    String GRAPH_BUS_ENABLED_DEFAULT = GRAPH_PREFIX + "bus.enabled.defaut";
 
-    public static final String LINK_SUBANT_COLOR = GRAPH_PREFIX+"link.subant.color";
+    String GRAPH_BUS_OUT_THRESHOLD = GRAPH_PREFIX + "bus.out.threshold";
 
-    public static final String LINK_SUBANT_LINEWIDTH = GRAPH_PREFIX+"link.subant.linewidth";
+    String GRAPH_BUS_IN_THRESHOLD = GRAPH_PREFIX + "bus.in.threshold";
 
-    public static final String LINK_WEAK_COLOR = GRAPH_PREFIX+"link.weak.color";
+    String LINK_SUBANT_COLOR = GRAPH_PREFIX + "link.subant.color";
 
-    public static final String LINK_WEAK_LINEWIDTH = GRAPH_PREFIX+"link.weak.linewidth";
+    String LINK_SUBANT_LINEWIDTH = GRAPH_PREFIX + "link.subant.linewidth";
 
-    public static final String LINK_DEFAULT_COLOR = GRAPH_PREFIX+"link.default.color";
+    String LINK_WEAK_COLOR = GRAPH_PREFIX + "link.weak.color";
 
-    public static final String LINK_DEFAULT_LINEWIDTH = GRAPH_PREFIX+"link.default.linewidth";
+    String LINK_WEAK_LINEWIDTH = GRAPH_PREFIX + "link.weak.linewidth";
 
+    String LINK_DEFAULT_COLOR = GRAPH_PREFIX + "link.default.color";
+    String LINK_DEFAULT_LINEWIDTH = GRAPH_PREFIX + "link.default.linewidth";
 }

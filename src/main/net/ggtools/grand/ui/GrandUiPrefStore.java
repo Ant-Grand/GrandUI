@@ -55,7 +55,7 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
     
     GrandUiPrefStore() throws IOException {
         super();
-        baseDir = new File(System.getProperty("user.home"), ".grandui" );
+        baseDir = new File(System.getProperty("user.home"), ".grandui");
         final File destFile = new File(baseDir, "ui.prefs");
         setPrefFile(destFile);
         setDefaults();
@@ -68,11 +68,12 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
     }
 
     @Override
-    public void save() throws IOException {
+    public final void save() throws IOException {
         if (!baseDir.isDirectory()) {
             baseDir.mkdirs();
-            if (!baseDir.isDirectory()) { throw new FileNotFoundException("Cannot find/create "
-                    + baseDir); }
+            if (!baseDir.isDirectory()) {
+                throw new FileNotFoundException("Cannot find/create " + baseDir);
+            }
         }
 
         super.save();

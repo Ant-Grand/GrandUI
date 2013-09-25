@@ -36,7 +36,8 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Christophe Labouisse
  */
-public class GraphPreferencePage extends FieldEditorPreferencePage implements PreferenceKeys {
+public class GraphPreferencePage extends FieldEditorPreferencePage
+        implements PreferenceKeys {
     public static void setDefaults(final IPreferenceStore prefs) {
         prefs.setDefault(GRAPH_BUS_ENABLED_DEFAULT, false);
         prefs.setDefault(GRAPH_BUS_IN_THRESHOLD, 5);
@@ -55,16 +56,19 @@ public class GraphPreferencePage extends FieldEditorPreferencePage implements Pr
      * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
      */
     @Override
-    protected void createFieldEditors() {
+    protected final void createFieldEditors() {
         final Composite parent = getFieldEditorParent();
-        final BooleanFieldEditor enableBusRouting = new BooleanFieldEditor(
-                GRAPH_BUS_ENABLED_DEFAULT, "Bus routing enabled on graph loading", parent);
+        final BooleanFieldEditor enableBusRouting =
+                new BooleanFieldEditor(GRAPH_BUS_ENABLED_DEFAULT,
+                        "Bus routing enabled on graph loading", parent);
         addField(enableBusRouting);
-        final IntegerFieldEditor inThreshold = new IntegerFieldEditor(GRAPH_BUS_IN_THRESHOLD,
-                "Bus routing in threshold", parent);
+        final IntegerFieldEditor inThreshold =
+                new IntegerFieldEditor(GRAPH_BUS_IN_THRESHOLD,
+                        "Bus routing in threshold", parent);
         addField(inThreshold);
-        final IntegerFieldEditor outThreadshold = new IntegerFieldEditor(GRAPH_BUS_OUT_THRESHOLD,
-                "Bus routing out threshold", parent);
+        final IntegerFieldEditor outThreadshold =
+                new IntegerFieldEditor(GRAPH_BUS_OUT_THRESHOLD,
+                        "Bus routing out threshold", parent);
         addField(outThreadshold);
     }
 

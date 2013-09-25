@@ -125,6 +125,7 @@ public class PropertyEditor {
         /**
          * Logger for this class
          */
+        @SuppressWarnings("unused")
         private static final Log log = LogFactory.getLog(PropertyListContentProvider.class);
 
         private PropertyList currentPropertyList;
@@ -300,18 +301,18 @@ public class PropertyEditor {
         tableViewer.setInput(propertyList);
     }
 
-    public Properties getValues() {
+    public final Properties getValues() {
         return propertyList.getAsProperties();
     }
     
-    PropertyList getPropertyList() {
+    final PropertyList getPropertyList() {
         return propertyList;
     }
 
     /**
      * @param properties
      */
-    public void setInput(final Map properties) {
+    public final void setInput(final Properties properties) {
         propertyList.clear();
         if (properties != null) {
             propertyList.addAll(properties);
@@ -431,8 +432,8 @@ public class PropertyEditor {
             // Remove the selection and refresh the view
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                final PropertyPair pair = (PropertyPair) ((IStructuredSelection) tableViewer
-                        .getSelection()).getFirstElement();
+                final PropertyPair pair = (PropertyPair) ((IStructuredSelection)
+                        tableViewer.getSelection()).getFirstElement();
                 if (pair != null) {
                     propertyList.remove(pair);
                 }
@@ -457,7 +458,8 @@ public class PropertyEditor {
 
     private void createContents(final Composite parent, final int style) {
         final Composite composite = new Composite(parent, SWT.NONE);
-        final GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH);
+        final GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+                | GridData.FILL_BOTH);
         composite.setLayoutData(gridData);
         final GridLayout layout = new GridLayout(GRID_LAYOUT_COLUMNS, false);
         layout.marginWidth = 4;
@@ -471,8 +473,8 @@ public class PropertyEditor {
     }
 
     private void createTable(final Composite parent) {
-        final int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
-                | SWT.HIDE_SELECTION;
+        final int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL
+                | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
 
         table = new Table(parent, style);
         table.setLinesVisible(true);

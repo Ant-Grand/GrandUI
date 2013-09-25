@@ -50,7 +50,8 @@ import org.eclipse.swt.widgets.Display;
  * 
  * @author Christophe Labouisse
  */
-public class RecentFilesMenu extends MenuManager implements RecentFilesListener {
+public class RecentFilesMenu extends MenuManager
+        implements RecentFilesListener {
 
     /**
      * An action openning a specific file when run.
@@ -63,7 +64,8 @@ public class RecentFilesMenu extends MenuManager implements RecentFilesListener 
 
         private final GraphWindow window;
 
-        public OpenRecentFileAction(final GraphWindow window, final String fileName) {
+        public OpenRecentFileAction(final GraphWindow window,
+                final String fileName) {
             super(fileName);
             this.window = window;
             file = new File(fileName);
@@ -76,11 +78,12 @@ public class RecentFilesMenu extends MenuManager implements RecentFilesListener 
          */
         @Override
         public void run() {
-            window.openGraphInNewDisplayer(file, RecentFilesManager.getInstance().getProperties(
-                    file));
+            window.openGraphInNewDisplayer(file,
+                    RecentFilesManager.getInstance().getProperties(file));
         }
     }
 
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(RecentFilesMenu.class);
 
     private static final String RECENT_FILES_GROUP = "Recent files";
@@ -107,7 +110,7 @@ public class RecentFilesMenu extends MenuManager implements RecentFilesListener 
      * @param recentFiles
      *            list of files to put in the menu.
      */
-    public void refreshRecentFiles(final Collection<String> recentFiles) {
+    public final void refreshRecentFiles(final Collection<String> recentFiles) {
         final Runnable runnable = new Runnable() {
             public void run() {
                 // Clear the previous items.

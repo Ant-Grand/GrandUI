@@ -53,11 +53,12 @@ import org.eclipse.swt.graphics.Image;
  * TODO change the data model to provide something better.
  * @author Christophe Labouisse
  */
-public class GraphNodeContentProvider implements IStructuredContentProvider, ILabelProvider,
-        IColorProvider {
+public class GraphNodeContentProvider implements IStructuredContentProvider,
+        ILabelProvider, IColorProvider {
     /**
      * Logger for this class
      */
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(GraphNodeContentProvider.class);
 
     private Graph graph;
@@ -81,7 +82,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
-    public void dispose() {
+    public final void dispose() {
         graph = null;
     }
 
@@ -89,7 +90,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
      */
-    public Color getBackground(final Object element) {
+    public final Color getBackground(final Object element) {
         if (element instanceof Node) {
             final Node node = (Node) element;
             final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
@@ -114,7 +115,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements(final Object inputElement) {
+    public final Object[] getElements(final Object inputElement) {
         if (graph == null) {
             return null;
         }
@@ -131,7 +132,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
      */
-    public Color getForeground(final Object element) {
+    public final Color getForeground(final Object element) {
         if (element instanceof Node) {
             final Node node = (Node) element;
             final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
@@ -155,7 +156,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
-    public Image getImage(final Object element) {
+    public final Image getImage(final Object element) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -164,7 +165,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      */
-    public String getText(final Object element) {
+    public final String getText(final Object element) {
         if (element == null) {
             return null;
         }
@@ -182,7 +183,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
      *      java.lang.Object, java.lang.Object)
      */
-    public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
+    public final void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
         // TODO Auto-generated method stub
 
     }
@@ -192,7 +193,8 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
      *      java.lang.String)
      */
-    public boolean isLabelProperty(final Object element, final String property) {
+    public final boolean isLabelProperty(final Object element,
+            final String property) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -209,7 +211,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider, ILa
     /**
      * @param graph
      */
-    void setGraph(final Graph graph) {
+    final void setGraph(final Graph graph) {
         this.graph = graph;
     }
 }

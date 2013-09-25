@@ -69,7 +69,7 @@ public class OpenFileWizard extends Wizard {
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
-    public void addPages() {
+    public final void addPages() {
         fileSelectionPage = new FileSelectionPage();
         addPage(fileSelectionPage);
         propertySettingPage = new PropertySettingPage(fileSelectionPage);
@@ -81,11 +81,12 @@ public class OpenFileWizard extends Wizard {
      * @see org.eclipse.jface.wizard.IWizard#performFinish()
      */
     @Override
-    public boolean performFinish() {
+    public final boolean performFinish() {
         boolean rc = false;
         final File selectedFile = fileSelectionPage.getSelectedFile();
         if (selectedFile != null) {
-            window.openGraphInNewDisplayer(selectedFile, propertySettingPage.getProperties());
+            window.openGraphInNewDisplayer(selectedFile,
+                    propertySettingPage.getProperties());
             rc = true;
         }
 
@@ -93,7 +94,7 @@ public class OpenFileWizard extends Wizard {
     }
 
     @Override
-    public boolean canFinish() {
+    public final boolean canFinish() {
         return fileSelectionPage.getSelectedFile() != null;
     }
 }

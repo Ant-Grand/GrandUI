@@ -52,7 +52,7 @@ public class QuitAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         System.exit(0);
     }
 }

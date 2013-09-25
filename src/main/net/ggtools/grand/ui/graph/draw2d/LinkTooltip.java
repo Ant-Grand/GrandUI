@@ -29,8 +29,8 @@ package net.ggtools.grand.ui.graph.draw2d;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.graph.DotGraphAttributes;
@@ -71,15 +71,15 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
     }
 
     @Override
-    protected void createContents() {
+    protected final void createContents() {
         if (log.isDebugEnabled()) {
             log.debug("createContents() - start");
         }
 
         final Label type;
         if (edge.hasAttr(LINK_TASK_ATTR)) {
-            type = new Label(edge.getAttrAsString(LINK_TASK_ATTR), Application.getInstance()
-                    .getImage(Application.LINK_ICON));
+            type = new Label(edge.getAttrAsString(LINK_TASK_ATTR),
+                    Application.getInstance().getImage(Application.LINK_ICON));
         }
         else {
             type = new Label("depency", Application.getInstance().getImage(Application.LINK_ICON));
@@ -122,17 +122,17 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
         }
 
         if (edge.hasAttr(LINK_PARAMETERS_ATTR)) {
-            final Map parameters = (Map) edge.getAttr(LINK_PARAMETERS_ATTR);
+            @SuppressWarnings("unchecked")
+            final Map<String, String> parameters = (Map<String, String>) edge.getAttr(LINK_PARAMETERS_ATTR);
             if (!parameters.isEmpty()) {
                 final BlockFlow outterBlock = new BlockFlow();
-                for (final Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
-                    final Map.Entry entry = (Map.Entry) iter.next();
+                for (final Entry<String, String> entry : parameters.entrySet()) {
                     final BlockFlow innerBlock = new BlockFlow();
-                    textFlow = new TextFlow(((String) entry.getKey()) + ": ");
+                    textFlow = new TextFlow(entry.getKey() + ": ");
                     textFlow.setFont(monospaceFont);
                     innerBlock.add(textFlow);
                     inline = new InlineFlow();
-                    textFlow = new TextFlow((String) entry.getValue());
+                    textFlow = new TextFlow(entry.getValue());
                     textFlow.setFont(italicMonospaceFont);
                     inline.add(textFlow);
                     innerBlock.add(inline);
@@ -144,14 +144,13 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
         }
 
         if (edge.hasAttr(LINK_SUBANT_DIRECTORIES)) {
-            final Collection directories = (Collection) edge.getAttr(LINK_SUBANT_DIRECTORIES);
+            @SuppressWarnings("unchecked")
+            final Collection<String> directories = (Collection<String>) edge.getAttr(LINK_SUBANT_DIRECTORIES);
             if (!directories.isEmpty()) {
                 final BlockFlow outterBlock = new BlockFlow();
                 textFlow = new TextFlow("Generic ant file to be applied to:");
                 outterBlock.add(textFlow);
-                for (final Iterator iter = directories.iterator(); iter.hasNext();) {
-                    String currentDirectory = (String) iter.next();
-
+                for (String currentDirectory : directories) {
                     final Dimension dim = FigureUtilities.getTextExtents(currentDirectory, monospaceFont);
                     if (dim.width > TOOLTIP_WIDTH) {
                         if (log.isDebugEnabled()) {

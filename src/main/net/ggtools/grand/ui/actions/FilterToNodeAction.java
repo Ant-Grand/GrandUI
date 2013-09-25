@@ -42,14 +42,15 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Christophe Labouisse
  */
-public class FilterToNodeAction extends GraphSelectionAction implements GraphControlerListener,
-        GraphListener {
+public class FilterToNodeAction extends GraphSelectionAction
+        implements GraphControlerListener, GraphListener {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(FilterToNodeAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Filter to selected node";
 
     public FilterToNodeAction(final GraphControlerProvider parent) {
-        super(parent,DEFAULT_ACTION_NAME);
+        super(parent, DEFAULT_ACTION_NAME);
     }
 
     /*
@@ -58,7 +59,7 @@ public class FilterToNodeAction extends GraphSelectionAction implements GraphCon
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final GraphFilter filter = new ToNodeFilter(getCurrentNode());
         getGraphControler().addFilter(filter);
     }

@@ -45,6 +45,7 @@ import org.eclipse.jface.action.Action;
  */
 public class AboutAction extends Action {
     
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(AboutAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "About Grand";
@@ -60,7 +61,7 @@ public class AboutAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final AboutDialog dialog = new AboutDialog(window.getShell());
         dialog.open();
     }

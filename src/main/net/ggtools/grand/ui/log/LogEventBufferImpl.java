@@ -42,13 +42,14 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Christophe Labouisse
  */
-public class LogEventBufferImpl implements LogEventBuffer {
+public final class LogEventBufferImpl implements LogEventBuffer {
 
     private static LogEventBufferImpl instance;
 
     /**
      * Logger for this class
      */
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(LogEventBufferImpl.class);
 
     /**
@@ -88,7 +89,7 @@ public class LogEventBufferImpl implements LogEventBuffer {
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.log.LogEventBuffer#clearLogEvents()
      */
-    synchronized public void clearLogEvents() {
+    public synchronized void clearLogEvents() {
         eventList.clear();
     }
 

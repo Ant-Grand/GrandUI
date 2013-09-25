@@ -53,8 +53,8 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
      * @param parent
      */
     public FilterSelectedNodesAction(final GraphControlerProvider parent) {
-        super(parent,DEFAULT_ACTION_NAME);
         
+        super(parent, DEFAULT_ACTION_NAME);
         boolean isEnabled = false;
 
         if (getGraphControler() != null) {
@@ -68,7 +68,7 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         if (log.isDebugEnabled()) {
             log.debug("run() - start");
         }
@@ -92,7 +92,7 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
     @Override
-    public void selectionChanged(final Collection selectedNodes) {
+    public final void selectionChanged(final Collection<Draw2dNode> selectedNodes) {
         setEnabled(!selectedNodes.isEmpty());
     }
 

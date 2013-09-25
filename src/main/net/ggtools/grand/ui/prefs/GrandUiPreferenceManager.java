@@ -42,14 +42,16 @@ public class GrandUiPreferenceManager extends PreferenceManager {
 
     public GrandUiPreferenceManager() {
         final PreferencePage generalPage = new GeneralPreferencePage();
-        final IPersistentPreferenceStore preferenceStore = Application.getInstance()
-                .getPreferenceStore();
+        final IPersistentPreferenceStore preferenceStore =
+                Application.getInstance().getPreferenceStore();
         generalPage.setPreferenceStore(preferenceStore);
-        final IPreferenceNode generalPageNode = new PreferenceNode("General", generalPage);
+        final IPreferenceNode generalPageNode =
+                new PreferenceNode("General", generalPage);
         addToRoot(generalPageNode);
         final PreferencePage graphPage = new GraphPreferencePage();
         graphPage.setPreferenceStore(preferenceStore);
-        final IPreferenceNode graphNode = new PreferenceNode("Graph", graphPage);
+        final IPreferenceNode graphNode =
+                new PreferenceNode("Graph", graphPage);
         addToRoot(graphNode);
         final PreferencePage nodePage = new NodesPreferencePage();
         nodePage.setPreferenceStore(preferenceStore);
@@ -57,7 +59,8 @@ public class GrandUiPreferenceManager extends PreferenceManager {
         graphNode.add(nodesNode);
         final PreferencePage linksPage = new LinksPreferencePage();
         linksPage.setPreferenceStore(preferenceStore);
-        final IPreferenceNode linksNode = new PreferenceNode("Nodes", linksPage);
+        final IPreferenceNode linksNode =
+                new PreferenceNode("Nodes", linksPage);
         graphNode.add(linksNode);
     }
 }

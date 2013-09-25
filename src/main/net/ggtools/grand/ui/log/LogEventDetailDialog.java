@@ -203,7 +203,7 @@ public class LogEventDetailDialog extends Dialog {
      * @see org.eclipse.jface.dialogs.Dialog#buttonPressed(int)
      */
     @Override
-    protected void buttonPressed(final int buttonId) {
+    protected final void buttonPressed(final int buttonId) {
         if (IDialogConstants.DETAILS_ID == buttonId) {
             toggleExceptionDetail();
         }
@@ -217,7 +217,7 @@ public class LogEventDetailDialog extends Dialog {
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
-    protected void configureShell(final Shell newShell) {
+    protected final void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Log event details");
         display = newShell.getDisplay();
@@ -228,7 +228,7 @@ public class LogEventDetailDialog extends Dialog {
      * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected void createButtonsForButtonBar(final Composite parent) {
+    protected final void createButtonsForButtonBar(final Composite parent) {
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
         if (event.getException() != null) {
             detailsButton = createButton(parent, IDialogConstants.DETAILS_ID,
@@ -241,7 +241,7 @@ public class LogEventDetailDialog extends Dialog {
      * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createContents(final Composite parent) {
+    protected final Control createContents(final Composite parent) {
         final Control contents = super.createContents(parent);
         getShell().setMinimumSize(getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT));
         return contents;
@@ -252,7 +252,7 @@ public class LogEventDetailDialog extends Dialog {
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createDialogArea(final Composite parent) {
+    protected final Control createDialogArea(final Composite parent) {
         final Composite composite = (Composite) super.createDialogArea(parent);
         final GridData compositeLayoutData = new GridData(GridData.FILL_HORIZONTAL);
         composite.setLayoutData(compositeLayoutData);

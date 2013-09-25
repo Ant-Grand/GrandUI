@@ -65,7 +65,7 @@ public class Analyzer extends ApplicationWindow {
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
-    protected void configureShell(final Shell shell) {
+    protected final void configureShell(final Shell shell) {
         super.configureShell(shell);
         shell.setText("ggTools log analyzer");
     }
@@ -75,7 +75,7 @@ public class Analyzer extends ApplicationWindow {
      * @see org.eclipse.jface.window.ApplicationWindow#createMenuManager()
      */
     @Override
-    protected MenuManager createMenuManager() {
+    protected final MenuManager createMenuManager() {
         final MenuManager manager = new MenuManager();
         final MenuManager fileMenu = new MenuManager("File");
         manager.add(fileMenu);
@@ -141,7 +141,7 @@ public class Analyzer extends ApplicationWindow {
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createContents(final Composite parent) {
+    protected final Control createContents(final Composite parent) {
         // Allow the LogViewer to display trace & debug events.
         logViewer = new LogViewer(parent, SWT.NONE);
         return logViewer;

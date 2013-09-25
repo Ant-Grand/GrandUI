@@ -74,10 +74,10 @@ public class GraphModel implements GraphProducer {
             log.debug("Loading " + file);
         }
         lastLoadedFile = file;
-        producer = new AntProject(file,properties);
+        producer = new AntProject(file, properties);
     }
 
-    public void reload(final Properties properties) throws GrandException {
+    public final void reload(final Properties properties) throws GrandException {
         if (lastLoadedFile != null) {
             if (log.isDebugEnabled()) {
                 log.debug("Reloading last file");
@@ -104,8 +104,8 @@ public class GraphModel implements GraphProducer {
      * 
      * @return
      */
-    final Map getAllProperties() {
-        Map rc = null;
+    final Map<String, Object> getAllProperties() {
+        Map<String, Object> rc = null;
         if (producer != null) {
             rc = producer.getAntProject().getProperties();
         }
@@ -117,7 +117,7 @@ public class GraphModel implements GraphProducer {
      * 
      * @return
      */
-    final Map getUserProperties() {
+    final Properties getUserProperties() {
         return lastLoadedFileProperties;
     }
 }

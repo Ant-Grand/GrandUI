@@ -39,6 +39,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Christophe Labouisse
  */
 public class ClearFiltersAction extends GraphControlerAction {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(ClearFiltersAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Remove filters";
@@ -49,12 +50,12 @@ public class ClearFiltersAction extends GraphControlerAction {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         getGraphControler().clearFilters();
     }
 
     public ClearFiltersAction(final GraphControlerProvider parent) {
-        super(parent,DEFAULT_ACTION_NAME);
+        super(parent, DEFAULT_ACTION_NAME);
     }
 
 }

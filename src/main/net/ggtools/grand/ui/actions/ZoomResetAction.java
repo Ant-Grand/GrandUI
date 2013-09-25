@@ -43,6 +43,7 @@ public class ZoomResetAction extends GraphControlerAction {
     /**
      * Logger for this class
      */
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(ZoomResetAction.class);
 
     /**
@@ -57,7 +58,7 @@ public class ZoomResetAction extends GraphControlerAction {
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         getGraphControler().getDisplayer().zoomReset();
     }
 }

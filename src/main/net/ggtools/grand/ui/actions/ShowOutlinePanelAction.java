@@ -44,6 +44,7 @@ import org.eclipse.jface.action.Action;
  */
 public class ShowOutlinePanelAction extends Action {
     
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(ShowOutlinePanelAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Show outline panel";
@@ -61,7 +62,7 @@ public class ShowOutlinePanelAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         window.setOutlinePanelVisible(isChecked());
     }
 }

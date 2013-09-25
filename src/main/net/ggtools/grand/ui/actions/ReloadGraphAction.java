@@ -40,6 +40,7 @@ import org.eclipse.swt.SWT;
  */
 public class ReloadGraphAction extends GraphControlerAction {
 
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(ReloadGraphAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Reload Graph";
@@ -50,7 +51,7 @@ public class ReloadGraphAction extends GraphControlerAction {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         getGraphControler().reloadGraph();
     }
 
@@ -69,7 +70,8 @@ public class ReloadGraphAction extends GraphControlerAction {
      * @param name
      * @param parent
      */
-    public ReloadGraphAction(final GraphControlerProvider parent, final String name) {
+    public ReloadGraphAction(final GraphControlerProvider parent,
+            final String name) {
         super(parent, name);
         setAccelerator(SWT.F5);
     }

@@ -53,7 +53,8 @@ import org.eclipse.swt.widgets.FileDialog;
 /**
  * @author Christophe Labouisse
  */
-public class FileSelectionPage extends WizardPage implements SelectedFileProvider {
+public class FileSelectionPage extends WizardPage
+        implements SelectedFileProvider {
     /**
      * Logger for this class
      */
@@ -80,7 +81,7 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl(final Composite parent) {
+    public final void createControl(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         final GridLayout layout = new GridLayout();
         layout.numColumns = 2;
@@ -92,8 +93,8 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
 
         combo.add(""); // Default: no file.
         // Fill up the combo with the recent files
-        for (final Iterator<String> iter = RecentFilesManager.getInstance().getRecentFiles().iterator(); iter
-                .hasNext();) {
+        for (final Iterator<String> iter = RecentFilesManager.getInstance().getRecentFiles().iterator();
+                iter.hasNext();) {
             final String fileName = iter.next();
             combo.add(fileName);
         }
@@ -170,14 +171,14 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
         return selectedFile;
     }
 
-    public void addListener(final OpenFileWizard.SelectedFileListener listener) {
+    public final void addListener(final OpenFileWizard.SelectedFileListener listener) {
         if (!subscribers.contains(listener)) {
             subscribers.add(listener);
             listener.fileSelected(selectedFile);
         }
     }
 
-    public void removeListener(final OpenFileWizard.SelectedFileListener listener) {
+    public final void removeListener(final OpenFileWizard.SelectedFileListener listener) {
         subscribers.remove(listener);
     }
 

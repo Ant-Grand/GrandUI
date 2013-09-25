@@ -37,9 +37,10 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 
 public final class CanvasScroller implements MouseMoveListener {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(CanvasScroller.class);
 
-    final private FigureCanvas canvas;
+    private final FigureCanvas canvas;
 
     private boolean gotStartPoint;
 

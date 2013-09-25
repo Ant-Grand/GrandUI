@@ -55,7 +55,7 @@ public class PrintAction extends GraphControlerAction {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final PrintDialog dialog = new PrintDialog(window.getShell());
         final PrinterData printerData = dialog.open();
         log.debug("Dialog returned " + printerData);
@@ -79,7 +79,7 @@ public class PrintAction extends GraphControlerAction {
      * @param parent
      */
     public PrintAction(final GraphWindow parent) {
-        this(parent,DEFAULT_ACTION_NAME);
+        this(parent, DEFAULT_ACTION_NAME);
     }
 
     /**
@@ -88,9 +88,9 @@ public class PrintAction extends GraphControlerAction {
      * @param name
      * @param parent
      */
-    public PrintAction(final GraphWindow parent,final String name) {
-        super(parent,name);
+    public PrintAction(final GraphWindow parent, final String name) {
+        super(parent, name);
         window = parent;
-        setAccelerator(SWT.CONTROL|'P');
+        setAccelerator(SWT.CONTROL | 'P');
     }
 }

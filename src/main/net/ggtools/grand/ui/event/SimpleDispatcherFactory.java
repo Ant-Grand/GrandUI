@@ -45,7 +45,8 @@ class SimpleDispatcherFactory extends DispatcherFactory {
      *      java.lang.reflect.Method)
      */
     @Override
-    Dispatcher createDispatcher(final EventManager eventManager, final Method method) {
+    Dispatcher createDispatcher(final EventManager eventManager,
+            final Method method) {
         return new SimpleDispatcher(eventManager, method);
     }
 

@@ -65,7 +65,8 @@ abstract class AbstractGraphTooltip extends Figure {
          * @see org.eclipse.draw2d.Border#paint(org.eclipse.draw2d.IFigure,
          *      org.eclipse.draw2d.Graphics, org.eclipse.draw2d.geometry.Insets)
          */
-        public void paint(final IFigure figure, final Graphics graphics, final Insets insets) {
+        public void paint(final IFigure figure, final Graphics graphics,
+                final Insets insets) {
             final Rectangle paintRectangle = getPaintRectangle(figure, insets);
             graphics.drawLine(paintRectangle.getTopLeft(), paintRectangle.getTopRight());
         }
@@ -91,7 +92,7 @@ abstract class AbstractGraphTooltip extends Figure {
      * Create the tooltip's contents. Should be called explicitly by implementing classes.
      * TODO: Make this part automatic (ticket #37).
      */
-    abstract protected void createContents();
+    protected abstract void createContents();
 
     /**
      * @return

@@ -41,6 +41,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Christophe Labouisse
  */
 public class FilterIsolatedNodesAction extends GraphControlerAction {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(FilterIsolatedNodesAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Filter out isolated nodes";
@@ -51,12 +52,12 @@ public class FilterIsolatedNodesAction extends GraphControlerAction {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final GraphFilter filter = new IsolatedNodeFilter();
         getGraphControler().addFilter(filter);
     }
 
     public FilterIsolatedNodesAction(final GraphControlerProvider parent) {
-        super(parent,DEFAULT_ACTION_NAME);
+        super(parent, DEFAULT_ACTION_NAME);
     }
 }

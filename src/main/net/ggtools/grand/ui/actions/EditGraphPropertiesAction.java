@@ -41,6 +41,7 @@ import org.eclipse.jface.window.Window;
  * @author Christophe Labouisse
  */
 public class EditGraphPropertiesAction extends GraphControlerAction {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(EditGraphPropertiesAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Edit Properties";
@@ -51,7 +52,7 @@ public class EditGraphPropertiesAction extends GraphControlerAction {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final PropertyEditionDialog dialog = new PropertyEditionDialog(getGraphControler()
                 .getWindow().getShell());
         dialog.setProperties(getGraphControler().getGraphProperties());

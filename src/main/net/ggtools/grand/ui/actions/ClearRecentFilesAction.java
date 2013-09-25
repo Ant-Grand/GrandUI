@@ -43,7 +43,7 @@ public class ClearRecentFilesAction extends Action {
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         RecentFilesManager.getInstance().clear();
     }
     

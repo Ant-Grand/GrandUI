@@ -105,7 +105,7 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
      * 
      * @return
      */
-    static public RecentFilesManager getInstance() {
+    public static RecentFilesManager getInstance() {
         if (instance == null) {
             instance = new RecentFilesManager();
         }

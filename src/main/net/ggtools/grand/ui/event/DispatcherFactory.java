@@ -46,7 +46,7 @@ abstract class DispatcherFactory {
      * 
      * @return
      */
-    final static DispatcherFactory getInstance() {
+    static final DispatcherFactory getInstance() {
         if (instance == null) {
             instance = new SimpleDispatcherFactory();
         }
@@ -61,5 +61,6 @@ abstract class DispatcherFactory {
      * @param method
      * @return
      */
-    abstract Dispatcher createDispatcher(final EventManager eventManager, final Method method);
+    abstract Dispatcher createDispatcher(final EventManager eventManager,
+            final Method method);
 }

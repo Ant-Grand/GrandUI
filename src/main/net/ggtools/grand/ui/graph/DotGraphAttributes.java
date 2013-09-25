@@ -36,40 +36,40 @@ package net.ggtools.grand.ui.graph;
  */
 public interface DotGraphAttributes {
 
-    static final String _BOUNDS_ATTR = "-bounds";
+    String _BOUNDS_ATTR = "-bounds";
 
-    static final String _SHAPE_ATTR = "-shape";
+    String _SHAPE_ATTR = "-shape";
 
-    static final String BUILD_FILE_ATTR = "build.file";
+    String BUILD_FILE_ATTR = "build.file";
 
-    static final String DESCRIPTION_ATTR = "description";
+    String DESCRIPTION_ATTR = "description";
 
-    static final String DRAW2DFGCOLOR_ATTR = "draw2dfgcolor";
+    String DRAW2DFGCOLOR_ATTR = "draw2dfgcolor";
 
-    static final String DRAW2DFILLCOLOR_ATTR = "draw2dfillcolor";
+    String DRAW2DFILLCOLOR_ATTR = "draw2dfillcolor";
 
-    static final String DRAW2DLINEWIDTH_ATTR = "draw2dlinewidth";
+    String DRAW2DLINEWIDTH_ATTR = "draw2dlinewidth";
 
-    static final String IF_CONDITION_ATTR = "ifCondition";
+    String IF_CONDITION_ATTR = "ifCondition";
 
-    static final String LABEL_ATTR = "label";
+    String LABEL_ATTR = "label";
 
-    static final String MINHEIGHT_ATTR = "minheight";
+    String MINHEIGHT_ATTR = "minheight";
 
-    static final String MINWIDTH_ATTR = "minwidth";
+    String MINWIDTH_ATTR = "minwidth";
 
-    static final double PATH_ITERATOR_FLATNESS = 1.0;
+    double PATH_ITERATOR_FLATNESS = 1.0;
 
-    static final String LINK_PARAMETERS_ATTR = "link.params";
+    String LINK_PARAMETERS_ATTR = "link.params";
 
-    static final String LINK_SUBANT_DIRECTORIES = "link.subant.directories";
+    String LINK_SUBANT_DIRECTORIES = "link.subant.directories";
 
-    static final String LINK_TASK_ATTR = "link.task";
+    String LINK_TASK_ATTR = "link.task";
 
-    static final String POSITION_ATTR = "pos";
+    String POSITION_ATTR = "pos";
 
-    static final String SHAPE_ATTR = "shape";
+    String SHAPE_ATTR = "shape";
 
-    static final String UNLESS_CONDITION_ATTR = "unlessCondition";
+    String UNLESS_CONDITION_ATTR = "unlessCondition";
 
 }

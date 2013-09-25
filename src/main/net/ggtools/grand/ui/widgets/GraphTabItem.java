@@ -83,11 +83,13 @@ import org.eclipse.swt.widgets.Menu;
  * 
  * @author Christophe Labouisse
  */
-public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListener {
+public class GraphTabItem extends CTabItem
+        implements GraphDisplayer, GraphListener {
     private final class MouseWheelZoomListener implements Listener {
         /**
          * Logger for this class
          */
+        @SuppressWarnings("unused")
         private final Log log = LogFactory.getLog(MouseWheelZoomListener.class);
 
         private MouseWheelZoomListener() {
@@ -121,10 +123,11 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
         private static final Log log = LogFactory.getLog(OutlineViewerCollator.class);
         private static final int NODE_INDEX_GROUP_NUM = 4;
 
-        private final static int NODE_NAME_GROUP_NUM = 1;
+        private static final int NODE_NAME_GROUP_NUM = 1;
 
-        private final static Pattern pattern = Pattern.compile(
-                "\\[?(.*?)(\\s*(\\((\\d+)\\))?\\s*\\])?", Pattern.CASE_INSENSITIVE);
+        private static final Pattern pattern =
+                Pattern.compile("\\[?(.*?)(\\s*(\\((\\d+)\\))?\\s*\\])?",
+                        Pattern.CASE_INSENSITIVE);
 
         private final Collator underlying;
 
@@ -174,7 +177,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
                     targetIndex = 0;
                 }
                 
-                result = sourceIndex < targetIndex ? -1 : (sourceIndex == targetIndex ? 0 : 1);
+                result = (sourceIndex < targetIndex) ? -1 : ((sourceIndex == targetIndex) ? 0 : 1);
             }
 
             return result;
@@ -194,11 +197,11 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
 
     private static final Log log = LogFactory.getLog(GraphTabItem.class);
 
-    private final static float ZOOM_MAX = 3.0f;
+    private static final float ZOOM_MAX = 3.0f;
 
-    private final static float ZOOM_MIN = 0.25f;
+    private static final float ZOOM_MIN = 0.25f;
 
-    private final static float ZOOM_STEP = 1.1f;
+    private static final float ZOOM_STEP = 1.1f;
 
     private final FigureCanvas canvas;
 
@@ -243,8 +246,8 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
         outlineSashForm = new SashForm(sourceSashForm, SWT.HORIZONTAL | SWT.BORDER);
         setControl(sourceSashForm);
 
-        outlineViewer = new TableViewer(outlineSashForm, SWT.READ_ONLY | SWT.H_SCROLL
-                | SWT.V_SCROLL);
+        outlineViewer = new TableViewer(outlineSashForm, SWT.READ_ONLY
+                | SWT.H_SCROLL | SWT.V_SCROLL);
         outlineViewer.setContentProvider(controler.getNodeContentProvider());
         outlineViewer.setLabelProvider(controler.getNodeLabelProvider());
         outlineViewer.setSorter(new ViewerSorter(new OutlineViewerCollator()));
@@ -304,7 +307,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#getContextMenu()
      */
-    public Menu getContextMenu() {
+    public final Menu getContextMenu() {
         return contextMenu;
     }
 
@@ -312,7 +315,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#getControler()
      */
-    public GraphControler getControler() {
+    public final GraphControler getControler() {
         return controler;
     }
 
@@ -320,7 +323,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#jumpToNode(java.lang.String)
      */
-    public void jumpToNode(final String nodeName) {
+    public final void jumpToNode(final String nodeName) {
         if (graph != null) {
             if (log.isDebugEnabled()) {
                 log.debug("jumpToNode(nodeName = " + nodeName + ")");
@@ -360,11 +363,11 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
-    public void selectionChanged(final Collection selectedNodes) {
+    public final void selectionChanged(final Collection<Draw2dNode> selectedNodes) {
 
         final List<Node> selection = new ArrayList<Node>(selectedNodes.size());
-        for (final Iterator iter = selectedNodes.iterator(); iter.hasNext();) {
-            final Draw2dNode node = (Draw2dNode) iter.next();
+        for (final Iterator<Draw2dNode> iter = selectedNodes.iterator(); iter.hasNext();) {
+            final Draw2dNode node = iter.next();
             selection.add(node.getNode());
         }
 
@@ -381,7 +384,8 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * 
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#setGraph(net.ggtools.grand.ui.graph.Graph)
      */
-    public void setGraph(final Draw2dGraph graph, final String name, final String toolTip) {
+    public final void setGraph(final Draw2dGraph graph, final String name,
+            final String toolTip) {
         this.graph = graph;
 
         Display.getDefault().asyncExec(new Runnable() {
@@ -410,7 +414,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#setRichSource(net.ggtools.grand.ant.AntTargetNode.SourceElement[])
      */
-    public void setRichSource(final SourceElement[] richSource) {
+    public final void setRichSource(final SourceElement[] richSource) {
         if (richSource == null) {
             setSourceText("");
             return;
@@ -471,7 +475,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#zoomIn()
      */
-    public void zoomIn() {
+    public final void zoomIn() {
         final float zoom = getZoom();
         if (zoom < ZOOM_MAX) {
             /*
@@ -486,7 +490,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#zoomOut()
      */
-    public void zoomOut() {
+    public final void zoomOut() {
         final float zoom = getZoom();
         if (zoom > ZOOM_MIN) {
             setZoom(zoom / ZOOM_STEP);
@@ -497,7 +501,7 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#zoomReset()
      */
-    public void zoomReset() {
+    public final void zoomReset() {
         setZoom(1.0f);
     }
 
@@ -505,15 +509,15 @@ public class GraphTabItem extends CTabItem implements GraphDisplayer, GraphListe
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#getZoom()
      */
-    private final float getZoom() {
-        return graph == null ? 1.0f : graph.getZoom();
+    private float getZoom() {
+        return (graph == null) ? 1.0f : graph.getZoom();
     }
 
     /*
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#setZoom(float)
      */
-    private final void setZoom(final float zoom) {
+    private void setZoom(final float zoom) {
         if (graph != null) {
             if (log.isTraceEnabled()) {
                 log.trace("setZoom(zoom = " + zoom + ")");

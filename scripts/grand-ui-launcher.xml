@@ -3,7 +3,7 @@
     <!-- ================================= 
           target: start              
          ================================= -->
-    <target name="start"  depends="setup" description="--> Start Grand UI using the current ant">
+    <target name="start" depends="setup" description="--> Start Grand UI using the current ant">
         <java classname="net.ggtools.grand.ui.Application" fork="yes" spawn="${background}">
             <classpath>
                 <path path="${java.class.path}"></path>
@@ -11,6 +11,7 @@
                 <fileset dir="${swtlibdir}" includes="*.jar"/>
             </classpath>
             <jvmarg value="-Djava.library.path=${swtlibdir}"/>
+		    <jvmarg line="${java.cli.args}"/>
         </java>
     </target>
 
@@ -32,17 +33,21 @@ Launcher for GrandUI. The following properties can be set:
           target: setup                      
          - - - - - - - - - - - - - - - - - -->
     <target name="setup">
-        <property name="libdir" value="${basedir}/lib" />
+        <property name="libdir" value="${basedir}/lib"/>
         <condition property="swtlibdir" value="${libdir}/linux-gtk">
-            <os name="Linux" />
+            <os name="Linux"/>
         </condition>
 
         <condition property="swtlibdir" value="${libdir}/win32">
-            <os family="windows" />
+            <os family="windows"/>
         </condition>
 
         <condition property="swtlibdir" value="${libdir}/macosx">
-            <os family="mac" />
+            <os family="mac"/>
         </condition>
+
+    	<condition property="java.cli.args" value="-d64 -XstartOnFirstThread" else="-d64">
+    		<os family="mac"/>
+    	</condition>
     </target>
 </project>

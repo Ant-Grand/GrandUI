@@ -91,8 +91,8 @@ public class LogEvent implements Serializable {
     /**
      * 
      */
-    public LogEvent(final Level level, final String originator, final Object message,
-            final Throwable exception) {
+    public LogEvent(final Level level, final String originator,
+            final Object message, final Throwable exception) {
         this.level = level;
         this.originator = originator;
         this.message = message;

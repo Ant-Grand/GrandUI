@@ -33,7 +33,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -175,13 +174,13 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     /**
      * @param filter
      */
-    public void addFilter(final GraphFilter filter) {
+    public final void addFilter(final GraphFilter filter) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         try {
             ModalContext.run(new IRunnableWithProgress() {
-                public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-                        InterruptedException {
+                public void run(final IProgressMonitor monitor)
+                        throws InvocationTargetException, InterruptedException {
                     log.info("Adding filter " + filter);
                     progressMonitor.beginTask("Adding filter", 4);
                     filterChain.addFilterLast(filter);
@@ -203,19 +202,19 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * 
      * @see net.ggtools.grand.ui.graph.SelectionManager#addSelectionListener(net.ggtools.grand.ui.graph.GraphListener)
      */
-    public void addListener(final GraphListener listener) {
+    public final void addListener(final GraphListener listener) {
         if (graphEventManager != null) {
             graphEventManager.subscribe(listener);
         }
     }
 
-    public void clearFilters() {
+    public final void clearFilters() {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         try {
             ModalContext.run(new IRunnableWithProgress() {
-                public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-                        InterruptedException {
+                public void run(final IProgressMonitor monitor)
+                        throws InvocationTargetException, InterruptedException {
                     log.info("Clearing filters");
                     progressMonitor.beginTask("Clearing filters", 4);
                     filterChain.clearFilters();
@@ -238,7 +237,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * 
      * @see net.ggtools.grand.ui.graph.SelectionManager#deselectAllNodes()
      */
-    public void deselectAllNodes() {
+    public final void deselectAllNodes() {
         if (!selectedNodes.isEmpty()) {
             for (final Iterator<Draw2dNode> iter = selectedNodes.iterator(); iter.hasNext();) {
                 final Draw2dNode currentNode = iter.next();
@@ -255,7 +254,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * 
      * @see net.ggtools.grand.ui.graph.SelectionManager#deselectNode(net.ggtools.grand.ui.graph.Draw2dNode)
      */
-    public void deselectNode(final Draw2dNode node) {
+    public final void deselectNode(final Draw2dNode node) {
         log.debug("Deselect node " + node);
         if (node.isSelected()) {
             selectedNodes.remove(node);
@@ -267,7 +266,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     /**
      * Hack for gtk: print using the dot command.
      */
-    public void dotPrint() {
+    public final void dotPrint() {
         if (log.isDebugEnabled()) {
             log.debug("Printing graph using dot");
         }
@@ -316,7 +315,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * 
      * @param enabled
      */
-    public void enableBusRouting(final boolean enabled) {
+    public final void enableBusRouting(final boolean enabled) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         if (busRoutingEnabled != enabled) {
@@ -338,7 +337,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @param targetName
      *            the target to focus on.
      */
-    public void focusOn(final String targetName) {
+    public final void focusOn(final String targetName) {
         if (displayer != null) {
             displayer.jumpToNode(targetName);
         }
@@ -361,7 +360,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         return displayer;
     }
 
-    public Map getGraphProperties() {
+    public final Properties getGraphProperties() {
         if (model != null) {
             return model.getUserProperties();
         }
@@ -370,11 +369,11 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         }
     }
 
-    public IStructuredContentProvider getNodeContentProvider() {
+    public final IStructuredContentProvider getNodeContentProvider() {
         return nodeContentProvider;
     }
 
-    public ILabelProvider getNodeLabelProvider() {
+    public final ILabelProvider getNodeLabelProvider() {
         return nodeContentProvider;
     }
 
@@ -390,7 +389,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * 
      * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
      */
-    public Collection<Draw2dNode> getSelection() {
+    public final Collection<Draw2dNode> getSelection() {
         return selectedNodes;
     }
 
@@ -414,7 +413,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      *            a set of properties to be preset when opening the graph or
      *            <code>null</code> if no properties should be preset.
      */
-    public void openFile(final File file, final Properties properties) {
+    public final void openFile(final File file, final Properties properties) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         if (log.isInfoEnabled()) {
@@ -453,7 +452,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * 
      * @param node
      */
-    public void openNodeFile(final Draw2dNode node) {
+    public final void openNodeFile(final Draw2dNode node) {
         final AntTargetNode targetNode = (AntTargetNode) node.getVertex().getData();
         final String buildFile = targetNode.getBuildFile();
         if ((buildFile != null) && (buildFile.length() > 0)) {
@@ -473,7 +472,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * 
      * @param printer
      */
-    public void print(final Printer printer) {
+    public final void print(final Printer printer) {
         if (log.isDebugEnabled()) {
             log.debug("Printing graph");
         }
@@ -487,7 +486,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * 
      * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
      */
-    public void propertyChange(final PropertyChangeEvent event) {
+    public final void propertyChange(final PropertyChangeEvent event) {
         if (log.isDebugEnabled()) {
             log.debug("Get PropertyChangeEvent " + event.getProperty());
         }
@@ -499,7 +498,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     /**
      * Refreshing (i.e.: rerender) the current graph.
      */
-    public void refreshGraph() {
+    public final void refreshGraph() {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         // FIXME check that there is a graph.
@@ -524,11 +523,11 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     /**
      * Reload the current graph.
      */
-    public void reloadGraph() {
+    public final void reloadGraph() {
         reloadGraph(null);
     }
 
-    public void reloadGraph(final Properties properties) {
+    public final void reloadGraph(final Properties properties) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         // FIXME Check that there is a model.
@@ -565,7 +564,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * 
      * @see net.ggtools.grand.ui.graph.SelectionManager#removeSelectionListener(net.ggtools.grand.ui.graph.GraphListener)
      */
-    public void removeSelectionListener(final GraphListener listener) {
+    public final void removeSelectionListener(final GraphListener listener) {
         graphEventManager.unSubscribe(listener);
     }
 
@@ -575,7 +574,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @see net.ggtools.grand.ui.graph.SelectionManager#selectNode(net.ggtools.grand.ui.graph.Draw2dNode,
      *      boolean)
      */
-    public void selectNode(final Draw2dNode node, final boolean addToSelection) {
+    public final void selectNode(final Draw2dNode node, final boolean addToSelection) {
         if (log.isTraceEnabled()) {
             log.trace("Select node " + node);
         }
@@ -585,6 +584,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             }
             selectedNodes.add(node);
             node.setSelected(true);
+            @SuppressWarnings("unused")
             final AntTargetNode antNode = (AntTargetNode) node.getVertex().getData();
             displayer.setRichSource(((AntTargetNode) node.getVertex().getData()).getRichSource());
             selectionChangedDispatcher.dispatch(selectedNodes);
@@ -597,7 +597,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @see net.ggtools.grand.ui.graph.SelectionManager#selectNodeByName(java.lang.String,
      *      boolean)
      */
-    public void selectNodeByName(final String nodeName, final boolean addToSelection) {
+    public final void selectNodeByName(final String nodeName, final boolean addToSelection) {
         figure.selectNodeByName(nodeName, addToSelection);
     }
 
@@ -708,7 +708,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @return a new image or <code>null</code> if no graph is loaded. This
      *         image should be disposed after use.
      */
-    public Image createImageForGraph() {
+    public final Image createImageForGraph() {
         if (figure == null) {
             return null;
         }

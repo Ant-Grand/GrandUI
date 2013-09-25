@@ -46,6 +46,7 @@ import sf.jzgraph.IVertex;
  * @author Christophe Labouisse
  */
 public class NodeTooltip extends AbstractGraphTooltip implements DotGraphAttributes {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(NodeTooltip.class);
 
     private final IVertex vertex;
@@ -61,9 +62,9 @@ public class NodeTooltip extends AbstractGraphTooltip implements DotGraphAttribu
     }
 
     @Override
-    protected void createContents() {
-        final Label name = new Label(vertex.getName(), Application.getInstance().getImage(
-                Application.NODE_ICON));
+    protected final void createContents() {
+        final Label name = new Label(vertex.getName(),
+                Application.getInstance().getImage(Application.NODE_ICON));
         name.setFont(Application.getInstance().getBoldFont(Application.TOOLTIP_FONT));
         add(name);
 

@@ -66,7 +66,8 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * @author Christophe Labouisse
  */
-public class GraphWindow extends ApplicationWindow implements GraphControlerProvider {
+public class GraphWindow extends ApplicationWindow
+        implements GraphControlerProvider {
 
     private static final Log log = LogFactory.getLog(GraphWindow.class);
 
@@ -128,7 +129,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#getControler()
      */
-    public GraphControler getControler() {
+    public final GraphControler getControler() {
         if (tabFolder != null) {
             final GraphTabItem selectedTab = (GraphTabItem) tabFolder.getSelection();
             if (selectedTab == null) {
@@ -147,7 +148,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      * @param controler
      * @return
      */
-    public GraphDisplayer newDisplayer(final GraphControler controler) {
+    public final GraphDisplayer newDisplayer(final GraphControler controler) {
         final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE, controler);
         graphTabItem.setSourcePanelVisible(sourcePanelVisible);
         graphTabItem.setOutlinePanelVisible(outlinePanelVisible);
@@ -165,7 +166,8 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      *            a set of properties to be preset when opening the graph or
      *            <code>null</code> if no properties should be preset.
      */
-    public void openGraphInNewDisplayer(final File buildFile, final Properties properties) {
+    public final void openGraphInNewDisplayer(final File buildFile,
+            final Properties properties) {
         openGraphInNewDisplayer(buildFile, null, properties);
     }
 
@@ -179,13 +181,15 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      *            a set of properties to be preset when opening the graph or
      *            <code>null</code> if no properties should be preset.
      */
-    public void openGraphInNewDisplayer(final File buildFile, final String targetName,
-            final Properties properties) {
+    public final void openGraphInNewDisplayer(final File buildFile,
+            final String targetName, final Properties properties) {
         final GraphControler controler = new GraphControler(this);
         try {
-            new ProgressMonitorDialog(getShell()).run(true, false, new IRunnableWithProgress() {
-                public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-                        InterruptedException {
+            new ProgressMonitorDialog(getShell()).run(true, false,
+                    new IRunnableWithProgress() {
+                            public void run(final IProgressMonitor monitor)
+                                    throws InvocationTargetException,
+                                            InterruptedException {
                     controler.setProgressMonitor(monitor);
                     controler.openFile(buildFile, properties);
                     if (targetName != null) {
@@ -248,7 +252,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
-    protected void configureShell(final Shell shell) {
+    protected final void configureShell(final Shell shell) {
         super.configureShell(shell);
         shell.setText("Grand");
     }
@@ -259,7 +263,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createContents(final Composite parent) {
+    protected final Control createContents(final Composite parent) {
         if (log.isDebugEnabled()) {
             log.debug("Creating contents");
         }
@@ -307,7 +311,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      * @see org.eclipse.jface.window.ApplicationWindow#createMenuManager()
      */
     @Override
-    protected MenuManager createMenuManager() {
+    protected final MenuManager createMenuManager() {
         if (log.isDebugEnabled()) {
             log.debug("Creating menu manager");
         }

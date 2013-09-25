@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.ggtools.grand.ant.AntLink;
 import net.ggtools.grand.ant.AntTargetNode;
@@ -65,6 +66,7 @@ import sf.jzgraph.dot.impl.DotGraph;
  * @author Christophe Labouisse
  */
 public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttributes {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(GraphControler.class);
 
     private String currentLinkName;
@@ -93,13 +95,13 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         startNode = graph.getStartNode();
     }
 
-    public IDotGraph getGraph() {
+    public final IDotGraph getGraph() {
         if (startNode != null) {
             startNode.accept(this);
         }
 
-        for (final Iterator iter = graph.getNodes(); iter.hasNext();) {
-            final Node node = (Node) iter.next();
+        for (final Iterator<Node> iter = graph.getNodes(); iter.hasNext();) {
+            final Node node = iter.next();
             if ("".equals(node.getName()) || (node == startNode)) {
                 continue;
             }
@@ -110,10 +112,9 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         Display.getDefault().syncExec(new Runnable() {
             public void run() {
                 final Font systemFont = Application.getInstance().getFont(Application.NODE_FONT);
-                for (final Iterator iter = nameDimensions.entrySet().iterator(); iter.hasNext();) {
-                    final Map.Entry entry = (Map.Entry) iter.next();
-                    final String name = (String) entry.getKey();
-                    final IVertex vertex = (IVertex) entry.getValue();
+                for (final Entry<String, IVertex> entry : nameDimensions.entrySet()) {
+                    final String name = entry.getKey();
+                    final IVertex vertex = entry.getValue();
 
                     final Dimension dim = FigureUtilities.getTextExtents(name, systemFont);
                     vertex.setAttr(MINWIDTH_ATTR, Math.max(dim.width, 50));
@@ -122,13 +123,12 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
             }
         });
 
-        for (final Iterator iter = graph.getNodes(); iter.hasNext();) {
-            final Node node = (Node) iter.next();
-            final Collection deps = node.getLinks();
+        for (final Iterator<Node> iter = graph.getNodes(); iter.hasNext();) {
+            final Node node = iter.next();
+            final Collection<Link> deps = node.getLinks();
             int index = 1;
             final int numDeps = deps.size();
-            for (final Iterator iterator = deps.iterator(); iterator.hasNext();) {
-                final Link link = (Link) iterator.next();
+            for (final Link link : deps) {
                 currentLinkName = "";
                 if (numDeps > 1) {
                     currentLinkName += index++;
@@ -144,7 +144,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * (non-Javadoc)
      * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.AntLink)
      */
-    public void visitLink(final AntLink link) {
+    public final void visitLink(final AntLink link) {
         addLink(link);
     }
 
@@ -152,7 +152,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * (non-Javadoc)
      * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.AntTaskLink)
      */
-    public void visitLink(final AntTaskLink link) {
+    public final void visitLink(final AntTaskLink link) {
         final IEdge edge = addLink(link);
         edge.setAttr(LINK_TASK_ATTR, link.getTaskName());
         edge.setAttr(LINK_PARAMETERS_ATTR, link.getParameterMap());
@@ -162,7 +162,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * (non-Javadoc)
      * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.graph.Link)
      */
-    public void visitLink(final Link link) {
+    public final void visitLink(final Link link) {
         addLink(link);
     }
 
@@ -170,7 +170,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * (non-Javadoc)
      * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.SubantTaskLink)
      */
-    public void visitLink(final SubantTaskLink link) {
+    public final void visitLink(final SubantTaskLink link) {
         final IEdge edge = addLink(link);
         edge.setAttr(LINK_TASK_ATTR, link.getTaskName());
         edge.setAttr(LINK_PARAMETERS_ATTR, link.getParameterMap());
@@ -187,7 +187,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * (non-Javadoc)
      * @see net.ggtools.grand.graph.visit.NodeVisitor#visitNode(net.ggtools.grand.ant.AntTargetNode)
      */
-    public void visitNode(final AntTargetNode node) {
+    public final void visitNode(final AntTargetNode node) {
         final IVertex vertex = addNode(node);
         final String ifCondition = node.getIfCondition();
         if (ifCondition != null) {
@@ -209,7 +209,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * (non-Javadoc)
      * @see net.ggtools.grand.graph.visit.NodeVisitor#visitNode(net.ggtools.grand.graph.Node)
      */
-    public void visitNode(final Node node) {
+    public final void visitNode(final Node node) {
         addNode(node);
     }
 
@@ -243,7 +243,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * @param node
      * @return
      */
-    private final IVertex addNode(final Node node) {
+    private IVertex addNode(final Node node) {
         final String name = node.getName();
         final IVertex vertex = dotGraph.newVertex(name, node);
 
@@ -282,7 +282,8 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * @param vertex
      * @param preferenceStore
      */
-    private void setVertexPreferences(final IVertex vertex, final String nodeType) {
+    private void setVertexPreferences(final IVertex vertex,
+            final String nodeType) {
         final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
         final String keyPrefix = PreferenceKeys.NODE_PREFIX + nodeType;
         vertex.setAttr(SHAPE_ATTR, preferenceStore.getString(keyPrefix + ".shape"));

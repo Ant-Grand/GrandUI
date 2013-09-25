@@ -43,7 +43,8 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Christophe Labouisse
  */
-public class PropertySettingPage extends WizardPage implements SelectedFileListener {
+public class PropertySettingPage extends WizardPage
+        implements SelectedFileListener {
 
     private PropertyEditor editor;
 
@@ -63,24 +64,24 @@ public class PropertySettingPage extends WizardPage implements SelectedFileListe
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl(final Composite parent) {
+    public final void createControl(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         setControl(composite);
         composite.setLayout(new FillLayout());
         editor = new PropertyEditor(composite, SWT.NONE);
     }
 
-    public Properties getProperties() {
+    public final Properties getProperties() {
         return editor.getValues();
     }
     
     @Override
-    public void dispose() {
+    public final void dispose() {
         fileProvider.removeListener(this);
         super.dispose();
     }
 
-    public void fileSelected(final File selectedFile) {
+    public final void fileSelected(final File selectedFile) {
         if (editor != null) {
             editor.setInput(RecentFilesManager.getInstance().getProperties(
                     selectedFile));

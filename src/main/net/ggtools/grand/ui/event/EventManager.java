@@ -108,7 +108,8 @@ public class EventManager implements Runnable {
 
     private final LinkedList<Runnable> eventQueue = new LinkedList<Runnable>();
 
-    private final LinkedList<WeakReference<Object>> listenerList = new LinkedList<WeakReference<Object>>();
+    private final LinkedList<WeakReference<Object>> listenerList =
+            new LinkedList<WeakReference<Object>>();
 
     private final String name;
 
@@ -136,7 +137,7 @@ public class EventManager implements Runnable {
     /**
      * Remove all subscribers and all pending actions from the queue.
      */
-    public void clear() {
+    public final void clear() {
         if (log.isInfoEnabled()) {
             log.info("Clearing event manager");
         }
@@ -155,21 +156,21 @@ public class EventManager implements Runnable {
      * @param method method to call on invokation
      * @return a new dispatcher.
      */
-    public Dispatcher createDispatcher(final Method method) {
+    public final Dispatcher createDispatcher(final Method method) {
         return dispatcherFactory.createDispatcher(this, method);
     }
 
     /**
      * @return String
      */
-    final public String getName() {
+    public final String getName() {
         return name;
     }
 
     /**
      * @return boolean
      */
-    public boolean isDefaultDispatchAnsynchronous() {
+    public final boolean isDefaultDispatchAnsynchronous() {
         return defaultDispatchAsynchronous;
     }
 
@@ -178,7 +179,7 @@ public class EventManager implements Runnable {
      * 
      * @see java.lang.Runnable#run()
      */
-    public void run() {
+    public final void run() {
         // Main loop.
         while (true) {
             Runnable nextEvent;
@@ -221,7 +222,7 @@ public class EventManager implements Runnable {
      * @param defaultDispatchAnsynchronous
      *            The defaultDispatchAnsynchronous to set
      */
-    public void setDefaultDispatchAnsynchronous(final boolean defaultDispatchAnsynchronous) {
+    public final void setDefaultDispatchAnsynchronous(final boolean defaultDispatchAnsynchronous) {
         defaultDispatchAsynchronous = defaultDispatchAnsynchronous;
     }
 
@@ -230,13 +231,13 @@ public class EventManager implements Runnable {
      * 
      * @param listener
      */
-    public void subscribe(final Object listener) {
+    public final void subscribe(final Object listener) {
         synchronized (eventQueue) {
             eventQueue.add(new SubscriptionAction(listener));
         }
     }
 
-    public void unSubscribe(final Object listener) {
+    public final void unSubscribe(final Object listener) {
         synchronized (eventQueue) {
             eventQueue.add(new UnsubscriptionAction(listener));
         }
@@ -249,7 +250,8 @@ public class EventManager implements Runnable {
      * @param event
      * @param method
      */
-    private final void asynchronousDispatchEvent(final Object event, final Dispatcher dispatcher) {
+    private void asynchronousDispatchEvent(final Object event,
+            final Dispatcher dispatcher) {
         synchronized (eventQueue) {
             eventQueue.add(new DispatchEventAction(event, dispatcher));
             eventQueue.notify();
@@ -262,13 +264,14 @@ public class EventManager implements Runnable {
      * @param eventData
      * @param method
      */
-    private void dispatchOneEvent(final Object eventData, final Dispatcher dispatcher) {
+    private void dispatchOneEvent(final Object eventData,
+            final Dispatcher dispatcher) {
         if (log.isDebugEnabled()) {
             log.debug("Start dispatching to " + dispatcher);
         }
         synchronized (listenerList) {
             for (final Iterator<WeakReference<Object>> iterator = listenerList.iterator(); iterator.hasNext();) {
-                final WeakReference weakReference = iterator.next();
+                final WeakReference<Object> weakReference = iterator.next();
                 final Object subscriber = weakReference.get();
 
                 if (subscriber != null) {
@@ -317,7 +320,7 @@ public class EventManager implements Runnable {
 
         synchronized (listenerList) {
             for (final Iterator<WeakReference<Object>> iterator = listenerList.iterator(); iterator.hasNext();) {
-                final WeakReference weakRef = iterator.next();
+                final WeakReference<Object> weakRef = iterator.next();
 
                 if (weakRef.get() == listener) {
                     iterator.remove();
@@ -333,7 +336,8 @@ public class EventManager implements Runnable {
      * @param event
      * @param method
      */
-    private final void synchronousDispatchEvent(final Object event, final Dispatcher dispatcher) {
+    private void synchronousDispatchEvent(final Object event,
+            final Dispatcher dispatcher) {
         dispatchOneEvent(event, dispatcher);
     }
 
@@ -345,7 +349,8 @@ public class EventManager implements Runnable {
      * @param eventData
      * @param dispatcher
      */
-    final void dispatchEvent(final Object eventData, final Dispatcher dispatcher) {
+    final void dispatchEvent(final Object eventData,
+            final Dispatcher dispatcher) {
         if (defaultDispatchAsynchronous) {
             asynchronousDispatchEvent(eventData, dispatcher);
         }

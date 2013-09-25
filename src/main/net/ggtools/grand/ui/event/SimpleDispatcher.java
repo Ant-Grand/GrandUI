@@ -56,7 +56,8 @@ class SimpleDispatcher extends DispatcherAdapter implements Dispatcher {
      * @see net.ggtools.grand.ui.event.EventManager.Dispatcher#sendEventToSubscriber(java.lang.Object,
      *      java.lang.Object)
      */
-    public void sendEventToSubscriber(final Object subscriber, final Object eventData) {
+    public void sendEventToSubscriber(final Object subscriber,
+            final Object eventData) {
         try {
             method.invoke(subscriber, new Object[]{eventData});
         } catch (final IllegalAccessException e) {

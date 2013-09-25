@@ -29,8 +29,9 @@ package net.ggtools.grand.ui.log;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+
+import net.ggtools.grand.ui.log.LogEvent.Level;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,7 +54,7 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
      */
     private static final Log log = LogFactory.getLog(LogLabelProvider.class);
 
-    private final Map logLevelIcons = new HashMap();
+    private final Map<Level, Image> logLevelIcons = new HashMap<Level, Image>();
 
     /**
      * 
@@ -74,11 +75,9 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
     public void dispose() {
-        for (final Iterator iter = logLevelIcons.entrySet().iterator(); iter.hasNext();) {
-            final Map.Entry entry = (Map.Entry) iter.next();
-            final Object entryValue = entry.getValue();
-            if ((entryValue != null) && (entryValue instanceof Image)) {
-                final Image image = (Image) entryValue;
+        for (final Map.Entry<Level, Image> entry : logLevelIcons.entrySet()) {
+            final Image image = entry.getValue();
+            if (image != null) {
                 image.dispose();
             }
         }
@@ -112,10 +111,10 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
                     rc = (Image) logLevelIcons.get(eventLevel);
                 }
                 else {
-                    final String resourceName = "resource/level_" + eventLevel.name.toLowerCase()
-                            + ".gif";
-                    rc = new Image(Display.getCurrent(), this.getClass().getResourceAsStream(
-                            resourceName));
+                    final String resourceName = "resource/level_"
+                            + eventLevel.name.toLowerCase() + ".gif";
+                    rc = new Image(Display.getCurrent(),
+                            this.getClass().getResourceAsStream(resourceName));
                 }
             }
         }

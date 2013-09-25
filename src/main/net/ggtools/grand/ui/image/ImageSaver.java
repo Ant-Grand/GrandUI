@@ -50,18 +50,19 @@ import org.eclipse.swt.graphics.RGB;
  */
 public class ImageSaver {
 
-    private static class ColorCounter implements Comparable {
+    private static class ColorCounter implements Comparable<ColorCounter> {
         /**
          * Logger for this class
          */
+        @SuppressWarnings("unused")
         private static final Log log = LogFactory.getLog(ColorCounter.class);
 
         int count;
 
         RGB rgb;
 
-        public int compareTo(final Object o) {
-            return ((ColorCounter) o).count - count;
+        public int compareTo(final ColorCounter o) {
+            return o.count - count;
         }
     }
 
@@ -71,11 +72,10 @@ public class ImageSaver {
      */
     private static class ImageFormat {
 
+        @SuppressWarnings("unused")
         public final String name;
-
-        public final boolean needDownsampling;
-
         public final int swtId;
+        public final boolean needDownsampling;
 
         public ImageFormat(final String name, final int swtId, final boolean needDownsampling) {
             this.name = name;
@@ -86,7 +86,8 @@ public class ImageSaver {
 
     private static boolean formatInitDone = false;
 
-    private final static Map<String, ImageFormat> formatRegistry = new HashMap<String, ImageFormat>();
+    private static final Map<String, ImageFormat> formatRegistry =
+            new HashMap<String, ImageFormat>();
 
     /**
      * Logger for this class
@@ -148,12 +149,12 @@ public class ImageSaver {
             mask = data.getTransparencyMask();
         }
         final int n = Math.min(256, freq.size());
-        final RGB[] rgbs = new RGB[n + (mask != null ? 1 : 0)];
+        final RGB[] rgbs = new RGB[n + ((mask != null) ? 1 : 0)];
         for (int i = 0; i < n; ++i) {
             rgbs[i] = counters[i].rgb;
         }
         if (mask != null) {
-            rgbs[rgbs.length - 1] = data.transparentPixel != -1 ? data.palette
+            rgbs[rgbs.length - 1] = (data.transparentPixel != -1) ? data.palette
                     .getRGB(data.transparentPixel) : new RGB(255, 255, 255);
         }
         final PaletteData palette = new PaletteData(rgbs);
@@ -184,7 +185,7 @@ public class ImageSaver {
         return newData;
     }
 
-    private final static void initFormats() {
+    private static final void initFormats() {
         if (!formatInitDone) {
             final ImageFormat jpegImageFormat = new ImageFormat("jpeg", SWT.IMAGE_JPEG, false);
             formatRegistry.put("jpg", jpegImageFormat);
@@ -206,8 +207,8 @@ public class ImageSaver {
         return supportedExtensions;
     }
 
-    public void saveImage(final Image image, final String fileName) throws IOException,
-            IllegalArgumentException {
+    public final void saveImage(final Image image, final String fileName)
+            throws IOException, IllegalArgumentException {
         final int lastDotPosition = fileName.lastIndexOf('.');
         final String extension = fileName.substring(lastDotPosition + 1).toLowerCase();
 

@@ -56,6 +56,7 @@ import sf.jzgraph.impl.GraphShape;
 public class Draw2dNode extends Polygon implements DotGraphAttributes {
     private static final Log log = LogFactory.getLog(Draw2dNode.class);
 
+    @SuppressWarnings("unused")
     private Draw2dGraph graph;
 
     private Label label;
@@ -83,6 +84,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
         nodeBgColor = (Color) vertex.getAttr(DRAW2DFILLCOLOR_ATTR);
         selectedBgColor = FigureUtilities.darker(nodeBgColor);
 
+        @SuppressWarnings("unused")
         int x, y, width, height;
         final Rectangle2D rect = (Rectangle2D) vertex.getAttr(_BOUNDS_ATTR);
         x = (int) rect.getX();
@@ -97,9 +99,9 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
 
         final GraphShape shape = (GraphShape) vertex.getAttr(_SHAPE_ATTR);
         final float[] coords = new float[6];
-        for (final PathIterator ite = new FlatteningPathIterator(shape
-                .getPathIterator(new AffineTransform()), PATH_ITERATOR_FLATNESS); !ite.isDone(); ite
-                .next()) {
+        for (final PathIterator ite =
+                new FlatteningPathIterator(shape.getPathIterator(new AffineTransform()), PATH_ITERATOR_FLATNESS);
+                !ite.isDone(); ite.next()) {
             final int segType = ite.currentSegment(coords);
 
             switch (segType) {
@@ -142,7 +144,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
      * 
      * @return
      */
-    public Node getNode() {
+    public final Node getNode() {
         return (Node) vertex.getData();
     }
 
@@ -178,7 +180,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return this.getClass().getName() + "@" + vertex.getName();
     }
 

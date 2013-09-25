@@ -50,7 +50,7 @@ public class CommonsLoggingLoggerFactory implements LoggerFactory {
      * (non-Javadoc)
      * @see net.ggtools.grand.log.LoggerFactory#getLog(java.lang.Class)
      */
-    public Log getLog(final Class clazz) {
+    public final Log getLog(final Class<?> clazz) {
         return LogFactory.getLog(clazz);
     }
 
@@ -58,7 +58,7 @@ public class CommonsLoggingLoggerFactory implements LoggerFactory {
      * (non-Javadoc)
      * @see net.ggtools.grand.log.LoggerFactory#getLog(java.lang.String)
      */
-    public Log getLog(final String name) {
+    public final Log getLog(final String name) {
         return LogFactory.getLog(name);
     }
 

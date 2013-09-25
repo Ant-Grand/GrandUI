@@ -30,6 +30,8 @@ package net.ggtools.grand.ui.graph;
 
 import java.util.Collection;
 
+import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
+
 /**
  * Interface to be implemented by class watch state of graph objects.
  * 
@@ -41,7 +43,7 @@ public interface GraphListener {
      * 
      * @param selectedNodes a read-only collection of the selected nodes.
      */
-    void selectionChanged(Collection selectedNodes);
+    void selectionChanged(Collection<Draw2dNode> selectedNodes);
     
     /**
      * Method called when a graph parameter such as the layout algorithm has changed.

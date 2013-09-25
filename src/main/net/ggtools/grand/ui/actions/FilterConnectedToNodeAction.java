@@ -42,6 +42,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Christophe Labouisse
  */
 public class FilterConnectedToNodeAction extends GraphSelectionAction implements GraphListener {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(FilterConnectedToNodeAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Filter connected to selected node";
@@ -52,12 +53,12 @@ public class FilterConnectedToNodeAction extends GraphSelectionAction implements
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final GraphFilter filter = new ConnectedToNodeFilter(getCurrentNode());
         getGraphControler().addFilter(filter);
     }
 
     public FilterConnectedToNodeAction(final GraphControlerProvider parent) {
-        super(parent,DEFAULT_ACTION_NAME);
+        super(parent, DEFAULT_ACTION_NAME);
     }
 }

@@ -30,7 +30,6 @@
 package net.ggtools.grand.ui;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Properties;
 
 import net.ggtools.grand.Configuration;
@@ -59,31 +58,31 @@ import org.eclipse.swt.widgets.Display;
  */
 public class Application implements Runnable {
 
-    final public static String ABOUT_DIALOG_IMAGE = "net.ggtools.grand.ui.aboutimage";
+    public static final String ABOUT_DIALOG_IMAGE = "net.ggtools.grand.ui.aboutimage";
 
-    final public static String APPLICATION_ICON = "net.ggtools.grand.ui.appicon";
+    public static final String APPLICATION_ICON = "net.ggtools.grand.ui.appicon";
 
-    final public static String GRAPH_FONT = "net.ggtools.grand.ui.graphfont";
+    public static final String GRAPH_FONT = "net.ggtools.grand.ui.graphfont";
 
-    final public static String LINK_FONT = "net.ggtools.grand.ui.linkfont";
+    public static final String LINK_FONT = "net.ggtools.grand.ui.linkfont";
 
-    final public static String LINK_ICON = "net.ggtools.grand.ui.linkicon";
+    public static final String LINK_ICON = "net.ggtools.grand.ui.linkicon";
 
-    final public static String MONOSPACE_FONT = "net.ggtools.grand.ui.monospacefont";
+    public static final String MONOSPACE_FONT = "net.ggtools.grand.ui.monospacefont";
 
-    final public static String NODE_FONT = "net.ggtools.grand.ui.nodefont";
+    public static final String NODE_FONT = "net.ggtools.grand.ui.nodefont";
 
-    final public static String NODE_ICON = "net.ggtools.grand.ui.nodeicon";
+    public static final String NODE_ICON = "net.ggtools.grand.ui.nodeicon";
 
-    final public static String TOOLTIP_FONT = "net.ggtools.grand.ui.tooltipfont";
+    public static final String TOOLTIP_FONT = "net.ggtools.grand.ui.tooltipfont";
 
-    final public static String TOOLTIP_MONOSPACE_FONT = "net.ggtools.grand.ui.tooltipmonospacefont";
+    public static final String TOOLTIP_MONOSPACE_FONT = "net.ggtools.grand.ui.tooltipmonospacefont";
 
     private static final Log log = LogFactory.getLog(Application.class);
 
     private static Application singleton;
 
-    static public Application getInstance() {
+    public static Application getInstance() {
         return singleton;
     }
 
@@ -99,7 +98,7 @@ public class Application implements Runnable {
         System.exit(0);
     }
 
-    final private Properties buildProperties;
+    private final Properties buildProperties;
 
     private FontRegistry fontRegistry;
 
@@ -107,7 +106,7 @@ public class Application implements Runnable {
 
     private GrandUiPrefStore preferenceStore;
 
-    final private String versionString;
+    private final String versionString;
 
     public Application() throws IOException {
         if (log.isTraceEnabled()) {
@@ -116,8 +115,8 @@ public class Application implements Runnable {
         singleton = this;
         buildProperties = new Properties();
         buildProperties.load(getClass().getResourceAsStream("buildnum.properties"));
-        versionString = "v" + buildProperties.getProperty("build.version.string") + " (build "
-                + buildProperties.getProperty("build.number") + " "
+        versionString = "v" + buildProperties.getProperty("build.version.string")
+                + " (build " + buildProperties.getProperty("build.number") + " "
                 + buildProperties.getProperty("build.date") + ")";
     }
 
@@ -125,14 +124,14 @@ public class Application implements Runnable {
      * @param symbolicName
      * @return
      */
-    final public Font getBoldFont(final String symbolicName) {
+    public final Font getBoldFont(final String symbolicName) {
         return fontRegistry.getBold(symbolicName);
     }
 
     /**
      * @return Returns the buildProperties.
      */
-    final public Properties getBuildProperties() {
+    public final Properties getBuildProperties() {
         return buildProperties;
     }
 
@@ -140,7 +139,7 @@ public class Application implements Runnable {
      * @param symbolicName
      * @return
      */
-    final public Font getFont(final String symbolicName) {
+    public final Font getFont(final String symbolicName) {
         return fontRegistry.get(symbolicName);
     }
 
@@ -155,7 +154,7 @@ public class Application implements Runnable {
      * @param key
      * @return
      */
-    final public Image getImage(final String key) {
+    public final Image getImage(final String key) {
         return imageRegistry.get(key);
     }
 
@@ -170,7 +169,7 @@ public class Application implements Runnable {
      * @param symbolicName
      * @return
      */
-    final public Font getItalicFont(final String symbolicName) {
+    public final Font getItalicFont(final String symbolicName) {
         return fontRegistry.getItalic(symbolicName);
     }
 
@@ -184,7 +183,7 @@ public class Application implements Runnable {
     /**
      * @return Returns the versionString.
      */
-    final public String getVersionString() {
+    public final String getVersionString() {
         return versionString;
     }
 
@@ -194,7 +193,7 @@ public class Application implements Runnable {
      * @throws IOException
      * 
      */
-    final private void initResources() throws IOException {
+    private final void initResources() throws IOException {
         if (log.isInfoEnabled()) {
             log.info("Initializing application resources");
         }
@@ -209,9 +208,8 @@ public class Application implements Runnable {
             log.debug("Initializing font registry");
         }
         fontRegistry = new FontRegistry("net.ggtools.grand.ui.resource.fonts");
-        for (final Iterator iter = fontRegistry.getKeySet().iterator(); iter.hasNext();) {
-            final String key = (String) iter.next();
-            fontRegistry.get(key);
+        for (final Object key : fontRegistry.getKeySet()) {
+            fontRegistry.get((String) key);
         }
 
         if (log.isDebugEnabled()) {
@@ -241,7 +239,7 @@ public class Application implements Runnable {
      * @throws IOException
      * 
      */
-    final public void run() {
+    public final void run() {
         if (log.isInfoEnabled()) {
             log.info("Starting application");
             log.info("Version: " + versionString);

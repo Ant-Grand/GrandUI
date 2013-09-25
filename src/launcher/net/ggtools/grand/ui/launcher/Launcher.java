@@ -75,7 +75,7 @@ public class Launcher {
                     Launcher.class.getClassLoader());
             Thread.currentThread().setName("Display thread");
             Thread.currentThread().setContextClassLoader(cl);
-            final Class clazz = cl.loadClass("net.ggtools.grand.ui.Application");
+            final Class<?> clazz = cl.loadClass("net.ggtools.grand.ui.Application");
             log.info("Classloader: " + clazz.getClassLoader());
             final Runnable application = (Runnable) clazz.newInstance();
             application.run();
@@ -98,7 +98,7 @@ public class Launcher {
 
         if (jars != null) {
             for (File element : jars) {
-                jarList.add(element.toURL());
+                jarList.add(element.toURI().toURL());
             }
         }
     }

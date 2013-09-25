@@ -39,7 +39,8 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author Christophe Labouisse
  */
-final class PropertyListLabelProvider extends LabelProvider implements ITableLabelProvider {
+final class PropertyListLabelProvider extends LabelProvider
+        implements ITableLabelProvider {
     public Image getColumnImage(final Object element, final int columnIndex) {
         return null;
     }

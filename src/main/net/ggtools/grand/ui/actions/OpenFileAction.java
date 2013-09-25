@@ -49,6 +49,7 @@ import org.eclipse.swt.SWT;
  */
 public class OpenFileAction extends Action {
 
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(OpenFileAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Open with properties";
@@ -59,7 +60,7 @@ public class OpenFileAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final IWizard wizard = new OpenFileWizard(window);
         final WizardDialog dialog = new WizardDialog(window.getShell(), wizard);
         dialog.create();

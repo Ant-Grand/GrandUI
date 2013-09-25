@@ -40,7 +40,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
  * and disabled when none is available.
  * @author Christophe Labouisse
  */
-public abstract class GraphControlerAction extends Action implements GraphControlerListener {
+public abstract class GraphControlerAction extends Action
+        implements GraphControlerListener {
 
     private GraphControler graphControler;
 
@@ -66,8 +67,8 @@ public abstract class GraphControlerAction extends Action implements GraphContro
      * @param text
      * @param image
      */
-    public GraphControlerAction(final GraphControlerProvider parent, final String text,
-            final ImageDescriptor image) {
+    public GraphControlerAction(final GraphControlerProvider parent,
+            final String text, final ImageDescriptor image) {
         super(text, image);
         init(parent);
     }
@@ -76,7 +77,8 @@ public abstract class GraphControlerAction extends Action implements GraphContro
      * @param text
      * @param style
      */
-    public GraphControlerAction(final GraphControlerProvider parent, final String text, final int style) {
+    public GraphControlerAction(final GraphControlerProvider parent,
+            final String text, final int style) {
         super(text, style);
         init(parent);
     }
@@ -85,7 +87,7 @@ public abstract class GraphControlerAction extends Action implements GraphContro
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerListener#controlerAvailable(net.ggtools.grand.ui.graph.GraphControler)
      */
-    final public void controlerAvailable(final GraphControler controler) {
+    public final void controlerAvailable(final GraphControler controler) {
         if (graphControler != null) {
             removeGraphControler();
         }
@@ -97,7 +99,7 @@ public abstract class GraphControlerAction extends Action implements GraphContro
      * (non-Javadoc)
      * @see net.ggtools.grand.ui.graph.GraphControlerListener#controlerRemoved(net.ggtools.grand.ui.graph.GraphControler)
      */
-    final public void controlerRemoved(final GraphControler controler) {
+    public final void controlerRemoved(final GraphControler controler) {
         if (controler == graphControler) {
             removeGraphControler();
         }
@@ -106,14 +108,14 @@ public abstract class GraphControlerAction extends Action implements GraphContro
     /**
      * @return Returns the graphControler.
      */
-    final public GraphControler getGraphControler() {
+    public final GraphControler getGraphControler() {
         return graphControler;
     }
 
     /**
      * @return Returns the graphControlerProvider.
      */
-    final public GraphControlerProvider getGraphControlerProvider() {
+    public final GraphControlerProvider getGraphControlerProvider() {
         return graphControlerProvider;
     }
 
@@ -121,7 +123,7 @@ public abstract class GraphControlerAction extends Action implements GraphContro
      * Initialize the action.
      *  
      */
-    final private void init(final GraphControlerProvider provider) {
+    private void init(final GraphControlerProvider provider) {
         graphControlerProvider = provider;
         provider.addControlerListener(this);
         graphControler = provider.getControler();

@@ -42,6 +42,7 @@ import org.eclipse.jface.preference.PreferenceDialog;
  */
 public class PreferenceAction extends Action {
 
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(PreferenceAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Preferences";
@@ -54,7 +55,7 @@ public class PreferenceAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final GrandUiPreferenceManager pm = new GrandUiPreferenceManager();
         final PreferenceDialog dialog = new PreferenceDialog(window.getShell(), pm);
         dialog.open();

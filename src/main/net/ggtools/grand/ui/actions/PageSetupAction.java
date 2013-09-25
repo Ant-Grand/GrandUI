@@ -45,6 +45,7 @@ import org.eclipse.jface.action.Action;
  */
 public class PageSetupAction extends Action {
     
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(PageSetupAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Page Setup";
@@ -60,7 +61,7 @@ public class PageSetupAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final PageSetupDialog dialog = new PageSetupDialog(window.getShell());
         dialog.open();
     }

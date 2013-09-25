@@ -41,6 +41,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Christophe Labouisse
  */
 public class FilterMissingNodesAction extends GraphControlerAction {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(FilterMissingNodesAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Filter out missing nodes";
@@ -50,12 +51,12 @@ public class FilterMissingNodesAction extends GraphControlerAction {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final GraphFilter filter = new MissingNodeFilter();
         getGraphControler().addFilter(filter);
     }
 
     public FilterMissingNodesAction(final GraphControlerProvider parent) {
-        super(parent,DEFAULT_ACTION_NAME);
+        super(parent, DEFAULT_ACTION_NAME);
     }
 }

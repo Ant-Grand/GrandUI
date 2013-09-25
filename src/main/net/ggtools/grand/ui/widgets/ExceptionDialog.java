@@ -40,9 +40,9 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author Christophe Labouisse
  */
-public class ExceptionDialog extends ErrorDialog {
-    private ExceptionDialog(final Shell parentShell, final String dialogTitle, final String message, final IStatus status,
-            final int displayMask) {
+public final class ExceptionDialog extends ErrorDialog {
+    private ExceptionDialog(final Shell parentShell, final String dialogTitle,
+            final String message, final IStatus status, final int displayMask) {
         super(parentShell, dialogTitle, message, status, displayMask);
     }
 
@@ -54,11 +54,12 @@ public class ExceptionDialog extends ErrorDialog {
      * @param message
      * @param e
      */
-    public static void openException(final Shell parent, final String message, final Throwable e) {
+    public static void openException(final Shell parent, final String message,
+            final Throwable e) {
         final MultiStatus topStatus = new MultiStatus("GrandUI", 0, message, e);
         for (Throwable nested = e; nested != null; nested = nested.getCause()) {
-            final IStatus status = new Status(IStatus.ERROR, "GraphUI", 0, nested.getMessage(),
-                    nested);
+            final IStatus status = new Status(IStatus.ERROR, "GraphUI", 0,
+                    nested.getMessage(), nested);
             topStatus.add(status);
         }
         Display display;

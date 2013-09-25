@@ -60,6 +60,7 @@ public class ShowLogAction extends Action {
         }
     }
 
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(ShowLogAction.class);
 
     private static final String DEFAULT_ACTION_NAME = "Log window";
@@ -80,7 +81,7 @@ public class ShowLogAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         if (isChecked()) {
             if ((dialog != null) && dialog.getShell().isDisposed()) {
                 dialog = null;

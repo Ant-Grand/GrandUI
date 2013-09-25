@@ -30,13 +30,13 @@ package net.ggtools.grand.ui.widgets.property;
 import java.util.Map.Entry;
 
 class PropertyPair {
-    String name;
+    private String name;
 
-    String value;
+    private String value;
 
-    public PropertyPair(final String name, final String value) {
-        this.name = name;
-        this.value = value;
+    public PropertyPair(final Object name, final Object value) {
+        this.name = (name instanceof String) ? (String) name : name.toString();
+        this.value = (value instanceof String) ? (String) value : value.toString();
 
     }
 
@@ -46,8 +46,8 @@ class PropertyPair {
      * 
      * @param entry
      */
-    public PropertyPair(final Entry entry) {
-        this((String) entry.getKey(), (String) entry.getValue());
+    public PropertyPair(final Entry<Object, Object> entry) {
+        this(entry.getKey(), entry.getValue());
     }
 
     public final String getName() {

@@ -61,7 +61,7 @@ public class PageSetupDialog extends Dialog {
      * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
      */
     @Override
-    protected void cancelPressed() {
+    protected final void cancelPressed() {
         super.cancelPressed();
     }
 
@@ -70,7 +70,7 @@ public class PageSetupDialog extends Dialog {
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createDialogArea(final Composite parent) {
+    protected final Control createDialogArea(final Composite parent) {
         final Composite composite = (Composite) super.createDialogArea(parent);
         final GridLayout layout = new GridLayout();
         layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
@@ -82,7 +82,8 @@ public class PageSetupDialog extends Dialog {
         label.setAlignment(SWT.RIGHT);
         label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
         combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
-        combo.setItems(new String[]{"Tile", "Fit on one page", "Fit on one page horizontally", "Fit one page vertically"});
+        combo.setItems(new String[]{"Tile", "Fit on one page",
+                "Fit on one page horizontally", "Fit one page vertically"});
         combo.select(GraphControler.getPrintMode() - 1);
         combo
                 .setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
@@ -95,8 +96,8 @@ public class PageSetupDialog extends Dialog {
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
     @Override
-    protected void okPressed() {
-        GraphControler.setPrintMode(combo.getSelectionIndex()+1);
+    protected final void okPressed() {
+        GraphControler.setPrintMode(combo.getSelectionIndex() + 1);
         super.okPressed();
     }
 
@@ -105,7 +106,7 @@ public class PageSetupDialog extends Dialog {
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
-    protected void configureShell(final Shell newShell) {
+    protected final void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Page Setup");
     }

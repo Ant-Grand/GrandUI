@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Shell;
  * @author Christophe Labouisse
  */
 public class Splash {
+    @SuppressWarnings("unused")
     private final Display display;
 
     private final Image image;
@@ -68,16 +69,16 @@ public class Splash {
         // shell.addPaintListener(this);
     }
 
-    public void close() {
+    public final void close() {
         shell.close();
     }
 
-    public void dispose() {
+    public final void dispose() {
         shell.dispose();
         image.dispose();
     }
 
-    public void open() {
+    public final void open() {
         shell.open();
     }
 }

@@ -27,7 +27,6 @@
  */
 package net.ggtools.grand.ui.widgets;
 
-import java.util.Map;
 import java.util.Properties;
 
 import net.ggtools.grand.ui.widgets.property.PropertyEditor;
@@ -47,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
 public class PropertyEditionDialog extends Dialog {
 
     private PropertyEditor propertyEditor;
-    private Map propertiesToLoad;
+    private Properties propertiesToLoad;
 
     public PropertyEditionDialog(final Shell parentShell) {
         super(parentShell);
@@ -55,7 +54,7 @@ public class PropertyEditionDialog extends Dialog {
     }
 
     @Override
-    protected Control createDialogArea(final Composite parent) {
+    protected final Control createDialogArea(final Composite parent) {
         final Composite composite = (Composite) super.createDialogArea(parent);
         composite.setLayout(new FillLayout());
         propertyEditor = new PropertyEditor(composite, SWT.NONE);
@@ -72,12 +71,12 @@ public class PropertyEditionDialog extends Dialog {
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
-    protected void configureShell(final Shell newShell) {
+    protected final void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Property Edition");
     }
 
-    public void setProperties(final Map properties) {
+    public final void setProperties(final Properties properties) {
         if (propertyEditor == null) {
             propertiesToLoad = properties;
         }
@@ -86,7 +85,7 @@ public class PropertyEditionDialog extends Dialog {
         }
     }
     
-    public Properties getProperties() {
+    public final Properties getProperties() {
         if (propertyEditor == null) {
             return null;
         }

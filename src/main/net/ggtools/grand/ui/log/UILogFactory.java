@@ -46,8 +46,8 @@ public class UILogFactory extends LogFactoryImpl {
      * @see org.apache.commons.logging.impl.LogFactoryImpl#newInstance(java.lang.String)
      */
     @Override
-    protected Log newInstance(final String name) {
+    protected final Log newInstance(final String name) {
         final Log log = super.newInstance(name);
-        return new UILogger(name,log);
+        return new UILogger(name, log);
     }
 }

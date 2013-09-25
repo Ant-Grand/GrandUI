@@ -62,7 +62,7 @@ public class QuickOpenFileAction extends Action {
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final FileDialog dialog = new FileDialog(window.getShell());
         dialog.setFilterExtensions(FILTER_EXTENSIONS);
         dialog.setFilterPath(previousPath);

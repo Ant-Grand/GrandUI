@@ -60,7 +60,7 @@ public class LogWindow extends Window {
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
-    protected void configureShell(final Shell newShell) {
+    protected final void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Logs");
     }
@@ -70,10 +70,10 @@ public class LogWindow extends Window {
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createContents(final Composite parent) {
+    protected final Control createContents(final Composite parent) {
         final GridLayout layout = new GridLayout();
         parent.setLayout(layout);
-        viewer = new LogViewer(parent,SWT.BORDER);
+        viewer = new LogViewer(parent, SWT.BORDER);
         viewer.setLogBuffer(LogEventBufferImpl.getInstance());
         return parent;
     }

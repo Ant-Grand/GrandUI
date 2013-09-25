@@ -52,6 +52,7 @@ public class FilterChainModel implements GraphProducer {
 
     private Graph graph = null;
 
+    @SuppressWarnings("unused")
     private GraphModel graphModel;
 
     public FilterChainModel(final GraphModel graphModel) {
@@ -63,7 +64,7 @@ public class FilterChainModel implements GraphProducer {
     /**
      * @param newFilter
      */
-    public void addFilterFirst(final GraphFilter newFilter) {
+    public final void addFilterFirst(final GraphFilter newFilter) {
         if (log.isDebugEnabled()) {
             log.debug("Adding new head filter " + newFilter);
         }
@@ -74,7 +75,7 @@ public class FilterChainModel implements GraphProducer {
     /**
      * @param newFilter
      */
-    public void addFilterLast(final GraphFilter newFilter) {
+    public final void addFilterLast(final GraphFilter newFilter) {
         if (log.isDebugEnabled()) {
             log.debug("Adding new tail filter " + newFilter);
         }
@@ -85,7 +86,7 @@ public class FilterChainModel implements GraphProducer {
     /**
      *  
      */
-    public void clearFilters() {
+    public final void clearFilters() {
         if (filterChain.getFilterList().size() > 0) {
             if (log.isDebugEnabled()) {
                 log.debug("Clearing filters");
@@ -101,7 +102,7 @@ public class FilterChainModel implements GraphProducer {
     /**
      * @return
      */
-    public List getFilterList() {
+    public final List<GraphFilter> getFilterList() {
         return filterChain.getFilterList();
     }
 
@@ -112,7 +113,7 @@ public class FilterChainModel implements GraphProducer {
         return graph;
     }
 
-    public void filterGraph() {
+    public final void filterGraph() {
         if (log.isDebugEnabled()) {
             log.debug("Start filtering, filter chain size is: "
                     + filterChain.getFilterList().size());
@@ -129,7 +130,7 @@ public class FilterChainModel implements GraphProducer {
     /**
      * @param producer
      */
-    public void setProducer(final GraphProducer producer) {
+    public final void setProducer(final GraphProducer producer) {
         filterChain.setProducer(producer);
     }
 }

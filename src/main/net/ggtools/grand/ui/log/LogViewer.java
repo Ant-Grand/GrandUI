@@ -71,6 +71,7 @@ public class LogViewer extends Composite {
         /**
          * Logger for this class
          */
+        @SuppressWarnings("unused")
         private final Log log = LogFactory.getLog(LogEventFilter.class);
 
         @Override
@@ -90,6 +91,7 @@ public class LogViewer extends Composite {
         /**
          * Logger for this class
          */
+        @SuppressWarnings("unused")
         private final Log log = LogFactory.getLog(LogEventRefreshListener.class);
 
         public void logEventReceived(final LogEvent event) {
@@ -160,6 +162,7 @@ public class LogViewer extends Composite {
         /**
          * Logger for this class
          */
+        @SuppressWarnings("unused")
         private final Log log = LogFactory.getLog(LogSaver.class);
 
         @Override
@@ -280,7 +283,7 @@ public class LogViewer extends Composite {
     }
 
     @Override
-    public void dispose() {
+    public final void dispose() {
         if (log.isDebugEnabled()) {
             log.debug("Disposing LogViewer");
         }
@@ -402,8 +405,8 @@ public class LogViewer extends Composite {
     }
 
     private void createViewer(final Composite parent) {
-        viewer = new TableViewer(parent, SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL
-                | SWT.HIDE_SELECTION);
+        viewer = new TableViewer(parent, SWT.READ_ONLY | SWT.H_SCROLL
+                | SWT.V_SCROLL | SWT.HIDE_SELECTION);
         final LogLabelProvider logLabelProvider = new LogLabelProvider();
         viewer.setContentProvider(new ArrayContentProvider());
         viewer.setLabelProvider(logLabelProvider);
@@ -418,8 +421,8 @@ public class LogViewer extends Composite {
         gridData.heightHint = table.getHeaderHeight() * DEFAULT_NUM_LINES;
         table.setLayoutData(gridData);
 
-        final TableTooltipListener tableListener = new LogEventTooltipListener(table, CI_CLASS,
-                CI_MESSAGE);
+        final TableTooltipListener tableListener =
+                new LogEventTooltipListener(table, CI_CLASS, CI_MESSAGE);
         tableListener.activateTooltips();
 
         final GC gc = new GC(table);
@@ -515,7 +518,7 @@ public class LogViewer extends Composite {
      * @param comboIndex
      * @return
      */
-    protected int comboIndexToLogLevel(final int comboIndex) {
+    protected final int comboIndexToLogLevel(final int comboIndex) {
         return comboIndex + LogEvent.TRACE.value;
     }
 
@@ -523,7 +526,7 @@ public class LogViewer extends Composite {
      * Add value to the level selection combo.
      * @param combo
      */
-    protected void fillUpLevelCombo(final Combo combo) {
+    protected final void fillUpLevelCombo(final Combo combo) {
         combo.add(LogEvent.TRACE.name);
         combo.add(LogEvent.DEBUG.name);
         combo.add(LogEvent.INFO.name);

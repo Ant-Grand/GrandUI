@@ -42,8 +42,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
  * 
  * @author Christophe Labouisse
  */
-public abstract class GraphSelectionAction extends GraphListenerAction implements
-        GraphListener {
+public abstract class GraphSelectionAction extends GraphListenerAction
+        implements GraphListener {
 
     private String currentNode;
 
@@ -59,7 +59,8 @@ public abstract class GraphSelectionAction extends GraphListenerAction implement
      * @param parent
      * @param text
      */
-    public GraphSelectionAction(final GraphControlerProvider parent, final String text) {
+    public GraphSelectionAction(final GraphControlerProvider parent,
+            final String text) {
         super(parent, text);
         init();
     }
@@ -79,7 +80,8 @@ public abstract class GraphSelectionAction extends GraphListenerAction implement
      * @param text
      * @param style
      */
-    public GraphSelectionAction(final GraphControlerProvider parent, final String text, final int style) {
+    public GraphSelectionAction(final GraphControlerProvider parent,
+            final String text, final int style) {
         super(parent, text, style);
         init();
     }
@@ -96,7 +98,7 @@ public abstract class GraphSelectionAction extends GraphListenerAction implement
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
     @Override
-    public void selectionChanged(final Collection selectedNodes) {
+    public final void selectionChanged(final Collection<Draw2dNode> selectedNodes) {
         final boolean isEnabled = selectedNodes.size() == 1;
         if (isEnabled) {
             currentNode = ((Draw2dNode) selectedNodes.iterator().next()).getName();
@@ -107,7 +109,7 @@ public abstract class GraphSelectionAction extends GraphListenerAction implement
     /**
      *  
      */
-    final private void init() {
+    private void init() {
         boolean isEnabled = false;
 
         if (getGraphControler() != null) {
