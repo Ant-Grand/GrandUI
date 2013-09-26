@@ -35,6 +35,10 @@ import sf.blacksun.util.StopWatch;
  */
 public class DispatcherPerformanceMeter {
 
+    /**
+     * Field LOOP.
+     * (value is 100000000)
+     */
     private static final int LOOP = 100000000;
 
     /**
@@ -49,11 +53,11 @@ public class DispatcherPerformanceMeter {
             super(manager);
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see net.ggtools.grand.ui.event.EventManager.InternalDispatcher#sendEventToSubscriber(java.lang.Object,
-         *      java.lang.Object)
+        /**
+         * Method sendEventToSubscriber.
+         * @param subscriber Object
+         * @param eventData Object
+         * @see net.ggtools.grand.ui.event.Dispatcher#sendEventToSubscriber(java.lang.Object, java.lang.Object)
          */
         public void sendEventToSubscriber(final Object subscriber, final Object eventData) {
             ((Listener) subscriber).listen(eventData);
@@ -67,10 +71,20 @@ public class DispatcherPerformanceMeter {
      * @author Christophe Labouisse
      */
     public static class Listener {
+        /**
+         * Method listen.
+         * @param o Object
+         */
         public void listen(final Object o) {
         }
     }
 
+    /**
+     * Method main.
+     * @param args String[]
+     * @throws SecurityException
+     * @throws NoSuchMethodException
+     */
     public static void main(final String[] args) throws SecurityException, NoSuchMethodException {
         final StopWatch timer = new StopWatch();
         final Listener subscriber = new Listener();

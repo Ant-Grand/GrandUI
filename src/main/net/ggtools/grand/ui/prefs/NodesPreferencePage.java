@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -54,6 +54,9 @@ import org.eclipse.swt.widgets.TabItem;
 public class NodesPreferencePage extends PreferencePage
         implements PreferenceKeys {
 
+    /**
+     * Field SUPPORTED_SHAPES.
+     */
     private static final String[][] SUPPORTED_SHAPES = new String[][]{
             {"Octagon", "octagon"}, {"Oval", "oval"}, {"Box", "box"},
             {"Triangle", "triangle"}, {"Square", "square"},
@@ -99,6 +102,9 @@ public class NodesPreferencePage extends PreferencePage
 
     }
 
+    /**
+     * Field fields.
+     */
     private final List<FieldEditor> fields = new ArrayList<FieldEditor>();
 
     /**
@@ -115,7 +121,8 @@ public class NodesPreferencePage extends PreferencePage
      * <code>FieldEditor.store</code>. Note that this method does not save
      * the preference store itself; it just stores the values back into the
      * preference store.
-     * 
+     *
+     * @return boolean
      * @see FieldEditor#store()
      */
     @Override
@@ -131,7 +138,8 @@ public class NodesPreferencePage extends PreferencePage
 
     /**
      * Calculates the number of columns needed to host all field editors.
-     * 
+     *
+     * @param tabFields List<FieldEditor>
      * @return the number of columns
      */
     private int calcNumberOfColumns(final List<FieldEditor> tabFields) {
@@ -147,7 +155,9 @@ public class NodesPreferencePage extends PreferencePage
     }
 
     /**
-     * @param tabFolder
+     * @param tabFolder TabFolder
+     * @param title String
+     * @param nodeType String
      */
     private void createNodeTab(final TabFolder tabFolder, final String title,
             final String nodeType) {
@@ -194,8 +204,10 @@ public class NodesPreferencePage extends PreferencePage
         fields.addAll(tabFields);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createContents.
+     * @param parent Composite
+     * @return Control
      * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override

@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,7 +42,7 @@ import org.eclipse.draw2d.text.FlowPage;
 
 /**
  * Basic tooltip.
- * 
+ *
  * @author Christophe Labouisse
  */
 abstract class AbstractGraphTooltip extends Figure {
@@ -52,16 +52,21 @@ abstract class AbstractGraphTooltip extends Figure {
      */
     public class SectionBorder extends AbstractBorder {
 
-        /*
-         * (non-Javadoc)
+        /**
+         * Method getInsets.
+         * @param figure IFigure
+         * @return Insets
          * @see org.eclipse.draw2d.Border#getInsets(org.eclipse.draw2d.IFigure)
          */
         public Insets getInsets(final IFigure figure) {
             return new Insets(1, 0, 0, 0);
         }
 
-        /*
-         * (non-Javadoc)
+        /**
+         * Method paint.
+         * @param figure IFigure
+         * @param graphics Graphics
+         * @param insets Insets
          * @see org.eclipse.draw2d.Border#paint(org.eclipse.draw2d.IFigure,
          *      org.eclipse.draw2d.Graphics, org.eclipse.draw2d.geometry.Insets)
          */
@@ -73,10 +78,14 @@ abstract class AbstractGraphTooltip extends Figure {
 
     }
 
-    static final int TOOLTIP_WIDTH = 400;
-    
     /**
-     * Default constructor. 
+     * Field TOOLTIP_WIDTH.
+     * (value is 400)
+     */
+    static final int TOOLTIP_WIDTH = 400;
+
+    /**
+     * Default constructor.
      */
     public AbstractGraphTooltip() {
         setForegroundColor(ColorConstants.tooltipForeground);
@@ -89,13 +98,14 @@ abstract class AbstractGraphTooltip extends Figure {
     }
 
     /**
-     * Create the tooltip's contents. Should be called explicitly by implementing classes.
-     * TODO: Make this part automatic (ticket #37).
+     * Create the tooltip's contents.
+     * Should be called explicitly by implementing classes.
+     * TODO Make this part automatic (ticket #37).
      */
     protected abstract void createContents();
 
     /**
-     * @return
+     * @return FlowPage
      */
     protected FlowPage createFlowPage() {
         FlowPage page;

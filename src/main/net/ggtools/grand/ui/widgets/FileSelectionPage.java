@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -56,20 +56,31 @@ import org.eclipse.swt.widgets.FileDialog;
 public class FileSelectionPage extends WizardPage
         implements SelectedFileProvider {
     /**
-     * Logger for this class
+     * Logger for this class.
      */
     private static final Log log = LogFactory.getLog(FileSelectionPage.class);
 
+    /**
+     * Field FILTER_EXTENSIONS.
+     */
     private static final String[] FILTER_EXTENSIONS = new String[]{"*.xml", "*"};
 
+    /**
+     * Field selectedFileName.
+     */
     private String selectedFileName;
 
+    /**
+     * Field selectedFile.
+     */
     private File selectedFile;
 
+    /**
+     * Field subscribers.
+     */
     private final Collection<SelectedFileListener> subscribers;
 
     /**
-     * @param pageName
      */
     public FileSelectionPage() {
         super("fileselect", "Build file selection", null);
@@ -77,8 +88,9 @@ public class FileSelectionPage extends WizardPage
         subscribers = new HashSet<SelectedFileListener>();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createControl.
+     * @param parent Composite
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public final void createControl(final Composite parent) {
@@ -145,7 +157,7 @@ public class FileSelectionPage extends WizardPage
     }
 
     /**
-     * @param text
+     * @param text String
      */
     private void updateSelectedFile(final String text) {
         selectedFileName = text;
@@ -167,10 +179,19 @@ public class FileSelectionPage extends WizardPage
         notifyListeners();
     }
 
+    /**
+     * Method getSelectedFile.
+     * @return File
+     */
     public final File getSelectedFile() {
         return selectedFile;
     }
 
+    /**
+     * Method addListener.
+     * @param listener OpenFileWizard.SelectedFileListener
+     * @see net.ggtools.grand.ui.widgets.OpenFileWizard$SelectedFileProvider#addListener(OpenFileWizard.SelectedFileListener)
+     */
     public final void addListener(final OpenFileWizard.SelectedFileListener listener) {
         if (!subscribers.contains(listener)) {
             subscribers.add(listener);
@@ -178,10 +199,18 @@ public class FileSelectionPage extends WizardPage
         }
     }
 
+    /**
+     * Method removeListener.
+     * @param listener OpenFileWizard.SelectedFileListener
+     * @see net.ggtools.grand.ui.widgets.OpenFileWizard$SelectedFileProvider#removeListener(OpenFileWizard.SelectedFileListener)
+     */
     public final void removeListener(final OpenFileWizard.SelectedFileListener listener) {
         subscribers.remove(listener);
     }
 
+    /**
+     * Method notifyListeners.
+     */
     private void notifyListeners() {
         for (final Iterator<SelectedFileListener> iter = subscribers.iterator(); iter.hasNext();) {
             final OpenFileWizard.SelectedFileListener listener = iter.next();

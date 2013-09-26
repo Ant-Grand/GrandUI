@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2005, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,20 +39,34 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * 
+ *
  * @author Christophe Labouisse
- * 
  */
 public class PropertyEditionDialog extends Dialog {
 
+    /**
+     * Field propertyEditor.
+     */
     private PropertyEditor propertyEditor;
+    /**
+     * Field propertiesToLoad.
+     */
     private Properties propertiesToLoad;
 
+    /**
+     * Constructor for PropertyEditionDialog.
+     * @param parentShell Shell
+     */
     public PropertyEditionDialog(final Shell parentShell) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
     }
 
+    /**
+     * Method createDialogArea.
+     * @param parent Composite
+     * @return Control
+     */
     @Override
     protected final Control createDialogArea(final Composite parent) {
         final Composite composite = (Composite) super.createDialogArea(parent);
@@ -65,9 +79,9 @@ public class PropertyEditionDialog extends Dialog {
         return composite;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method configureShell.
+     * @param newShell Shell
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
@@ -76,6 +90,10 @@ public class PropertyEditionDialog extends Dialog {
         newShell.setText("Property Edition");
     }
 
+    /**
+     * Method setProperties.
+     * @param properties Properties
+     */
     public final void setProperties(final Properties properties) {
         if (propertyEditor == null) {
             propertiesToLoad = properties;
@@ -84,12 +102,16 @@ public class PropertyEditionDialog extends Dialog {
             propertyEditor.setInput(properties);
         }
     }
-    
+
+    /**
+     * Method getProperties.
+     * @return Properties
+     */
     public final Properties getProperties() {
         if (propertyEditor == null) {
             return null;
         }
-        
+
         return propertyEditor.getValues();
     }
 }

@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -44,34 +44,38 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * Table label provider for log events.
- * 
+ *
  * @author Christophe Labouisse
  */
 class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
 
     /**
-     * Logger for this class
+     * Logger for this class.
      */
     private static final Log log = LogFactory.getLog(LogLabelProvider.class);
 
+    /**
+     * Field logLevelIcons.
+     */
     private final Map<Level, Image> logLevelIcons = new HashMap<Level, Image>();
 
     /**
-     * 
+     *
      */
     public LogLabelProvider() {
         super();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method addListener.
+     * @param listener ILabelProviderListener
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     public void addListener(final ILabelProviderListener listener) {
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method dispose.
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
     public void dispose() {
@@ -83,19 +87,23 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object,
-     *      int)
+    /**
+     * Method getBackground.
+     * @param element Object
+     * @param columnIndex int
+     * @return Color
+     * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object, int)
      */
     public Color getBackground(final Object element, final int columnIndex) {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object,
-     *      int)
+    /**
+     * Method getColumnImage.
+     * @param element Object
+     * @param columnIndex int
+     * @return Image
+     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      */
     public Image getColumnImage(final Object element, final int columnIndex) {
         Image rc = null;
@@ -121,10 +129,12 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
         return rc;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
-     *      int)
+    /**
+     * Method getColumnText.
+     * @param element Object
+     * @param columnIndex int
+     * @return String
+     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
      */
     public String getColumnText(final Object element, final int columnIndex) {
         String rc = null;
@@ -160,26 +170,31 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
         return rc;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object,
-     *      int)
+    /**
+     * Method getForeground.
+     * @param element Object
+     * @param columnIndex int
+     * @return Color
+     * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object, int)
      */
     public Color getForeground(final Object element, final int columnIndex) {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
-     *      java.lang.String)
+    /**
+     * Method isLabelProperty.
+     * @param element Object
+     * @param property String
+     * @return boolean
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      */
     public boolean isLabelProperty(final Object element, final String property) {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method removeListener.
+     * @param listener ILabelProviderListener
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     public void removeListener(final ILabelProviderListener listener) {

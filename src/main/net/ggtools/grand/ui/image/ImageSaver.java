@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -45,38 +45,67 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * A class to save SWT Image to disk.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class ImageSaver {
 
+    /**
+     * @author Christophe Labouisse
+     */
     private static class ColorCounter implements Comparable<ColorCounter> {
         /**
-         * Logger for this class
+         * Logger for this class.
          */
         @SuppressWarnings("unused")
         private static final Log log = LogFactory.getLog(ColorCounter.class);
 
+        /**
+         * Field count.
+         */
         int count;
 
+        /**
+         * Field rgb.
+         */
         RGB rgb;
 
+        /**
+         * Method compareTo.
+         * @param o ColorCounter
+         * @return int
+         */
         public int compareTo(final ColorCounter o) {
             return o.count - count;
         }
     }
 
     /**
-     * 
+     *
      * @author Christophe Labouisse
      */
     private static class ImageFormat {
 
+        /**
+         * Field name.
+         */
         @SuppressWarnings("unused")
         public final String name;
+        /**
+         * Field swtId.
+         */
         public final int swtId;
+        /**
+         * Field needDownsampling.
+         */
         public final boolean needDownsampling;
 
+        /**
+         * Constructor for ImageFormat.
+         * @param name String
+         * @param swtId int
+         * @param needDownsampling boolean
+         */
         public ImageFormat(final String name, final int swtId, final boolean needDownsampling) {
             this.name = name;
             this.swtId = swtId;
@@ -84,18 +113,34 @@ public class ImageSaver {
         }
     }
 
+    /**
+     * Field formatInitDone.
+     */
     private static boolean formatInitDone = false;
 
+    /**
+     * Field formatRegistry.
+     */
     private static final Map<String, ImageFormat> formatRegistry =
             new HashMap<String, ImageFormat>();
 
     /**
-     * Logger for this class
+     * Logger for this class.
      */
     private static final Log log = LogFactory.getLog(ImageSaver.class);
 
+    /**
+     * Field supportedExtensions.
+     */
     private static String[] supportedExtensions;
 
+    /**
+     * Method closest.
+     * @param rgbs RGB[]
+     * @param n int
+     * @param rgb RGB
+     * @return int
+     */
     private static int closest(final RGB[] rgbs, final int n, final RGB rgb) {
         int minDist = 256 * 256 * 3;
         int minIndex = 0;
@@ -113,6 +158,11 @@ public class ImageSaver {
         return minIndex;
     }
 
+    /**
+     * Method downSample.
+     * @param image Image
+     * @return ImageData
+     */
     private static ImageData downSample(final Image image) {
         final ImageData data = image.getImageData();
         if (!data.palette.isDirect && (data.depth <= 8)) {
@@ -185,6 +235,9 @@ public class ImageSaver {
         return newData;
     }
 
+    /**
+     * Method initFormats.
+     */
     private static final void initFormats() {
         if (!formatInitDone) {
             final ImageFormat jpegImageFormat = new ImageFormat("jpeg", SWT.IMAGE_JPEG, false);
@@ -199,14 +252,28 @@ public class ImageSaver {
         }
     }
 
+    /**
+     * Constructor for ImageSaver.
+     */
     public ImageSaver() {
         initFormats();
     }
 
+    /**
+     * Method getSupportedExtensions.
+     * @return String[]
+     */
     public final String[] getSupportedExtensions() {
         return supportedExtensions;
     }
 
+    /**
+     * Method saveImage.
+     * @param image Image
+     * @param fileName String
+     * @throws IOException
+     * @throws IllegalArgumentException
+     */
     public final void saveImage(final Image image, final String fileName)
             throws IOException, IllegalArgumentException {
         final int lastDotPosition = fileName.lastIndexOf('.');

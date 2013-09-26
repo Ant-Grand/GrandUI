@@ -43,11 +43,15 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 
 /**
- * 
- * 
+ *
+ *
  * @author Christophe Labouisse
  */
 public class FileMenuManager extends MenuManager {
+    /**
+     * Constructor for FileMenuManager.
+     * @param window GraphWindow
+     */
     public FileMenuManager(final GraphWindow window) {
         super("File");
         add(new QuickOpenFileAction(window));

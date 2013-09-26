@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -62,29 +62,55 @@ import sf.jzgraph.dot.impl.DotGraph;
 /**
  * Factory class creating a JzGraph graph for a Grand graph using Grand's
  * visitor API.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttributes {
+    /**
+     * Field log.
+     */
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(GraphControler.class);
 
+    /**
+     * Field currentLinkName.
+     */
     private String currentLinkName;
 
+    /**
+     * Field dotGraph.
+     */
     private final IDotGraph dotGraph;
 
+    /**
+     * Field graph.
+     */
     private Graph graph;
 
+    /**
+     * Field nameDimensions.
+     */
     private final Map<String, IVertex> nameDimensions;
 
+    /**
+     * Field startNode.
+     */
     private final Node startNode;
 
+    /**
+     * Field useBusRouting.
+     */
     private final boolean useBusRouting;
 
+    /**
+     * Field vertexLUT.
+     */
     private final Map<String, IVertex> vertexLUT;
 
     /**
-     *  
+     *
+     * @param graph Graph
+     * @param useBusRouting boolean
      */
     public DotGraphCreator(final Graph graph, final boolean useBusRouting) {
         this.graph = graph;
@@ -95,6 +121,10 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         startNode = graph.getStartNode();
     }
 
+    /**
+     * Method getGraph.
+     * @return IDotGraph
+     */
     public final IDotGraph getGraph() {
         if (startNode != null) {
             startNode.accept(this);
@@ -140,16 +170,18 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         return dotGraph;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method visitLink.
+     * @param link AntLink
      * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.AntLink)
      */
     public final void visitLink(final AntLink link) {
         addLink(link);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method visitLink.
+     * @param link AntTaskLink
      * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.AntTaskLink)
      */
     public final void visitLink(final AntTaskLink link) {
@@ -158,16 +190,18 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         edge.setAttr(LINK_PARAMETERS_ATTR, link.getParameterMap());
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method visitLink.
+     * @param link Link
      * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.graph.Link)
      */
     public final void visitLink(final Link link) {
         addLink(link);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method visitLink.
+     * @param link SubantTaskLink
      * @see net.ggtools.grand.graph.visit.LinkVisitor#visitLink(net.ggtools.grand.ant.SubantTaskLink)
      */
     public final void visitLink(final SubantTaskLink link) {
@@ -183,8 +217,9 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
 
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method visitNode.
+     * @param node AntTargetNode
      * @see net.ggtools.grand.graph.visit.NodeVisitor#visitNode(net.ggtools.grand.ant.AntTargetNode)
      */
     public final void visitNode(final AntTargetNode node) {
@@ -205,8 +240,9 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method visitNode.
+     * @param node Node
      * @see net.ggtools.grand.graph.visit.NodeVisitor#visitNode(net.ggtools.grand.graph.Node)
      */
     public final void visitNode(final Node node) {
@@ -215,9 +251,8 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
 
     /**
      * Creates a basic link.
-     * @param link
-     * @param name
-     * @return
+     * @param link Link
+     * @return IEdge
      */
     private IEdge addLink(final Link link) {
         final IEdge edge = dotGraph.newEdge(vertexLUT.get(link.getStartNode().getName()),
@@ -239,9 +274,9 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
     }
 
     /**
-     * Creates a <em>basic node</em>
-     * @param node
-     * @return
+     * Creates a <em>basic node</em>.
+     * @param node Node
+     * @return IVertex
      */
     private IVertex addNode(final Node node) {
         final String name = node.getName();
@@ -279,8 +314,8 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
     }
 
     /**
-     * @param vertex
-     * @param preferenceStore
+     * @param vertex IVertex
+     * @param nodeType String
      */
     private void setVertexPreferences(final IVertex vertex,
             final String nodeType) {

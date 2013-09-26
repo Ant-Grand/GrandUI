@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -64,12 +64,20 @@ import sf.jzgraph.dot.impl.DotRoute;
 
 /**
  * Renders a IDotGraph into draw2d objects.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class Draw2dGraphRenderer implements DotGraphAttributes {
+    /**
+     * Field log.
+     */
     private static final Log log = LogFactory.getLog(Draw2dGraphRenderer.class);
 
+    /**
+     * Method render.
+     * @param dotGraph IDotGraph
+     * @return Draw2dGraph
+     */
     public final Draw2dGraph render(final IDotGraph dotGraph) {
         if (log.isDebugEnabled()) {
             log.debug("Rendering Draw2d Graph");
@@ -83,13 +91,13 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
 
         return createGraph(dotGraph, contents);
     }
-    
+
     /**
      * Fill an existing graph with a IDotGraph.
-     * 
-     * @param contents
-     * @param dotGraph
-     * @return
+     *
+     * @param contents Draw2dGraph
+     * @param dotGraph IDotGraph
+     * @return Draw2dGraph
      */
     public final Draw2dGraph render(final Draw2dGraph contents,
             final IDotGraph dotGraph) {
@@ -98,9 +106,9 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     }
 
     /**
-     * @param dotGraph
-     * @param contents
-     * @return
+     * @param dotGraph IDotGraph
+     * @param contents Draw2dGraph
+     * @return Draw2dGraph
      */
     private Draw2dGraph createGraph(final IDotGraph dotGraph,
             final Draw2dGraph contents) {
@@ -118,10 +126,10 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     }
 
     /**
-     * @param coords
-     * @param bends
-     * @param min
-     * @param max
+     * @param coords float[]
+     * @param bends ArrayList<AbsoluteBendpoint>
+     * @param min Point
+     * @param max Point
      */
     private void addBendPoint(final float[] coords, final ArrayList<AbsoluteBendpoint> bends,
             final Point min, final Point max) {
@@ -143,10 +151,10 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     }
 
     /**
-     * @param contents
-     * @param edge
-     * @param route
-     * @return
+     * @param contents IFigure
+     * @param name String
+     * @param route DotRoute
+     * @return PolylineConnection
      */
     private PolylineConnection addConnectionFromRoute(final IFigure contents,
             final String name, final DotRoute route) {
@@ -225,8 +233,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     }
 
     /**
-     * Builds a figure for the given edge and adds it to contents
-     * 
+     * Builds a figure for the given edge and adds it to contents.
+     *
      * @param contents
      *            the parent figure to add the edge to
      * @param edge
@@ -249,7 +257,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         if (edge.getAttr(DRAW2DFGCOLOR_ATTR) != null) {
             conn.setForegroundColor((Color) edge.getAttr(DRAW2DFGCOLOR_ATTR));
         }
-        
+
         if (edge.getAttr(DRAW2DLINEWIDTH_ATTR) != null) {
             conn.setLineWidth(edge.getAttrInt(DRAW2DLINEWIDTH_ATTR));
         }
@@ -262,8 +270,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     }
 
     /**
-     * Builds a Figure for the given node and adds it to contents
-     * 
+     * Builds a Figure for the given node and adds it to contents.
+     *
      * @param contents
      *            the parent Figure to add the node to
      * @param node
@@ -301,11 +309,12 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     }
 
     /**
-     * @param contents
-     * @param node
-     * @param color
-     * @param busLabel
-     * @return
+     * @param contents Draw2dGraph
+     * @param node IVertex
+     * @param color Color
+     * @param busLabel String
+     * @param busId String String
+     * @return PolylineConnection
      */
     private PolylineConnection createBusConnexion(final Draw2dGraph contents,
             final IVertex node, final Color color,

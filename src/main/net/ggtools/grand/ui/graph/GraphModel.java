@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,22 +42,35 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * A UI friendly wrapper over the Grand core task.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class GraphModel implements GraphProducer {
 
+    /**
+     * Field log.
+     */
     private static final Log log = LogFactory.getLog(GraphModel.class);
 
+    /**
+     * Field lastLoadedFile.
+     */
     private File lastLoadedFile;
 
+    /**
+     * Field producer.
+     */
     private AntProject producer = null;
 
+    /**
+     * Field lastLoadedFileProperties.
+     */
     private Properties lastLoadedFileProperties;
 
     /**
      * @return Returns the currentGraph.
      * @throws GrandException
+     * @see net.ggtools.grand.graph.GraphProducer#getGraph()
      */
     public final Graph getGraph() throws GrandException {
         // Do not cache the graph as node may be filtered out
@@ -68,6 +81,12 @@ public class GraphModel implements GraphProducer {
         return graph;
     }
 
+    /**
+     * Method openFile.
+     * @param file File
+     * @param properties Properties
+     * @throws GrandException
+     */
     public void openFile(final File file, final Properties properties) throws GrandException {
         lastLoadedFileProperties = properties;
         if (log.isDebugEnabled()) {
@@ -77,6 +96,11 @@ public class GraphModel implements GraphProducer {
         producer = new AntProject(file, properties);
     }
 
+    /**
+     * Method reload.
+     * @param properties Properties
+     * @throws GrandException
+     */
     public final void reload(final Properties properties) throws GrandException {
         if (lastLoadedFile != null) {
             if (log.isDebugEnabled()) {
@@ -98,11 +122,11 @@ public class GraphModel implements GraphProducer {
     final File getLastLoadedFile() {
         return lastLoadedFile;
     }
-    
+
     /**
      * Gets all the properties from the producer.
-     * 
-     * @return
+     *
+     * @return Map<String,Object>
      */
     final Map<String, Object> getAllProperties() {
         Map<String, Object> rc = null;
@@ -111,11 +135,11 @@ public class GraphModel implements GraphProducer {
         }
         return rc;
     }
-    
+
     /**
      * Gets the properties set by the user when loading the graph.
-     * 
-     * @return
+     *
+     * @return Properties
      */
     final Properties getUserProperties() {
         return lastLoadedFileProperties;

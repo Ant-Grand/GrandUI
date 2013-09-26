@@ -17,20 +17,28 @@ import org.eclipse.swt.widgets.TableItem;
  * Class simulating an item dependant tooltip on a {@link Table}widget.
  * Shamelessly created from:
  * http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/platform-swt-home/dev.html#snippets
- * 
+ *
  * @author Christophe Labouisse
  */
 abstract class TableTooltipListener implements Listener {
     /**
      * Listener in charge of removing the tooltips and sending events to the
      * underlying table.
-     * 
+     *
      * @author Christophe Labouisse
      */
     private  final class ToolTipRemoverListener implements Listener {
+        /**
+         * Constructor for ToolTipRemoverListener.
+         */
         private ToolTipRemoverListener() {
         }
 
+        /**
+         * Method handleEvent.
+         * @param event Event
+         * @see org.eclipse.swt.widgets.Listener#handleEvent(Event)
+         */
         public void handleEvent(final Event event) {
             final Control control = (Control) event.widget;
             final Shell shell = control.getShell();
@@ -48,12 +56,25 @@ abstract class TableTooltipListener implements Listener {
         }
     }
 
+    /**
+     * Field tip.
+     */
     private Shell tip = null;
 
+    /**
+     * Field table.
+     */
     private final Table table;
 
+    /**
+     * Field labelListener.
+     */
     private Listener labelListener = null;
 
+    /**
+     * Constructor for TableTooltipListener.
+     * @param table Table
+     */
     TableTooltipListener(final Table table) {
         this.table = table;
         labelListener = new ToolTipRemoverListener();
@@ -66,7 +87,7 @@ abstract class TableTooltipListener implements Listener {
      * <li>adding <code>this</code> as listener for several events of
      * {@link #table}</li>
      * </ol>
-     * 
+     *
      */
     public void activateTooltips() {
         table.setToolTipText("");
@@ -76,6 +97,11 @@ abstract class TableTooltipListener implements Listener {
         table.addListener(SWT.MouseHover, this);
     }
 
+    /**
+     * Method handleEvent.
+     * @param event Event
+     * @see org.eclipse.swt.widgets.Listener#handleEvent(Event)
+     */
     public void handleEvent(final Event event) {
         switch (event.type) {
         case SWT.Dispose:
@@ -110,20 +136,21 @@ abstract class TableTooltipListener implements Listener {
 
     /**
      * Creates the tooltip contents for a specific item.
-     * 
+     *
      * Subclasses must override this method but may call <code>super</code>
      * as in the following example:
-     * 
+     *
      * <pre>
      * Composite composite = (Composite) createTooltipContents(parent, item);
      * //add controls to composite as necessary
      * return composite;
      * </pre>
-     * 
+     *
      * The composite returned by this method will have a {@link GridLayout}.
-     * 
+     *
      * @param parent
      * @param item
+     * @return Control
      */
     protected Control createTooltipContents(final Composite parent, final TableItem item) {
         final Composite composite = new Composite(parent, SWT.NONE);

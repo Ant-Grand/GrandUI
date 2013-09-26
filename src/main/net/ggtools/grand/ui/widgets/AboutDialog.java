@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -47,12 +47,18 @@ import org.eclipse.swt.widgets.Shell;
  * @author Christophe Labouisse
  */
 public class AboutDialog extends Dialog {
+    /**
+     * Field log.
+     */
     private static final Log log = LogFactory.getLog(AboutDialog.class);
 
+    /**
+     * Field coreConfiguration.
+     */
     private Configuration coreConfiguration;
 
     /**
-     * @param parentShell
+     * @param parentShell Shell
      */
     public AboutDialog(final Shell parentShell) {
         super(parentShell);
@@ -64,9 +70,9 @@ public class AboutDialog extends Dialog {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method configureShell.
+     * @param newShell Shell
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
@@ -75,9 +81,9 @@ public class AboutDialog extends Dialog {
         newShell.setText("About Grand");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method createButtonsForButtonBar.
+     * @param parent Composite
      * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -85,9 +91,10 @@ public class AboutDialog extends Dialog {
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method createDialogArea.
+     * @param parent Composite
+     * @return Control
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -101,7 +108,7 @@ public class AboutDialog extends Dialog {
         image.setImage(Application.getInstance().getImage(Application.ABOUT_DIALOG_IMAGE));
         final Label message = new Label(composite, SWT.NONE);
         final StringBuffer messageBuffer = new StringBuffer(
-                "Grand ©2004,2005 Christophe Labouisse, distributed under BSD License\nUi: ");
+                "Grand (C)2004,2005 Christophe Labouisse, distributed under BSD License\nUi: ");
         messageBuffer.append(Application.getInstance().getVersionString());
         if (coreConfiguration != null) {
             messageBuffer.append("\nCore: ").append(coreConfiguration.getVersionString());

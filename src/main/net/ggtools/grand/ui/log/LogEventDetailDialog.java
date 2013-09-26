@@ -1,20 +1,18 @@
-// $Id:
-// /grand/local/GrandUi/src/net/ggtools/grand/ui/log/LogEventDetailDialog.java
-// 535 2005-02-11T23:13:05.074023Z moi $
+// $Id$
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -54,20 +52,26 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * A dialog to display the details of a log event.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class LogEventDetailDialog extends Dialog {
 
+    /**
+     * Field ICONS_FOR_LEVELS.
+     */
     private static final int[] ICONS_FOR_LEVELS = {SWT.ICON_INFORMATION, SWT.ICON_INFORMATION,
             SWT.ICON_INFORMATION, SWT.ICON_INFORMATION, SWT.ICON_WARNING, SWT.ICON_ERROR,
             SWT.ICON_ERROR};
 
     /**
-     * Logger for this class
+     * Logger for this class.
      */
     private static final Log log = LogFactory.getLog(LogEventDetailDialog.class);
 
+    /**
+     * Field details.
+     */
     private Control details;
 
     /**
@@ -75,13 +79,19 @@ public class LogEventDetailDialog extends Dialog {
      */
     private Button detailsButton;
 
+    /**
+     * Field display.
+     */
     private Display display;
 
+    /**
+     * Field event.
+     */
     private final LogEvent event;
 
     /**
      * Creates a new LogEventDetailDialog.
-     * 
+     *
      * @param parentShell
      * @param event
      */
@@ -94,7 +104,7 @@ public class LogEventDetailDialog extends Dialog {
     /**
      * Creates a key/value widget pair with the value widget spanning on 1
      * column.
-     * 
+     *
      * @param composite
      * @param key
      * @param value
@@ -105,7 +115,7 @@ public class LogEventDetailDialog extends Dialog {
 
     /**
      * Add a key/value widget pair.
-     * 
+     *
      * @param composite
      * @param key
      * @param value
@@ -117,7 +127,7 @@ public class LogEventDetailDialog extends Dialog {
             log.warn("Value is null, skipping");
             return;
         }
-        
+
         final Label header = new Label(composite, SWT.BOLD);
         header.setText(key);
         header.setFont(JFaceResources.getDefaultFont());
@@ -141,7 +151,7 @@ public class LogEventDetailDialog extends Dialog {
     /**
      * Creates the detail widget for an exception. The widget will be made of a
      * {@link ScrolledComposite}containing a read only text control.
-     * 
+     *
      * @param exception
      * @return the detail control
      */
@@ -198,8 +208,9 @@ public class LogEventDetailDialog extends Dialog {
         shell.setSize(new Point(windowSize.x, windowSize.y + (newSize.y - oldSize.y)));
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method buttonPressed.
+     * @param buttonId int
      * @see org.eclipse.jface.dialogs.Dialog#buttonPressed(int)
      */
     @Override
@@ -212,8 +223,9 @@ public class LogEventDetailDialog extends Dialog {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method configureShell.
+     * @param newShell Shell
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
@@ -223,8 +235,9 @@ public class LogEventDetailDialog extends Dialog {
         display = newShell.getDisplay();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createButtonsForButtonBar.
+     * @param parent Composite
      * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -236,8 +249,10 @@ public class LogEventDetailDialog extends Dialog {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createContents.
+     * @param parent Composite
+     * @return Control
      * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -247,8 +262,10 @@ public class LogEventDetailDialog extends Dialog {
         return contents;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createDialogArea.
+     * @param parent Composite
+     * @return Control
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override

@@ -35,10 +35,14 @@ import net.ggtools.grand.graph.Graph;
 
 /**
  * Interface to be implemented by classes listening to FilterChainModel changes.
- * 
+ *
  * @author Christophe Labouisse
  */
 public interface FilterChainModelListener {
 
+    /**
+     * Method filteredGraphAvailable.
+     * @param filteredGraph Graph
+     */
     void filteredGraphAvailable(final Graph filteredGraph);
 }

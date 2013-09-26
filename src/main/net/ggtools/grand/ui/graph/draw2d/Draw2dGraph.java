@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -59,10 +59,13 @@ import sf.jzgraph.IVertex;
  */
 public class Draw2dGraph extends Panel implements SelectionManager {
 
+    /**
+     * @author Christophe Labouisse
+     */
     private final class GraphMouseListener extends MouseListener.Stub {
-        /*
-         * (non-Javadoc)
-         * 
+        /**
+         * Method mousePressed.
+         * @param me MouseEvent
          * @see org.eclipse.draw2d.MouseListener#mousePressed(org.eclipse.draw2d.MouseEvent)
          */
         @Override
@@ -90,10 +93,10 @@ public class Draw2dGraph extends Panel implements SelectionManager {
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.draw2d.MouseListener.Stub#mouseReleased(org.eclipse.draw2d.MouseEvent)
+        /**
+         * Method mouseReleased.
+         * @param me MouseEvent
+         * @see org.eclipse.draw2d.MouseListener#mouseReleased(org.eclipse.draw2d.MouseEvent)
          */
         @Override
         public void mouseReleased(final MouseEvent me) {
@@ -111,19 +114,32 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         }
     }
 
+    /**
+     * @author Christophe Labouisse
+     */
     private final class NodeMouseListener extends MouseListener.Stub {
+        /**
+         * Field log.
+         */
         private final Log log = LogFactory.getLog(NodeMouseListener.class);
 
+        /**
+         * Field node.
+         */
         private final Draw2dNode node;
 
+        /**
+         * Constructor for NodeMouseListener.
+         * @param node Draw2dNode
+         */
         private NodeMouseListener(final Draw2dNode node) {
             super();
             this.node = node;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
+        /**
+         * Method mouseDoubleClicked.
+         * @param me MouseEvent
          * @see org.eclipse.draw2d.MouseListener#mouseDoubleClicked(org.eclipse.draw2d.MouseEvent)
          */
         @Override
@@ -147,10 +163,10 @@ public class Draw2dGraph extends Panel implements SelectionManager {
             me.consume();
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.draw2d.MouseListener.Stub#mousePressed(org.eclipse.draw2d.MouseEvent)
+        /**
+         * Method mousePressed.
+         * @param me MouseEvent
+         * @see org.eclipse.draw2d.MouseListener#mousePressed(org.eclipse.draw2d.MouseEvent)
          */
         @Override
         public void mousePressed(final MouseEvent me) {
@@ -184,10 +200,10 @@ public class Draw2dGraph extends Panel implements SelectionManager {
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.draw2d.MouseListener.Stub#mouseReleased(org.eclipse.draw2d.MouseEvent)
+        /**
+         * Method mouseReleased.
+         * @param me MouseEvent
+         * @see org.eclipse.draw2d.MouseListener#mouseReleased(org.eclipse.draw2d.MouseEvent)
          */
         @Override
         public void mouseReleased(final MouseEvent me) {
@@ -210,19 +226,40 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     }
 
+    /**
+     * Field log.
+     */
     private static final Log log = LogFactory.getLog(Draw2dGraph.class);
 
+    /**
+     * Field graphControler.
+     */
     private GraphControler graphControler;
 
+    /**
+     * Field graphMouseListener.
+     */
     private GraphMouseListener graphMouseListener;
 
+    /**
+     * Field nodeIndex.
+     */
     private final Map<String, Draw2dNode> nodeIndex =
             new HashMap<String, Draw2dNode>();
 
+    /**
+     * Field scroller.
+     */
     private CanvasScroller scroller;
 
+    /**
+     * Field zoom.
+     */
     private float zoom;
 
+    /**
+     * Constructor for Draw2dGraph.
+     */
     public Draw2dGraph() {
         super();
         scroller = null;
@@ -231,7 +268,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
-     * @param listener
+     * @param listener GraphListener
+     * @see net.ggtools.grand.ui.graph.SelectionManager#addListener(GraphListener)
      */
     public final void addListener(final GraphListener listener) {
         if (graphControler != null) {
@@ -239,9 +277,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method addNotify.
      * @see org.eclipse.draw2d.IFigure#addNotify()
      */
     @Override
@@ -255,6 +292,11 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         setFocusTraversable(true);
     }
 
+    /**
+     * Method createNode.
+     * @param vertex IVertex
+     * @return Draw2dNode
+     */
     public final Draw2dNode createNode(final IVertex vertex) {
         final Draw2dNode node = new Draw2dNode(this, vertex);
         add(node, node.getBounds());
@@ -266,7 +308,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
-     * 
+     *
+     * @see net.ggtools.grand.ui.graph.SelectionManager#deselectAllNodes()
      */
     public final void deselectAllNodes() {
         if (graphControler != null) {
@@ -275,7 +318,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
-     * @param node
+     * @param node Draw2dNode
+     * @see net.ggtools.grand.ui.graph.SelectionManager#deselectNode(Draw2dNode)
      */
     public final void deselectNode(final Draw2dNode node) {
         if (graphControler != null) {
@@ -285,7 +329,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     /**
      * Gets the bounding box for a specific node.
-     * 
+     *
      * @param name
      *            name of the node to look for.
      * @return the bounds for the node or <code>null</code> if no such node
@@ -297,6 +341,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
+     * @param rect Rectangle
+     * @return Rectangle
      * @see org.eclipse.draw2d.Figure#getClientArea()
      */
     @Override
@@ -308,15 +354,17 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
-     * @return Returns the controler.
+     * @return Returns the controller.
      */
     public final SelectionManager getControler() {
         return graphControler;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method getMinimumSize.
+     * @param wHint int
+     * @param hHint int
+     * @return Dimension
      * @see org.eclipse.draw2d.IFigure#getMinimumSize(int, int)
      */
     @Override
@@ -327,6 +375,13 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         return d.getExpanded(-w, -h).scale(zoom).expand(w, h);
     }
 
+    /**
+     * Method getPreferredSize.
+     * @param wHint int
+     * @param hHint int
+     * @return Dimension
+     * @see org.eclipse.draw2d.IFigure#getPreferredSize(int, int)
+     */
     @Override
     public final Dimension getPreferredSize(final int wHint, final int hHint) {
         final Dimension d = super.getPreferredSize(wHint, hHint);
@@ -342,9 +397,9 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         return scroller;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method getSelection.
+     * @return Collection<Draw2dNode>
      * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
      */
     public final Collection<Draw2dNode> getSelection() {
@@ -361,9 +416,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         return zoom;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method removeNotify.
      * @see org.eclipse.draw2d.IFigure#removeNotify()
      */
     @Override
@@ -379,7 +433,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
-     * @param listener
+     * @param listener GraphListener
+     * @see net.ggtools.grand.ui.graph.SelectionManager#removeSelectionListener(GraphListener)
      */
     public final void removeSelectionListener(final GraphListener listener) {
         if (graphControler != null) {
@@ -388,8 +443,9 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
-     * @param node
-     * @param addToSelection
+     * @param node Draw2dNode
+     * @param addToSelection boolean
+     * @see net.ggtools.grand.ui.graph.SelectionManager#selectNode(Draw2dNode, boolean)
      */
     public final void selectNode(final Draw2dNode node,
             final boolean addToSelection) {
@@ -398,11 +454,11 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.SelectionManager#selectNodeByName(java.lang.String,
-     *      boolean)
+    /**
+     * Method selectNodeByName.
+     * @param nodeName String
+     * @param addToSelection boolean
+     * @see net.ggtools.grand.ui.graph.SelectionManager#selectNodeByName(java.lang.String, boolean)
      */
     public final void selectNodeByName(final String nodeName,
             final boolean addToSelection) {
@@ -428,6 +484,10 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         this.graphControler = graphControler;
     }
 
+    /**
+     * Method setZoom.
+     * @param zoom float
+     */
     public final void setZoom(final float zoom) {
         this.zoom = zoom;
         revalidate();
@@ -435,6 +495,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
+     * @param t Translatable
      * @see org.eclipse.draw2d.Figure#translateFromParent(Translatable)
      */
     @Override
@@ -444,6 +505,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
+     * @param t Translatable
      * @see org.eclipse.draw2d.Figure#translateToParent(Translatable)
      */
     @Override
@@ -452,6 +514,11 @@ public class Draw2dGraph extends Panel implements SelectionManager {
         super.translateToParent(t);
     }
 
+    /**
+     * Method toggleSelection.
+     * @param node Draw2dNode
+     * @param addToSelection boolean
+     */
     private void toggleSelection(final Draw2dNode node,
             final boolean addToSelection) {
         if (node.isSelected()) {
@@ -463,6 +530,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
+     * @param graphics Graphics
      * @see org.eclipse.draw2d.Figure#paintClientArea(Graphics)
      */
     @Override
@@ -489,6 +557,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
+     * @return boolean
      * @see org.eclipse.draw2d.Figure#useLocalCoordinates()
      */
     @Override

@@ -35,9 +35,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * @author Christophe Labouisse
+ */
 public class PropertyEditorTestApp {
     /**
      * Main method to launch the window
+     * @param args String[]
      */
     public static void main(final String[] args) {
         final Shell shell = new Shell();

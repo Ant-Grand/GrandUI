@@ -1,19 +1,18 @@
-// $Id: /grand/local/GrandUi/src/net/ggtools/grand/ui/Application.java 944
-// 2005-05-20T11:00:42.144348Z clabouisse $
+// $Id$
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -53,39 +52,93 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * Singleton holding the application data.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class Application implements Runnable {
 
+    /**
+     * Field ABOUT_DIALOG_IMAGE.
+     * (value is ""net.ggtools.grand.ui.aboutimage"")
+     */
     public static final String ABOUT_DIALOG_IMAGE = "net.ggtools.grand.ui.aboutimage";
 
+    /**
+     * Field APPLICATION_ICON.
+     * (value is ""net.ggtools.grand.ui.appicon"")
+     */
     public static final String APPLICATION_ICON = "net.ggtools.grand.ui.appicon";
 
+    /**
+     * Field GRAPH_FONT.
+     * (value is ""net.ggtools.grand.ui.graphfont"")
+     */
     public static final String GRAPH_FONT = "net.ggtools.grand.ui.graphfont";
 
+    /**
+     * Field LINK_FONT.
+     * (value is ""net.ggtools.grand.ui.linkfont"")
+     */
     public static final String LINK_FONT = "net.ggtools.grand.ui.linkfont";
 
+    /**
+     * Field LINK_ICON.
+     * (value is ""net.ggtools.grand.ui.linkicon"")
+     */
     public static final String LINK_ICON = "net.ggtools.grand.ui.linkicon";
 
+    /**
+     * Field MONOSPACE_FONT.
+     * (value is ""net.ggtools.grand.ui.monospacefont"")
+     */
     public static final String MONOSPACE_FONT = "net.ggtools.grand.ui.monospacefont";
 
+    /**
+     * Field NODE_FONT.
+     * (value is ""net.ggtools.grand.ui.nodefont"")
+     */
     public static final String NODE_FONT = "net.ggtools.grand.ui.nodefont";
 
+    /**
+     * Field NODE_ICON.
+     * (value is ""net.ggtools.grand.ui.nodeicon"")
+     */
     public static final String NODE_ICON = "net.ggtools.grand.ui.nodeicon";
 
+    /**
+     * Field TOOLTIP_FONT.
+     * (value is ""net.ggtools.grand.ui.tooltipfont"")
+     */
     public static final String TOOLTIP_FONT = "net.ggtools.grand.ui.tooltipfont";
 
+    /**
+     * Field TOOLTIP_MONOSPACE_FONT.
+     * (value is ""net.ggtools.grand.ui.tooltipmonospacefont"")
+     */
     public static final String TOOLTIP_MONOSPACE_FONT = "net.ggtools.grand.ui.tooltipmonospacefont";
 
+    /**
+     * Field log.
+     */
     private static final Log log = LogFactory.getLog(Application.class);
 
+    /**
+     * Field singleton.
+     */
     private static Application singleton;
 
+    /**
+     * Method getInstance.
+     * @return Application
+     */
     public static Application getInstance() {
         return singleton;
     }
 
+    /**
+     * Method main.
+     * @param args String[]
+     */
     public static void main(final String[] args) {
         try {
             Thread.currentThread().setName("Display thread");
@@ -98,16 +151,35 @@ public class Application implements Runnable {
         System.exit(0);
     }
 
+    /**
+     * Field buildProperties.
+     */
     private final Properties buildProperties;
 
+    /**
+     * Field fontRegistry.
+     */
     private FontRegistry fontRegistry;
 
+    /**
+     * Field imageRegistry.
+     */
     private ImageRegistry imageRegistry;
 
+    /**
+     * Field preferenceStore.
+     */
     private GrandUiPrefStore preferenceStore;
 
+    /**
+     * Field versionString.
+     */
     private final String versionString;
 
+    /**
+     * Constructor for Application.
+     * @throws IOException
+     */
     public Application() throws IOException {
         if (log.isTraceEnabled()) {
             log.trace("Creating new application");
@@ -121,8 +193,8 @@ public class Application implements Runnable {
     }
 
     /**
-     * @param symbolicName
-     * @return
+     * @param symbolicName String
+     * @return Font
      */
     public final Font getBoldFont(final String symbolicName) {
         return fontRegistry.getBold(symbolicName);
@@ -136,8 +208,8 @@ public class Application implements Runnable {
     }
 
     /**
-     * @param symbolicName
-     * @return
+     * @param symbolicName String
+     * @return Font
      */
     public final Font getFont(final String symbolicName) {
         return fontRegistry.get(symbolicName);
@@ -151,8 +223,8 @@ public class Application implements Runnable {
     }
 
     /**
-     * @param key
-     * @return
+     * @param key String
+     * @return Image
      */
     public final Image getImage(final String key) {
         return imageRegistry.get(key);
@@ -166,8 +238,8 @@ public class Application implements Runnable {
     }
 
     /**
-     * @param symbolicName
-     * @return
+     * @param symbolicName String
+     * @return Font
      */
     public final Font getItalicFont(final String symbolicName) {
         return fontRegistry.getItalic(symbolicName);
@@ -190,8 +262,8 @@ public class Application implements Runnable {
     /**
      * Initializes the application resources. This method must be called from an
      * active display thread.
+     *
      * @throws IOException
-     * 
      */
     private final void initResources() throws IOException {
         if (log.isInfoEnabled()) {
@@ -236,8 +308,9 @@ public class Application implements Runnable {
     }
 
     /**
+     *
      * @throws IOException
-     * 
+     * @see java.lang.Runnable#run()
      */
     public final void run() {
         if (log.isInfoEnabled()) {

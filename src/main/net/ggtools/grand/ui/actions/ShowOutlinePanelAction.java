@@ -1,4 +1,4 @@
-// $Id: AboutAction.java 240 2004-06-23 23:19:03Z moi $
+// $Id$
 /* ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse
  * All rights reserved.
@@ -38,27 +38,42 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 
 /**
- * 
- * 
+ *
+ *
  * @author Christophe Labouisse
  */
 public class ShowOutlinePanelAction extends Action {
-    
+
+    /**
+     * Field log.
+     */
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(ShowOutlinePanelAction.class);
 
+    /**
+     * Field DEFAULT_ACTION_NAME.
+     * (value is ""Show outline panel"")
+     */
     private static final String DEFAULT_ACTION_NAME = "Show outline panel";
 
+    /**
+     * Field window.
+     */
     private final GraphWindow window;
 
+    /**
+     * Constructor for ShowOutlinePanelAction.
+     * @param parent GraphWindow
+     */
     public ShowOutlinePanelAction(final GraphWindow parent) {
         super(DEFAULT_ACTION_NAME);
         window = parent;
         setChecked(parent.isOutlinePanelVisible());
         setAccelerator('o');
     }
-    
-    /* (non-Javadoc)
+
+    /**
+     * Method run.
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override

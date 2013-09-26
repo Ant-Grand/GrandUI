@@ -47,12 +47,16 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 
 /**
- * 
- * 
+ *
+ *
  * @author Christophe Labouisse
  */
 public class GraphMenu extends MenuManager {
 
+    /**
+     * Constructor for GraphMenu.
+     * @param controlerProvider GraphControlerProvider
+     */
     public GraphMenu(final GraphControlerProvider controlerProvider) {
         super("Graph");
         add(new ReloadGraphAction(controlerProvider));

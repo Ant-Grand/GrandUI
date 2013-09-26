@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -69,28 +69,62 @@ import org.eclipse.swt.widgets.Widget;
 public class GraphWindow extends ApplicationWindow
         implements GraphControlerProvider {
 
+    /**
+     * Field log.
+     */
     private static final Log log = LogFactory.getLog(GraphWindow.class);
 
+    /**
+     * Field controlerAvailableDispatcher.
+     */
     private final Dispatcher controlerAvailableDispatcher;
 
+    /**
+     * Field controlerEventManager.
+     */
     private final EventManager controlerEventManager;
 
+    /**
+     * Field controlerRemovedDispatcher.
+     */
     private final Dispatcher controlerRemovedDispatcher;
 
+    /**
+     * Field display.
+     */
     private Display display;
 
+    /**
+     * Field manager.
+     */
     private MenuManager manager;
 
+    /**
+     * Field outlinePanelVisible.
+     */
     private boolean outlinePanelVisible = false;
 
+    /**
+     * Field sourcePanelVisible.
+     */
     private boolean sourcePanelVisible = true;
 
+    /**
+     * Field tabFolder.
+     */
     private CTabFolder tabFolder;
 
+    /**
+     * Constructor for GraphWindow.
+     */
     public GraphWindow() {
         this(null);
     }
 
+    /**
+     * Constructor for GraphWindow.
+     * @param parent Shell
+     */
     public GraphWindow(final Shell parent) {
         super(parent);
         if (log.isDebugEnabled()) {
@@ -117,16 +151,18 @@ public class GraphWindow extends ApplicationWindow
         addMenuBar();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method addControlerListener.
+     * @param listener GraphControlerListener
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#addControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
     public void addControlerListener(final GraphControlerListener listener) {
         controlerEventManager.subscribe(listener);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method getControler.
+     * @return GraphControler
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#getControler()
      */
     public final GraphControler getControler() {
@@ -144,9 +180,9 @@ public class GraphWindow extends ApplicationWindow
 
     /**
      * Create a new displayer for a controler.
-     * 
+     *
      * @param controler
-     * @return
+     * @return GraphDisplayer
      */
     public final GraphDisplayer newDisplayer(final GraphControler controler) {
         final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE, controler);
@@ -161,7 +197,7 @@ public class GraphWindow extends ApplicationWindow
 
     /**
      * Open an ant file in a new window.
-     * @param buildFile
+     * @param buildFile File
      * @param properties
      *            a set of properties to be preset when opening the graph or
      *            <code>null</code> if no properties should be preset.
@@ -173,7 +209,7 @@ public class GraphWindow extends ApplicationWindow
 
     /**
      * Open an ant file in a new window, focusing on a specific target.
-     * @param buildFile
+     * @param buildFile File
      * @param targetName
      *            the target to scroll to or <code>null</code> not to focus on
      *            any target.
@@ -204,8 +240,9 @@ public class GraphWindow extends ApplicationWindow
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method removeControlerListener.
+     * @param listener GraphControlerListener
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
     public void removeControlerListener(final GraphControlerListener listener) {
@@ -246,9 +283,9 @@ public class GraphWindow extends ApplicationWindow
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method configureShell.
+     * @param shell Shell
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
@@ -257,9 +294,10 @@ public class GraphWindow extends ApplicationWindow
         shell.setText("Grand");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method createContents.
+     * @param parent Composite
+     * @return Control
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -305,9 +343,9 @@ public class GraphWindow extends ApplicationWindow
         return tabFolder;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method createMenuManager.
+     * @return MenuManager
      * @see org.eclipse.jface.window.ApplicationWindow#createMenuManager()
      */
     @Override

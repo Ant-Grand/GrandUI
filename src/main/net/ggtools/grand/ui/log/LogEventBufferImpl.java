@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,28 +39,31 @@ import org.apache.commons.logging.LogFactory;
 /**
  * A singleton class used to store the log events generated from the start of
  * the application.
- * 
+ *
  * @author Christophe Labouisse
  */
 public final class LogEventBufferImpl implements LogEventBuffer {
 
+    /**
+     * Field instance.
+     */
     private static LogEventBufferImpl instance;
 
     /**
-     * Logger for this class
+     * Logger for this class.
      */
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(LogEventBufferImpl.class);
 
     /**
-     * Comment for <code>serialVersionUID</code>
+     * Comment for <code>serialVersionUID</code>.
      */
     private static final long serialVersionUID = 3760564170055364917L;
 
 
     /**
      * Get the singleton instance.
-     * 
+     *
      * @return the instance.
      */
     public static LogEventBufferImpl getInstance() {
@@ -70,8 +73,14 @@ public final class LogEventBufferImpl implements LogEventBuffer {
         return instance;
     }
 
+    /**
+     * Field eventList.
+     */
     private final LinkedList<LogEvent> eventList = new LinkedList<LogEvent>();
 
+    /**
+     * Field listener.
+     */
     private transient LogEventListener listener;
 
     /**
@@ -81,12 +90,17 @@ public final class LogEventBufferImpl implements LogEventBuffer {
         super();
     }
 
+    /**
+     * Method addListener.
+     * @param newListener LogEventListener
+     * @see net.ggtools.grand.ui.log.LogEventBuffer#addListener(LogEventListener)
+     */
     public void addListener(final LogEventListener newListener) {
         listener = newListener;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method clearLogEvents.
      * @see net.ggtools.grand.ui.log.LogEventBuffer#clearLogEvents()
      */
     public synchronized void clearLogEvents() {
@@ -95,23 +109,42 @@ public final class LogEventBufferImpl implements LogEventBuffer {
 
     /**
      * Return an unmodifiable list.
-     * 
-     * @return
+     *
+     * @return List<LogEvent>
+     * @see net.ggtools.grand.ui.log.LogEventBuffer#getEventList()
      */
     public List<LogEvent> getEventList() {
         return Collections.unmodifiableList(eventList);
     }
 
+    /**
+     * Method removeListener.
+     * @param toRemove LogEventListener
+     * @see net.ggtools.grand.ui.log.LogEventBuffer#removeListener(LogEventListener)
+     */
     public void removeListener(final LogEventListener toRemove) {
         if (listener == toRemove) {
             listener = null;
         }
     }
 
+    /**
+     * Method addLogEvent.
+     * @param level Level
+     * @param originator String
+     * @param message Object
+     */
     void addLogEvent(final Level level, final String originator, final Object message) {
         addLogEvent(level, originator, message, null);
     }
 
+    /**
+     * Method addLogEvent.
+     * @param level Level
+     * @param originator String
+     * @param message Object
+     * @param exception Throwable
+     */
     void addLogEvent(final Level level, final String originator, final Object message,
             final Throwable exception) {
         final LogEvent logEvent = new LogEvent(level, originator, message, exception);

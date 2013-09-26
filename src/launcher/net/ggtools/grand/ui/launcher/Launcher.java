@@ -38,8 +38,21 @@ import java.util.Locale;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * @author Christophe Labouisse
+ */
 public class Launcher {
+    /**
+     * @author Christophe Labouisse
+     */
     private static final class JarFilenameFilter implements FilenameFilter {
+        /**
+         * Method accept.
+         * @param dir File
+         * @param name String
+         * @return boolean
+         * @see java.io.FilenameFilter#accept(File, String)
+         */
         public boolean accept(final File dir, final String name) {
             return name.endsWith(".jar");
         }
@@ -50,6 +63,9 @@ public class Launcher {
      */
     private static final Log log = LogFactory.getLog(Launcher.class);
 
+    /**
+     * Constructor for Launcher.
+     */
     public Launcher() {
         super();
         // TODO Auto-generated constructor stub

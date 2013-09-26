@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -38,23 +38,23 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * An abstract class implementing basic features for actions listening to a graph.
- * This class manages the subscription/unsubscription process whenever the controler
+ * This class manages the subscription/unsubscription process whenever the controller
  * gets available/unavailable and implements do nothing methods on events.
- * 
+ *
  * @author Christophe Labouisse
  */
 public abstract class GraphListenerAction extends GraphControlerAction
         implements GraphListener {
     /**
-     * @param parent
+     * @param parent GraphControlerProvider
      */
     public GraphListenerAction(final GraphControlerProvider parent) {
         super(parent);
     }
 
     /**
-     * @param parent
-     * @param text
+     * @param parent GraphControlerProvider
+     * @param text String
      */
     public GraphListenerAction(final GraphControlerProvider parent,
             final String text) {
@@ -62,9 +62,9 @@ public abstract class GraphListenerAction extends GraphControlerAction
     }
 
     /**
-     * @param parent
-     * @param text
-     * @param image
+     * @param parent GraphControlerProvider
+     * @param text String
+     * @param image ImageDescriptor
      */
     public GraphListenerAction(final GraphControlerProvider parent,
             final String text, final ImageDescriptor image) {
@@ -72,31 +72,33 @@ public abstract class GraphListenerAction extends GraphControlerAction
     }
 
     /**
-     * @param parent
-     * @param text
-     * @param style
+     * @param parent GraphControlerProvider
+     * @param text String
+     * @param style int
      */
     public GraphListenerAction(final GraphControlerProvider parent,
             final String text, final int style) {
         super(parent, text, style);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanges(net.ggtools.grand.ui.graph.GraphControler)
+    /**
+     * Method parameterChanged.
+     * @param controler GraphControler
+     * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanged(net.ggtools.grand.ui.graph.GraphControler)
      */
     public void parameterChanged(final GraphControler controler) {
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method selectionChanged.
+     * @param selectedNodes Collection<Draw2dNode>
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
     public void selectionChanged(final Collection<Draw2dNode> selectedNodes) {
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method postAddHook.
      * @see net.ggtools.grand.ui.actions.GraphControlerAction#postAddHook()
      */
     @Override
@@ -104,8 +106,8 @@ public abstract class GraphListenerAction extends GraphControlerAction
         getGraphControler().addListener(this);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method postInitHook.
      * @see net.ggtools.grand.ui.actions.GraphControlerAction#postInitHook()
      */
     @Override
@@ -115,8 +117,8 @@ public abstract class GraphListenerAction extends GraphControlerAction
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method preRemoveHook.
      * @see net.ggtools.grand.ui.actions.GraphControlerAction#preRemoveHook()
      */
     @Override

@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,20 +36,48 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 
+/**
+ * @author Christophe Labouisse
+ */
 public final class CanvasScroller implements MouseMoveListener {
+    /**
+     * Field log.
+     */
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(CanvasScroller.class);
 
+    /**
+     * Field canvas.
+     */
     private final FigureCanvas canvas;
 
+    /**
+     * Field gotStartPoint.
+     */
     private boolean gotStartPoint;
 
+    /**
+     * Field inDragMode.
+     */
     private boolean inDragMode;
 
+    /**
+     * Field startDragY.
+     */
+    /**
+     * Field startDragX.
+     */
     private int startDragX, startDragY;
 
+    /**
+     * Field viewport.
+     */
     private final Viewport viewport;
 
+    /**
+     * Constructor for CanvasScroller.
+     * @param c FigureCanvas
+     */
     public CanvasScroller(final FigureCanvas c) {
         canvas = c;
         viewport = canvas.getViewport();
@@ -70,7 +98,7 @@ public final class CanvasScroller implements MouseMoveListener {
     }
 
     /**
-     * 
+     *
      */
     public void leaveDragMode() {
         if (inDragMode) {
@@ -80,15 +108,9 @@ public final class CanvasScroller implements MouseMoveListener {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
-     */
-
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method mouseMove.
+     * @param e MouseEvent
      * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
      */
     public void mouseMove(final MouseEvent e) {

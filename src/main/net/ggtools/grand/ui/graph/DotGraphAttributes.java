@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,47 +29,119 @@
 package net.ggtools.grand.ui.graph;
 
 /**
- * An interface holding the constants for some useful attributes use in the dot &
- * draw2d graph.
- * 
+ * An interface holding the constants for some useful attributes use in the dot
+ * & draw2d graph.
+ *
  * @author Christophe Labouisse
  */
 public interface DotGraphAttributes {
 
+    /**
+     * Field _BOUNDS_ATTR.
+     * (value is ""-bounds"")
+     */
     String _BOUNDS_ATTR = "-bounds";
 
+    /**
+     * Field _SHAPE_ATTR.
+     * (value is ""-shape"")
+     */
     String _SHAPE_ATTR = "-shape";
 
+    /**
+     * Field BUILD_FILE_ATTR.
+     * (value is ""build.file"")
+     */
     String BUILD_FILE_ATTR = "build.file";
 
+    /**
+     * Field DESCRIPTION_ATTR.
+     * (value is ""description"")
+     */
     String DESCRIPTION_ATTR = "description";
 
+    /**
+     * Field DRAW2DFGCOLOR_ATTR.
+     * (value is ""draw2dfgcolor"")
+     */
     String DRAW2DFGCOLOR_ATTR = "draw2dfgcolor";
 
+    /**
+     * Field DRAW2DFILLCOLOR_ATTR.
+     * (value is ""draw2dfillcolor"")
+     */
     String DRAW2DFILLCOLOR_ATTR = "draw2dfillcolor";
 
+    /**
+     * Field DRAW2DLINEWIDTH_ATTR.
+     * (value is ""draw2dlinewidth"")
+     */
     String DRAW2DLINEWIDTH_ATTR = "draw2dlinewidth";
 
+    /**
+     * Field IF_CONDITION_ATTR.
+     * (value is ""ifCondition"")
+     */
     String IF_CONDITION_ATTR = "ifCondition";
 
+    /**
+     * Field LABEL_ATTR.
+     * (value is ""label"")
+     */
     String LABEL_ATTR = "label";
 
+    /**
+     * Field MINHEIGHT_ATTR.
+     * (value is ""minheight"")
+     */
     String MINHEIGHT_ATTR = "minheight";
 
+    /**
+     * Field MINWIDTH_ATTR.
+     * (value is ""minwidth"")
+     */
     String MINWIDTH_ATTR = "minwidth";
 
+    /**
+     * Field PATH_ITERATOR_FLATNESS.
+     * (value is 1.0)
+     */
     double PATH_ITERATOR_FLATNESS = 1.0;
 
+    /**
+     * Field LINK_PARAMETERS_ATTR.
+     * (value is ""link.params"")
+     */
     String LINK_PARAMETERS_ATTR = "link.params";
 
+    /**
+     * Field LINK_SUBANT_DIRECTORIES.
+     * (value is ""link.subant.directories"")
+     */
     String LINK_SUBANT_DIRECTORIES = "link.subant.directories";
 
+    /**
+     * Field LINK_TASK_ATTR.
+     * (value is ""link.task"")
+     */
     String LINK_TASK_ATTR = "link.task";
 
+    /**
+     * Field POSITION_ATTR.
+     * (value is ""pos"")
+     */
     String POSITION_ATTR = "pos";
 
+    /**
+     * Field SHAPE_ATTR.
+     * (value is ""shape"")
+     */
     String SHAPE_ATTR = "shape";
 
+    /**
+     * Field UNLESS_CONDITION_ATTR.
+     * (value is ""unlessCondition"")
+     */
     String UNLESS_CONDITION_ATTR = "unlessCondition";
 
 }

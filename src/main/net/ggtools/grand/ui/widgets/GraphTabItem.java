@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -80,21 +80,32 @@ import org.eclipse.swt.widgets.Menu;
  * {@link net.ggtools.grand.ui.graph.GraphControlerProvider}this class only
  * manage a dummy notification system as there won't be any change of the
  * controler during the instances lifetime.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class GraphTabItem extends CTabItem
         implements GraphDisplayer, GraphListener {
+    /**
+     * @author Christophe Labouisse
+     */
     private final class MouseWheelZoomListener implements Listener {
         /**
-         * Logger for this class
+         * Logger for this class.
          */
         @SuppressWarnings("unused")
         private final Log log = LogFactory.getLog(MouseWheelZoomListener.class);
 
+        /**
+         * Constructor for MouseWheelZoomListener.
+         */
         private MouseWheelZoomListener() {
         }
 
+        /**
+         * Method handleEvent.
+         * @param event Event
+         * @see org.eclipse.swt.widgets.Listener#handleEvent(Event)
+         */
         public void handleEvent(final Event event) {
             final float zoomBefore = getZoom();
             event.doit = false;
@@ -116,25 +127,51 @@ public class GraphTabItem extends CTabItem
         }
     }
 
+    /**
+     * @author Christophe Labouisse
+     */
     private final static class OutlineViewerCollator extends Collator {
         /**
-         * Logger for this class
+         * Logger for this class.
          */
         private static final Log log = LogFactory.getLog(OutlineViewerCollator.class);
+        /**
+         * Field NODE_INDEX_GROUP_NUM.
+         * (value is 4)
+         */
         private static final int NODE_INDEX_GROUP_NUM = 4;
 
+        /**
+         * Field NODE_NAME_GROUP_NUM.
+         * (value is 1)
+         */
         private static final int NODE_NAME_GROUP_NUM = 1;
 
+        /**
+         * Field pattern.
+         */
         private static final Pattern pattern =
                 Pattern.compile("\\[?(.*?)(\\s*(\\((\\d+)\\))?\\s*\\])?",
                         Pattern.CASE_INSENSITIVE);
 
+        /**
+         * Field underlying.
+         */
         private final Collator underlying;
 
+        /**
+         * Constructor for OutlineViewerCollator.
+         */
         public OutlineViewerCollator() {
             underlying = getInstance();
         }
 
+        /**
+         * Method compare.
+         * @param source String
+         * @param target String
+         * @return int
+         */
         @Override
         public int compare(final String source, final String target) {
             final Matcher sourceMatcher = pattern.matcher(source);
@@ -166,7 +203,7 @@ public class GraphTabItem extends CTabItem
                             + " is not an integer treating as 0");
                     sourceIndex = 0;
                 }
-                
+
                 int targetIndex;
                 final String targetIndexGroup = targetMatcher.group(NODE_INDEX_GROUP_NUM);
                 try {
@@ -176,18 +213,27 @@ public class GraphTabItem extends CTabItem
                             + " is not an integer treating as 0");
                     targetIndex = 0;
                 }
-                
+
                 result = (sourceIndex < targetIndex) ? -1 : ((sourceIndex == targetIndex) ? 0 : 1);
             }
 
             return result;
         }
 
+        /**
+         * Method getCollationKey.
+         * @param source String
+         * @return CollationKey
+         */
         @Override
         public CollationKey getCollationKey(final String source) {
             throw new Error("getCollationKey is not implemented");
         }
 
+        /**
+         * Method hashCode.
+         * @return int
+         */
         @Override
         public int hashCode() {
             return underlying.hashCode();
@@ -195,49 +241,103 @@ public class GraphTabItem extends CTabItem
 
     }
 
+    /**
+     * Field log.
+     */
     private static final Log log = LogFactory.getLog(GraphTabItem.class);
 
+    /**
+     * Field ZOOM_MAX.
+     * (value is 3.0)
+     */
     private static final float ZOOM_MAX = 3.0f;
 
+    /**
+     * Field ZOOM_MIN.
+     * (value is 0.25)
+     */
     private static final float ZOOM_MIN = 0.25f;
 
+    /**
+     * Field ZOOM_STEP.
+     * (value is 1.1)
+     */
     private static final float ZOOM_STEP = 1.1f;
 
+    /**
+     * Field canvas.
+     */
     private final FigureCanvas canvas;
 
+    /**
+     * Field canvasScroller.
+     */
     private final CanvasScroller canvasScroller;
 
+    /**
+     * Field contextMenu.
+     */
     private final Menu contextMenu;
 
+    /**
+     * Field contextMenuManager.
+     */
     private final MenuManager contextMenuManager;
 
+    /**
+     * Field controler.
+     */
     private final GraphControler controler;
 
+    /**
+     * Field graph.
+     */
     private Draw2dGraph graph;
 
+    /**
+     * Field outlineSashForm.
+     */
     private final SashForm outlineSashForm;
 
-    // TableViewer is richer than ListViewer
+    /**
+     * Field outlineViewer.
+     *
+     * TableViewer is richer than ListViewer
+     */
     private final TableViewer outlineViewer;
 
-    // To be set to <code>true</code> when the next selection change do no
-    // requires jumping to the selected node.
+    /**
+     * Field skipJumpToNode.
+     *
+     * To be set to <code>true</code> when the next selection change do no
+     * requires jumping to the selected node.
+     */
     private boolean skipJumpToNode = false;
 
+    /**
+     * Field sourceSashForm.
+     */
     private final SashForm sourceSashForm;
 
+    /**
+     * Field textComposite.
+     */
     private final ScrolledComposite textComposite;
 
+    /**
+     * Field textDisplayer.
+     */
     private final StyledText textDisplayer;
 
     /**
      * Creates a tab to display a new graph. The tab will contain two sash forms
      * a vertical one with the source panel as the bottom part and a second
      * horizontal second one containing the outline window and the graph itself.
-     * 
+     *
      * @param parent
      *            parent CTabFolder.
      * @param style
+     * @param controler GraphControler
      */
     public GraphTabItem(final CTabFolder parent, final int style, final GraphControler controler) {
         super(parent, style);
@@ -296,31 +396,35 @@ public class GraphTabItem extends CTabItem
         controler.addListener(this);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method addControlerListener.
+     * @param listener GraphControlerListener
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#addControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
     public void addControlerListener(final GraphControlerListener listener) {
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method getContextMenu.
+     * @return Menu
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#getContextMenu()
      */
     public final Menu getContextMenu() {
         return contextMenu;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#getControler()
+    /**
+     * Method getControler.
+     * @return GraphControler
+     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#getControler()
      */
     public final GraphControler getControler() {
         return controler;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method jumpToNode.
+     * @param nodeName String
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#jumpToNode(java.lang.String)
      */
     public final void jumpToNode(final String nodeName) {
@@ -345,22 +449,25 @@ public class GraphTabItem extends CTabItem
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method parameterChanged.
+     * @param graphControler GraphControler
      * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanged(net.ggtools.grand.ui.graph.GraphControler)
      */
     public void parameterChanged(final GraphControler graphControler) {
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method removeControlerListener.
+     * @param listener GraphControlerListener
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
     public void removeControlerListener(final GraphControlerListener listener) {
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method selectionChanged.
+     * @param selectedNodes Collection<Draw2dNode>
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
     public final void selectionChanged(final Collection<Draw2dNode> selectedNodes) {
@@ -379,10 +486,13 @@ public class GraphTabItem extends CTabItem
         });
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setGraph(net.ggtools.grand.ui.graph.Graph)
+    /**
+     * Method setGraph.
+     * @param graph Draw2dGraph
+     * @param name String
+     * @param toolTip String
+     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setGraph(net.ggtools.grand.ui.graph.draw2d.Draw2dGraph,
+     *      java.lang.String, java.lang.String)
      */
     public final void setGraph(final Draw2dGraph graph, final String name,
             final String toolTip) {
@@ -410,8 +520,9 @@ public class GraphTabItem extends CTabItem
         outlineSashForm.layout();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method setRichSource.
+     * @param richSource SourceElement[]
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#setRichSource(net.ggtools.grand.ant.AntTargetNode.SourceElement[])
      */
     public final void setRichSource(final SourceElement[] richSource) {
@@ -462,17 +573,18 @@ public class GraphTabItem extends CTabItem
         sourceSashForm.layout();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method setSourceText.
+     * @param text String
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#setSourceText(java.lang.String)
      */
-    public void setSourceText(final String text) {
+    public final void setSourceText(final String text) {
         textDisplayer.setText(text);
         textComposite.setMinSize(textDisplayer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method zoomIn.
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#zoomIn()
      */
     public final void zoomIn() {
@@ -486,8 +598,8 @@ public class GraphTabItem extends CTabItem
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method zoomOut.
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#zoomOut()
      */
     public final void zoomOut() {
@@ -497,25 +609,27 @@ public class GraphTabItem extends CTabItem
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method zoomReset.
      * @see net.ggtools.grand.ui.graph.GraphDisplayer#zoomReset()
      */
     public final void zoomReset() {
         setZoom(1.0f);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#getZoom()
+    /**
+     * Method getZoom.
+     * @return float
+     * @see net.ggtools.grand.ui.graph.draw2d.Draw2dGraph#getZoom()
      */
     private float getZoom() {
         return (graph == null) ? 1.0f : graph.getZoom();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.ggtools.grand.ui.graph.GraphDisplayer#setZoom(float)
+    /**
+     * Method setZoom.
+     * @param zoom float
+     * @see net.ggtools.grand.ui.graph.draw2d.Draw2dGraph#setZoom(float)
      */
     private void setZoom(final float zoom) {
         if (graph != null) {

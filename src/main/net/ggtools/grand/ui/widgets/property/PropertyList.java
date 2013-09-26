@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,30 +40,54 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Specialized list for property pairs.
- * 
+ *
  * @author Christophe Labouisse
  */
 class PropertyList {
     /**
-     * Logger for this class
+     * Logger for this class.
      */
     private static final Log log = LogFactory.getLog(PropertyList.class);
 
+    /**
+     * Field allPropertiesChangedDispatcher.
+     */
     @SuppressWarnings("unused")
     private Dispatcher allPropertiesChangedDispatcher;
 
+    /**
+     * Field clearedPropertiesDispatcher.
+     */
     private Dispatcher clearedPropertiesDispatcher;
 
+    /**
+     * Field propertyAddedDispatcher.
+     */
     private Dispatcher propertyAddedDispatcher;
 
+    /**
+     * Field propertyChangedDispatcher.
+     */
     private Dispatcher propertyChangedDispatcher;
 
+    /**
+     * Field propertyRemovedDispatcher.
+     */
     private Dispatcher propertyRemovedDispatcher;
 
+    /**
+     * Field eventManager.
+     */
     EventManager eventManager;
 
+    /**
+     * Field pairList.
+     */
     final Set<PropertyPair> pairList = new HashSet<PropertyPair>();
 
+    /**
+     * Constructor for PropertyList.
+     */
     public PropertyList() {
         eventManager = new EventManager("PropertyList event manager");
         try {
@@ -88,6 +112,10 @@ class PropertyList {
         }
     }
 
+    /**
+     * Method addAll.
+     * @param properties Properties
+     */
     public void addAll(final Properties properties) {
         for (final Entry<Object, Object> entry : properties.entrySet()) {
             pairList.add(new PropertyPair(entry));
@@ -95,19 +123,33 @@ class PropertyList {
 
     }
 
+    /**
+     * Method addProperty.
+     */
     public void addProperty() {
         add(new PropertyPair("new property", ""));
     }
 
+    /**
+     * Method addPropertyChangedListener.
+     * @param listener PropertyChangedListener
+     */
     public void addPropertyChangedListener(final PropertyChangedListener listener) {
         eventManager.subscribe(listener);
     }
 
+    /**
+     * Method clear.
+     */
     public void clear() {
         pairList.clear();
         clearedPropertiesDispatcher.dispatch(null);
     }
 
+    /**
+     * Method getAsProperties.
+     * @return Properties
+     */
     public Properties getAsProperties() {
         final Properties props = new Properties();
         for (final PropertyPair pair : pairList) {
@@ -116,19 +158,35 @@ class PropertyList {
         return props;
     }
 
+    /**
+     * Method remove.
+     * @param pair PropertyPair
+     */
     public void remove(final PropertyPair pair) {
         pairList.remove(pair);
         propertyRemovedDispatcher.dispatch(pair);
     }
 
+    /**
+     * Method removePropertyChangedListener.
+     * @param listener PropertyChangedListener
+     */
     public void removePropertyChangedListener(final PropertyChangedListener listener) {
         eventManager.unSubscribe(listener);
     }
 
+    /**
+     * Method toArray.
+     * @return PropertyPair[]
+     */
     public PropertyPair[] toArray() {
         return pairList.toArray(new PropertyPair[pairList.size()]);
     }
 
+    /**
+     * Method toString.
+     * @return String
+     */
     @Override
     public String toString() {
         final StringBuffer strBuff = new StringBuffer();
@@ -139,14 +197,14 @@ class PropertyList {
     }
 
     /**
-     * @param pair
+     * @param pair PropertyPair
      */
     public void update(final PropertyPair pair) {
         propertyChangedDispatcher.dispatch(pair);
     }
 
     /**
-     * @param pair
+     * @param pair PropertyPair
      */
     private void add(final PropertyPair pair) {
         pairList.add(pair);

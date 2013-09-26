@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -46,24 +46,35 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * 
- * 
+ *
+ *
  * @author Christophe Labouisse
  */
 public class RecentFilesMenu extends MenuManager
         implements RecentFilesListener {
 
     /**
-     * An action openning a specific file when run.
-     * 
+     * An action opening a specific file when run.
+     *
      * @author Christophe Labouisse
      */
     private class OpenRecentFileAction extends Action {
 
+        /**
+         * Field file.
+         */
         private final File file;
 
+        /**
+         * Field window.
+         */
         private final GraphWindow window;
 
+        /**
+         * Constructor for OpenRecentFileAction.
+         * @param window GraphWindow
+         * @param fileName String
+         */
         public OpenRecentFileAction(final GraphWindow window,
                 final String fileName) {
             super(fileName);
@@ -71,10 +82,9 @@ public class RecentFilesMenu extends MenuManager
             file = new File(fileName);
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.action.Action#run()
+        /**
+         * Method run.
+         * @see org.eclipse.jface.action.IAction#run()
          */
         @Override
         public void run() {
@@ -83,18 +93,28 @@ public class RecentFilesMenu extends MenuManager
         }
     }
 
+    /**
+     * Field log.
+     */
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(RecentFilesMenu.class);
 
+    /**
+     * Field RECENT_FILES_GROUP.
+     * (value is ""Recent files"")
+     */
     private static final String RECENT_FILES_GROUP = "Recent files";
 
+    /**
+     * Field window.
+     */
     private final GraphWindow window;
 
     /**
      * Creates a new RecentFilesMenu instance loading the recent files from the
      * preference store.
-     * 
-     * @param window
+     *
+     * @param window GraphWindow
      */
     public RecentFilesMenu(final GraphWindow window) {
         super("Recent files");
@@ -106,9 +126,10 @@ public class RecentFilesMenu extends MenuManager
 
     /**
      * Update the recent files menu.
-     * 
+     *
      * @param recentFiles
      *            list of files to put in the menu.
+     * @see net.ggtools.grand.ui.RecentFilesListener#refreshRecentFiles(Collection)
      */
     public final void refreshRecentFiles(final Collection<String> recentFiles) {
         final Runnable runnable = new Runnable() {

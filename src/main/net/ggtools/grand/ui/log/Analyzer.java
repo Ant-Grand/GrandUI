@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -44,24 +44,27 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Quick 'n dirty class to load a saved log from disk and display it in a log
  * viewer.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class Analyzer extends ApplicationWindow {
 
+    /**
+     * Field logViewer.
+     */
     private LogViewer logViewer;
 
     /**
-     * 
+     *
      */
     public Analyzer() {
         super(null);
         addMenuBar();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method configureShell.
+     * @param shell Shell
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
@@ -70,8 +73,9 @@ public class Analyzer extends ApplicationWindow {
         shell.setText("ggTools log analyzer");
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createMenuManager.
+     * @return MenuManager
      * @see org.eclipse.jface.window.ApplicationWindow#createMenuManager()
      */
     @Override
@@ -136,8 +140,10 @@ public class Analyzer extends ApplicationWindow {
         return manager;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createContents.
+     * @param parent Composite
+     * @return Control
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -147,6 +153,10 @@ public class Analyzer extends ApplicationWindow {
         return logViewer;
     }
 
+    /**
+     * Method main.
+     * @param args String[]
+     */
     public static void main(final String[] args) {
         final Analyzer analyzer = new Analyzer();
         analyzer.setBlockOnOpen(true);

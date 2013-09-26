@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
 /**
  * A {@link org.eclipse.jface.preference.PreferenceStore} featuring higher level
  * functionalities like save properties or list.
- * 
+ *
  * @author Christophe Labouisse
  */
 /**
@@ -82,86 +82,158 @@ public class ComplexPreferenceStore extends PreferenceStore {
     /**
      * An interface used to load properties like structure. It is used to save
      * either a {@link PreferenceStore} or a {@link Properties}.
-     * 
+     *
      * @author Christophe Labouisse
      */
     private interface PropertyLoader {
+        /**
+         * Method addEntry.
+         * @param key String
+         * @param value String
+         */
         void addEntry(final String key, final String value);
 
+        /**
+         * Method addProperties.
+         * @param key String
+         * @param propertiesElement Element
+         */
         void addProperties(final String key, final Element propertiesElement);
     }
 
     /**
      * An interface used to save properties like structure. It is used to save
      * either a {@link PreferenceStore} or a {@link Properties}.
-     * 
+     *
      * @author Christophe Labouisse
      */
     private interface PropertySaver {
 
+        /**
+         * Method get.
+         * @param key String
+         * @return String
+         */
         String get(final String key);
 
+        /**
+         * Method getKeys.
+         * @return Collection<?>
+         */
         Collection<?> getKeys();
 
+        /**
+         * Method needSaving.
+         * @param key String
+         * @return boolean
+         */
         boolean needSaving(final String key);
     }
 
+    /**
+     * Field COLLECTION_NO_LIMIT.
+     * (value is -1)
+     */
     private static final int COLLECTION_NO_LIMIT = -1;
 
+    /**
+     * Field DATE_ATTRIBUTE.
+     * (value is ""date"")
+     */
     private static final String DATE_ATTRIBUTE = "date";
 
+    /**
+     * Field ENTRY_ELEMENT.
+     * (value is ""entry"")
+     */
     private static final String ENTRY_ELEMENT = "entry";
 
+    /**
+     * Field KEY_ATTRIBUTE.
+     * (value is ""key"")
+     */
     private static final String KEY_ATTRIBUTE = "key";
 
     /**
-     * Logger for this class
+     * Logger for this class.
      */
     private static final Log log = LogFactory.getLog(ComplexPreferenceStore.class);
 
+    /**
+     * Field PREF_FILE_VERSION_MAJOR.
+     * (value is 1)
+     */
     private static final int PREF_FILE_VERSION_MAJOR = 1;
 
+    /**
+     * Field PREF_FILE_VERSION_MINOR.
+     * (value is 0)
+     */
     private static final int PREF_FILE_VERSION_MINOR = 0;
 
+    /**
+     * Field PROPERTIES_ELEMENT.
+     * (value is ""properties"")
+     */
     private static final String PROPERTIES_ELEMENT = "properties";
 
+    /**
+     * Field ROOT_ELEMENT.
+     * (value is ""preferences"")
+     */
     private static final String ROOT_ELEMENT = "preferences";
 
+    /**
+     * Field VERSION_ATTRIBUTE.
+     * (value is ""version"")
+     */
     private static final String VERSION_ATTRIBUTE = "version";
 
     /**
      * Escapes the "," character in a script to be able to use the "," as
      * separator in lists.
-     * 
-     * @param item
-     * @return
+     *
+     * @param item String
+     * @return String
      */
     private static String escapeString(final String item) {
         return item.replaceAll("%", "%%").replaceAll(",", "%,");
     }
 
     /**
-     * @param item
-     * @return
+     * @param item String
+     * @return String
      */
     private static String unEscapeString(final String item) {
         return item.replaceAll("%,", ",").replaceAll("%%", "%");
     }
 
+    /**
+     * Field colorRegistry.
+     */
     private final ColorRegistry colorRegistry = new ColorRegistry();
 
+    /**
+     * Field fontRegistry.
+     */
     private final FontRegistry fontRegistry = new FontRegistry();
 
+    /**
+     * Field prefFile.
+     */
     private File prefFile;
 
+    /**
+     * Field propertiesTable.
+     */
     private final Map<String, Properties> propertiesTable =
             new HashMap<String, Properties>();
 
     /**
      * Get a collection of {@link String}s.
-     * 
-     * @param key
-     * @return
+     *
+     * @param key String
+     * @return Collection<String>
      */
     public final Collection<String> getCollection(final String key) {
         return getCollection(key, COLLECTION_NO_LIMIT);
@@ -172,11 +244,11 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * this method can be tuned by the limit parameter. If the limit is less
      * than the number of stored elements, only the <i>limit</i> first ones
      * will be fetched.
-     * 
-     * @param key
+     *
+     * @param key String
      * @param limit
      *            maximum size of the returned list or -1 for unlimited.
-     * @return
+     * @return Collection<String>
      */
     public final Collection<String> getCollection(final String key,
             final int limit) {
@@ -189,6 +261,11 @@ public class ComplexPreferenceStore extends PreferenceStore {
         return list;
     }
 
+    /**
+     * Method getColor.
+     * @param key String
+     * @return Color
+     */
     public final Color getColor(final String key) {
         final RGB newRGBColor = PreferenceConverter.getColor(this, key);
         final RGB currentRGBColor = colorRegistry.getRGB(key);
@@ -198,6 +275,11 @@ public class ComplexPreferenceStore extends PreferenceStore {
         return colorRegistry.get(key);
     }
 
+    /**
+     * Method getFont.
+     * @param key String
+     * @return Font
+     */
     public final Font getFont(final String key) {
         final FontData[] newFontDataArray = PreferenceConverter.getFontDataArray(this, key);
         final FontData[] currentFontDataArray = fontRegistry.getFontData(key);
@@ -210,9 +292,9 @@ public class ComplexPreferenceStore extends PreferenceStore {
     /**
      * Retrieve a Properties object stored by
      * {@link #setValue(String, Properties)}.
-     * 
-     * @param key
-     * @return
+     *
+     * @param key String
+     * @return Properties
      */
     public final Properties getProperties(final String key) {
         Properties properties = null;
@@ -223,9 +305,9 @@ public class ComplexPreferenceStore extends PreferenceStore {
         return properties;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method load.
+     * @throws IOException
      * @see org.eclipse.jface.preference.PreferenceStore#load()
      */
     @Override
@@ -302,9 +384,9 @@ public class ComplexPreferenceStore extends PreferenceStore {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method save.
+     * @throws IOException
      * @see org.eclipse.jface.preference.IPersistentPreferenceStore#save()
      */
     @Override
@@ -396,6 +478,10 @@ public class ComplexPreferenceStore extends PreferenceStore {
         }
     }
 
+    /**
+     * Method setPrefFile.
+     * @param prefFile File
+     */
     public final void setPrefFile(final File prefFile) {
         this.prefFile = prefFile;
     }
@@ -403,8 +489,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
     /**
      * Sets a properties to the default value. It removes the key from the
      * properties table and mark it for removal on next save.
-     * 
-     * @param key
+     *
+     * @param key String
      */
     public final void setPropertiesToDefault(final String key) {
         // TODO fire listeners
@@ -416,9 +502,9 @@ public class ComplexPreferenceStore extends PreferenceStore {
     /**
      * Save a string collection into the preference store. The collection is
      * stored by escaping each element and appending them separated by commas.
-     * 
-     * @param key
-     * @param value
+     *
+     * @param key String
+     * @param value Collection<String>
      */
     public final void setValue(final String key, final Collection<String> value) {
         final StringBuffer buffer = new StringBuffer();
@@ -434,9 +520,9 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
     /**
      * Save a {@link Properties} into the preference store.
-     * 
-     * @param key
-     * @param props
+     *
+     * @param key String
+     * @param props Properties
      */
     public final void setValue(final String key, final Properties props) {
         final Properties myProperties = new Properties();
@@ -447,7 +533,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
     }
 
     /**
-     * @param propElement
+     * @param propElement Element
+     * @param loader PropertyLoader
      */
     private void loadProperties(final Element propElement, final PropertyLoader loader) {
         final NodeList entries = propElement.getChildNodes();
@@ -471,9 +558,9 @@ public class ComplexPreferenceStore extends PreferenceStore {
     }
 
     /**
-     * @param doc
-     * @param properties
-     * @param saver
+     * @param doc Document
+     * @param properties Element
+     * @param saver PropertySaver
      */
     private void saveProperties(final Document doc, final Element properties, final PropertySaver saver) {
         final Collection<?> keys = saver.getKeys();

@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,18 +37,24 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * An action to filter the isolated nodes.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class FilterIsolatedNodesAction extends GraphControlerAction {
+    /**
+     * Field log.
+     */
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(FilterIsolatedNodesAction.class);
 
+    /**
+     * Field DEFAULT_ACTION_NAME.
+     * (value is ""Filter out isolated nodes"")
+     */
     private static final String DEFAULT_ACTION_NAME = "Filter out isolated nodes";
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method run.
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
@@ -57,6 +63,10 @@ public class FilterIsolatedNodesAction extends GraphControlerAction {
         getGraphControler().addFilter(filter);
     }
 
+    /**
+     * Constructor for FilterIsolatedNodesAction.
+     * @param parent GraphControlerProvider
+     */
     public FilterIsolatedNodesAction(final GraphControlerProvider parent) {
         super(parent, DEFAULT_ACTION_NAME);
     }

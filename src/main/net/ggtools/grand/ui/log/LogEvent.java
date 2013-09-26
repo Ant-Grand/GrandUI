@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,23 +31,30 @@ import java.io.Serializable;
 
 /**
  * A class storing all data related to a log event.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class LogEvent implements Serializable {
 
     /**
      * A log level.
+     * @author Christophe Labouisse
      */
     public static final class Level implements Serializable {
 
         /**
-         * Comment for <code>serialVersionUID</code>
+         * Comment for <code>serialVersionUID</code>.
          */
         private static final long serialVersionUID = 3257003276267435833L;
 
+        /**
+         * Field name.
+         */
         public final String name;
 
+        /**
+         * Field value.
+         */
         public final int value;
 
         /**
@@ -61,35 +68,72 @@ public class LogEvent implements Serializable {
         }
     }
 
+    /**
+     * Field DEBUG.
+     */
     public static final Level DEBUG = new Level(2, "DEBUG");
 
+    /**
+     * Field ERROR.
+     */
     public static final Level ERROR = new Level(5, "ERROR");
 
+    /**
+     * Field FATAL.
+     */
     public static final Level FATAL = new Level(6, "FATAL");
 
+    /**
+     * Field INFO.
+     */
     public static final Level INFO = new Level(3, "INFO");
 
+    /**
+     * Field TRACE.
+     */
     public static final Level TRACE = new Level(1, "TRACE");
 
+    /**
+     * Field WARNING.
+     */
     public static final Level WARNING = new Level(4, "WARNING");
 
     /**
-     * Comment for <code>serialVersionUID</code>
+     * Comment for <code>serialVersionUID</code>.
      */
     private static final long serialVersionUID = 3545794399121453874L;
 
+    /**
+     * Field exception.
+     */
     private Throwable exception;
 
+    /**
+     * Field level.
+     */
     private Level level;
 
+    /**
+     * Field message.
+     */
     private Object message;
 
+    /**
+     * Field originator.
+     */
     private String originator;
 
+    /**
+     * Field time.
+     */
     private long time;
 
     /**
-     * 
+     *
+     * @param level Level
+     * @param originator String
+     * @param message Object
+     * @param exception Throwable
      */
     public LogEvent(final Level level, final String originator,
             final Object message, final Throwable exception) {
@@ -101,7 +145,7 @@ public class LogEvent implements Serializable {
     }
 
     /**
-     * @return Returns the exception.
+     * @return Returns the exception
      */
     public final Throwable getException() {
         return exception;

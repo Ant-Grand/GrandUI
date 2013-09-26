@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -67,13 +67,23 @@ import org.eclipse.swt.widgets.TableItem;
  */
 public class LogViewer extends Composite {
 
+    /**
+     * @author Christophe Labouisse
+     */
     private final class LogEventFilter extends ViewerFilter {
         /**
-         * Logger for this class
+         * Logger for this class.
          */
         @SuppressWarnings("unused")
         private final Log log = LogFactory.getLog(LogEventFilter.class);
 
+        /**
+         * Method select.
+         * @param v Viewer
+         * @param parentElement Object
+         * @param element Object
+         * @return boolean
+         */
         @Override
         public boolean select(final Viewer v, final Object parentElement, final Object element) {
             if (element instanceof LogEvent) {
@@ -86,14 +96,22 @@ public class LogViewer extends Composite {
         }
     }
 
+    /**
+     * @author Christophe Labouisse
+     */
     private final class LogEventRefreshListener implements LogEventListener {
 
         /**
-         * Logger for this class
+         * Logger for this class.
          */
         @SuppressWarnings("unused")
         private final Log log = LogFactory.getLog(LogEventRefreshListener.class);
 
+        /**
+         * Method logEventReceived.
+         * @param event LogEvent
+         * @see net.ggtools.grand.ui.log.LogEventListener#logEventReceived(LogEvent)
+         */
         public void logEventReceived(final LogEvent event) {
             if (refreshEnabled && (event.getLevel().value >= minLogLevel)) {
                 synchronized (refreshThread) {
@@ -104,14 +122,32 @@ public class LogViewer extends Composite {
         }
     }
 
+    /**
+     * @author Christophe Labouisse
+     */
     private static final class LogEventTooltipListener extends TableTooltipListener {
 
+        /**
+         * Field CI_CLASS.
+         */
         private final int CI_CLASS;
 
+        /**
+         * Field CI_MESSAGE.
+         */
         private final int CI_MESSAGE;
 
+        /**
+         * Field table.
+         */
         private final Table table;
 
+        /**
+         * Constructor for LogEventTooltipListener.
+         * @param table Table
+         * @param CI_CLASS int
+         * @param CI_MESSAGE int
+         */
         private LogEventTooltipListener(final Table table, final int CI_CLASS, final int CI_MESSAGE) {
             super(table);
             this.table = table;
@@ -119,9 +155,12 @@ public class LogViewer extends Composite {
             this.CI_MESSAGE = CI_MESSAGE;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see net.ggtools.grand.ui.log.LogViewer.TableTooltipListener#createTooltipContents(org.eclipse.swt.widgets.Composite,
+        /**
+         * Method createTooltipContents.
+         * @param tooltipParent Composite
+         * @param item TableItem
+         * @return Control
+         * @see net.ggtools.grand.ui.log.TableTooltipListener#createTooltipContents(org.eclipse.swt.widgets.Composite,
          *      org.eclipse.swt.widgets.TableItem)
          */
         @Override
@@ -158,13 +197,21 @@ public class LogViewer extends Composite {
         }
     }
 
+    /**
+     * @author Christophe Labouisse
+     */
     private final class LogSaver extends SelectionAdapter {
         /**
-         * Logger for this class
+         * Logger for this class.
          */
         @SuppressWarnings("unused")
         private final Log log = LogFactory.getLog(LogSaver.class);
 
+        /**
+         * Method widgetSelected.
+         * @param e SelectionEvent
+         * @see org.eclipse.swt.events.SelectionListener#widgetSelected(SelectionEvent)
+         */
         @Override
         public void widgetSelected(final SelectionEvent e) {
             if (e.widget instanceof Button) {
@@ -192,12 +239,25 @@ public class LogViewer extends Composite {
         }
     }
 
+    /**
+     * @author Christophe Labouisse
+     */
     private final class ViewerRefreshThread extends Thread {
 
+        /**
+         * Field display.
+         */
         private final Display display = getDisplay();
 
+        /**
+         * Field keepRunning.
+         */
         private boolean keepRunning = true;
 
+        /**
+         * Method run.
+         * @see java.lang.Runnable#run()
+         */
         @Override
         public void run() {
             while (keepRunning) {
@@ -228,53 +288,110 @@ public class LogViewer extends Composite {
             }
         }
 
+        /**
+         * Method stopThread.
+         */
         private void stopThread() {
             keepRunning = false;
             interrupt();
         }
     }
 
+    /**
+     * Field DEFAULT_NUM_LINES.
+     * (value is 10)
+     */
     private static final int DEFAULT_NUM_LINES = 10;
 
+    /**
+     * Field HEADER_EXTRA_WIDTH.
+     * (value is 10)
+     */
     private static final int HEADER_EXTRA_WIDTH = 10;
 
     /**
-     * Logger for this class
+     * Logger for this class.
      */
     private static final Log log = LogFactory.getLog(LogViewer.class);
 
+    /**
+     * Field CI_CLASS.
+     * (value is 2)
+     */
     static final int CI_CLASS = 2;
 
+    /**
+     * Field CI_DATE.
+     * (value is 1)
+     */
     static final int CI_DATE = 1;
 
     // Indexes for table columns.
+    /**
+     * Field CI_LEVEL.
+     * (value is 0)
+     */
     static final int CI_LEVEL = 0;
 
+    /**
+     * Field CI_MESSAGE.
+     * (value is 3)
+     */
     static final int CI_MESSAGE = 3;
 
+    /**
+     * Field COLUMN_NAMES.
+     */
     static final String[] COLUMN_NAMES = new String[]{"Lvl", "Date", "Class", "Message"};
 
+    /**
+     * Field eventLevelFilter.
+     */
     private LogEventFilter eventLevelFilter;
 
+    /**
+     * Field logBuffer.
+     */
     private LogEventBuffer logBuffer;
 
+    /**
+     * Field minLogLevel.
+     */
     private int minLogLevel = LogEvent.INFO.value;
 
+    /**
+     * Field nextEvent.
+     */
     private LogEvent nextEvent = null;
 
+    /**
+     * Field refreshEnabled.
+     */
     private boolean refreshEnabled = true;
 
+    /**
+     * Field refreshListener.
+     */
     private LogEventRefreshListener refreshListener;
 
+    /**
+     * Field refreshThread.
+     */
     private final ViewerRefreshThread refreshThread;
 
+    /**
+     * Field table.
+     */
     private Table table;
 
+    /**
+     * Field viewer.
+     */
     private TableViewer viewer;
 
     /**
-     * @param parent
-     * @param style
+     * @param parent Composite
+     * @param style int
      */
     public LogViewer(final Composite parent, final int style) {
         super(parent, style);
@@ -282,6 +399,9 @@ public class LogViewer extends Composite {
         createContents(this);
     }
 
+    /**
+     * Method dispose.
+     */
     @Override
     public final void dispose() {
         if (log.isDebugEnabled()) {
@@ -313,7 +433,7 @@ public class LogViewer extends Composite {
     }
 
     /**
-     * @param composite
+     * @param parent Composite
      */
     private void createCommands(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
@@ -394,6 +514,10 @@ public class LogViewer extends Composite {
         });
     }
 
+    /**
+     * Method createContents.
+     * @param composite Composite
+     */
     private void createContents(final Composite composite) {
         final GridLayout layout = new GridLayout();
         composite.setLayout(layout);
@@ -404,6 +528,10 @@ public class LogViewer extends Composite {
         refreshThread.start();
     }
 
+    /**
+     * Method createViewer.
+     * @param parent Composite
+     */
     private void createViewer(final Composite parent) {
         viewer = new TableViewer(parent, SWT.READ_ONLY | SWT.H_SCROLL
                 | SWT.V_SCROLL | SWT.HIDE_SELECTION);
@@ -487,7 +615,7 @@ public class LogViewer extends Composite {
     }
 
     /**
-     * 
+     *
      */
     private void refreshViewer() {
         if (!table.isDisposed()) {
@@ -500,7 +628,7 @@ public class LogViewer extends Composite {
     }
 
     /**
-     * 
+     *
      */
     private void stopRefreshThread() {
         if (log.isDebugEnabled()) {
@@ -515,8 +643,8 @@ public class LogViewer extends Composite {
     }
 
     /**
-     * @param comboIndex
-     * @return
+     * @param comboIndex int
+     * @return int
      */
     protected final int comboIndexToLogLevel(final int comboIndex) {
         return comboIndex + LogEvent.TRACE.value;
@@ -524,7 +652,7 @@ public class LogViewer extends Composite {
 
     /**
      * Add value to the level selection combo.
-     * @param combo
+     * @param combo Combo
      */
     protected final void fillUpLevelCombo(final Combo combo) {
         combo.add(LogEvent.TRACE.name);

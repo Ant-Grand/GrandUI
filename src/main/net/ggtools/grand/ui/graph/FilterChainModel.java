@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,20 +41,36 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * A wrapper for a FilterChain.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class FilterChainModel implements GraphProducer {
 
+    /**
+     * Field log.
+     */
     private static final Log log = LogFactory.getLog(FilterChainModel.class);
 
+    /**
+     * Field filterChain.
+     */
     private final FilterChain filterChain;
 
+    /**
+     * Field graph.
+     */
     private Graph graph = null;
 
+    /**
+     * Field graphModel.
+     */
     @SuppressWarnings("unused")
     private GraphModel graphModel;
 
+    /**
+     * Constructor for FilterChainModel.
+     * @param graphModel GraphModel
+     */
     public FilterChainModel(final GraphModel graphModel) {
         filterChain = new FilterChain();
         this.graphModel = graphModel;
@@ -62,7 +78,7 @@ public class FilterChainModel implements GraphProducer {
     }
 
     /**
-     * @param newFilter
+     * @param newFilter GraphFilter
      */
     public final void addFilterFirst(final GraphFilter newFilter) {
         if (log.isDebugEnabled()) {
@@ -73,7 +89,7 @@ public class FilterChainModel implements GraphProducer {
     }
 
     /**
-     * @param newFilter
+     * @param newFilter GraphFilter
      */
     public final void addFilterLast(final GraphFilter newFilter) {
         if (log.isDebugEnabled()) {
@@ -84,7 +100,7 @@ public class FilterChainModel implements GraphProducer {
     }
 
     /**
-     *  
+     *
      */
     public final void clearFilters() {
         if (filterChain.getFilterList().size() > 0) {
@@ -100,7 +116,7 @@ public class FilterChainModel implements GraphProducer {
     }
 
     /**
-     * @return
+     * @return List<GraphFilter>
      */
     public final List<GraphFilter> getFilterList() {
         return filterChain.getFilterList();
@@ -108,11 +124,15 @@ public class FilterChainModel implements GraphProducer {
 
     /**
      * @return Returns the graph.
+     * @see net.ggtools.grand.graph.GraphProducer#getGraph()
      */
     public final Graph getGraph() {
         return graph;
     }
 
+    /**
+     * Method filterGraph.
+     */
     public final void filterGraph() {
         if (log.isDebugEnabled()) {
             log.debug("Start filtering, filter chain size is: "
@@ -128,7 +148,7 @@ public class FilterChainModel implements GraphProducer {
     }
 
     /**
-     * @param producer
+     * @param producer GraphProducer
      */
     public final void setProducer(final GraphProducer producer) {
         filterChain.setProducer(producer);

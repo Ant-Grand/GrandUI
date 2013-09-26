@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,16 +39,19 @@ import org.eclipse.jface.resource.ImageDescriptor;
  * An abstract class implementing basic features for action listening to a graph
  * selection. The default behavior of this class is to enable itself if there is
  * exactly one item selected.
- * 
+ *
  * @author Christophe Labouisse
  */
 public abstract class GraphSelectionAction extends GraphListenerAction
         implements GraphListener {
 
+    /**
+     * Field currentNode.
+     */
     private String currentNode;
 
     /**
-     * @param parent
+     * @param parent GraphControlerProvider
      */
     public GraphSelectionAction(final GraphControlerProvider parent) {
         super(parent);
@@ -56,8 +59,8 @@ public abstract class GraphSelectionAction extends GraphListenerAction
     }
 
     /**
-     * @param parent
-     * @param text
+     * @param parent GraphControlerProvider
+     * @param text String
      */
     public GraphSelectionAction(final GraphControlerProvider parent,
             final String text) {
@@ -66,19 +69,20 @@ public abstract class GraphSelectionAction extends GraphListenerAction
     }
 
     /**
-     * @param parent
-     * @param text
-     * @param image
+     * @param parent GraphControlerProvider
+     * @param text String
+     * @param image ImageDescriptor
      */
-    public GraphSelectionAction(final GraphControlerProvider parent, final String text, final ImageDescriptor image) {
+    public GraphSelectionAction(final GraphControlerProvider parent,
+            final String text, final ImageDescriptor image) {
         super(parent, text, image);
         init();
     }
 
     /**
-     * @param parent
-     * @param text
-     * @param style
+     * @param parent GraphControlerProvider
+     * @param text String
+     * @param style int
      */
     public GraphSelectionAction(final GraphControlerProvider parent,
             final String text, final int style) {
@@ -93,8 +97,9 @@ public abstract class GraphSelectionAction extends GraphListenerAction
         return currentNode;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method selectionChanged.
+     * @param selectedNodes Collection<Draw2dNode>
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
     @Override
@@ -107,7 +112,7 @@ public abstract class GraphSelectionAction extends GraphListenerAction
     }
 
     /**
-     *  
+     *
      */
     private void init() {
         boolean isEnabled = false;
