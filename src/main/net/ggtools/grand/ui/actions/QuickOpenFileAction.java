@@ -50,7 +50,7 @@ public class QuickOpenFileAction extends Action {
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(QuickOpenFileAction.class);
+    private static final Log LOG = LogFactory.getLog(QuickOpenFileAction.class);
 
     /**
      * Field FILTER_EXTENSIONS.
@@ -83,7 +83,7 @@ public class QuickOpenFileAction extends Action {
         dialog.setFilterExtensions(FILTER_EXTENSIONS);
         dialog.setFilterPath(previousPath);
         final String buildFileName = dialog.open();
-        log.debug("Dialog returned " + buildFileName);
+        LOG.debug("Dialog returned " + buildFileName);
         if (buildFileName != null) {
             previousPath = dialog.getFilterPath();
             window.openGraphInNewDisplayer(new File(buildFileName), null);

@@ -53,7 +53,7 @@ public final class LogEventBufferImpl implements LogEventBuffer {
      * Logger for this class.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(LogEventBufferImpl.class);
+    private static final Log LOG = LogFactory.getLog(LogEventBufferImpl.class);
 
     /**
      * Comment for <code>serialVersionUID</code>.

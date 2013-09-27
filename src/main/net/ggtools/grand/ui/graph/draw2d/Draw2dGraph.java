@@ -70,8 +70,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
          */
         @Override
         public void mousePressed(final MouseEvent me) {
-            if (log.isTraceEnabled()) {
-                log.trace("Graph got mousePressed " + me.button);
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Graph got mousePressed " + me.button);
             }
             switch (me.button) {
             case (1):
@@ -100,8 +100,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
          */
         @Override
         public void mouseReleased(final MouseEvent me) {
-            if (log.isTraceEnabled()) {
-                log.trace("Graph got mouseReleased " + me.button);
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Graph got mouseReleased " + me.button);
             }
             switch (me.button) {
             case (1):
@@ -152,8 +152,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                 final boolean addToSelection;
                 if ((me.getState() & SWT.CONTROL) == 0) {
                     addToSelection = false;
-                }
-                else {
+                } else {
                     addToSelection = true;
                 }
                 selectNode(node, addToSelection);
@@ -178,8 +177,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                 final boolean addToSelection;
                 if ((me.getState() & SWT.CONTROL) == 0) {
                     addToSelection = false;
-                }
-                else {
+                } else {
                     addToSelection = true;
                 }
                 toggleSelection(node, addToSelection);
@@ -229,7 +227,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(Draw2dGraph.class);
+    private static final Log LOG = LogFactory.getLog(Draw2dGraph.class);
 
     /**
      * Field graphControler.
@@ -283,8 +281,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      */
     @Override
     public final void addNotify() {
-        if (log.isTraceEnabled()) {
-            log.trace("Adding listeners");
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Adding listeners");
         }
         super.addNotify();
         graphMouseListener = new GraphMouseListener();
@@ -422,8 +420,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      */
     @Override
     public final void removeNotify() {
-        if (log.isTraceEnabled()) {
-            log.trace("Removing listeners");
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Removing listeners");
         }
         super.removeNotify();
         if (graphMouseListener != null) {
@@ -523,8 +521,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
             final boolean addToSelection) {
         if (node.isSelected()) {
             deselectNode(node);
-        }
-        else {
+        } else {
             selectNode(node, addToSelection);
         }
     }

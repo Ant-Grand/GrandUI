@@ -44,7 +44,7 @@ public final class CanvasScroller implements MouseMoveListener {
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(CanvasScroller.class);
+    private static final Log LOG = LogFactory.getLog(CanvasScroller.class);
 
     /**
      * Field canvas.
@@ -116,8 +116,7 @@ public final class CanvasScroller implements MouseMoveListener {
     public void mouseMove(final MouseEvent e) {
         if (gotStartPoint) {
             canvas.scrollTo(startDragX - e.x, startDragY - e.y);
-        }
-        else {
+        } else {
             final Point vpLocation = viewport.getViewLocation();
             startDragX = vpLocation.x + e.x;
             startDragY = vpLocation.y + e.y;

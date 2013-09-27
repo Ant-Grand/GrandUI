@@ -59,7 +59,7 @@ public class DispatcherPerformanceMeter {
          * @param eventData Object
          * @see net.ggtools.grand.ui.event.Dispatcher#sendEventToSubscriber(java.lang.Object, java.lang.Object)
          */
-        public void sendEventToSubscriber(final Object subscriber, final Object eventData) {
+        public final void sendEventToSubscriber(final Object subscriber, final Object eventData) {
             ((Listener) subscriber).listen(eventData);
         }
 
@@ -82,10 +82,9 @@ public class DispatcherPerformanceMeter {
     /**
      * Method main.
      * @param args String[]
-     * @throws SecurityException
      * @throws NoSuchMethodException
      */
-    public static void main(final String[] args) throws SecurityException, NoSuchMethodException {
+    public static void main(final String[] args) throws NoSuchMethodException {
         final StopWatch timer = new StopWatch();
         final Listener subscriber = new Listener();
         System.out.println("Testing manual dispatcher");

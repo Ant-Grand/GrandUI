@@ -46,7 +46,7 @@ public class FilterFromNodeAction extends GraphSelectionAction implements GraphL
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(FilterFromNodeAction.class);
+    private static final Log LOG = LogFactory.getLog(FilterFromNodeAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

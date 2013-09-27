@@ -50,7 +50,7 @@ public class GraphModel implements GraphProducer {
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(GraphModel.class);
+    private static final Log LOG = LogFactory.getLog(GraphModel.class);
 
     /**
      * Field lastLoadedFile.
@@ -87,10 +87,10 @@ public class GraphModel implements GraphProducer {
      * @param properties Properties
      * @throws GrandException
      */
-    public void openFile(final File file, final Properties properties) throws GrandException {
+    public final void openFile(final File file, final Properties properties) throws GrandException {
         lastLoadedFileProperties = properties;
-        if (log.isDebugEnabled()) {
-            log.debug("Loading " + file);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Loading " + file);
         }
         lastLoadedFile = file;
         producer = new AntProject(file, properties);
@@ -103,16 +103,15 @@ public class GraphModel implements GraphProducer {
      */
     public final void reload(final Properties properties) throws GrandException {
         if (lastLoadedFile != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Reloading last file");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Reloading last file");
             }
             if (properties != null) {
                 lastLoadedFileProperties = properties;
             }
             openFile(lastLoadedFile, lastLoadedFileProperties);
-        }
-        else {
-            log.warn("No file previously loaded, skipping reload");
+        } else {
+            LOG.warn("No file previously loaded, skipping reload");
         }
     }
 

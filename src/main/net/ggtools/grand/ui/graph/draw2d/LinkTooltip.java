@@ -63,7 +63,7 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(LinkTooltip.class);
+    private static final Log LOG = LogFactory.getLog(LinkTooltip.class);
 
     /**
      * Field edge.
@@ -85,17 +85,16 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
      */
     @Override
     protected final void createContents() {
-        if (log.isDebugEnabled()) {
-            log.debug("createContents() - start");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("createContents() - start");
         }
 
         final Label type;
         if (edge.hasAttr(LINK_TASK_ATTR)) {
             type = new Label(edge.getAttrAsString(LINK_TASK_ATTR),
                     Application.getInstance().getImage(Application.LINK_ICON));
-        }
-        else {
-            type = new Label("depency", Application.getInstance().getImage(Application.LINK_ICON));
+        } else {
+            type = new Label("dependency", Application.getInstance().getImage(Application.LINK_ICON));
         }
         type.setFont(Application.getInstance().getBoldFont(Application.TOOLTIP_FONT));
         add(type);
@@ -166,8 +165,8 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
                 for (String currentDirectory : directories) {
                     final Dimension dim = FigureUtilities.getTextExtents(currentDirectory, monospaceFont);
                     if (dim.width > TOOLTIP_WIDTH) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("createContents() - Filename too long, truncating : dim = "
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("createContents() - Filename too long, truncating : dim = "
                                     + dim + ", currentDirectory = " + currentDirectory);
                         }
 
@@ -184,8 +183,8 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
                         }
                         currentDirectory = ELLIPSIS + part;
 
-                        if (log.isDebugEnabled()) {
-                            log.debug("createContents() - dir truncated to: currentDirectory = "
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("createContents() - dir truncated to: currentDirectory = "
                                     + currentDirectory);
                         }
                     }
@@ -202,8 +201,8 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
             }
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("createContents() - end");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("createContents() - end");
         }
     }
 }

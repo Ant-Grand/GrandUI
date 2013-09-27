@@ -49,11 +49,11 @@ import org.eclipse.jface.util.PropertyChangeEvent;
  *
  * @author Christophe Labouisse
  */
-public class RecentFilesManager implements IPropertyChangeListener, PreferenceKeys {
+public final class RecentFilesManager implements IPropertyChangeListener, PreferenceKeys {
     /**
      * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(RecentFilesManager.class);
+    private static final Log LOG = LogFactory.getLog(RecentFilesManager.class);
 
     /**
      * Field instance.
@@ -156,8 +156,8 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
      * @param file File
      */
     public void addNewFile(final File file, final Properties properties) {
-        if (log.isDebugEnabled()) {
-            log.debug("Adding " + file + " to recent files");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Adding " + file + " to recent files");
         }
         final String fileName = file.getAbsolutePath();
         recentFiles.remove(fileName);
@@ -166,17 +166,16 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
         preferenceStore.setValue(RECENT_FILES_PREFS_KEY, recentFiles);
         if (properties == null) {
             preferenceStore.setPropertiesToDefault(getKeyForProperties(fileName));
-        }
-        else {
+        } else {
             preferenceStore.setValue(getKeyForProperties(fileName), properties);
         }
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("Saving recent files");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Saving recent files");
             }
             preferenceStore.save();
         } catch (final IOException e) {
-            log.error("Cannot save recent files", e);
+            LOG.error("Cannot save recent files", e);
         }
         notifyListeners();
     }
@@ -188,24 +187,23 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
      * @param properties Properties
      */
     public void updatePropertiesFor(final File file, final Properties properties) {
-        if (log.isDebugEnabled()) {
-            log.debug("Updating properties for " + file);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Updating properties for " + file);
         }
         final String fileName = file.getAbsolutePath();
         if (recentFiles.contains(fileName)) {
             if (properties == null) {
                 preferenceStore.setPropertiesToDefault(getKeyForProperties(fileName));
-            }
-            else {
+            } else {
                 preferenceStore.setValue(getKeyForProperties(fileName), properties);
             }
             try {
-                if (log.isDebugEnabled()) {
-                    log.debug("Saving recent files");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Saving recent files");
                 }
                 preferenceStore.save();
             } catch (final IOException e) {
-                log.error("Cannot save recent files", e);
+                LOG.error("Cannot save recent files", e);
             }
         }
     }
@@ -226,12 +224,12 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
         recentFiles.clear();
         preferenceStore.setToDefault(RECENT_FILES_PREFS_KEY);
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("Saving recent files");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Saving recent files");
             }
             preferenceStore.save();
         } catch (final IOException e) {
-            log.warn("Cannot save recent files", e);
+            LOG.warn("Cannot save recent files", e);
         }
         notifyListeners();
     }
@@ -239,7 +237,7 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
     /**
      * Load the recent files from the persistent storage to the local list.
      */
-    private final void loadRecentFiles() {
+    private void loadRecentFiles() {
         maxFiles = preferenceStore.getInt(MAX_RECENT_FILES_PREFS_KEY);
         recentFiles.clear();
         recentFiles.addAll(preferenceStore.getCollection(RECENT_FILES_PREFS_KEY, maxFiles));
@@ -253,8 +251,8 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
      */
     public void propertyChange(final PropertyChangeEvent event) {
         final String changedProperty = event.getProperty();
-        if (log.isDebugEnabled()) {
-            log.debug("Prefs changed " + changedProperty + " '" + event.getNewValue() + "'");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Prefs changed " + changedProperty + " '" + event.getNewValue() + "'");
         }
 
         if (MAX_RECENT_FILES_PREFS_KEY.equals(changedProperty)) {
@@ -278,7 +276,7 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
      *
      * @return Collection<String>
      */
-    public final Collection<String> getRecentFiles() {
+    public Collection<String> getRecentFiles() {
         return readOnlyRecentFiles;
     }
 
@@ -290,8 +288,7 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
     public Properties getProperties(final File file) {
         if (file == null) {
             return null;
-        }
-        else {
+        } else {
             return getProperties(file.getAbsolutePath());
         }
     }

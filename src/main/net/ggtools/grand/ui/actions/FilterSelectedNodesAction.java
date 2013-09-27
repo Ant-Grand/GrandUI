@@ -53,7 +53,7 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(FilterSelectedNodesAction.class);
+    private static final Log LOG = LogFactory.getLog(FilterSelectedNodesAction.class);
 
 
     /**
@@ -77,8 +77,8 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
      */
     @Override
     public final void run() {
-        if (log.isDebugEnabled()) {
-            log.debug("run() - start");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("run() - start");
         }
 
         final Collection<Draw2dNode> selection = getGraphControler().getSelection();
@@ -90,8 +90,8 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
         final GraphFilter filter = new NodeRemoverFilter(nodeList);
         getGraphControler().addFilter(filter);
 
-        if (log.isDebugEnabled()) {
-            log.debug("run() - end");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("run() - end");
         }
     }
 

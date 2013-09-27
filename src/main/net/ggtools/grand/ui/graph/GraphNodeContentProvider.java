@@ -59,7 +59,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      * Logger for this class.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(GraphNodeContentProvider.class);
+    private static final Log LOG = LogFactory.getLog(GraphNodeContentProvider.class);
 
     /**
      * Field graph.

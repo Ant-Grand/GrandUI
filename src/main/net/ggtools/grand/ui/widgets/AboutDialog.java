@@ -50,7 +50,7 @@ public class AboutDialog extends Dialog {
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(AboutDialog.class);
+    private static final Log LOG = LogFactory.getLog(AboutDialog.class);
 
     /**
      * Field coreConfiguration.
@@ -65,7 +65,7 @@ public class AboutDialog extends Dialog {
         try {
             coreConfiguration = Configuration.getConfiguration();
         } catch (final IOException e) {
-            log.error("Cannot load core configuration", e);
+            LOG.error("Cannot load core configuration", e);
             coreConfiguration = null;
         }
     }

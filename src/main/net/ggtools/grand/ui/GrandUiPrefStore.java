@@ -49,7 +49,7 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
     /**
      * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(GrandUiPrefStore.class);
+    private static final Log LOG = LogFactory.getLog(GrandUiPrefStore.class);
 
     /**
      * Field baseDir.
@@ -68,8 +68,7 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
         setDefaults();
         if (destFile.isFile()) {
             load();
-        }
-        else {
+        } else {
             migratePreferences();
         }
     }
@@ -106,9 +105,9 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
             save();
             node.removeNode();
         } catch (final BackingStoreException e) {
-            log.warn("Cannot retrieve previous preferences", e);
+            LOG.warn("Cannot retrieve previous preferences", e);
         } catch (final IOException e) {
-            log.error("Cannot save preferences after migration", e);
+            LOG.error("Cannot save preferences after migration", e);
         }
     }
 

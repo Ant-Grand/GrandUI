@@ -111,8 +111,7 @@ public class GraphTabItem extends CTabItem
             event.doit = false;
             if (event.count > 0) {
                 zoomIn();
-            }
-            else {
+            } else {
                 zoomOut();
             }
             final float zoomAfter = getZoom();
@@ -130,11 +129,11 @@ public class GraphTabItem extends CTabItem
     /**
      * @author Christophe Labouisse
      */
-    private final static class OutlineViewerCollator extends Collator {
+    private static final class OutlineViewerCollator extends Collator {
         /**
          * Logger for this class.
          */
-        private static final Log log = LogFactory.getLog(OutlineViewerCollator.class);
+        private static final Log OVC_LOG = LogFactory.getLog(OutlineViewerCollator.class);
         /**
          * Field NODE_INDEX_GROUP_NUM.
          * (value is 4)
@@ -150,7 +149,7 @@ public class GraphTabItem extends CTabItem
         /**
          * Field pattern.
          */
-        private static final Pattern pattern =
+        private static final Pattern PATTERN =
                 Pattern.compile("\\[?(.*?)(\\s*(\\((\\d+)\\))?\\s*\\])?",
                         Pattern.CASE_INSENSITIVE);
 
@@ -174,18 +173,18 @@ public class GraphTabItem extends CTabItem
          */
         @Override
         public int compare(final String source, final String target) {
-            final Matcher sourceMatcher = pattern.matcher(source);
+            final Matcher sourceMatcher = PATTERN.matcher(source);
             if (!sourceMatcher.matches()) {
                 final String message = "Source name (" + source + ") not matched by pattern";
-                log.error(message);
+                OVC_LOG.error(message);
                 throw new Error(message);
             }
             assert (sourceMatcher.groupCount() == 4);
 
-            final Matcher targetMatcher = pattern.matcher(target);
+            final Matcher targetMatcher = PATTERN.matcher(target);
             if (!targetMatcher.matches()) {
                 final String message = "Source name (" + source + ") not matched by pattern";
-                log.error(message);
+                OVC_LOG.error(message);
                 throw new Error(message);
             }
             assert (targetMatcher.groupCount() == 4);
@@ -199,7 +198,7 @@ public class GraphTabItem extends CTabItem
                 try {
                     sourceIndex = Integer.parseInt(sourceIndexGroup);
                 } catch (final NumberFormatException e) {
-                    log.debug("Index group" + sourceIndexGroup
+                    OVC_LOG.debug("Index group" + sourceIndexGroup
                             + " is not an integer treating as 0");
                     sourceIndex = 0;
                 }
@@ -209,7 +208,7 @@ public class GraphTabItem extends CTabItem
                 try {
                     targetIndex = Integer.parseInt(targetIndexGroup);
                 } catch (final NumberFormatException e) {
-                    log.debug("Index group" + targetIndexGroup
+                    OVC_LOG.debug("Index group" + targetIndexGroup
                             + " is not an integer treating as 0");
                     targetIndex = 0;
                 }
@@ -244,7 +243,7 @@ public class GraphTabItem extends CTabItem
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(GraphTabItem.class);
+    private static final Log LOG = LogFactory.getLog(GraphTabItem.class);
 
     /**
      * Field ZOOM_MAX.
@@ -429,8 +428,8 @@ public class GraphTabItem extends CTabItem
      */
     public final void jumpToNode(final String nodeName) {
         if (graph != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("jumpToNode(nodeName = " + nodeName + ")");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("jumpToNode(nodeName = " + nodeName + ")");
             }
 
             final Rectangle bounds = graph.getBoundsForNode(nodeName);
@@ -633,8 +632,8 @@ public class GraphTabItem extends CTabItem
      */
     private void setZoom(final float zoom) {
         if (graph != null) {
-            if (log.isTraceEnabled()) {
-                log.trace("setZoom(zoom = " + zoom + ")");
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("setZoom(zoom = " + zoom + ")");
             }
 
             graph.setZoom(zoom);

@@ -157,7 +157,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
     /**
      * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(ComplexPreferenceStore.class);
+    private static final Log LOG = LogFactory.getLog(ComplexPreferenceStore.class);
 
     /**
      * Field PREF_FILE_VERSION_MAJOR.
@@ -326,10 +326,10 @@ public class ComplexPreferenceStore extends PreferenceStore {
 //                final InputSource inputSource = new InputSource(is);
                 doc = db.parse(is);
             } catch (final ParserConfigurationException e) {
-                log.error("Got exception while parsing preference file", e);
+                LOG.error("Got exception while parsing preference file", e);
                 throw new Error(e);
             } catch (final SAXException e) {
-                log.error("Got exception while parsing preference file", e);
+                LOG.error("Got exception while parsing preference file", e);
                 throw new Error(e);
             }
 
@@ -341,15 +341,14 @@ public class ComplexPreferenceStore extends PreferenceStore {
                     final String message = "Cannot load preferences file version " + version
                             + " current version is " + PREF_FILE_VERSION_MAJOR + "."
                             + PREF_FILE_VERSION_MINOR;
-                    log.error(message);
+                    LOG.error(message);
                     throw new Error(message);
                 }
-                if (log.isInfoEnabled()) {
-                    log.info("Loading from preference file version " + version);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("Loading from preference file version " + version);
                 }
-            }
-            else {
-                log.warn("Root element does not have a version, trying to log anyway");
+            } else {
+                LOG.warn("Root element does not have a version, trying to log anyway");
             }
 
             final PropertyLoader loader = new PropertyLoader() {
@@ -367,7 +366,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                         }
 
                         public void addProperties(final String k, final Element element) {
-                            log.warn("Nested properties not supported, ignoring key " + k);
+                            LOG.warn("Nested properties not supported, ignoring key " + k);
                         }
                     };
 
@@ -399,7 +398,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
             try {
                 db = dbf.newDocumentBuilder();
             } catch (final ParserConfigurationException e) {
-                log.error("Cannot create document builder", e);
+                LOG.error("Cannot create document builder", e);
                 throw new Error("Cannot create document builder", e);
             }
 
@@ -458,7 +457,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 t.setOutputProperty(OutputKeys.METHOD, "xml");
                 t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             } catch (final TransformerConfigurationException e) {
-                log.error("Cannot configure Transformer to save preferences", e);
+                LOG.error("Cannot configure Transformer to save preferences", e);
                 throw new RuntimeException("Cannot configure Transformer to save preferences", e);
             }
             final DOMSource doms = new DOMSource(doc);
@@ -466,7 +465,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
             try {
                 t.transform(doms, sr);
             } catch (final TransformerException e) {
-                log.error("Cannot save preferences", e);
+                LOG.error("Cannot save preferences", e);
                 final IOException ioe = new IOException("Cannot save preferences");
                 ioe.initCause(e);
                 throw ioe;
@@ -547,8 +546,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                     final String val = (n == null) ? "" : n.getNodeValue();
                     loader.addEntry(entryElement.getAttribute(KEY_ATTRIBUTE), val);
                 }
-            }
-            else if (PROPERTIES_ELEMENT.equals(item.getNodeName())) {
+            } else if (PROPERTIES_ELEMENT.equals(item.getNodeName())) {
                 final Element entryElement = (Element) item;
                 if (entryElement.hasAttribute(KEY_ATTRIBUTE)) {
                     loader.addProperties(entryElement.getAttribute(KEY_ATTRIBUTE), entryElement);

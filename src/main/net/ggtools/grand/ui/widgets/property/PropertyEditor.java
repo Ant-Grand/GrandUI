@@ -124,8 +124,8 @@ public class PropertyEditor {
             if (columnExists(property)) {
                 final PropertyPair pair = (PropertyPair) ((TableItem) element).getData();
 
-                if (log.isDebugEnabled()) {
-                    log.debug("modify() - Modifying property : pair = " + pair);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("modify() - Modifying property : pair = " + pair);
                 }
 
                 final int columnNumber = getColumnNumber(property);
@@ -150,10 +150,10 @@ public class PropertyEditor {
     private static final class PropertyListContentProvider implements IStructuredContentProvider,
             PropertyChangedListener {
         /**
-         * Logger for this class
+         * Logger for this class.
          */
         @SuppressWarnings("unused")
-        private static final Log log = LogFactory.getLog(PropertyListContentProvider.class);
+        private static final Log PLCP_LOG = LogFactory.getLog(PropertyListContentProvider.class);
 
         /**
          * Field currentPropertyList.
@@ -211,8 +211,7 @@ public class PropertyEditor {
             if (inputElement instanceof PropertyList) {
                 final PropertyList pList = (PropertyList) inputElement;
                 return pList.toArray();
-            }
-            else {
+            } else {
                 return null;
             }
         }
@@ -285,13 +284,13 @@ public class PropertyEditor {
          * Field NAME_COLUMN.
          * (value is 1)
          */
-        private final static int NAME_COLUMN = 1;
+        private static final int NAME_COLUMN = 1;
 
         /**
          * Field VALUE_COLUMN.
          * (value is 2)
          */
-        private final static int VALUE_COLUMN = 2;
+        private static final int VALUE_COLUMN = 2;
 
         /**
          * Field column.
@@ -327,8 +326,7 @@ public class PropertyEditor {
 
                 }
                 return collator.compare(name1, name2);
-            }
-            else {
+            } else {
                 return super.compare(viewer, e1, e2);
             }
         }
@@ -374,7 +372,7 @@ public class PropertyEditor {
     /**
      * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(PropertyEditor.class);
+    private static final Log LOG = LogFactory.getLog(PropertyEditor.class);
 
     /**
      * Field STATUS_COLUMN.
@@ -518,14 +516,14 @@ public class PropertyEditor {
                         setInput(props);
                     } catch (final IOException e) {
                         final String message = "Cannot load from " + fileName;
-                        log.error(message, e);
+                        LOG.error(message, e);
                         ExceptionDialog.openException(table.getShell(), message, e);
                     } finally {
                         if (fileInputStream != null) {
                             try {
                                 fileInputStream.close();
                             } catch (final IOException e) {
-                                log.warn("Error closing file", e);
+                                LOG.warn("Error closing file", e);
                             }
                         }
                     }
@@ -553,14 +551,14 @@ public class PropertyEditor {
                         getValues().store(fileOutputStream, null);
                     } catch (final IOException e) {
                         final String message = "Cannot save to " + fileName;
-                        log.error(message, e);
+                        LOG.error(message, e);
                         ExceptionDialog.openException(table.getShell(), message, e);
                     } finally {
                         if (fileOutputStream != null) {
                             try {
                                 fileOutputStream.close();
                             } catch (final IOException e) {
-                                log.warn("Error closing file", e);
+                                LOG.warn("Error closing file", e);
                             }
                         }
                     }
@@ -583,8 +581,8 @@ public class PropertyEditor {
             // Add a task to the ExampleTaskList and refresh the view
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                if (log.isDebugEnabled()) {
-                    log.debug("widgetSelected() - Adding new element");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("widgetSelected() - Adding new element");
                 }
                 propertyList.addProperty();
             }
@@ -744,7 +742,7 @@ public class PropertyEditor {
      * @param columnName String
      * @return int
      */
-    int getColumnNumber(final String columnName) {
+    final int getColumnNumber(final String columnName) {
         return columnNamesToNumMap.get(columnName).intValue();
     }
 
@@ -752,7 +750,7 @@ public class PropertyEditor {
      * @param columnName String
      * @return boolean
      */
-    boolean columnExists(final String columnName) {
+    final boolean columnExists(final String columnName) {
         return columnNamesToNumMap.containsKey(columnName);
     }
 

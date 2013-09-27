@@ -130,12 +130,12 @@ public class LogViewer extends Composite {
         /**
          * Field CI_CLASS.
          */
-        private final int CI_CLASS;
+        private final int ciCLASS;
 
         /**
          * Field CI_MESSAGE.
          */
-        private final int CI_MESSAGE;
+        private final int ciMESSAGE;
 
         /**
          * Field table.
@@ -145,14 +145,14 @@ public class LogViewer extends Composite {
         /**
          * Constructor for LogEventTooltipListener.
          * @param table Table
-         * @param CI_CLASS int
-         * @param CI_MESSAGE int
+         * @param ciClass int
+         * @param ciMessage int
          */
-        private LogEventTooltipListener(final Table table, final int CI_CLASS, final int CI_MESSAGE) {
+        private LogEventTooltipListener(final Table table, final int ciClass, final int ciMessage) {
             super(table);
             this.table = table;
-            this.CI_CLASS = CI_CLASS;
-            this.CI_MESSAGE = CI_MESSAGE;
+            this.ciCLASS = ciClass;
+            this.ciMESSAGE = ciMessage;
         }
 
         /**
@@ -181,12 +181,12 @@ public class LogViewer extends Composite {
             final Label date = new Label(composite, SWT.NO_BACKGROUND);
             date.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
             date.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-            date.setText(item.getText(CI_CLASS));
+            date.setText(item.getText(ciCLASS));
 
             final Label message = new Label(composite, SWT.READ_ONLY | SWT.WRAP);
             message.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
             message.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-            message.setText(item.getText(CI_MESSAGE));
+            message.setText(item.getText(ciMESSAGE));
             final GridData msgGridData = new GridData(GridData.GRAB_HORIZONTAL);
             msgGridData.horizontalSpan = 2;
             msgGridData.widthHint = Math.min(400, message.computeSize(SWT.DEFAULT, SWT.DEFAULT).x
@@ -281,8 +281,8 @@ public class LogViewer extends Composite {
                         wait();
                     }
                 } catch (final InterruptedException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Thread interrupted", e);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Thread interrupted", e);
                     }
                 }
             }
@@ -312,7 +312,7 @@ public class LogViewer extends Composite {
     /**
      * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(LogViewer.class);
+    private static final Log LOG = LogFactory.getLog(LogViewer.class);
 
     /**
      * Field CI_CLASS.
@@ -404,8 +404,8 @@ public class LogViewer extends Composite {
      */
     @Override
     public final void dispose() {
-        if (log.isDebugEnabled()) {
-            log.debug("Disposing LogViewer");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Disposing LogViewer");
         }
         stopRefreshThread();
         super.dispose();
@@ -590,8 +590,8 @@ public class LogViewer extends Composite {
         table.addDisposeListener(new DisposeListener() {
 
             public void widgetDisposed(final DisposeEvent e) {
-                if (log.isTraceEnabled()) {
-                    log.trace("Table disposed");
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Table disposed");
                 }
                 stopRefreshThread();
             }
@@ -621,9 +621,8 @@ public class LogViewer extends Composite {
         if (!table.isDisposed()) {
             viewer.refresh(false);
             table.showItem(table.getItem(table.getItemCount() - 1));
-        }
-        else {
-            log.warn("Table is disposed");
+        } else {
+            LOG.warn("Table is disposed");
         }
     }
 
@@ -631,14 +630,14 @@ public class LogViewer extends Composite {
      *
      */
     private void stopRefreshThread() {
-        if (log.isDebugEnabled()) {
-            log.debug("Stopping refresh thread");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Stopping refresh thread");
         }
         refreshThread.stopThread();
         try {
             refreshThread.join();
         } catch (final InterruptedException e) {
-            log.warn("Caught exception stopping refresh thread", e);
+            LOG.warn("Caught exception stopping refresh thread", e);
         }
     }
 

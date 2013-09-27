@@ -48,7 +48,7 @@ public class ShowSourcePanelAction extends Action {
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(ShowSourcePanelAction.class);
+    private static final Log LOG = LogFactory.getLog(ShowSourcePanelAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

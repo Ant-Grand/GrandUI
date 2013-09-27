@@ -48,7 +48,7 @@ public class UseBusRoutingAction extends GraphListenerAction {
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(UseBusRoutingAction.class);
+    private static final Log LOG = LogFactory.getLog(UseBusRoutingAction.class);
 
     /**
      * @param parent GraphControlerProvider
@@ -100,8 +100,7 @@ public class UseBusRoutingAction extends GraphListenerAction {
         if (getGraphControler() != null) {
             setChecked(getGraphControler().isBusRoutingEnabled());
             setEnabled(true);
-        }
-        else {
+        } else {
             setEnabled(false);
         }
     }

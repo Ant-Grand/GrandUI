@@ -79,7 +79,7 @@ public class ShowLogAction extends Action {
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(ShowLogAction.class);
+    private static final Log LOG = LogFactory.getLog(ShowLogAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.
@@ -125,8 +125,7 @@ public class ShowLogAction extends Action {
             dialog.open();
             final Shell shell = dialog.getShell();
             shell.addDisposeListener(new DialogDisposeListener(shell));
-        }
-        else {
+        } else {
             if (dialog != null) {
                 dialog.close();
                 dialog = null;

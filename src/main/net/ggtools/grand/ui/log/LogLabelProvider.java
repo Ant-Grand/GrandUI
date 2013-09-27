@@ -52,7 +52,7 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
     /**
      * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(LogLabelProvider.class);
+    private static final Log LOG = LogFactory.getLog(LogLabelProvider.class);
 
     /**
      * Field logLevelIcons.
@@ -117,8 +117,7 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
                 // with containsKeys rather than get() == null.
                 if (logLevelIcons.containsKey(eventLevel)) {
                     rc = (Image) logLevelIcons.get(eventLevel);
-                }
-                else {
+                } else {
                     final String resourceName = "resource/level_"
                             + eventLevel.name.toLowerCase() + ".gif";
                     rc = new Image(Display.getCurrent(),
@@ -160,8 +159,8 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
                 break;
 
             default:
-                if (log.isWarnEnabled()) {
-                    log.warn("getColumnText(columnIndex = " + columnIndex
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("getColumnText(columnIndex = " + columnIndex
                             + ") - Got unexpected column index ");
                 }
                 break;

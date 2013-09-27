@@ -97,8 +97,7 @@ public class PropertyEditionDialog extends Dialog {
     public final void setProperties(final Properties properties) {
         if (propertyEditor == null) {
             propertiesToLoad = properties;
-        }
-        else {
+        } else {
             propertyEditor.setInput(properties);
         }
     }

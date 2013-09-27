@@ -58,7 +58,7 @@ public class ImageSaver {
          * Logger for this class.
          */
         @SuppressWarnings("unused")
-        private static final Log log = LogFactory.getLog(ColorCounter.class);
+        private static final Log COLOR_LOG = LogFactory.getLog(ColorCounter.class);
 
         /**
          * Field count.
@@ -121,13 +121,13 @@ public class ImageSaver {
     /**
      * Field formatRegistry.
      */
-    private static final Map<String, ImageFormat> formatRegistry =
+    private static final Map<String, ImageFormat> FORMAT_REGISTRY =
             new HashMap<String, ImageFormat>();
 
     /**
      * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(ImageSaver.class);
+    private static final Log LOG = LogFactory.getLog(ImageSaver.class);
 
     /**
      * Field supportedExtensions.
@@ -224,8 +224,7 @@ public class ImageSaver {
             for (int x = 0; x < width; ++x) {
                 if ((mask != null) && (maskPixels[x] == 0)) {
                     pixels[x] = rgbs.length - 1;
-                }
-                else {
+                } else {
                     final RGB rgb = data.palette.getRGB(pixels[x]);
                     pixels[x] = closest(rgbs, n, rgb);
                 }
@@ -238,16 +237,16 @@ public class ImageSaver {
     /**
      * Method initFormats.
      */
-    private static final void initFormats() {
+    private static void initFormats() {
         if (!formatInitDone) {
             final ImageFormat jpegImageFormat = new ImageFormat("jpeg", SWT.IMAGE_JPEG, false);
-            formatRegistry.put("jpg", jpegImageFormat);
-            formatRegistry.put("jpeg", jpegImageFormat);
-            formatRegistry.put("gif", new ImageFormat("gif", SWT.IMAGE_GIF, true));
-            formatRegistry.put("png", new ImageFormat("png", SWT.IMAGE_PNG, false));
-            formatRegistry.put("bmp", new ImageFormat("bmp", SWT.IMAGE_BMP, false));
-            supportedExtensions = formatRegistry.keySet().toArray(
-                    new String[formatRegistry.keySet().size()]);
+            FORMAT_REGISTRY.put("jpg", jpegImageFormat);
+            FORMAT_REGISTRY.put("jpeg", jpegImageFormat);
+            FORMAT_REGISTRY.put("gif", new ImageFormat("gif", SWT.IMAGE_GIF, true));
+            FORMAT_REGISTRY.put("png", new ImageFormat("png", SWT.IMAGE_PNG, false));
+            FORMAT_REGISTRY.put("bmp", new ImageFormat("bmp", SWT.IMAGE_BMP, false));
+            supportedExtensions = FORMAT_REGISTRY.keySet().toArray(
+                    new String[FORMAT_REGISTRY.keySet().size()]);
             formatInitDone = true;
         }
     }
@@ -272,24 +271,23 @@ public class ImageSaver {
      * @param image Image
      * @param fileName String
      * @throws IOException
-     * @throws IllegalArgumentException
      */
     public final void saveImage(final Image image, final String fileName)
-            throws IOException, IllegalArgumentException {
+            throws IOException {
         final int lastDotPosition = fileName.lastIndexOf('.');
         final String extension = fileName.substring(lastDotPosition + 1).toLowerCase();
 
-        if (!formatRegistry.containsKey(extension)) {
+        if (!FORMAT_REGISTRY.containsKey(extension)) {
             final String message = "Unknow extension " + extension;
-            log.error(message);
+            LOG.error(message);
             throw new IllegalArgumentException(message);
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Saving image to " + fileName + " as " + extension);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Saving image to " + fileName + " as " + extension);
         }
 
-        final ImageFormat format = formatRegistry.get(extension);
+        final ImageFormat format = FORMAT_REGISTRY.get(extension);
 
         FileOutputStream result = null;
         try {
@@ -303,8 +301,8 @@ public class ImageSaver {
             result = new FileOutputStream(fileName);
             ImageData imageData = image.getImageData();
             if (format.needDownsampling && (imageData.depth > 8)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Downsampling image");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Downsampling image");
                 }
                 imageData = downSample(image);
             }
@@ -319,7 +317,7 @@ public class ImageSaver {
                 try {
                     result.close();
                 } catch (final IOException e) {
-                    log.warn("Got exception saving image", e);
+                    LOG.warn("Got exception saving image", e);
                 }
             }
         }

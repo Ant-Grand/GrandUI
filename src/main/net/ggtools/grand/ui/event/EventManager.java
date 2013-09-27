@@ -135,7 +135,7 @@ public class EventManager implements Runnable {
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(EventManager.class);
+    private static final Log LOG = LogFactory.getLog(EventManager.class);
 
     /**
      * Field defaultDispatchAsynchronous.
@@ -193,8 +193,8 @@ public class EventManager implements Runnable {
      * Remove all subscribers and all pending actions from the queue.
      */
     public final void clear() {
-        if (log.isInfoEnabled()) {
-            log.info("Clearing event manager");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Clearing event manager");
         }
         synchronized (eventQueue) {
             eventQueue.clear();
@@ -263,8 +263,8 @@ public class EventManager implements Runnable {
                     eventQueue.wait();
                 }
             } catch (final InterruptedException e) {
-                if (log.isTraceEnabled()) {
-                    log.trace("Event queue watch interrupted");
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Event queue watch interrupted");
                 }
             }
         }
@@ -324,8 +324,8 @@ public class EventManager implements Runnable {
      */
     private void dispatchOneEvent(final Object eventData,
             final Dispatcher dispatcher) {
-        if (log.isDebugEnabled()) {
-            log.debug("Start dispatching to " + dispatcher);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Start dispatching to " + dispatcher);
         }
         synchronized (listenerList) {
             for (final Iterator<WeakReference<Object>> iterator = listenerList.iterator(); iterator.hasNext();) {
@@ -333,15 +333,14 @@ public class EventManager implements Runnable {
                 final Object subscriber = weakReference.get();
 
                 if (subscriber != null) {
-                    if (log.isTraceEnabled()) {
-                        log.trace("Dispatching " + eventData + " to " + subscriber);
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Dispatching " + eventData + " to " + subscriber);
                     }
                     dispatcher.sendEventToSubscriber(subscriber, eventData);
-                }
-                else {
+                } else {
                     // Remove the listener since it has been garbage collected.
-                    if (log.isDebugEnabled()) {
-                        log.debug("Removing weak reference " + weakReference);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Removing weak reference " + weakReference);
                     }
                     iterator.remove();
                 }
@@ -356,8 +355,8 @@ public class EventManager implements Runnable {
      * @param listener Object
      */
     private void doSubscribtion(final Object listener) {
-        if (log.isDebugEnabled()) {
-            log.debug(name + " subscribing " + listener);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(name + " subscribing " + listener);
         }
 
         synchronized (listenerList) {
@@ -372,8 +371,8 @@ public class EventManager implements Runnable {
      * @param listener Object
      */
     private void doUnsubscription(final Object listener) {
-        if (log.isDebugEnabled()) {
-            log.debug(name + " unsubscribing " + listener);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(name + " unsubscribing " + listener);
         }
 
         synchronized (listenerList) {
@@ -411,8 +410,7 @@ public class EventManager implements Runnable {
             final Dispatcher dispatcher) {
         if (defaultDispatchAsynchronous) {
             asynchronousDispatchEvent(eventData, dispatcher);
-        }
-        else {
+        } else {
             synchronousDispatchEvent(eventData, dispatcher);
         }
     }

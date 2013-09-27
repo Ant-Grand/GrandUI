@@ -48,7 +48,7 @@ public class ZoomResetAction extends GraphControlerAction {
      * Logger for this class.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(ZoomResetAction.class);
+    private static final Log LOG = LogFactory.getLog(ZoomResetAction.class);
 
     /**
      * @param provider GraphControlerProvider

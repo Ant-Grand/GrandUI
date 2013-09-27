@@ -45,7 +45,7 @@ public class EditGraphPropertiesAction extends GraphControlerAction {
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(EditGraphPropertiesAction.class);
+    private static final Log LOG = LogFactory.getLog(EditGraphPropertiesAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

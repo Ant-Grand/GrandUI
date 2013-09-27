@@ -48,7 +48,7 @@ public class FilterToNodeAction extends GraphSelectionAction
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(FilterToNodeAction.class);
+    private static final Log LOG = LogFactory.getLog(FilterToNodeAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

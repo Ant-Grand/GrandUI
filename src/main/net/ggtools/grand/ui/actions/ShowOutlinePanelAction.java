@@ -48,7 +48,7 @@ public class ShowOutlinePanelAction extends Action {
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(ShowOutlinePanelAction.class);
+    private static final Log LOG = LogFactory.getLog(ShowOutlinePanelAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

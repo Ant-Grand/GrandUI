@@ -70,7 +70,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(GraphControler.class);
+    private static final Log LOG = LogFactory.getLog(GraphControler.class);
 
     /**
      * Field currentLinkName.
@@ -263,8 +263,7 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
                     .getColor(PreferenceKeys.LINK_WEAK_COLOR));
             edge.setAttr(DRAW2DLINEWIDTH_ATTR, preferenceStore
                     .getInt(PreferenceKeys.LINK_WEAK_LINEWIDTH));
-        }
-        else {
+        } else {
             edge.setAttr(DRAW2DFGCOLOR_ATTR, preferenceStore
                     .getColor(PreferenceKeys.LINK_DEFAULT_COLOR));
             edge.setAttr(DRAW2DLINEWIDTH_ATTR, preferenceStore
@@ -284,15 +283,11 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
 
         if (node.equals(startNode)) {
             setVertexPreferences(vertex, "start");
-        }
-        else if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
+        } else if (node.hasAttributes(Node.ATTR_MAIN_NODE)) {
             setVertexPreferences(vertex, "main");
-        }
-        else if (node.hasAttributes(Node.ATTR_MISSING_NODE)) {
+        } else if (node.hasAttributes(Node.ATTR_MISSING_NODE)) {
             setVertexPreferences(vertex, "missing");
-        }
-
-        else {
+        } else {
             setVertexPreferences(vertex, "default");
         }
 

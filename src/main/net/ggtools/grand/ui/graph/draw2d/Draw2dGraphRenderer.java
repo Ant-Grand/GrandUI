@@ -71,7 +71,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(Draw2dGraphRenderer.class);
+    private static final Log LOG = LogFactory.getLog(Draw2dGraphRenderer.class);
 
     /**
      * Method render.
@@ -79,8 +79,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      * @return Draw2dGraph
      */
     public final Draw2dGraph render(final IDotGraph dotGraph) {
-        if (log.isDebugEnabled()) {
-            log.debug("Rendering Draw2d Graph");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Rendering Draw2d Graph");
         }
         final Draw2dGraph contents = new Draw2dGraph();
         // Add a margin on the right & bottom edge.
@@ -172,9 +172,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
             case PathIterator.SEG_MOVETO:
                 if (isFirstPoint) {
                     addBendPoint(coords, bends, min, max);
-                }
-                else {
-                    log.error("Got SEG_MOVETO after first point");
+                } else {
+                    LOG.error("Got SEG_MOVETO after first point");
                 }
                 break;
 
@@ -183,7 +182,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
                 break;
 
             default:
-                log.error("Unexpected segment type " + segType);
+                LOG.error("Unexpected segment type " + segType);
                 break;
             }
 
@@ -197,8 +196,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         final Point targetPoint;
         if (route.getEndPt() != null) {
             targetPoint = new Point(route.getEndPt().getX(), route.getEndPt().getY());
-        }
-        else {
+        } else {
             targetPoint = bends.remove(bends.size() - 1);
         }
         conn.setSourceAnchor(new XYRelativeAnchor(conn, sourcePoint));
@@ -206,8 +204,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
 
         if (bends.isEmpty()) {
             conn.setConnectionRouter(null);
-        }
-        else {
+        } else {
             conn.setConnectionRouter(new BendpointConnectionRouter());
             conn.setRoutingConstraint(bends);
         }
@@ -241,8 +238,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      *            the edge
      */
     private void buildEdgeFigure(final IFigure contents, final IEdge edge) {
-        if (log.isTraceEnabled()) {
-            log.trace("Building edge from " + edge.getTail().getName() + " to "
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Building edge from " + edge.getTail().getName() + " to "
                     + edge.getHead().getName());
         }
         final DotRoute route = (DotRoute) edge.getAttr(POSITION_ATTR);
@@ -279,8 +276,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      */
     private void buildNodeFigure(final Draw2dGraph contents,
             final IVertex node) {
-        if (log.isDebugEnabled()) {
-            log.debug("Building node " + node.getName());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Building node " + node.getName());
         }
         final Draw2dNode polygon = contents.createNode(node);
         polygon.setToolTip(new NodeTooltip(node));

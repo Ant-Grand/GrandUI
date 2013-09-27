@@ -47,7 +47,7 @@ class PropertyList {
     /**
      * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(PropertyList.class);
+    private static final Log LOG = LogFactory.getLog(PropertyList.class);
 
     /**
      * Field allPropertiesChangedDispatcher.
@@ -104,10 +104,10 @@ class PropertyList {
                     .createDispatcher(PropertyChangedListener.class.getDeclaredMethod(
                             "allPropertiesChanged", new Class[]{Object.class}));
         } catch (final SecurityException e) {
-            log.fatal("Caught exception initializing PropertyList", e);
+            LOG.fatal("Caught exception initializing PropertyList", e);
             throw new RuntimeException("Cannot instanciate PropertyList", e);
         } catch (final NoSuchMethodException e) {
-            log.fatal("Caught exception initializing PropertyList", e);
+            LOG.fatal("Caught exception initializing PropertyList", e);
             throw new RuntimeException("Cannot instanciate PropertyList", e);
         }
     }

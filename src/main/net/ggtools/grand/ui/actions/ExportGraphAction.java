@@ -56,7 +56,7 @@ public class ExportGraphAction extends GraphControlerAction {
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(ExportGraphAction.class);
+    private static final Log LOG = LogFactory.getLog(ExportGraphAction.class);
 
     /**
      * Creates a new ReloadGraphAction object.
@@ -90,7 +90,7 @@ public class ExportGraphAction extends GraphControlerAction {
         dialog.setFilterExtensions(imageSaver.getSupportedExtensions());
         dialog.setText("Export graph as image");
         final String fileName = dialog.open();
-        log.debug("Dialog returned " + fileName);
+        LOG.debug("Dialog returned " + fileName);
         if (fileName != null) {
             Image image = null;
             try {

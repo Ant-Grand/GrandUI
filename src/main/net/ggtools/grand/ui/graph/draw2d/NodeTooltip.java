@@ -50,7 +50,7 @@ public class NodeTooltip extends AbstractGraphTooltip implements DotGraphAttribu
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(NodeTooltip.class);
+    private static final Log LOG = LogFactory.getLog(NodeTooltip.class);
 
     /**
      * Field vertex.

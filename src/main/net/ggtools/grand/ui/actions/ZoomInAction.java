@@ -48,7 +48,7 @@ public class ZoomInAction extends GraphControlerAction {
      * Logger for this class.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(ZoomInAction.class);
+    private static final Log LOG = LogFactory.getLog(ZoomInAction.class);
 
     /**
      * @param provider GraphControlerProvider

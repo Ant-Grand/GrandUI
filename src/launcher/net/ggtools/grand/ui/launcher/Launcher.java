@@ -61,7 +61,7 @@ public class Launcher {
     /**
      * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(Launcher.class);
+    private static final Log LOG = LogFactory.getLog(Launcher.class);
 
     /**
      * Constructor for Launcher.
@@ -92,13 +92,13 @@ public class Launcher {
             Thread.currentThread().setName("Display thread");
             Thread.currentThread().setContextClassLoader(cl);
             final Class<?> clazz = cl.loadClass("net.ggtools.grand.ui.Application");
-            log.info("Classloader: " + clazz.getClassLoader());
+            LOG.info("Classloader: " + clazz.getClassLoader());
             final Runnable application = (Runnable) clazz.newInstance();
             application.run();
         } catch (final Throwable e) {
-            log.fatal("Cannot run application", e);
+            LOG.fatal("Cannot run application", e);
         }
-        log.info("Exiting ...");
+        LOG.info("Exiting ...");
         System.exit(0);
     }
 

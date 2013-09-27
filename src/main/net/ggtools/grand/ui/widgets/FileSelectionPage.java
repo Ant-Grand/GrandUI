@@ -58,7 +58,7 @@ public class FileSelectionPage extends WizardPage
     /**
      * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(FileSelectionPage.class);
+    private static final Log LOG = LogFactory.getLog(FileSelectionPage.class);
 
     /**
      * Field FILTER_EXTENSIONS.
@@ -115,8 +115,8 @@ public class FileSelectionPage extends WizardPage
             public void widgetSelected(final SelectionEvent e) {
                 updateSelectedFile(combo.getText());
 
-                if (log.isDebugEnabled()) {
-                    log.debug("widgetSelected() - Changing file : selectionFile = "
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("widgetSelected() - Changing file : selectionFile = "
                             + selectedFileName);
                 }
             }
@@ -146,7 +146,7 @@ public class FileSelectionPage extends WizardPage
                 dialog.setFilterExtensions(FILTER_EXTENSIONS);
                 dialog.setFilterPath(selectedFileName);
                 final String buildFileName = dialog.open();
-                log.debug("Dialog returned " + buildFileName);
+                LOG.debug("Dialog returned " + buildFileName);
                 if (buildFileName != null) {
                     combo.add(buildFileName);
                     combo.select(combo.getItemCount() - 1);
@@ -163,15 +163,13 @@ public class FileSelectionPage extends WizardPage
         selectedFileName = text;
         if ("".equals(selectedFileName)) {
             selectedFile = null;
-        }
-        else {
+        } else {
             selectedFile = new File(selectedFileName);
             final boolean isSelectedFileValid = selectedFile.isFile();
             setPageComplete(isSelectedFileValid);
             if (isSelectedFileValid) {
                 setErrorMessage(null);
-            }
-            else {
+            } else {
                 selectedFile = null;
                 setErrorMessage(selectedFileName + " is not a valid build file");
             }

@@ -95,8 +95,7 @@ final class PropertyListLabelProvider extends LabelProvider
         if (element instanceof PropertyPair) {
             final PropertyPair pair = (PropertyPair) element;
             return pair.getName();
-        }
-        else {
+        } else {
             return element.toString();
         }
     }

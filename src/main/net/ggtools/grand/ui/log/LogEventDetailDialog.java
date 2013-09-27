@@ -67,7 +67,7 @@ public class LogEventDetailDialog extends Dialog {
     /**
      * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(LogEventDetailDialog.class);
+    private static final Log LOG = LogFactory.getLog(LogEventDetailDialog.class);
 
     /**
      * Field details.
@@ -109,7 +109,8 @@ public class LogEventDetailDialog extends Dialog {
      * @param key String
      * @param value String
      */
-    private void addKeyValue(final Composite composite, final String key, final String value) {
+    private void addKeyValue(final Composite composite, final String key,
+            final String value) {
         addKeyValue(composite, key, value, 1);
     }
 
@@ -121,10 +122,10 @@ public class LogEventDetailDialog extends Dialog {
      * @param value String
      * @param valueColumnSpan int
      */
-    private void addKeyValue(final Composite composite, final String key, final String value,
-            final int valueColumnSpan) {
+    private void addKeyValue(final Composite composite, final String key,
+            final String value, final int valueColumnSpan) {
         if (value == null) {
-            log.warn("Value is null, skipping");
+            LOG.warn("Value is null, skipping");
             return;
         }
 
@@ -196,8 +197,7 @@ public class LogEventDetailDialog extends Dialog {
             details.dispose();
             details = null;
             detailsButton.setText(IDialogConstants.SHOW_DETAILS_LABEL);
-        }
-        else {
+        } else {
             details = createDetailWidget(event.getException());
             detailsButton.setText(IDialogConstants.HIDE_DETAILS_LABEL);
         }
@@ -217,8 +217,7 @@ public class LogEventDetailDialog extends Dialog {
     protected final void buttonPressed(final int buttonId) {
         if (IDialogConstants.DETAILS_ID == buttonId) {
             toggleExceptionDetail();
-        }
-        else {
+        } else {
             super.buttonPressed(buttonId);
         }
     }

@@ -97,7 +97,7 @@ public class RecentFilesMenu extends MenuManager
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(RecentFilesMenu.class);
+    private static final Log LOG = LogFactory.getLog(RecentFilesMenu.class);
 
     /**
      * Field RECENT_FILES_GROUP.
@@ -155,8 +155,7 @@ public class RecentFilesMenu extends MenuManager
 
         if (Display.getCurrent() == null) {
             Display.getDefault().syncExec(runnable);
-        }
-        else {
+        } else {
             runnable.run();
         }
     }

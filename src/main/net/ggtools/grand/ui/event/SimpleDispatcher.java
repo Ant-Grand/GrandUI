@@ -44,7 +44,7 @@ class SimpleDispatcher extends DispatcherAdapter implements Dispatcher {
     /**
      * Field log.
      */
-    private final static Log log = LogFactory.getLog(SimpleDispatcher.class);
+    private static final Log LOG = LogFactory.getLog(SimpleDispatcher.class);
 
     /**
      * Field method.
@@ -72,10 +72,10 @@ class SimpleDispatcher extends DispatcherAdapter implements Dispatcher {
         try {
             method.invoke(subscriber, new Object[]{eventData});
         } catch (final IllegalAccessException e) {
-            log.fatal(getEventManager().getName() + " dispatchOneEvent", e);
+            LOG.fatal(getEventManager().getName() + " dispatchOneEvent", e);
             throw new RuntimeException(e);
         } catch (final InvocationTargetException e) {
-            log.error(getEventManager().getName() + " dispatchOneEvent", e);
+            LOG.error(getEventManager().getName() + " dispatchOneEvent", e);
             throw new RuntimeException(e.getCause());
         }
     }

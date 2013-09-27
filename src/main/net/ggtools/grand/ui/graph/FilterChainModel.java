@@ -49,7 +49,7 @@ public class FilterChainModel implements GraphProducer {
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(FilterChainModel.class);
+    private static final Log LOG = LogFactory.getLog(FilterChainModel.class);
 
     /**
      * Field filterChain.
@@ -81,8 +81,8 @@ public class FilterChainModel implements GraphProducer {
      * @param newFilter GraphFilter
      */
     public final void addFilterFirst(final GraphFilter newFilter) {
-        if (log.isDebugEnabled()) {
-            log.debug("Adding new head filter " + newFilter);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Adding new head filter " + newFilter);
         }
         filterChain.addFilterFirst(newFilter);
         filterGraph();
@@ -92,8 +92,8 @@ public class FilterChainModel implements GraphProducer {
      * @param newFilter GraphFilter
      */
     public final void addFilterLast(final GraphFilter newFilter) {
-        if (log.isDebugEnabled()) {
-            log.debug("Adding new tail filter " + newFilter);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Adding new tail filter " + newFilter);
         }
         filterChain.addFilterLast(newFilter);
         filterGraph();
@@ -104,14 +104,13 @@ public class FilterChainModel implements GraphProducer {
      */
     public final void clearFilters() {
         if (filterChain.getFilterList().size() > 0) {
-            if (log.isDebugEnabled()) {
-                log.debug("Clearing filters");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Clearing filters");
             }
             filterChain.clearFilters();
             filterGraph();
-        }
-        else if (log.isDebugEnabled()) {
-            log.debug("Empty filter chain, not clearing");
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("Empty filter chain, not clearing");
         }
     }
 
@@ -134,15 +133,15 @@ public class FilterChainModel implements GraphProducer {
      * Method filterGraph.
      */
     public final void filterGraph() {
-        if (log.isDebugEnabled()) {
-            log.debug("Start filtering, filter chain size is: "
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Start filtering, filter chain size is: "
                     + filterChain.getFilterList().size());
         }
         try {
             graph = filterChain.getGraph();
         } catch (final GrandException e) {
-            log.error("Cannot filter graph", e);
             // TODO proper exception handling.
+            LOG.error("Cannot filter graph", e);
             graph = null;
         }
     }

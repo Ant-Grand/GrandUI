@@ -43,7 +43,7 @@ public class ClearFiltersAction extends GraphControlerAction {
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(ClearFiltersAction.class);
+    private static final Log LOG = LogFactory.getLog(ClearFiltersAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

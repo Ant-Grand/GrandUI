@@ -86,7 +86,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(GraphControler.class);
+    private static final Log LOG = LogFactory.getLog(GraphControler.class);
 
     // FIXME Ok that's bad it'll probably have to go to the forthcoming pref
     // API.
@@ -191,8 +191,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @param window GraphWindow
      */
     public GraphControler(final GraphWindow window) {
-        if (log.isInfoEnabled()) {
-            log.info("Creating new controler to " + window);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Creating new controler to " + window);
         }
         this.window = window;
         model = new GraphModel();
@@ -210,10 +210,10 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             parameterChangedEvent = graphEventManager.createDispatcher(GraphListener.class
                     .getDeclaredMethod("parameterChanged", new Class[]{GraphControler.class}));
         } catch (final SecurityException e) {
-            log.fatal("Caught exception initializing GraphControler", e);
+            LOG.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         } catch (final NoSuchMethodException e) {
-            log.fatal("Caught exception initializing GraphControler", e);
+            LOG.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         }
 
@@ -233,7 +233,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             ModalContext.run(new IRunnableWithProgress() {
                 public void run(final IProgressMonitor monitor)
                         throws InvocationTargetException, InterruptedException {
-                    log.info("Adding filter " + filter);
+                    LOG.info("Adding filter " + filter);
                     progressMonitor.beginTask("Adding filter", 4);
                     filterChain.addFilterLast(filter);
                     progressMonitor.worked(1);
@@ -270,7 +270,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             ModalContext.run(new IRunnableWithProgress() {
                 public void run(final IProgressMonitor monitor)
                         throws InvocationTargetException, InterruptedException {
-                    log.info("Clearing filters");
+                    LOG.info("Clearing filters");
                     progressMonitor.beginTask("Clearing filters", 4);
                     filterChain.clearFilters();
                     progressMonitor.worked(1);
@@ -309,7 +309,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @see net.ggtools.grand.ui.graph.SelectionManager#deselectNode(net.ggtools.grand.ui.graph.draw2d.Draw2dNode)
      */
     public final void deselectNode(final Draw2dNode node) {
-        log.debug("Deselect node " + node);
+        LOG.debug("Deselect node " + node);
         if (node.isSelected()) {
             selectedNodes.remove(node);
             node.setSelected(false);
@@ -321,8 +321,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * Hack for gtk: print using the dot command.
      */
     public final void dotPrint() {
-        if (log.isDebugEnabled()) {
-            log.debug("Printing graph using dot");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Printing graph using dot");
         }
         final Properties props = new Properties();
         props.setProperty("dot.graph.attributes", "rankdir=\"TB\"");
@@ -353,14 +353,14 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
                     "dot -Tps " + dotParameters + " -o GrandDotPrint.ps GrandDotPrint.dot");
             proc.waitFor();
             proc.destroy();
-            log.info("Graph printed to GrandDotPrint.ps");
+            LOG.info("Graph printed to GrandDotPrint.ps");
             final MessageDialog dialog = new MessageDialog(window.getShell(), "Graph printed",
                     Application.getInstance().getImage(Application.APPLICATION_ICON),
                     "Graph saved as GraphDotPrint.ps", MessageDialog.INFORMATION,
                     new String[]{"OK"}, 0);
             dialog.open();
         } catch (final Exception e) {
-            log.error("Got execption printing", e);
+            LOG.error("Got execption printing", e);
         }
     }
 
@@ -373,8 +373,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         if (busRoutingEnabled != enabled) {
-            if (log.isInfoEnabled()) {
-                log.info("Using bus routing set to " + enabled);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Using bus routing set to " + enabled);
             }
             busRoutingEnabled = enabled;
             parameterChangedEvent.dispatch(this);
@@ -402,8 +402,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      */
     public final GraphDisplayer getDisplayer() {
         if (displayer == null) {
-            if (log.isInfoEnabled()) {
-                log.info("Opening graph displayer");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Opening graph displayer");
             }
             Display.getDefault().syncExec(new Runnable() {
                 public void run() {
@@ -421,8 +421,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     public final Properties getGraphProperties() {
         if (model != null) {
             return model.getUserProperties();
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -486,8 +485,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     public final void openFile(final File file, final Properties properties) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
-        if (log.isInfoEnabled()) {
-            log.info("Opening " + file);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Opening " + file);
         }
 
         progressMonitor.beginTask("Opening new graph", 5);
@@ -496,14 +495,14 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         try {
             progressMonitor.subTask("Loading ant file");
             model.openFile(file, properties);
-            if (log.isDebugEnabled()) {
-                log.debug("Model loaded graph");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Model loaded graph");
             }
             progressMonitor.worked(1);
 
             filterAndRenderGraph(progressMonitor);
-            if (log.isInfoEnabled()) {
-                log.info("Graph loaded & rendered");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Graph loaded & rendered");
             }
             RecentFilesManager.getInstance().addNewFile(file, properties);
         } catch (final GrandException e) {
@@ -543,8 +542,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @param printer Printer
      */
     public final void print(final Printer printer) {
-        if (log.isDebugEnabled()) {
-            log.debug("Printing graph");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Printing graph");
         }
         final PrintFigureOperation printOp = new PrintFigureOperation(printer, figure);
         printOp.setPrintMode(printMode);
@@ -557,8 +556,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
      */
     public final void propertyChange(final PropertyChangeEvent event) {
-        if (log.isDebugEnabled()) {
-            log.debug("Get PropertyChangeEvent " + event.getProperty());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Get PropertyChangeEvent " + event.getProperty());
         }
         if (event.getProperty().startsWith(PreferenceKeys.GRAPH_PREFIX)) {
             refreshGraph();
@@ -572,16 +571,16 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         // FIXME check that there is a graph.
-        if (log.isInfoEnabled()) {
-            log.info("Refreshing current graph");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Refreshing current graph");
         }
         progressMonitor.beginTask("Refreshing graph", 3);
         clearFiltersOnNextLoad = false;
 
         try {
             renderFilteredGraph(progressMonitor);
-            if (log.isInfoEnabled()) {
-                log.info("Graph refreshed");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Graph refreshed");
             }
         } catch (final BuildException e) {
             reportError("Cannot open graph", e);
@@ -604,23 +603,23 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     public final void reloadGraph(final Properties properties) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
-        if (log.isInfoEnabled()) {
-            log.info("Reloading current graph");
         // FIXME check that there is a model.
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Reloading current graph");
         }
         progressMonitor.beginTask("Reloading graph", 5);
         clearFiltersOnNextLoad = false;
 
         try {
             model.reload(properties);
-            if (log.isDebugEnabled()) {
-                log.debug("Model reloaded graph");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Model reloaded graph");
             }
             progressMonitor.worked(1);
 
             filterAndRenderGraph(progressMonitor);
-            if (log.isInfoEnabled()) {
-                log.info("Graph reloaded");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Graph reloaded");
             }
             RecentFilesManager.getInstance().updatePropertiesFor(model.getLastLoadedFile(),
                     properties);
@@ -649,8 +648,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @see net.ggtools.grand.ui.graph.SelectionManager#selectNode(net.ggtools.grand.ui.graph.draw2d.Draw2dNode, boolean)
      */
     public final void selectNode(final Draw2dNode node, final boolean addToSelection) {
-        if (log.isTraceEnabled()) {
-            log.trace("Select node " + node);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Select node " + node);
         }
         if (!node.isSelected()) {
             if (!addToSelection) {
@@ -693,8 +692,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             filterChain.clearFilters();
         }
         filterChain.filterGraph();
-        if (log.isDebugEnabled()) {
-            log.debug("Filtering done");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Filtering done");
         }
         progressMonitor.worked(1);
 
@@ -707,8 +706,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @param progressMonitor IProgressMonitor
      */
     private void renderFilteredGraph(final IProgressMonitor progressMonitor) {
-        if (log.isDebugEnabled()) {
-            log.debug("Creating dot graph");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating dot graph");
         }
         progressMonitor.subTask("Laying out graph");
         graph = filterChain.getGraph();
@@ -717,8 +716,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         final IDotGraph dotGraph = creator.getGraph();
         progressMonitor.worked(1);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Laying out graph");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Laying out graph");
         }
         final Dot app = new Dot();
         app.layout(dotGraph, 0, -7);
@@ -729,8 +728,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             public void run() {
                 if (figure == null) {
                     figure = renderer.render(dotGraph);
-                }
-                else {
+                } else {
                     renderer.render(figure, dotGraph);
                 }
 
@@ -753,7 +751,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @param e Throwable
      */
     private void reportError(final String message, final Throwable e) {
-        log.error(message, e);
+        LOG.error(message, e);
         ExceptionDialog.openException(window.getShell(), message, e);
     }
 

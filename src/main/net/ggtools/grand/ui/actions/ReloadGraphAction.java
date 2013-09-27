@@ -44,7 +44,7 @@ public class ReloadGraphAction extends GraphControlerAction {
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(ReloadGraphAction.class);
+    private static final Log LOG = LogFactory.getLog(ReloadGraphAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

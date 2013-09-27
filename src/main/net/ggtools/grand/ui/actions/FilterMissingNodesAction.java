@@ -45,7 +45,7 @@ public class FilterMissingNodesAction extends GraphControlerAction {
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(FilterMissingNodesAction.class);
+    private static final Log LOG = LogFactory.getLog(FilterMissingNodesAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

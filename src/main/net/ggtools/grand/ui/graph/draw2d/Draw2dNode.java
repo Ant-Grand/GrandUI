@@ -57,7 +57,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(Draw2dNode.class);
+    private static final Log LOG = LogFactory.getLog(Draw2dNode.class);
 
     /**
      * Field graph.
@@ -150,7 +150,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
                 break;
 
             default:
-                log.error("Unexpected segment type " + segType);
+                LOG.error("Unexpected segment type " + segType);
                 break;
             }
         }
@@ -203,8 +203,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
             this.selected = selected;
             if (selected) {
                 setBackgroundColor(selectedBgColor);
-            }
-            else {
+            } else {
                 setBackgroundColor(nodeBgColor);
             }
             repaint();

@@ -72,7 +72,7 @@ public class GraphWindow extends ApplicationWindow
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(GraphWindow.class);
+    private static final Log LOG = LogFactory.getLog(GraphWindow.class);
 
     /**
      * Field controlerAvailableDispatcher.
@@ -127,8 +127,8 @@ public class GraphWindow extends ApplicationWindow
      */
     public GraphWindow(final Shell parent) {
         super(parent);
-        if (log.isDebugEnabled()) {
-            log.debug("Creating new GraphWindow");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating new GraphWindow");
         }
 
         controlerEventManager = new EventManager("GraphControler Availability Event");
@@ -140,10 +140,10 @@ public class GraphWindow extends ApplicationWindow
                     .createDispatcher(GraphControlerListener.class.getDeclaredMethod(
                             "controlerRemoved", new Class[]{GraphControler.class}));
         } catch (final SecurityException e) {
-            log.fatal("Caught exception initializing GraphControler", e);
+            LOG.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         } catch (final NoSuchMethodException e) {
-            log.fatal("Caught exception initializing GraphControler", e);
+            LOG.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         }
 
@@ -156,7 +156,7 @@ public class GraphWindow extends ApplicationWindow
      * @param listener GraphControlerListener
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#addControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
-    public void addControlerListener(final GraphControlerListener listener) {
+    public final void addControlerListener(final GraphControlerListener listener) {
         controlerEventManager.subscribe(listener);
     }
 
@@ -170,8 +170,7 @@ public class GraphWindow extends ApplicationWindow
             final GraphTabItem selectedTab = (GraphTabItem) tabFolder.getSelection();
             if (selectedTab == null) {
                 return null;
-            }
-            else {
+            } else {
                 return selectedTab.getControler();
             }
         }
@@ -234,9 +233,9 @@ public class GraphWindow extends ApplicationWindow
                 }
             });
         } catch (final InvocationTargetException e) {
-            log.error("Caugh exception opening file", e);
+            LOG.error("Caugh exception opening file", e);
         } catch (final InterruptedException e) {
-            log.info("Loading cancelled", e);
+            LOG.info("Loading cancelled", e);
         }
     }
 
@@ -245,7 +244,7 @@ public class GraphWindow extends ApplicationWindow
      * @param listener GraphControlerListener
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
-    public void removeControlerListener(final GraphControlerListener listener) {
+    public final void removeControlerListener(final GraphControlerListener listener) {
         controlerEventManager.unSubscribe(listener);
     }
 
@@ -302,8 +301,8 @@ public class GraphWindow extends ApplicationWindow
      */
     @Override
     protected final Control createContents(final Composite parent) {
-        if (log.isDebugEnabled()) {
-            log.debug("Creating contents");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating contents");
         }
         tabFolder = new CTabFolder(parent, SWT.BORDER | SWT.TOP);
         tabFolder.addCTabFolder2Listener(new CTabFolder2Adapter() {
@@ -313,7 +312,7 @@ public class GraphWindow extends ApplicationWindow
              */
             @Override
             public void close(final CTabFolderEvent event) {
-                log.debug("Got " + event);
+                LOG.debug("Got " + event);
                 final Widget item = event.item;
                 if (item instanceof GraphTabItem) {
                     controlerRemovedDispatcher.dispatch(((GraphTabItem) item).getControler());
@@ -327,7 +326,7 @@ public class GraphWindow extends ApplicationWindow
              */
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                log.debug("Got " + e);
+                LOG.debug("Got " + e);
                 final Widget widget = e.widget;
                 if (widget instanceof CTabFolder) {
                     final CTabFolder folder = (CTabFolder) widget;
@@ -350,8 +349,8 @@ public class GraphWindow extends ApplicationWindow
      */
     @Override
     protected final MenuManager createMenuManager() {
-        if (log.isDebugEnabled()) {
-            log.debug("Creating menu manager");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating menu manager");
         }
         manager = new MenuManager();
         manager.add(new FileMenuManager(this));

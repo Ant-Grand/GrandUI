@@ -46,7 +46,7 @@ public class PrintAction extends GraphControlerAction {
     /**
      * Field log.
      */
-    private static final Log log = LogFactory.getLog(PrintAction.class);
+    private static final Log LOG = LogFactory.getLog(PrintAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.
@@ -67,7 +67,7 @@ public class PrintAction extends GraphControlerAction {
     public final void run() {
         final PrintDialog dialog = new PrintDialog(window.getShell());
         final PrinterData printerData = dialog.open();
-        log.debug("Dialog returned " + printerData);
+        LOG.debug("Dialog returned " + printerData);
         if (printerData != null) {
             final Printer printer = new Printer(printerData);
             getGraphControler().print(printer);

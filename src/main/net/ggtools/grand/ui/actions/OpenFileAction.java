@@ -53,7 +53,7 @@ public class OpenFileAction extends Action {
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(OpenFileAction.class);
+    private static final Log LOG = LogFactory.getLog(OpenFileAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

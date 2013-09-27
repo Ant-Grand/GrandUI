@@ -49,7 +49,7 @@ public class AboutAction extends Action {
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(AboutAction.class);
+    private static final Log LOG = LogFactory.getLog(AboutAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.
