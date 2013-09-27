@@ -14,8 +14,8 @@
 	<property name="confdir" value="etc"/>
 	<property name="jnlpdir" value="jnlp"/>
 	<property name="buildnum-file" value="etc/net/ggtools/grand/ui/buildnum.properties"/>
-    <property name="classdir.launcher" value="bin/launcher"/>
-    <property name="srcdir.launcher" value="src/launcher"/>
+	<property name="classdir.launcher" value="bin/launcher"/>
+	<property name="srcdir.launcher" value="src/launcher"/>
 	<property name="javadocdir" value="tmp/docs/api"/>
 
 	<property name="verbose-get" value="false"/>
@@ -25,11 +25,11 @@
 	</condition>
 
 	<condition property="isWin32">
-        <os family="windows"/>
+		<os family="windows"/>
 	</condition>
 
 	<condition property="isMacOS">
-        <os family="mac"/>
+		<os family="mac"/>
 	</condition>
 
 	<macrodef name="getjar" description="Download a jar to a the extlib directory">
@@ -108,42 +108,53 @@
 		<include name="**/org.eclipse.swt.${swt.archive.tag}_${swt.version}.jar"/>
 	</patternset>
 
-	<target name="init" depends="get-deps">
-		<path id="ext-libs">
-			<fileset dir="${extlibdir}">
-				<include name="**/*.jar"/>
-			</fileset>
-		</path>
+	<target name="javadoc" description="Generates javadoc" depends="jars">
+		<mkdir dir="${javadocdir}"/>
+		<tstamp>
+			<format pattern="2004-yyyy" property="year"/>
+		</tstamp>
+		<property name="copyright" value="Copyright &amp;copy; ggTools. All Rights Reserved."/>
+		<property name="title" value="Grand UI"/>
+		<javadoc use="true" private="true" destdir="${javadocdir}" author="true" version="true" sourcepath="src/main" packagenames="net.ggtools.grand.*">
+			<classpath>
+				<fileset dir="${libdir}">
+					<include name="*.jar"/>
+				</fileset>
+				<fileset dir="${extlibdir}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</javadoc>
 	</target>
 
-	<target name="dist" depends="deploy, bin-dist,src-dist" description="Create source and binary distributions"/>
+	<target name="make.keystore" if="keystore.dn" description="Creates a self-signed keystore for testing">
+		<fail>
+			<condition>
+				<or>
+					<not><isset property="keystore.alias"/></not>
+					<not><isset property="keystore.password"/></not>
+					<available file="${keystore.location}" type="file"/>
+				</or>
+			</condition>
+		</fail>
+		<exec executable="keytool">
+			<arg line="-genkey -alias ${keystore.alias} -keyalg RSA -keysize 2048"/>
+			<arg value="-keystore"/>
+			<arg file="${keystore.location}"/>
+			<arg line="-keypass ${keystore.password} -storepass ${keystore.password} -dname"/>
+			<arg value="${keystore.dn}"/>
+		</exec>
+	</target>
 
-	<target name="javadoc" description="Generates javadoc" depends="jars">
-	    <mkdir dir="${javadocdir}"/>
-	    <tstamp>
-	      <format pattern="2004-yyyy" property="year"/>
-	    </tstamp>
-	    <property name="copyright" value="Copyright &amp;copy;  ggTools. All Rights Reserved."/>
-	    <property name="title" value="Grand UI"/>
-	    <javadoc use="true" private="true" destdir="${javadocdir}" author="true" version="true" sourcepath="src/main" packagenames="net.ggtools.grand.*">
-	      <classpath>
-	        <fileset dir="${libdir}">
-	          <include name="*.jar"/>
-	        </fileset>
-	        <fileset dir="${extlibdir}">
-	          <include name="*.jar"/>
-	        </fileset>
-	      </classpath>
-	    </javadoc>
-	  </target>
+	<target name="dist" depends="deploy,bin-dist,src-dist" description="Create source and binary distributions"/>
 
 	<!-- ================================= 
-          target: deploy              
-         ================================= -->
+	  target: deploy	      
+	 ================================= -->
 	<target name="deploy" depends="clean,jars,get-alien-swt" description="Deploys the application to be used with Java Web Start.">
 		<fail message="You must define jnlp.deploydir" unless="jnlp.deploydir"/>
 		<copy tofile="${jnlp.deploydir}/${product.name}.jar" file="${libdir}/${product.fullname}.jar"/>
-        <copy tofile="${jnlp.deploydir}/${product.name}-launcher.jar" file="${libdir}/${product.fullname}-launcher.jar"/>
+		<copy tofile="${jnlp.deploydir}/${product.name}-launcher.jar" file="${libdir}/${product.fullname}-launcher.jar"/>
 		<copy todir="${jnlp.deploydir}">
 			<fileset dir="${extlibdir}">
 				<exclude name="*swt*.*"/>
@@ -207,7 +218,7 @@
 		<delete dir="tmp"/>
 		<mkdir dir="tmp/${product.fullname}"/>
 		<copy tofile="tmp/${product.fullname}/lib/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
-        <copy tofile="tmp/${product.fullname}/grand-ui-launcher.jar" file="${libdir}/${product.fullname}-launcher.jar"/>
+		<copy tofile="tmp/${product.fullname}/grand-ui-launcher.jar" file="${libdir}/${product.fullname}-launcher.jar"/>
 		<copy todir="tmp/${product.fullname}/lib">
 			<fileset dir="${extlibdir}">
 				<exclude name="*swt*.*"/>
@@ -259,13 +270,13 @@
 				<attribute name="Main-Class" value="net.ggtools.grand.ui.Application"/>
 			</manifest>
 		</jar>
-        <jar destfile="${libdir}/${product.fullname}-launcher.jar" index="true">
-            <fileset dir="${classdir.launcher}"/>
-            <!--fileset dir="${confdir}" /-->
-            <manifest>
-                <attribute name="Main-Class" value="net.ggtools.grand.ui.launcher.Launcher"/>
-            </manifest>
-        </jar>
+		<jar destfile="${libdir}/${product.fullname}-launcher.jar" index="true">
+			<fileset dir="${classdir.launcher}"/>
+			<!--fileset dir="${confdir}" /-->
+			<manifest>
+				<attribute name="Main-Class" value="net.ggtools.grand.ui.launcher.Launcher"/>
+			</manifest>
+		</jar>
 	</target>
 
 	<target name="compile.java" depends="init" description="Compile the java source files">
@@ -275,12 +286,12 @@
 				<path refid="ext-libs"/>
 			</classpath>
 		</javac>
-        <mkdir dir="${classdir.launcher}"/>
-        <javac srcdir="${srcdir.launcher}" destdir="${classdir.launcher}" debug="true" optimize="true" includeantruntime="false" source="1.5" target="1.5">
-            <classpath>
-                <path refid="ext-libs"/>
-            </classpath>
-        </javac>
+		<mkdir dir="${classdir.launcher}"/>
+		<javac srcdir="${srcdir.launcher}" destdir="${classdir.launcher}" debug="true" optimize="true" includeantruntime="false" source="1.5" target="1.5">
+			<classpath>
+				<path refid="ext-libs"/>
+			</classpath>
+		</javac>
 	</target>
 
 	<target name="incbuildnum" depends="setup-svn-macros" unless="noincbuildnum">
@@ -296,6 +307,13 @@
 		<svn-commit message="Setting buildnum to ${build.number} for ${product.name}" file="${buildnum-file}"/>
 	</target>
 
+	<target name="init" depends="get-deps">
+		<path id="ext-libs">
+			<fileset dir="${extlibdir}">
+				<include name="**/*.jar"/>
+			</fileset>
+		</path>
+	</target>
 
 	<target name="setup-svn-macros" depends="setup-svn-macros-svn,setup-svn-macros-svk"/>
 
@@ -345,7 +363,7 @@
 	<target name="clean" depends="clean.dist,clean.deps" description="Remove intermediate files but not external libs">
 		<delete dir="${libdir}"/>
 		<delete dir="${classdir.main}"/>
-        <delete dir="${classdir.launcher}"/>
+	<delete dir="${classdir.launcher}"/>
 	</target>
 
 	<target name="clean.deps" description="Clean the dependencies directory">
@@ -423,8 +441,8 @@
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
-          target: get-alien-swt                      
-         - - - - - - - - - - - - - - - - - -->
+	  target: get-alien-swt			     
+	 - - - - - - - - - - - - - - - - - -->
 	<target name="get-alien-swt" depends="set-swt-properties">
 		<get-swt url="${url.eclipse.alien.swt}" name="${dist.aliendir}"/>
 	</target>
