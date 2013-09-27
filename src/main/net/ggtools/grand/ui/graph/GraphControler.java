@@ -88,7 +88,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      */
     private static final Log log = LogFactory.getLog(GraphControler.class);
 
-    // FIXME: Ok that's bad it'll probably have to go to the forthcoming pref
+    // FIXME Ok that's bad it'll probably have to go to the forthcoming pref
     // API.
     /**
      * Field printMode.
@@ -604,9 +604,9 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     public final void reloadGraph(final Properties properties) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
-        // FIXME Check that there is a model.
         if (log.isInfoEnabled()) {
             log.info("Reloading current graph");
+        // FIXME check that there is a model.
         }
         progressMonitor.beginTask("Reloading graph", 5);
         clearFiltersOnNextLoad = false;

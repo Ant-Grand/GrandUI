@@ -62,7 +62,7 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
 
     /**
      * The maximum number of files to keep in the recent files menu. A
-     * <code>-1</code> should be intepreted as need to load from the
+     * <code>-1</code> should be interpreted as need to load from the
      * preferences store.
      */
     private int maxFiles = -1;
@@ -184,8 +184,8 @@ public class RecentFilesManager implements IPropertyChangeListener, PreferenceKe
     /**
      * Update the properties for a specific file.
      *
-     * @param file
-     * @param properties
+     * @param file File
+     * @param properties Properties
      */
     public void updatePropertiesFor(final File file, final Properties properties) {
         if (log.isDebugEnabled()) {

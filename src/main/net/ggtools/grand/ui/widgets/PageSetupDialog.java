@@ -41,8 +41,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * TODO The whole thing is crappy I've to change it when the Prefs API will be
- * there.
+ * TODO the whole thing is crappy, change it when the Prefs API will be there.
  * @author Christophe Labouisse
  */
 public class PageSetupDialog extends Dialog {

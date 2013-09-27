@@ -148,8 +148,8 @@ abstract class TableTooltipListener implements Listener {
      *
      * The composite returned by this method will have a {@link GridLayout}.
      *
-     * @param parent
-     * @param item
+     * @param parent Composite
+     * @param item TableItem
      * @return Control
      */
     protected Control createTooltipContents(final Composite parent, final TableItem item) {

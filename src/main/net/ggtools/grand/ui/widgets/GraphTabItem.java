@@ -336,7 +336,7 @@ public class GraphTabItem extends CTabItem
      *
      * @param parent
      *            parent CTabFolder.
-     * @param style
+     * @param style int
      * @param controler GraphControler
      */
     public GraphTabItem(final CTabFolder parent, final int style, final GraphControler controler) {

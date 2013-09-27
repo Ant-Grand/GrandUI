@@ -78,7 +78,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     public void addListener(final ILabelProviderListener listener) {
-        // TODO Auto-generated method stub
+        // TODO auto-generated method stub
 
     }
 
@@ -169,7 +169,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
     public final Image getImage(final Object element) {
-        // TODO Auto-generated method stub
+        // TODO auto-generated method stub
         return null;
     }
 
@@ -201,7 +201,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      *      java.lang.Object, java.lang.Object)
      */
     public final void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
-        // TODO Auto-generated method stub
+        // TODO auto-generated method stub
 
     }
 
@@ -214,7 +214,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      */
     public final boolean isLabelProperty(final Object element,
             final String property) {
-        // TODO Auto-generated method stub
+        // TODO auto-generated method stub
         return false;
     }
 
@@ -224,7 +224,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     public void removeListener(final ILabelProviderListener listener) {
-        // TODO Auto-generated method stub
+        // TODO auto-generated method stub
 
     }
 

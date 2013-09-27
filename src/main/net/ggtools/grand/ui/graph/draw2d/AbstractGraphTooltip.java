@@ -100,7 +100,7 @@ abstract class AbstractGraphTooltip extends Figure {
     /**
      * Create the tooltip's contents.
      * Should be called explicitly by implementing classes.
-     * TODO Make this part automatic (ticket #37).
+     * TODO make this part automatic (ticket #37).
      */
     protected abstract void createContents();
 

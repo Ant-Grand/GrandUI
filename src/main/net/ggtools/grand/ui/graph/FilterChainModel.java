@@ -141,8 +141,8 @@ public class FilterChainModel implements GraphProducer {
         try {
             graph = filterChain.getGraph();
         } catch (final GrandException e) {
-            // TODO Proper exception handling.
             log.error("Cannot filter graph", e);
+            // TODO proper exception handling.
             graph = null;
         }
     }

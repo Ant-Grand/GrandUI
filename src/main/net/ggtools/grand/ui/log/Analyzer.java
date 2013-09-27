@@ -101,13 +101,13 @@ public class Analyzer extends ApplicationWindow {
                             ois = new ObjectInputStream(new FileInputStream(logFileName));
                             logViewer.setLogBuffer((LogEventBuffer) ois.readObject());
                         } catch (final FileNotFoundException e) {
-                            // TODO Auto-generated catch block
+                            // TODO auto-generated catch block
                             e.printStackTrace();
                         } catch (final IOException e) {
-                            // TODO Auto-generated catch block
+                            // TODO auto-generated catch block
                             e.printStackTrace();
                         } catch (final ClassNotFoundException e) {
-                            // TODO Auto-generated catch block
+                            // TODO auto-generated catch block
                             e.printStackTrace();
                         } finally {
                             if (ois != null) {

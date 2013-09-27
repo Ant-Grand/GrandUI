@@ -92,8 +92,8 @@ public class LogEventDetailDialog extends Dialog {
     /**
      * Creates a new LogEventDetailDialog.
      *
-     * @param parentShell
-     * @param event
+     * @param parentShell Shell
+     * @param event LogEvent
      */
     public LogEventDetailDialog(final Shell parentShell, final LogEvent event) {
         super(parentShell);
@@ -105,9 +105,9 @@ public class LogEventDetailDialog extends Dialog {
      * Creates a key/value widget pair with the value widget spanning on 1
      * column.
      *
-     * @param composite
-     * @param key
-     * @param value
+     * @param composite Composite
+     * @param key String
+     * @param value String
      */
     private void addKeyValue(final Composite composite, final String key, final String value) {
         addKeyValue(composite, key, value, 1);
@@ -116,10 +116,10 @@ public class LogEventDetailDialog extends Dialog {
     /**
      * Add a key/value widget pair.
      *
-     * @param composite
-     * @param key
-     * @param value
-     * @param valueColumnSpan
+     * @param composite Composite
+     * @param key String
+     * @param value String
+     * @param valueColumnSpan int
      */
     private void addKeyValue(final Composite composite, final String key, final String value,
             final int valueColumnSpan) {
@@ -152,7 +152,7 @@ public class LogEventDetailDialog extends Dialog {
      * Creates the detail widget for an exception. The widget will be made of a
      * {@link ScrolledComposite}containing a read only text control.
      *
-     * @param exception
+     * @param exception Throwable
      * @return the detail control
      */
     private Control createDetailWidget(final Throwable exception) {

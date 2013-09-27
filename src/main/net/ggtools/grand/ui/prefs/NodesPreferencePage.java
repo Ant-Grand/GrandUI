@@ -65,7 +65,7 @@ public class NodesPreferencePage extends PreferencePage
     /**
      * Initialize a preferences store with sensible defaults values for the
      * nodes.
-     * @param prefs
+     * @param prefs IPreferenceStore
      */
     public static void setDefaults(final IPreferenceStore prefs) {
         PreferenceConverter.setDefault(prefs, NODE_PREFIX + "default.fgcolor",

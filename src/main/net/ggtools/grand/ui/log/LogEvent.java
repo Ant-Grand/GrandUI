@@ -59,8 +59,8 @@ public class LogEvent implements Serializable {
 
         /**
          * Creates a new log level.
-         * @param value
-         * @param name
+         * @param value int
+         * @param name String
          */
         private Level(final int value, final String name) {
             this.value = value;

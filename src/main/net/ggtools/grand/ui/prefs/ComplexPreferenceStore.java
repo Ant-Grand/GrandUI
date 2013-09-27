@@ -564,7 +564,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      */
     private void saveProperties(final Document doc, final Element properties, final PropertySaver saver) {
         final Collection<?> keys = saver.getKeys();
-        // TODO Solve the properties problem.
+        // TODO solve the properties problem.
         for (Object i : keys) {
             final String key = i instanceof String ? (String) i : i.toString();
             if (saver.needSaving(key)) {

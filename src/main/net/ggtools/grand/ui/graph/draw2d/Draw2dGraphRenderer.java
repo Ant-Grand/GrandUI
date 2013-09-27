@@ -220,8 +220,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
             label.setFont(Application.getInstance().getFont(Application.LINK_FONT));
             final ConnectionLocator locator = new MidpointLocator(conn, bends.size() / 2);
             locator.setRelativePosition(PositionConstants.CENTER);
-            // Includes the label in the connnection bounds.
-            // Worth cas scenario, the label is on the connection edge.
+            // Includes the label in the connection bounds.
+            // Worst case scenario, the label is on the connection edge.
             final Dimension labelSize = label.getPreferredSize();
             bounds.expand(labelSize.width, labelSize.height);
             conn.add(label, locator);

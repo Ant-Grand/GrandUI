@@ -181,7 +181,7 @@ public class GraphWindow extends ApplicationWindow
     /**
      * Create a new displayer for a controler.
      *
-     * @param controler
+     * @param controler GraphControler
      * @return GraphDisplayer
      */
     public final GraphDisplayer newDisplayer(final GraphControler controler) {

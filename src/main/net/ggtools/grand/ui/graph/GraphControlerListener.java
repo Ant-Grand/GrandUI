@@ -38,14 +38,14 @@ public interface GraphControlerListener {
      * Notify the listener that the controler has been removed and should
      * no longer be used.
      *
-     * @param controler
+     * @param controler GraphControler
      */
     void controlerRemoved(GraphControler controler);
 
     /**
      * Notify the listener of the new available controler.
      *
-     * @param controler
+     * @param controler GraphControler
      */
     void controlerAvailable(GraphControler controler);
 }
