@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,12 +41,26 @@ import org.apache.commons.logging.LogFactory;
  */
 public class EventManager implements Runnable {
 
+    /**
+     * @author Christophe Labouisse
+     */
     private final class DispatchEventAction implements Runnable {
 
+        /**
+         * Field dispatcher.
+         */
         private final Dispatcher dispatcher;
 
+        /**
+         * Field event.
+         */
         private final Object event;
 
+        /**
+         * Constructor for DispatchEventAction.
+         * @param event Object
+         * @param dispatcher Dispatcher
+         */
         public DispatchEventAction(final Object event, final Dispatcher dispatcher) {
             this.event = event;
             this.dispatcher = dispatcher;
@@ -54,8 +68,8 @@ public class EventManager implements Runnable {
 
         /**
          * Dispatch one event.
-         * 
-         * @see EventManager#dispatchOneEvent(Object, Method)
+         *
+         * @see EventManager#dispatchOneEvent(Object, Dispatcher)
          * @see java.lang.Runnable#run()
          */
         public void run() {
@@ -63,16 +77,26 @@ public class EventManager implements Runnable {
         }
     }
 
+    /**
+     * @author Christophe Labouisse
+     */
     private final class SubscriptionAction implements Runnable {
+        /**
+         * Field subscriber.
+         */
         private Object subscriber;
 
+        /**
+         * Constructor for SubscriptionAction.
+         * @param subscriber Object
+         */
         public SubscriptionAction(final Object subscriber) {
             this.subscriber = subscriber;
         }
 
         /**
-         * Add the subscriber to the event's dispatcher subscribtion list.
-         * 
+         * Add the subscriber to the event's dispatcher subscription list.
+         *
          * @see java.lang.Runnable#run()
          */
         public void run() {
@@ -80,16 +104,26 @@ public class EventManager implements Runnable {
         }
     }
 
+    /**
+     * @author Christophe Labouisse
+     */
     private final class UnsubscriptionAction implements Runnable {
+        /**
+         * Field subscriber.
+         */
         private Object subscriber;
 
+        /**
+         * Constructor for UnsubscriptionAction.
+         * @param subscriber Object
+         */
         public UnsubscriptionAction(final Object subscriber) {
             this.subscriber = subscriber;
         }
 
         /**
          * Add the subscriber to the event's dispatcher subscribtion list.
-         * 
+         *
          * @see EventManager#doUnsubscription(Object)
          * @see java.lang.Runnable#run()
          */
@@ -98,18 +132,40 @@ public class EventManager implements Runnable {
         }
     }
 
-    private static final Log log = LogFactory.getLog(EventManager.class);
+    /**
+     * Field log.
+     */
+    private static final Log LOG = LogFactory.getLog(EventManager.class);
 
+    /**
+     * Field defaultDispatchAsynchronous.
+     */
     private boolean defaultDispatchAsynchronous = true;
 
+    /**
+     * Field dispatcherFactory.
+     */
     private final DispatcherFactory dispatcherFactory;
 
+    /**
+     * Field dispatcherThread.
+     */
     private Thread dispatcherThread;
 
+    /**
+     * Field eventQueue.
+     */
     private final LinkedList<Runnable> eventQueue = new LinkedList<Runnable>();
 
-    private final LinkedList<WeakReference<Object>> listenerList = new LinkedList<WeakReference<Object>>();
+    /**
+     * Field listenerList.
+     */
+    private final LinkedList<WeakReference<Object>> listenerList =
+            new LinkedList<WeakReference<Object>>();
 
+    /**
+     * Field name.
+     */
     private final String name;
 
     /**
@@ -123,8 +179,8 @@ public class EventManager implements Runnable {
     /**
      * Creates an named event dispatcher. The dispatching process will be
      * logged.
-     * 
-     * @param name
+     *
+     * @param name String
      */
     public EventManager(final String name) {
         this.name = name;
@@ -136,9 +192,9 @@ public class EventManager implements Runnable {
     /**
      * Remove all subscribers and all pending actions from the queue.
      */
-    public void clear() {
-        if (log.isInfoEnabled()) {
-            log.info("Clearing event manager");
+    public final void clear() {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Clearing event manager");
         }
         synchronized (eventQueue) {
             eventQueue.clear();
@@ -152,33 +208,32 @@ public class EventManager implements Runnable {
 
     /**
      * Creates a new dispatcher calling a specific method when invoked.
-     * @param method method to call on invokation
+     * @param method method to call on invocation
      * @return a new dispatcher.
      */
-    public Dispatcher createDispatcher(final Method method) {
+    public final Dispatcher createDispatcher(final Method method) {
         return dispatcherFactory.createDispatcher(this, method);
     }
 
     /**
      * @return String
      */
-    final public String getName() {
+    public final String getName() {
         return name;
     }
 
     /**
      * @return boolean
      */
-    public boolean isDefaultDispatchAnsynchronous() {
+    public final boolean isDefaultDispatchAnsynchronous() {
         return defaultDispatchAsynchronous;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method run.
      * @see java.lang.Runnable#run()
      */
-    public void run() {
+    public final void run() {
         // Main loop.
         while (true) {
             Runnable nextEvent;
@@ -208,8 +263,8 @@ public class EventManager implements Runnable {
                     eventQueue.wait();
                 }
             } catch (final InterruptedException e) {
-                if (log.isTraceEnabled()) {
-                    log.trace("Event queue watch interrupted");
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Event queue watch interrupted");
                 }
             }
         }
@@ -217,39 +272,44 @@ public class EventManager implements Runnable {
 
     /**
      * Sets the defaultDispatchAnsynchronous.
-     * 
+     *
      * @param defaultDispatchAnsynchronous
      *            The defaultDispatchAnsynchronous to set
      */
-    public void setDefaultDispatchAnsynchronous(final boolean defaultDispatchAnsynchronous) {
+    public final void setDefaultDispatchAnsynchronous(final boolean defaultDispatchAnsynchronous) {
         defaultDispatchAsynchronous = defaultDispatchAnsynchronous;
     }
 
     /**
      * Add a new listener.
-     * 
-     * @param listener
+     *
+     * @param listener Object
      */
-    public void subscribe(final Object listener) {
+    public final void subscribe(final Object listener) {
         synchronized (eventQueue) {
             eventQueue.add(new SubscriptionAction(listener));
         }
     }
 
-    public void unSubscribe(final Object listener) {
+    /**
+     * Method unSubscribe.
+     * @param listener Object
+     */
+    public final void unSubscribe(final Object listener) {
         synchronized (eventQueue) {
             eventQueue.add(new UnsubscriptionAction(listener));
         }
     }
 
     /**
-     * Dispatch an event asynchronously. This method garanties that the events
+     * Dispatch an event asynchronously. This method guarantees that the events
      * will be processed in the order of reception.
-     * 
-     * @param event
-     * @param method
+     *
+     * @param event Object
+     * @param dispatcher Dispatcher
      */
-    private final void asynchronousDispatchEvent(final Object event, final Dispatcher dispatcher) {
+    private void asynchronousDispatchEvent(final Object event,
+            final Dispatcher dispatcher) {
         synchronized (eventQueue) {
             eventQueue.add(new DispatchEventAction(event, dispatcher));
             eventQueue.notify();
@@ -258,29 +318,29 @@ public class EventManager implements Runnable {
 
     /**
      * Dispatch one event to the current subscriber.
-     * 
-     * @param eventData
-     * @param method
+     *
+     * @param eventData Object
+     * @param dispatcher Dispatcher
      */
-    private void dispatchOneEvent(final Object eventData, final Dispatcher dispatcher) {
-        if (log.isDebugEnabled()) {
-            log.debug("Start dispatching to " + dispatcher);
+    private void dispatchOneEvent(final Object eventData,
+            final Dispatcher dispatcher) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Start dispatching to " + dispatcher);
         }
         synchronized (listenerList) {
             for (final Iterator<WeakReference<Object>> iterator = listenerList.iterator(); iterator.hasNext();) {
-                final WeakReference weakReference = iterator.next();
+                final WeakReference<Object> weakReference = iterator.next();
                 final Object subscriber = weakReference.get();
 
                 if (subscriber != null) {
-                    if (log.isTraceEnabled()) {
-                        log.trace("Dispatching " + eventData + " to " + subscriber);
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Dispatching " + eventData + " to " + subscriber);
                     }
                     dispatcher.sendEventToSubscriber(subscriber, eventData);
-                }
-                else {
+                } else {
                     // Remove the listener since it has been garbage collected.
-                    if (log.isDebugEnabled()) {
-                        log.debug("Removing weak reference " + weakReference);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Removing weak reference " + weakReference);
                     }
                     iterator.remove();
                 }
@@ -291,12 +351,12 @@ public class EventManager implements Runnable {
     /**
      * Add a new subscriber to the dispatch list. This method will do nothing if
      * the subscriber is already in the list.
-     * 
-     * @param listener
+     *
+     * @param listener Object
      */
     private void doSubscribtion(final Object listener) {
-        if (log.isDebugEnabled()) {
-            log.debug(name + " subscribing " + listener);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(name + " subscribing " + listener);
         }
 
         synchronized (listenerList) {
@@ -307,17 +367,17 @@ public class EventManager implements Runnable {
     /**
      * Removes a subscriber from the list. Does nothing if the subscriber is not
      * in the list.
-     * 
-     * @param listener
+     *
+     * @param listener Object
      */
     private void doUnsubscription(final Object listener) {
-        if (log.isDebugEnabled()) {
-            log.debug(name + " unsubscribing " + listener);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(name + " unsubscribing " + listener);
         }
 
         synchronized (listenerList) {
             for (final Iterator<WeakReference<Object>> iterator = listenerList.iterator(); iterator.hasNext();) {
-                final WeakReference weakRef = iterator.next();
+                final WeakReference<Object> weakRef = iterator.next();
 
                 if (weakRef.get() == listener) {
                     iterator.remove();
@@ -329,11 +389,12 @@ public class EventManager implements Runnable {
 
     /**
      * Dispatch an event synchronously.
-     * 
-     * @param event
-     * @param method
+     *
+     * @param event Object
+     * @param dispatcher Dispatcher
      */
-    private final void synchronousDispatchEvent(final Object event, final Dispatcher dispatcher) {
+    private void synchronousDispatchEvent(final Object event,
+            final Dispatcher dispatcher) {
         dispatchOneEvent(event, dispatcher);
     }
 
@@ -341,15 +402,15 @@ public class EventManager implements Runnable {
      * Dispatch an event. The dispatching will be either synchronous or
      * asynchronous depending of the <code>defaultDispatchAnsynchronous</code>
      * attributes. The default is to use synchronous event dispatching.
-     * 
-     * @param eventData
-     * @param dispatcher
+     *
+     * @param eventData Object
+     * @param dispatcher Dispatcher
      */
-    final void dispatchEvent(final Object eventData, final Dispatcher dispatcher) {
+    final void dispatchEvent(final Object eventData,
+            final Dispatcher dispatcher) {
         if (defaultDispatchAsynchronous) {
             asynchronousDispatchEvent(eventData, dispatcher);
-        }
-        else {
+        } else {
             synchronousDispatchEvent(eventData, dispatcher);
         }
     }

@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,23 +27,27 @@
  */
 package net.ggtools.grand.ui.graph.draw2d;
 
+//import org.eclipse.draw2d.text.BlockFlowLayout;
 import org.eclipse.draw2d.text.FlowPage;
-import org.eclipse.draw2d.text.LineBox;
+//import org.eclipse.draw2d.text.LineBox;
 import org.eclipse.draw2d.text.PageFlowLayout;
 
 /**
  * A layout for {@link org.eclipse.draw2d.text.FlowPage}object with a maximum
  * width.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class ConstrainedPageFlowLayout extends PageFlowLayout {
 
+    /**
+     * Field maxFlowWidth.
+     */
     private int maxFlowWidth = -1; // Default is not to bound lines.
 
     /**
      * Creates a new instance without any constrained width.
-     * @param page
+     * @param page FlowPage
      */
     public ConstrainedPageFlowLayout(final FlowPage page) {
         super(page);
@@ -52,28 +56,29 @@ public class ConstrainedPageFlowLayout extends PageFlowLayout {
     /**
      * @return Returns the maximum flow width or <code>-1</code> if not set.
      */
-    public int getMaxFlowWidth() {
+    public final int getMaxFlowWidth() {
         return maxFlowWidth;
     }
 
     /**
      * Sets the maximum with of the flow. When set to a positive value, the
      * layout will ensure that the flow lines won't be wider than this value.
-     * 
+     *
      * @param maxFlowWidth
      *            The maxFlowWidth to set or <code>-1</code> not to bound the
      *            flow width.
      */
-    public void setMaxFlowWidth(final int maxFlowWidth) {
+    public final void setMaxFlowWidth(final int maxFlowWidth) {
         this.maxFlowWidth = maxFlowWidth;
         invalidate();
     }
 
-    /**
+    /*
      * Override to setup the line's x, remaining, and available width.
      * @param line
      *            the LineBox to set up
      */
+    /*
     @Override
     protected void setupLine(final LineBox line) {
         super.setupLine(line);
@@ -82,4 +87,5 @@ public class ConstrainedPageFlowLayout extends PageFlowLayout {
             line.setRecommendedWidth(maxFlowWidth);
         }
     }
+    */
 }

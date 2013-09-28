@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -38,49 +38,62 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Christophe Labouisse
  */
-public class LinksPreferencePage extends FieldEditorPreferencePage implements PreferenceKeys {
+public class LinksPreferencePage extends FieldEditorPreferencePage
+        implements PreferenceKeys {
+    /**
+     * Method setDefaults.
+     * @param prefs IPreferenceStore
+     */
     public static void setDefaults(final IPreferenceStore prefs) {
-        PreferenceConverter.setDefault(prefs, LINK_DEFAULT_COLOR, ColorConstants.black.getRGB());
+        PreferenceConverter.setDefault(prefs, LINK_DEFAULT_COLOR,
+                ColorConstants.black.getRGB());
         prefs.setDefault(LINK_DEFAULT_LINEWIDTH, 1);
-        PreferenceConverter.setDefault(prefs, LINK_WEAK_COLOR, ColorConstants.lightGray.getRGB());
+        PreferenceConverter.setDefault(prefs, LINK_WEAK_COLOR,
+                ColorConstants.lightGray.getRGB());
         prefs.setDefault(LINK_WEAK_LINEWIDTH, 1);
-        PreferenceConverter.setDefault(prefs, LINK_SUBANT_COLOR, ColorConstants.lightGray.getRGB());
+        PreferenceConverter.setDefault(prefs, LINK_SUBANT_COLOR,
+                ColorConstants.lightGray.getRGB());
         prefs.setDefault(LINK_SUBANT_LINEWIDTH, 2);
     }
 
     /**
-     *  
+     *
      */
     public LinksPreferencePage() {
         super("Links", GRID);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createFieldEditors.
      * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
      */
     @Override
-    protected void createFieldEditors() {
+    protected final void createFieldEditors() {
         final Composite parent = getFieldEditorParent();
-        final ColorFieldEditor defaultLinkColor = new ColorFieldEditor(LINK_DEFAULT_COLOR,
-                "Link color", parent);
+        final ColorFieldEditor defaultLinkColor =
+                new ColorFieldEditor(LINK_DEFAULT_COLOR, "Link color", parent);
         addField(defaultLinkColor);
-        final IntegerFieldEditor defaultLinkLineWidth = new IntegerFieldEditor(LINK_DEFAULT_LINEWIDTH,
-                "Link width", parent);
+        final IntegerFieldEditor defaultLinkLineWidth =
+                new IntegerFieldEditor(LINK_DEFAULT_LINEWIDTH,
+                        "Link width", parent);
         defaultLinkLineWidth.setValidRange(1, 5);
         addField(defaultLinkLineWidth);
-        final ColorFieldEditor weakLinkColor = new ColorFieldEditor(LINK_WEAK_COLOR,
-                "Weak link color", parent);
+        final ColorFieldEditor weakLinkColor =
+                new ColorFieldEditor(LINK_WEAK_COLOR,
+                        "Weak link color", parent);
         addField(weakLinkColor);
-        final IntegerFieldEditor weakLinkLineWidth = new IntegerFieldEditor(LINK_WEAK_LINEWIDTH,
-                "Weak link width", parent);
+        final IntegerFieldEditor weakLinkLineWidth =
+                new IntegerFieldEditor(LINK_WEAK_LINEWIDTH,
+                        "Weak link width", parent);
         weakLinkLineWidth.setValidRange(1, 5);
         addField(weakLinkLineWidth);
-        final ColorFieldEditor subantLinkColor = new ColorFieldEditor(LINK_SUBANT_COLOR,
-                "subant link color", parent);
+        final ColorFieldEditor subantLinkColor =
+                new ColorFieldEditor(LINK_SUBANT_COLOR,
+                        "subant link color", parent);
         addField(subantLinkColor);
-        final IntegerFieldEditor subantLinkLineWidth = new IntegerFieldEditor(LINK_SUBANT_LINEWIDTH,
-                "subant link width", parent);
+        final IntegerFieldEditor subantLinkLineWidth =
+                new IntegerFieldEditor(LINK_SUBANT_LINEWIDTH,
+                        "subant link width", parent);
         subantLinkLineWidth.setValidRange(1, 5);
         addField(subantLinkLineWidth);
     }

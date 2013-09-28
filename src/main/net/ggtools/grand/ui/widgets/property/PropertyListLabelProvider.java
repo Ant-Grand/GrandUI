@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,17 +36,32 @@ import org.eclipse.swt.graphics.Image;
  * {@link net.ggtools.grand.ui.widgets.property.PropertyEditor}. Takes a
  * {@link net.ggtools.grand.ui.widgets.property.PropertyPair} as input and
  * return the pair name for the column #0 and the pair values for all others.
- * 
+ *
  * @author Christophe Labouisse
  */
-final class PropertyListLabelProvider extends LabelProvider implements ITableLabelProvider {
+final class PropertyListLabelProvider extends LabelProvider
+        implements ITableLabelProvider {
+    /**
+     * Method getColumnImage.
+     * @param element Object
+     * @param columnIndex int
+     * @return Image
+     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(Object, int)
+     */
     public Image getColumnImage(final Object element, final int columnIndex) {
         return null;
     }
 
+    /**
+     * Method getColumnText.
+     * @param element Object
+     * @param columnIndex int
+     * @return String
+     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(Object, int)
+     */
     public String getColumnText(final Object element, final int columnIndex) {
         String rc = null;
-        
+
         if (element instanceof PropertyPair) {
             final PropertyPair pair = (PropertyPair) element;
             switch (columnIndex) {
@@ -69,13 +84,18 @@ final class PropertyListLabelProvider extends LabelProvider implements ITableLab
         return rc;
     }
 
+    /**
+     * Method getText.
+     * @param element Object
+     * @return String
+     * @see org.eclipse.jface.viewers.ILabelProvider#getText(Object)
+     */
     @Override
     public String getText(final Object element) {
         if (element instanceof PropertyPair) {
             final PropertyPair pair = (PropertyPair) element;
             return pair.getName();
-        }
-        else {
+        } else {
             return element.toString();
         }
     }

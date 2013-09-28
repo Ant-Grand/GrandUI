@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,14 +40,22 @@ import org.eclipse.jface.resource.ImageDescriptor;
  * and disabled when none is available.
  * @author Christophe Labouisse
  */
-public abstract class GraphControlerAction extends Action implements GraphControlerListener {
+public abstract class GraphControlerAction extends Action
+        implements GraphControlerListener {
 
+    /**
+     * Field graphControler.
+     */
     private GraphControler graphControler;
 
+    /**
+     * Field graphControlerProvider.
+     */
     private GraphControlerProvider graphControlerProvider;
 
     /**
-     *  
+     *
+     * @param parent GraphControlerProvider
      */
     public GraphControlerAction(final GraphControlerProvider parent) {
         super();
@@ -55,37 +63,43 @@ public abstract class GraphControlerAction extends Action implements GraphContro
     }
 
     /**
-     * @param text
+     * @param parent GraphControlerProvider
+     * @param text String
      */
-    public GraphControlerAction(final GraphControlerProvider parent, final String text) {
+    public GraphControlerAction(final GraphControlerProvider parent,
+            final String text) {
         super(text);
         init(parent);
     }
 
     /**
-     * @param text
-     * @param image
+     * @param parent GraphControlerProvider
+     * @param text String
+     * @param image ImageDescriptor
      */
-    public GraphControlerAction(final GraphControlerProvider parent, final String text,
-            final ImageDescriptor image) {
+    public GraphControlerAction(final GraphControlerProvider parent,
+            final String text, final ImageDescriptor image) {
         super(text, image);
         init(parent);
     }
 
     /**
-     * @param text
-     * @param style
+     * @param parent GraphControlerProvider
+     * @param text String
+     * @param style int
      */
-    public GraphControlerAction(final GraphControlerProvider parent, final String text, final int style) {
+    public GraphControlerAction(final GraphControlerProvider parent,
+            final String text, final int style) {
         super(text, style);
         init(parent);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method controlerAvailable.
+     * @param controler GraphControler
      * @see net.ggtools.grand.ui.graph.GraphControlerListener#controlerAvailable(net.ggtools.grand.ui.graph.GraphControler)
      */
-    final public void controlerAvailable(final GraphControler controler) {
+    public final void controlerAvailable(final GraphControler controler) {
         if (graphControler != null) {
             removeGraphControler();
         }
@@ -93,11 +107,12 @@ public abstract class GraphControlerAction extends Action implements GraphContro
         postAddHook();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method controlerRemoved.
+     * @param controler GraphControler
      * @see net.ggtools.grand.ui.graph.GraphControlerListener#controlerRemoved(net.ggtools.grand.ui.graph.GraphControler)
      */
-    final public void controlerRemoved(final GraphControler controler) {
+    public final void controlerRemoved(final GraphControler controler) {
         if (controler == graphControler) {
             removeGraphControler();
         }
@@ -106,22 +121,23 @@ public abstract class GraphControlerAction extends Action implements GraphContro
     /**
      * @return Returns the graphControler.
      */
-    final public GraphControler getGraphControler() {
+    public final GraphControler getGraphControler() {
         return graphControler;
     }
 
     /**
      * @return Returns the graphControlerProvider.
      */
-    final public GraphControlerProvider getGraphControlerProvider() {
+    public final GraphControlerProvider getGraphControlerProvider() {
         return graphControlerProvider;
     }
 
     /**
      * Initialize the action.
-     *  
+     *
+     * @param provider GraphControlerProvider
      */
-    final private void init(final GraphControlerProvider provider) {
+    private void init(final GraphControlerProvider provider) {
         graphControlerProvider = provider;
         provider.addControlerListener(this);
         graphControler = provider.getControler();
@@ -137,7 +153,7 @@ public abstract class GraphControlerAction extends Action implements GraphContro
     }
 
     /**
-     *  
+     *
      */
     private void removeGraphControler() {
         preRemoveHook();
@@ -148,7 +164,7 @@ public abstract class GraphControlerAction extends Action implements GraphContro
      * A method being called just after a new graph controler have been made
      * available. Overriders can assume that graphControler already refs the new
      * available graph.
-     * 
+     *
      * The default behaviour is to enable the action.
      */
     protected void postAddHook() {
@@ -159,7 +175,7 @@ public abstract class GraphControlerAction extends Action implements GraphContro
      * A method being called just before a the current graph is removed.
      * Overriders may consider that the graphControler still refs the to be
      * removed controler.
-     * 
+     *
      * The default behaviour is to disable the action.
      */
     protected void preRemoveHook() {

@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -44,38 +44,42 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Quick 'n dirty class to load a saved log from disk and display it in a log
  * viewer.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class Analyzer extends ApplicationWindow {
 
+    /**
+     * Field logViewer.
+     */
     private LogViewer logViewer;
 
     /**
-     * 
+     *
      */
     public Analyzer() {
         super(null);
         addMenuBar();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method configureShell.
+     * @param shell Shell
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
-    protected void configureShell(final Shell shell) {
+    protected final void configureShell(final Shell shell) {
         super.configureShell(shell);
         shell.setText("ggTools log analyzer");
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createMenuManager.
+     * @return MenuManager
      * @see org.eclipse.jface.window.ApplicationWindow#createMenuManager()
      */
     @Override
-    protected MenuManager createMenuManager() {
+    protected final MenuManager createMenuManager() {
         final MenuManager manager = new MenuManager();
         final MenuManager fileMenu = new MenuManager("File");
         manager.add(fileMenu);
@@ -97,13 +101,13 @@ public class Analyzer extends ApplicationWindow {
                             ois = new ObjectInputStream(new FileInputStream(logFileName));
                             logViewer.setLogBuffer((LogEventBuffer) ois.readObject());
                         } catch (final FileNotFoundException e) {
-                            // TODO Auto-generated catch block
+                            // TODO auto-generated catch block
                             e.printStackTrace();
                         } catch (final IOException e) {
-                            // TODO Auto-generated catch block
+                            // TODO auto-generated catch block
                             e.printStackTrace();
                         } catch (final ClassNotFoundException e) {
-                            // TODO Auto-generated catch block
+                            // TODO auto-generated catch block
                             e.printStackTrace();
                         } finally {
                             if (ois != null) {
@@ -136,17 +140,23 @@ public class Analyzer extends ApplicationWindow {
         return manager;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createContents.
+     * @param parent Composite
+     * @return Control
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createContents(final Composite parent) {
+    protected final Control createContents(final Composite parent) {
         // Allow the LogViewer to display trace & debug events.
         logViewer = new LogViewer(parent, SWT.NONE);
         return logViewer;
     }
 
+    /**
+     * Method main.
+     * @param args String[]
+     */
     public static void main(final String[] args) {
         final Analyzer analyzer = new Analyzer();
         analyzer.setBlockOnOpen(true);

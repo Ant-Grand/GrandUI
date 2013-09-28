@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,11 +33,15 @@ import java.util.Collection;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
 
 /**
- * 
- * 
+ *
+ *
  * @author Christophe Labouisse
  */
 public interface SelectionManager {
+    /**
+     * Method addListener.
+     * @param listener GraphListener
+     */
     void addListener(GraphListener listener);
 
     /**
@@ -47,23 +51,27 @@ public interface SelectionManager {
 
     /**
      * Deselect a node.
-     * 
-     * @param node
+     *
+     * @param node Draw2dNode
      */
     void deselectNode(Draw2dNode node);
 
     /**
      * Returns a collection of the current selection.
-     * 
+     *
      * @return a read-only collection of the selected nodes.
      */
     Collection<Draw2dNode> getSelection();
 
+    /**
+     * Method removeSelectionListener.
+     * @param listener GraphListener
+     */
     void removeSelectionListener(GraphListener listener);
 
     /**
      * Selects a specific node in the graph.
-     * 
+     *
      * @param node
      *            node to select
      * @param addToSelection
@@ -74,7 +82,7 @@ public interface SelectionManager {
 
     /**
      * Selects a specific node in the graph.
-     * 
+     *
      * @param nodeName
      *            name of the node to select
      * @param addToSelection

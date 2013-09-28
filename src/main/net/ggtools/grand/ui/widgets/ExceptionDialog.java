@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,41 +31,49 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * A dialog specialized in displaying exception. Quite minimal at the moment, except for a high
- * level openException taking directly an exception.
- * 
+ * A dialog specialized in displaying exception. Quite minimal at the moment,
+ * except for a high level openException taking directly an exception.
+ *
  * @author Christophe Labouisse
  */
-public class ExceptionDialog extends ErrorDialog {
-    private ExceptionDialog(final Shell parentShell, final String dialogTitle, final String message, final IStatus status,
-            final int displayMask) {
+public final class ExceptionDialog extends ErrorDialog {
+    /**
+     * Constructor for ExceptionDialog.
+     * @param parentShell Shell
+     * @param dialogTitle String
+     * @param message String
+     * @param status IStatus
+     * @param displayMask int
+     */
+    private ExceptionDialog(final Shell parentShell, final String dialogTitle,
+            final String message, final IStatus status, final int displayMask) {
         super(parentShell, dialogTitle, message, status, displayMask);
     }
 
     /**
-     * Opens a dialog to display an error caused by an exception. This method is intented
-     * to work regardless of the current thread.
-     * 
-     * @param parent
-     * @param message
-     * @param e
+     * Opens a dialog to display an error caused by an exception.
+     * This method is intended to work regardless of the current thread.
+     *
+     * @param parent Shell
+     * @param message String
+     * @param e Throwable
      */
-    public static void openException(final Shell parent, final String message, final Throwable e) {
+    public static void openException(final Shell parent, final String message,
+            final Throwable e) {
         final MultiStatus topStatus = new MultiStatus("GrandUI", 0, message, e);
         for (Throwable nested = e; nested != null; nested = nested.getCause()) {
-            final IStatus status = new Status(IStatus.ERROR, "GraphUI", 0, nested.getMessage(),
-                    nested);
+            final IStatus status = new Status(IStatus.ERROR, "GraphUI", 0,
+                    nested.getMessage(), nested);
             topStatus.add(status);
         }
         Display display;
         if (parent == null) {
             display = Display.getCurrent();
-        }
-        else {
+        } else {
             display = parent.getDisplay();
         }
         display.syncExec(new Runnable() {

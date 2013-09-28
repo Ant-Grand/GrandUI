@@ -35,24 +35,32 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
 
 /**
- * 
- * 
+ *
+ *
  * @author Christophe Labouisse
  */
 public class QuitAction extends Action {
-    
+
+    /**
+     * Field DEFAULT_ACTION_NAME.
+     * (value is ""Quit"")
+     */
     private static final String DEFAULT_ACTION_NAME = "Quit";
 
+    /**
+     * Constructor for QuitAction.
+     */
     public QuitAction() {
         super(DEFAULT_ACTION_NAME);
         setAccelerator(SWT.CONTROL | 'Q');
     }
-    
-    /* (non-Javadoc)
+
+    /**
+     * Method run.
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         System.exit(0);
     }
 }

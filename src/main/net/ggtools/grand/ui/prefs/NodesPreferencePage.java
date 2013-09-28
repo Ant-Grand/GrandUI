@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -51,48 +51,60 @@ import org.eclipse.swt.widgets.TabItem;
 /**
  * @author Christophe Labouisse
  */
-public class NodesPreferencePage extends PreferencePage implements PreferenceKeys {
+public class NodesPreferencePage extends PreferencePage
+        implements PreferenceKeys {
 
-    private static final String[][] SUPPORTED_SHAPES = new String[][]{{"Octagon", "octagon"},
-            {"Oval", "oval"}, {"Box", "box"}, {"Triangle", "triangle"}, {"Square", "square"},
+    /**
+     * Field SUPPORTED_SHAPES.
+     */
+    private static final String[][] SUPPORTED_SHAPES = new String[][]{
+            {"Octagon", "octagon"}, {"Oval", "oval"}, {"Box", "box"},
+            {"Triangle", "triangle"}, {"Square", "square"},
             {"Hexagon", "hexagon"}, {"Circle", "circle"}};
 
     /**
      * Initialize a preferences store with sensible defaults values for the
      * nodes.
-     * @param prefs
+     * @param prefs IPreferenceStore
      */
     public static void setDefaults(final IPreferenceStore prefs) {
-        PreferenceConverter
-                .setDefault(prefs, NODE_PREFIX+"default.fgcolor", ColorConstants.black.getRGB());
-        PreferenceConverter.setDefault(prefs, NODE_PREFIX+"default.fillcolor", ColorConstants.white
-                .getRGB());
+        PreferenceConverter.setDefault(prefs, NODE_PREFIX + "default.fgcolor",
+                ColorConstants.black.getRGB());
+        PreferenceConverter.setDefault(prefs, NODE_PREFIX + "default.fillcolor",
+                ColorConstants.white.getRGB());
         //prefs.setDefault("nodes.default.font",4);
-        prefs.setDefault(NODE_PREFIX+"default.shape", "oval");
-        prefs.setDefault(NODE_PREFIX+"default.linewidth", 1);
+        prefs.setDefault(NODE_PREFIX + "default.shape", "oval");
+        prefs.setDefault(NODE_PREFIX + "default.linewidth", 1);
 
-        PreferenceConverter.setDefault(prefs, NODE_PREFIX+"main.fgcolor", ColorConstants.black.getRGB());
-        PreferenceConverter.setDefault(prefs, NODE_PREFIX+"main.fillcolor", ColorConstants.cyan.getRGB());
-        //prefs.setDefault(NODE_PREFIX+"main.font",4);
-        prefs.setDefault(NODE_PREFIX+"main.shape", "box");
-        prefs.setDefault(NODE_PREFIX+"main.linewidth", 1);
+        PreferenceConverter.setDefault(prefs, NODE_PREFIX + "main.fgcolor",
+                ColorConstants.black.getRGB());
+        PreferenceConverter.setDefault(prefs, NODE_PREFIX + "main.fillcolor",
+                ColorConstants.cyan.getRGB());
+        //prefs.setDefault(NODE_PREFIX + "main.font",4);
+        prefs.setDefault(NODE_PREFIX + "main.shape", "box");
+        prefs.setDefault(NODE_PREFIX + "main.linewidth", 1);
 
-        PreferenceConverter.setDefault(prefs, NODE_PREFIX+"start.fgcolor", ColorConstants.black.getRGB());
-        PreferenceConverter.setDefault(prefs, NODE_PREFIX+"start.fillcolor", ColorConstants.yellow
-                .getRGB());
-        //prefs.setDefault(NODE_PREFIX+"default.font",4);
-        prefs.setDefault(NODE_PREFIX+"start.shape", "octagon");
-        prefs.setDefault(NODE_PREFIX+"start.linewidth", 2);
+        PreferenceConverter.setDefault(prefs, NODE_PREFIX + "start.fgcolor",
+                ColorConstants.black.getRGB());
+        PreferenceConverter.setDefault(prefs, NODE_PREFIX + "start.fillcolor",
+                ColorConstants.yellow.getRGB());
+        //prefs.setDefault(NODE_PREFIX + "default.font",4);
+        prefs.setDefault(NODE_PREFIX + "start.shape", "octagon");
+        prefs.setDefault(NODE_PREFIX + "start.linewidth", 2);
 
-        PreferenceConverter.setDefault(prefs, NODE_PREFIX+"missing.fgcolor", ColorConstants.gray.getRGB());
-        PreferenceConverter.setDefault(prefs, NODE_PREFIX+"missing.fillcolor", ColorConstants.lightGray
-                .getRGB());
-        //prefs.setDefault(NODE_PREFIX+"default.font",4);
-        prefs.setDefault(NODE_PREFIX+"missing.shape", "oval");
-        prefs.setDefault(NODE_PREFIX+"missing.linewidth", 1);
+        PreferenceConverter.setDefault(prefs, NODE_PREFIX + "missing.fgcolor",
+                ColorConstants.gray.getRGB());
+        PreferenceConverter.setDefault(prefs, NODE_PREFIX + "missing.fillcolor",
+                ColorConstants.lightGray.getRGB());
+        //prefs.setDefault(NODE_PREFIX + "default.font",4);
+        prefs.setDefault(NODE_PREFIX + "missing.shape", "oval");
+        prefs.setDefault(NODE_PREFIX + "missing.linewidth", 1);
 
     }
 
+    /**
+     * Field fields.
+     */
     private final List<FieldEditor> fields = new ArrayList<FieldEditor>();
 
     /**
@@ -109,11 +121,12 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
      * <code>FieldEditor.store</code>. Note that this method does not save
      * the preference store itself; it just stores the values back into the
      * preference store.
-     * 
+     *
+     * @return boolean
      * @see FieldEditor#store()
      */
     @Override
-    public boolean performOk() {
+    public final boolean performOk() {
         if (fields != null) {
             for (final Iterator<FieldEditor> iter = fields.iterator(); iter.hasNext();) {
                 final FieldEditor fieldEditor = iter.next();
@@ -125,7 +138,8 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
 
     /**
      * Calculates the number of columns needed to host all field editors.
-     * 
+     *
+     * @param tabFields List<FieldEditor>
      * @return the number of columns
      */
     private int calcNumberOfColumns(final List<FieldEditor> tabFields) {
@@ -141,9 +155,12 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
     }
 
     /**
-     * @param tabFolder
+     * @param tabFolder TabFolder
+     * @param title String
+     * @param nodeType String
      */
-    private void createNodeTab(final TabFolder tabFolder, final String title, final String nodeType) {
+    private void createNodeTab(final TabFolder tabFolder, final String title,
+            final String nodeType) {
         final String prefix = NODE_PREFIX + nodeType;
         final TabItem tabItem = new TabItem(tabFolder, SWT.NONE);
         tabItem.setText(title);
@@ -152,20 +169,20 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
         tabItem.setControl(parent);
 
         final List<FieldEditor> tabFields = new LinkedList<FieldEditor>();
-        final ColorFieldEditor fgcolorField = new ColorFieldEditor(prefix + "fgcolor",
-                "Foreground", parent);
+        final ColorFieldEditor fgcolorField = new ColorFieldEditor(prefix
+                + "fgcolor", "Foreground", parent);
         tabFields.add(fgcolorField);
-        final ColorFieldEditor fillcolorField = new ColorFieldEditor(prefix + "fillcolor",
-                "Shape filling", parent);
+        final ColorFieldEditor fillcolorField = new ColorFieldEditor(prefix
+                + "fillcolor", "Shape filling", parent);
         tabFields.add(fillcolorField);
         // FIXME enable font preferences.
         //final FontFieldEditor fontField = new FontFieldEditor(prefix + "font", "Node font", parent);
         //tabFields.add(fontField);
-        final RadioGroupFieldEditor shapeField = new RadioGroupFieldEditor(prefix + "shape",
-                "Shape", 4, SUPPORTED_SHAPES, parent);
+        final RadioGroupFieldEditor shapeField = new RadioGroupFieldEditor(prefix
+                + "shape", "Shape", 4, SUPPORTED_SHAPES, parent);
         tabFields.add(shapeField);
-        final IntegerFieldEditor lineWidthField = new IntegerFieldEditor(prefix + "linewidth",
-                "Line width", parent);
+        final IntegerFieldEditor lineWidthField = new IntegerFieldEditor(prefix
+                + "linewidth", "Line width", parent);
         lineWidthField.setValidRange(1, 5);
         tabFields.add(lineWidthField);
         final GridLayout layout = (GridLayout) parent.getLayout();
@@ -187,12 +204,14 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
         fields.addAll(tabFields);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createContents.
+     * @param parent Composite
+     * @return Control
      * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createContents(final Composite parent) {
+    protected final Control createContents(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(new FillLayout());
         final TabFolder tabFolder = new TabFolder(composite, SWT.TOP);
@@ -211,7 +230,7 @@ public class NodesPreferencePage extends PreferencePage implements PreferenceKey
      * their default values.
      */
     @Override
-    protected void performDefaults() {
+    protected final void performDefaults() {
         if (fields != null) {
             final Iterator<FieldEditor> e = fields.iterator();
             while (e.hasNext()) {

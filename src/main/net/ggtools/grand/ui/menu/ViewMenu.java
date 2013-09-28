@@ -44,12 +44,16 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 
 /**
- * 
- * 
+ *
+ *
  * @author Christophe Labouisse
  */
 public class ViewMenu extends MenuManager {
 
+    /**
+     * Constructor for ViewMenu.
+     * @param window GraphWindow
+     */
     public ViewMenu(final GraphWindow window) {
         super("View");
         add(new Separator("panels"));

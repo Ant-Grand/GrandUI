@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,60 +40,91 @@ public class OpenFileWizard extends Wizard {
      * @author Christophe Labouisse
      */
     interface SelectedFileProvider {
+        /**
+         * Method addListener.
+         * @param listener SelectedFileListener
+         */
         void addListener(SelectedFileListener listener);
-        
+
+        /**
+         * Method removeListener.
+         * @param listener SelectedFileListener
+         */
         void removeListener(SelectedFileListener listener);
     }
-    
+
+    /**
+     * @author Christophe Labouisse
+     */
     interface SelectedFileListener {
+        /**
+         * Method fileSelected.
+         * @param selectedFile File
+         */
         void fileSelected(File selectedFile);
     }
 
+    /**
+     * Field window.
+     */
     private final GraphWindow window;
 
+    /**
+     * Field propertySettingPage.
+     */
     private PropertySettingPage propertySettingPage;
 
+    /**
+     * Field fileSelectionPage.
+     */
     private FileSelectionPage fileSelectionPage;
 
     /**
-     * @param window
-     * 
+     *
+     * @param window GraphWindow
      */
     public OpenFileWizard(final GraphWindow window) {
         super();
         this.window = window;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#addPages()
+    /**
+     * Method addPages.
+     * @see org.eclipse.jface.wizard.IWizard#addPages()
      */
     @Override
-    public void addPages() {
+    public final void addPages() {
         fileSelectionPage = new FileSelectionPage();
         addPage(fileSelectionPage);
         propertySettingPage = new PropertySettingPage(fileSelectionPage);
         addPage(propertySettingPage);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method performFinish.
+     * @return boolean
      * @see org.eclipse.jface.wizard.IWizard#performFinish()
      */
     @Override
-    public boolean performFinish() {
+    public final boolean performFinish() {
         boolean rc = false;
         final File selectedFile = fileSelectionPage.getSelectedFile();
         if (selectedFile != null) {
-            window.openGraphInNewDisplayer(selectedFile, propertySettingPage.getProperties());
+            window.openGraphInNewDisplayer(selectedFile,
+                    propertySettingPage.getProperties());
             rc = true;
         }
 
         return rc;
     }
 
+    /**
+     * Method canFinish.
+     * @return boolean
+     * @see org.eclipse.jface.wizard.IWizard#canFinish()
+     */
     @Override
-    public boolean canFinish() {
+    public final boolean canFinish() {
         return fileSelectionPage.getSelectedFile() != null;
     }
 }

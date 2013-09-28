@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,7 +42,7 @@ import org.eclipse.draw2d.BorderLayout;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.Polygon;
-import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.swt.graphics.Color;
 
 import sf.jzgraph.IVertex;
@@ -50,28 +50,61 @@ import sf.jzgraph.impl.GraphShape;
 
 /**
  * The graphical representation of a node.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class Draw2dNode extends Polygon implements DotGraphAttributes {
-    private static final Log log = LogFactory.getLog(Draw2dNode.class);
+    /**
+     * Field log.
+     */
+    private static final Log LOG = LogFactory.getLog(Draw2dNode.class);
 
+    /**
+     * Field graph.
+     */
+    @SuppressWarnings("unused")
     private Draw2dGraph graph;
 
+    /**
+     * Field label.
+     */
     private Label label;
 
+    /**
+     * Field name.
+     */
     private String name;
 
+    /**
+     * Field nodeBgColor.
+     */
     private Color nodeBgColor;
 
+    /**
+     * Field nodeFgColor.
+     */
     private Color nodeFgColor;
 
+    /**
+     * Field selected.
+     */
     private boolean selected;
 
+    /**
+     * Field selectedBgColor.
+     */
     private Color selectedBgColor;
 
+    /**
+     * Field vertex.
+     */
     private IVertex vertex;
 
+    /**
+     * Constructor for Draw2dNode.
+     * @param graph Draw2dGraph
+     * @param vertex IVertex
+     */
     public Draw2dNode(final Draw2dGraph graph, final IVertex vertex) {
         super();
 
@@ -83,6 +116,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
         nodeBgColor = (Color) vertex.getAttr(DRAW2DFILLCOLOR_ATTR);
         selectedBgColor = FigureUtilities.darker(nodeBgColor);
 
+        @SuppressWarnings("unused")
         int x, y, width, height;
         final Rectangle2D rect = (Rectangle2D) vertex.getAttr(_BOUNDS_ATTR);
         x = (int) rect.getX();
@@ -97,18 +131,18 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
 
         final GraphShape shape = (GraphShape) vertex.getAttr(_SHAPE_ATTR);
         final float[] coords = new float[6];
-        for (final PathIterator ite = new FlatteningPathIterator(shape
-                .getPathIterator(new AffineTransform()), PATH_ITERATOR_FLATNESS); !ite.isDone(); ite
-                .next()) {
+        for (final PathIterator ite =
+                new FlatteningPathIterator(shape.getPathIterator(new AffineTransform()), PATH_ITERATOR_FLATNESS);
+                !ite.isDone(); ite.next()) {
             final int segType = ite.currentSegment(coords);
 
             switch (segType) {
             case PathIterator.SEG_MOVETO:
-                addPoint(new Point(coords[0], coords[1]));
+                addPoint(new PrecisionPoint(coords[0], coords[1]));
                 break;
 
             case PathIterator.SEG_LINETO:
-                addPoint(new Point(coords[0], coords[1]));
+                addPoint(new PrecisionPoint(coords[0], coords[1]));
                 break;
 
             case PathIterator.SEG_CLOSE:
@@ -116,7 +150,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
                 break;
 
             default:
-                log.error("Unexpected segment type " + segType);
+                LOG.error("Unexpected segment type " + segType);
                 break;
             }
         }
@@ -139,10 +173,10 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
 
     /**
      * Return the underlying node.
-     * 
-     * @return
+     *
+     * @return Node
      */
-    public Node getNode() {
+    public final Node getNode() {
         return (Node) vertex.getData();
     }
 
@@ -169,16 +203,19 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
             this.selected = selected;
             if (selected) {
                 setBackgroundColor(selectedBgColor);
-            }
-            else {
+            } else {
                 setBackgroundColor(nodeBgColor);
             }
             repaint();
         }
     }
 
+    /**
+     * Method toString.
+     * @return String
+     */
     @Override
-    public String toString() {
+    public final String toString() {
         return this.getClass().getName() + "@" + vertex.getName();
     }
 

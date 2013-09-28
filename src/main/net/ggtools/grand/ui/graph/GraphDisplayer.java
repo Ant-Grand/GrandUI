@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,20 +35,20 @@ import org.eclipse.swt.widgets.Menu;
 
 /**
  * Interface to be implemented by classes displaying graphs.
- * 
+ *
  * @author Christophe Labouisse
  */
 public interface GraphDisplayer extends GraphControlerProvider {
 
     /**
      * Get the widget context menu.
-     * @return
+     * @return Menu
      */
     Menu getContextMenu();
 
     /**
      * Scroll the canvas to display a specific node.
-     * 
+     *
      * @param nodeName
      *            Node to be shown.
      */
@@ -56,21 +56,20 @@ public interface GraphDisplayer extends GraphControlerProvider {
 
     /**
      * Ask to display the supplied figure.
-     * @param graph
-     * @param name
-     * @param toolTip
+     * @param graph Draw2dGraph
+     * @param name String
+     * @param toolTip String
      */
     void setGraph(Draw2dGraph graph, String name, String toolTip);
 
     /**
-     * @param richSource
+     * @param richSource SourceElement[]
      */
     void setRichSource(SourceElement[] richSource);
 
     /**
      * Sets a text to display.
-     * @param text
-     * @return
+     * @param text String
      */
     void setSourceText(String text);
 
@@ -79,13 +78,13 @@ public interface GraphDisplayer extends GraphControlerProvider {
      *
      */
     void zoomIn();
-    
+
     /**
      * Zoom out the displayed graph by one step.
      *
      */
     void zoomOut();
-    
+
     /**
      * Reset the zoom factor to 1:1.
      *

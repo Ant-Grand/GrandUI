@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,33 +37,45 @@ import org.apache.commons.logging.LogFactory;
 /**
  * A simple dispatcher implementation of InternalDispatcher using
  * <code>invoke</code> to actually dispatch the events.
- * 
+ *
  * @author Christophe Labouisse
  */
 class SimpleDispatcher extends DispatcherAdapter implements Dispatcher {
-    private final static Log log = LogFactory.getLog(SimpleDispatcher.class);
+    /**
+     * Field log.
+     */
+    private static final Log LOG = LogFactory.getLog(SimpleDispatcher.class);
 
+    /**
+     * Field method.
+     */
     private final Method method;
 
+    /**
+     * Constructor for SimpleDispatcher.
+     * @param manager EventManager
+     * @param method Method
+     */
     SimpleDispatcher(final EventManager manager, final Method method) {
         super(manager);
         this.method = method;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.event.EventManager.Dispatcher#sendEventToSubscriber(java.lang.Object,
-     *      java.lang.Object)
+    /**
+     * Method sendEventToSubscriber.
+     * @param subscriber Object
+     * @param eventData Object
+     * @see net.ggtools.grand.ui.event.Dispatcher#sendEventToSubscriber(java.lang.Object, java.lang.Object)
      */
-    public void sendEventToSubscriber(final Object subscriber, final Object eventData) {
+    public void sendEventToSubscriber(final Object subscriber,
+            final Object eventData) {
         try {
             method.invoke(subscriber, new Object[]{eventData});
         } catch (final IllegalAccessException e) {
-            log.fatal(getEventManager().getName() + " dispatchOneEvent", e);
+            LOG.fatal(getEventManager().getName() + " dispatchOneEvent", e);
             throw new RuntimeException(e);
         } catch (final InvocationTargetException e) {
-            log.error(getEventManager().getName() + " dispatchOneEvent", e);
+            LOG.error(getEventManager().getName() + " dispatchOneEvent", e);
             throw new RuntimeException(e.getCause());
         }
     }

@@ -1,19 +1,18 @@
-// $Id: /grand/local/GrandUi/src/net/ggtools/grand/ui/Application.java 944
-// 2005-05-20T11:00:42.144348Z clabouisse $
+// $Id$
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +29,6 @@
 package net.ggtools.grand.ui;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Properties;
 
 import net.ggtools.grand.Configuration;
@@ -54,93 +52,166 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * Singleton holding the application data.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class Application implements Runnable {
 
-    final public static String ABOUT_DIALOG_IMAGE = "net.ggtools.grand.ui.aboutimage";
+    /**
+     * Field ABOUT_DIALOG_IMAGE.
+     * (value is ""net.ggtools.grand.ui.aboutimage"")
+     */
+    public static final String ABOUT_DIALOG_IMAGE = "net.ggtools.grand.ui.aboutimage";
 
-    final public static String APPLICATION_ICON = "net.ggtools.grand.ui.appicon";
+    /**
+     * Field APPLICATION_ICON.
+     * (value is ""net.ggtools.grand.ui.appicon"")
+     */
+    public static final String APPLICATION_ICON = "net.ggtools.grand.ui.appicon";
 
-    final public static String GRAPH_FONT = "net.ggtools.grand.ui.graphfont";
+    /**
+     * Field GRAPH_FONT.
+     * (value is ""net.ggtools.grand.ui.graphfont"")
+     */
+    public static final String GRAPH_FONT = "net.ggtools.grand.ui.graphfont";
 
-    final public static String LINK_FONT = "net.ggtools.grand.ui.linkfont";
+    /**
+     * Field LINK_FONT.
+     * (value is ""net.ggtools.grand.ui.linkfont"")
+     */
+    public static final String LINK_FONT = "net.ggtools.grand.ui.linkfont";
 
-    final public static String LINK_ICON = "net.ggtools.grand.ui.linkicon";
+    /**
+     * Field LINK_ICON.
+     * (value is ""net.ggtools.grand.ui.linkicon"")
+     */
+    public static final String LINK_ICON = "net.ggtools.grand.ui.linkicon";
 
-    final public static String MONOSPACE_FONT = "net.ggtools.grand.ui.monospacefont";
+    /**
+     * Field MONOSPACE_FONT.
+     * (value is ""net.ggtools.grand.ui.monospacefont"")
+     */
+    public static final String MONOSPACE_FONT = "net.ggtools.grand.ui.monospacefont";
 
-    final public static String NODE_FONT = "net.ggtools.grand.ui.nodefont";
+    /**
+     * Field NODE_FONT.
+     * (value is ""net.ggtools.grand.ui.nodefont"")
+     */
+    public static final String NODE_FONT = "net.ggtools.grand.ui.nodefont";
 
-    final public static String NODE_ICON = "net.ggtools.grand.ui.nodeicon";
+    /**
+     * Field NODE_ICON.
+     * (value is ""net.ggtools.grand.ui.nodeicon"")
+     */
+    public static final String NODE_ICON = "net.ggtools.grand.ui.nodeicon";
 
-    final public static String TOOLTIP_FONT = "net.ggtools.grand.ui.tooltipfont";
+    /**
+     * Field TOOLTIP_FONT.
+     * (value is ""net.ggtools.grand.ui.tooltipfont"")
+     */
+    public static final String TOOLTIP_FONT = "net.ggtools.grand.ui.tooltipfont";
 
-    final public static String TOOLTIP_MONOSPACE_FONT = "net.ggtools.grand.ui.tooltipmonospacefont";
+    /**
+     * Field TOOLTIP_MONOSPACE_FONT.
+     * (value is ""net.ggtools.grand.ui.tooltipmonospacefont"")
+     */
+    public static final String TOOLTIP_MONOSPACE_FONT = "net.ggtools.grand.ui.tooltipmonospacefont";
 
-    private static final Log log = LogFactory.getLog(Application.class);
+    /**
+     * Field log.
+     */
+    private static final Log LOG = LogFactory.getLog(Application.class);
 
+    /**
+     * Field singleton.
+     */
     private static Application singleton;
 
-    static public Application getInstance() {
+    /**
+     * Method getInstance.
+     * @return Application
+     */
+    public static Application getInstance() {
         return singleton;
     }
 
+    /**
+     * Method main.
+     * @param args String[]
+     */
     public static void main(final String[] args) {
         try {
             Thread.currentThread().setName("Display thread");
             final Application application = new Application();
             application.run();
         } catch (final Throwable e) {
-            log.fatal("Cannot run application", e);
+            LOG.fatal("Cannot run application", e);
         }
-        log.info("Exiting ...");
+        LOG.info("Exiting ...");
         System.exit(0);
     }
 
-    final private Properties buildProperties;
+    /**
+     * Field buildProperties.
+     */
+    private final Properties buildProperties;
 
+    /**
+     * Field fontRegistry.
+     */
     private FontRegistry fontRegistry;
 
+    /**
+     * Field imageRegistry.
+     */
     private ImageRegistry imageRegistry;
 
+    /**
+     * Field preferenceStore.
+     */
     private GrandUiPrefStore preferenceStore;
 
-    final private String versionString;
+    /**
+     * Field versionString.
+     */
+    private final String versionString;
 
+    /**
+     * Constructor for Application.
+     * @throws IOException
+     */
     public Application() throws IOException {
-        if (log.isTraceEnabled()) {
-            log.trace("Creating new application");
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Creating new application");
         }
         singleton = this;
         buildProperties = new Properties();
         buildProperties.load(getClass().getResourceAsStream("buildnum.properties"));
-        versionString = "v" + buildProperties.getProperty("build.version.string") + " (build "
-                + buildProperties.getProperty("build.number") + " "
+        versionString = "v" + buildProperties.getProperty("build.version.string")
+                + " (build " + buildProperties.getProperty("build.number") + " "
                 + buildProperties.getProperty("build.date") + ")";
     }
 
     /**
-     * @param symbolicName
-     * @return
+     * @param symbolicName String
+     * @return Font
      */
-    final public Font getBoldFont(final String symbolicName) {
+    public final Font getBoldFont(final String symbolicName) {
         return fontRegistry.getBold(symbolicName);
     }
 
     /**
      * @return Returns the buildProperties.
      */
-    final public Properties getBuildProperties() {
+    public final Properties getBuildProperties() {
         return buildProperties;
     }
 
     /**
-     * @param symbolicName
-     * @return
+     * @param symbolicName String
+     * @return Font
      */
-    final public Font getFont(final String symbolicName) {
+    public final Font getFont(final String symbolicName) {
         return fontRegistry.get(symbolicName);
     }
 
@@ -152,10 +223,10 @@ public class Application implements Runnable {
     }
 
     /**
-     * @param key
-     * @return
+     * @param key String
+     * @return Image
      */
-    final public Image getImage(final String key) {
+    public final Image getImage(final String key) {
         return imageRegistry.get(key);
     }
 
@@ -167,10 +238,10 @@ public class Application implements Runnable {
     }
 
     /**
-     * @param symbolicName
-     * @return
+     * @param symbolicName String
+     * @return Font
      */
-    final public Font getItalicFont(final String symbolicName) {
+    public final Font getItalicFont(final String symbolicName) {
         return fontRegistry.getItalic(symbolicName);
     }
 
@@ -184,38 +255,37 @@ public class Application implements Runnable {
     /**
      * @return Returns the versionString.
      */
-    final public String getVersionString() {
+    public final String getVersionString() {
         return versionString;
     }
 
     /**
      * Initializes the application resources. This method must be called from an
      * active display thread.
+     *
      * @throws IOException
-     * 
      */
-    final private void initResources() throws IOException {
-        if (log.isInfoEnabled()) {
-            log.info("Initializing application resources");
+    private void initResources() throws IOException {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Initializing application resources");
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Initializing preferences");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Initializing preferences");
         }
         preferenceStore = new GrandUiPrefStore();
         // TODO init with default values.
 
-        if (log.isDebugEnabled()) {
-            log.debug("Initializing font registry");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Initializing font registry");
         }
         fontRegistry = new FontRegistry("net.ggtools.grand.ui.resource.fonts");
-        for (final Iterator iter = fontRegistry.getKeySet().iterator(); iter.hasNext();) {
-            final String key = (String) iter.next();
-            fontRegistry.get(key);
+        for (final Object key : fontRegistry.getKeySet()) {
+            fontRegistry.get((String) key);
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Initializing image registry");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Initializing image registry");
         }
         imageRegistry = new ImageRegistry();
 
@@ -228,8 +298,8 @@ public class Application implements Runnable {
         imageRegistry.put(NODE_ICON, ImageDescriptor.createFromFile(Application.class,
                 "resource/node-icon.png"));
 
-        if (log.isDebugEnabled()) {
-            log.debug("Initializing colors");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Initializing colors");
         }
         // Put the same icons for all windows & dialogs.
         Window.setDefaultImage(getImage(APPLICATION_ICON));
@@ -238,23 +308,24 @@ public class Application implements Runnable {
     }
 
     /**
+     *
      * @throws IOException
-     * 
+     * @see java.lang.Runnable#run()
      */
-    final public void run() {
-        if (log.isInfoEnabled()) {
-            log.info("Starting application");
-            log.info("Version: " + versionString);
-            log.info("SWT: " + SWT.getPlatform() + " v" + SWT.getVersion());
+    public final void run() {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Starting application");
+            LOG.info("Version: " + versionString);
+            LOG.info("SWT: " + SWT.getPlatform() + " v" + SWT.getVersion());
             Configuration coreConfiguration = null;
             try {
                 coreConfiguration = Configuration.getConfiguration();
-                log.info("Core: " + coreConfiguration.getVersionString());
-                log.info("Ant: " + coreConfiguration.getAntVersionString());
+                LOG.info("Core: " + coreConfiguration.getVersionString());
+                LOG.info("Ant: " + coreConfiguration.getAntVersionString());
             } catch (final IOException e) {
-                log.error("Error getting core configuration", e);
+                LOG.error("Error getting core configuration", e);
             }
-            log.info("JRE: " + System.getProperty("java.vm.name") + " "
+            LOG.info("JRE: " + System.getProperty("java.vm.name") + " "
                     + System.getProperty("java.vm.version"));
         }
         final Display display = Display.getDefault();
@@ -265,7 +336,7 @@ public class Application implements Runnable {
         } catch (final IOException e) {
             splash.close();
             splash.dispose();
-            log.error("Caught exception initializing ressources", e);
+            LOG.error("Caught exception initializing ressources", e);
             ExceptionDialog.openException(null, "Cannot load preferences", e);
             throw new RuntimeException("Cannot initialize resources", e);
         }

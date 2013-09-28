@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,18 +30,21 @@ package net.ggtools.grand.ui.event;
 
 /**
  * Adapter class providing a straightforward implementation of dispatch. This
- * class is meant to be subclassesd by defining the
+ * class is meant to be subclassed by defining the
  * {@link net.ggtools.grand.ui.event.Dispatcher#sendEventToSubscriber(Object, Object)}
  * method.
- * 
+ *
  * @author Christophe Labouisse
  */
 abstract class DispatcherAdapter implements Dispatcher {
 
+    /**
+     * Field eventManager.
+     */
     private final EventManager eventManager;
 
     /**
-     * @param EventManager
+     * @param manager EventManager
      */
     protected DispatcherAdapter(final EventManager manager) {
         eventManager = manager;
@@ -49,6 +52,8 @@ abstract class DispatcherAdapter implements Dispatcher {
 
     /**
      * Ask the EventManager to dispatch an event to the subscribers.
+     * @param eventData Object
+     * @see net.ggtools.grand.ui.event.Dispatcher#dispatch(Object)
      */
     public final void dispatch(final Object eventData) {
         eventManager.dispatchEvent(eventData, this);

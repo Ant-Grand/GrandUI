@@ -39,28 +39,44 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 
 /**
- * 
- * 
+ *
+ *
  * @author Christophe Labouisse
  */
 public class AboutAction extends Action {
-    
-    private static final Log log = LogFactory.getLog(AboutAction.class);
 
+    /**
+     * Field log.
+     */
+    @SuppressWarnings("unused")
+    private static final Log LOG = LogFactory.getLog(AboutAction.class);
+
+    /**
+     * Field DEFAULT_ACTION_NAME.
+     * (value is ""About Grand"")
+     */
     private static final String DEFAULT_ACTION_NAME = "About Grand";
 
+    /**
+     * Field window.
+     */
     private final GraphWindow window;
 
+    /**
+     * Constructor for AboutAction.
+     * @param parent GraphWindow
+     */
     public AboutAction(final GraphWindow parent) {
         super(DEFAULT_ACTION_NAME);
         window = parent;
     }
-    
-    /* (non-Javadoc)
+
+    /**
+     * Method run.
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final AboutDialog dialog = new AboutDialog(window.getShell());
         dialog.open();
     }

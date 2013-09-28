@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,31 +33,39 @@ import org.eclipse.swt.widgets.Display;
 /**
  * A wrapper to a {@link org.eclipse.core.runtime.IProgressMonitor}ensuring
  * that the actual methods are called from the display thread.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class SafeProgressMonitor implements IProgressMonitor {
 
+    /**
+     * Field monitor.
+     */
     private final IProgressMonitor monitor;
 
+    /**
+     * Field display.
+     */
     private final Display display;
 
     /**
-     * 
-     * @param monitor
-     * @param display
+     *
+     * @param monitor IProgressMonitor
+     * @param display Display
      */
-    public SafeProgressMonitor(final IProgressMonitor monitor, final Display display) {
+    public SafeProgressMonitor(final IProgressMonitor monitor,
+            final Display display) {
         this.monitor = monitor;
         this.display = display;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.core.runtime.IProgressMonitor#beginTask(java.lang.String,
-     *      int)
+    /**
+     * Method beginTask.
+     * @param name String
+     * @param totalWork int
+     * @see org.eclipse.core.runtime.IProgressMonitor#beginTask(java.lang.String, int)
      */
-    public void beginTask(final String name, final int totalWork) {
+    public final void beginTask(final String name, final int totalWork) {
         display.asyncExec(new Runnable() {
 
             public void run() {
@@ -66,11 +74,11 @@ public class SafeProgressMonitor implements IProgressMonitor {
         });
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method done.
      * @see org.eclipse.core.runtime.IProgressMonitor#done()
      */
-    public void done() {
+    public final void done() {
         display.asyncExec(new Runnable() {
 
             public void run() {
@@ -79,11 +87,12 @@ public class SafeProgressMonitor implements IProgressMonitor {
         });
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method internalWorked.
+     * @param work double
      * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
      */
-    public void internalWorked(final double work) {
+    public final void internalWorked(final double work) {
         display.asyncExec(new Runnable() {
 
             public void run() {
@@ -92,21 +101,23 @@ public class SafeProgressMonitor implements IProgressMonitor {
         });
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method isCanceled.
+     * @return boolean
      * @see org.eclipse.core.runtime.IProgressMonitor#isCanceled()
      */
-    public boolean isCanceled() {
+    public final boolean isCanceled() {
         // As this is a getter method it probably don't need to be
         // called from the display thread.
         return monitor.isCanceled();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method setCanceled.
+     * @param value boolean
      * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
      */
-    public void setCanceled(final boolean value) {
+    public final void setCanceled(final boolean value) {
         display.asyncExec(new Runnable() {
 
             public void run() {
@@ -115,11 +126,12 @@ public class SafeProgressMonitor implements IProgressMonitor {
         });
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method setTaskName.
+     * @param name String
      * @see org.eclipse.core.runtime.IProgressMonitor#setTaskName(java.lang.String)
      */
-    public void setTaskName(final String name) {
+    public final void setTaskName(final String name) {
         display.asyncExec(new Runnable() {
 
             public void run() {
@@ -128,11 +140,12 @@ public class SafeProgressMonitor implements IProgressMonitor {
         });
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method subTask.
+     * @param name String
      * @see org.eclipse.core.runtime.IProgressMonitor#subTask(java.lang.String)
      */
-    public void subTask(final String name) {
+    public final void subTask(final String name) {
         display.asyncExec(new Runnable() {
 
             public void run() {
@@ -141,11 +154,12 @@ public class SafeProgressMonitor implements IProgressMonitor {
         });
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method worked.
+     * @param work int
      * @see org.eclipse.core.runtime.IProgressMonitor#worked(int)
      */
-    public void worked(final int work) {
+    public final void worked(final int work) {
         display.asyncExec(new Runnable() {
 
             public void run() {
