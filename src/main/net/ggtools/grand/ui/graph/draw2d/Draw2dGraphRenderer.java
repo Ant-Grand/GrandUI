@@ -54,6 +54,7 @@ import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
 
@@ -112,13 +113,12 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      */
     private Draw2dGraph createGraph(final IDotGraph dotGraph,
             final Draw2dGraph contents) {
-        for (final Iterator<IVertex> iter = dotGraph.allVertices().iterator(); iter.hasNext();) {
-            final IVertex node = (IVertex) iter.next();
+        for (final IVertex node : dotGraph.allVertices()) {
             buildNodeFigure(contents, node);
         }
 
         for (final Iterator<IEdge> iter = dotGraph.edgeIterator(); iter.hasNext();) {
-            final IEdge edge = (IEdge) iter.next();
+            final IEdge edge = iter.next();
             buildEdgeFigure(contents, edge);
         }
 
@@ -195,7 +195,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         final Point sourcePoint = bends.remove(0);
         final Point targetPoint;
         if (route.getEndPt() != null) {
-            targetPoint = new Point(route.getEndPt().getX(), route.getEndPt().getY());
+            targetPoint = new PrecisionPoint(route.getEndPt().getX(), route.getEndPt().getY());
         } else {
             targetPoint = bends.remove(bends.size() - 1);
         }

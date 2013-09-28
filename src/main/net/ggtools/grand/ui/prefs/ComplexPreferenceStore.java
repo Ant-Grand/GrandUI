@@ -283,7 +283,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
     public final Font getFont(final String key) {
         final FontData[] newFontDataArray = PreferenceConverter.getFontDataArray(this, key);
         final FontData[] currentFontDataArray = fontRegistry.getFontData(key);
-        if (!newFontDataArray.equals(currentFontDataArray)) {
+        if (!Arrays.equals(currentFontDataArray, newFontDataArray)) {
             fontRegistry.put(key, newFontDataArray);
         }
         return fontRegistry.get(key);

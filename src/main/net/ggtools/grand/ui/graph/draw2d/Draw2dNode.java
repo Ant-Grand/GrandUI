@@ -42,7 +42,7 @@ import org.eclipse.draw2d.BorderLayout;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.Polygon;
-import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.swt.graphics.Color;
 
 import sf.jzgraph.IVertex;
@@ -138,11 +138,11 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
 
             switch (segType) {
             case PathIterator.SEG_MOVETO:
-                addPoint(new Point(coords[0], coords[1]));
+                addPoint(new PrecisionPoint(coords[0], coords[1]));
                 break;
 
             case PathIterator.SEG_LINETO:
-                addPoint(new Point(coords[0], coords[1]));
+                addPoint(new PrecisionPoint(coords[0], coords[1]));
                 break;
 
             case PathIterator.SEG_CLOSE:

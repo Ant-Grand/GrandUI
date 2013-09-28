@@ -90,12 +90,6 @@ public class GraphTabItem extends CTabItem
      */
     private final class MouseWheelZoomListener implements Listener {
         /**
-         * Logger for this class.
-         */
-        @SuppressWarnings("unused")
-        private final Log log = LogFactory.getLog(MouseWheelZoomListener.class);
-
-        /**
          * Constructor for MouseWheelZoomListener.
          */
         private MouseWheelZoomListener() {

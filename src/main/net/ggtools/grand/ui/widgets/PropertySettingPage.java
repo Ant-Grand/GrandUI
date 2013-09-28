@@ -37,7 +37,7 @@ import net.ggtools.grand.ui.widgets.property.PropertyEditor;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -74,7 +74,7 @@ public class PropertySettingPage extends WizardPage
     public final void createControl(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         setControl(composite);
-        composite.setLayout(new FillLayout());
+        composite.setLayout(new GridLayout());
         editor = new PropertyEditor(composite, SWT.NONE);
     }
 

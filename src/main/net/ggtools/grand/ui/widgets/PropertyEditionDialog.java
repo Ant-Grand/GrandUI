@@ -33,7 +33,7 @@ import net.ggtools.grand.ui.widgets.property.PropertyEditor;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -70,7 +70,7 @@ public class PropertyEditionDialog extends Dialog {
     @Override
     protected final Control createDialogArea(final Composite parent) {
         final Composite composite = (Composite) super.createDialogArea(parent);
-        composite.setLayout(new FillLayout());
+        composite.setLayout(new GridLayout());
         propertyEditor = new PropertyEditor(composite, SWT.NONE);
         if (propertiesToLoad != null) {
             propertyEditor.setInput(propertiesToLoad);
