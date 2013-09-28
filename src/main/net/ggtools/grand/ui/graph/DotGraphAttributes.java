@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,47 +29,119 @@
 package net.ggtools.grand.ui.graph;
 
 /**
- * An interface holding the constants for some useful attributes use in the dot &
- * draw2d graph.
- * 
+ * An interface holding the constants for some useful attributes use in the dot
+ * & draw2d graph.
+ *
  * @author Christophe Labouisse
  */
 public interface DotGraphAttributes {
 
-    static final String _BOUNDS_ATTR = "-bounds";
+    /**
+     * Field _BOUNDS_ATTR.
+     * (value is ""-bounds"")
+     */
+    String _BOUNDS_ATTR = "-bounds";
 
-    static final String _SHAPE_ATTR = "-shape";
+    /**
+     * Field _SHAPE_ATTR.
+     * (value is ""-shape"")
+     */
+    String _SHAPE_ATTR = "-shape";
 
-    static final String BUILD_FILE_ATTR = "build.file";
+    /**
+     * Field BUILD_FILE_ATTR.
+     * (value is ""build.file"")
+     */
+    String BUILD_FILE_ATTR = "build.file";
 
-    static final String DESCRIPTION_ATTR = "description";
+    /**
+     * Field DESCRIPTION_ATTR.
+     * (value is ""description"")
+     */
+    String DESCRIPTION_ATTR = "description";
 
-    static final String DRAW2DFGCOLOR_ATTR = "draw2dfgcolor";
+    /**
+     * Field DRAW2DFGCOLOR_ATTR.
+     * (value is ""draw2dfgcolor"")
+     */
+    String DRAW2DFGCOLOR_ATTR = "draw2dfgcolor";
 
-    static final String DRAW2DFILLCOLOR_ATTR = "draw2dfillcolor";
+    /**
+     * Field DRAW2DFILLCOLOR_ATTR.
+     * (value is ""draw2dfillcolor"")
+     */
+    String DRAW2DFILLCOLOR_ATTR = "draw2dfillcolor";
 
-    static final String DRAW2DLINEWIDTH_ATTR = "draw2dlinewidth";
+    /**
+     * Field DRAW2DLINEWIDTH_ATTR.
+     * (value is ""draw2dlinewidth"")
+     */
+    String DRAW2DLINEWIDTH_ATTR = "draw2dlinewidth";
 
-    static final String IF_CONDITION_ATTR = "ifCondition";
+    /**
+     * Field IF_CONDITION_ATTR.
+     * (value is ""ifCondition"")
+     */
+    String IF_CONDITION_ATTR = "ifCondition";
 
-    static final String LABEL_ATTR = "label";
+    /**
+     * Field LABEL_ATTR.
+     * (value is ""label"")
+     */
+    String LABEL_ATTR = "label";
 
-    static final String MINHEIGHT_ATTR = "minheight";
+    /**
+     * Field MINHEIGHT_ATTR.
+     * (value is ""minheight"")
+     */
+    String MINHEIGHT_ATTR = "minheight";
 
-    static final String MINWIDTH_ATTR = "minwidth";
+    /**
+     * Field MINWIDTH_ATTR.
+     * (value is ""minwidth"")
+     */
+    String MINWIDTH_ATTR = "minwidth";
 
-    static final double PATH_ITERATOR_FLATNESS = 1.0;
+    /**
+     * Field PATH_ITERATOR_FLATNESS.
+     * (value is 1.0)
+     */
+    double PATH_ITERATOR_FLATNESS = 1.0;
 
-    static final String LINK_PARAMETERS_ATTR = "link.params";
+    /**
+     * Field LINK_PARAMETERS_ATTR.
+     * (value is ""link.params"")
+     */
+    String LINK_PARAMETERS_ATTR = "link.params";
 
-    static final String LINK_SUBANT_DIRECTORIES = "link.subant.directories";
+    /**
+     * Field LINK_SUBANT_DIRECTORIES.
+     * (value is ""link.subant.directories"")
+     */
+    String LINK_SUBANT_DIRECTORIES = "link.subant.directories";
 
-    static final String LINK_TASK_ATTR = "link.task";
+    /**
+     * Field LINK_TASK_ATTR.
+     * (value is ""link.task"")
+     */
+    String LINK_TASK_ATTR = "link.task";
 
-    static final String POSITION_ATTR = "pos";
+    /**
+     * Field POSITION_ATTR.
+     * (value is ""pos"")
+     */
+    String POSITION_ATTR = "pos";
 
-    static final String SHAPE_ATTR = "shape";
+    /**
+     * Field SHAPE_ATTR.
+     * (value is ""shape"")
+     */
+    String SHAPE_ATTR = "shape";
 
-    static final String UNLESS_CONDITION_ATTR = "unlessCondition";
+    /**
+     * Field UNLESS_CONDITION_ATTR.
+     * (value is ""unlessCondition"")
+     */
+    String UNLESS_CONDITION_ATTR = "unlessCondition";
 
 }

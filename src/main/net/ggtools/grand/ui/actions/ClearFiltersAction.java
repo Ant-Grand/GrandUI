@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,26 +35,37 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * An action to remove all filters currently enabled.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class ClearFiltersAction extends GraphControlerAction {
-    private static final Log log = LogFactory.getLog(ClearFiltersAction.class);
+    /**
+     * Field log.
+     */
+    @SuppressWarnings("unused")
+    private static final Log LOG = LogFactory.getLog(ClearFiltersAction.class);
 
+    /**
+     * Field DEFAULT_ACTION_NAME.
+     * (value is ""Remove filters"")
+     */
     private static final String DEFAULT_ACTION_NAME = "Remove filters";
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method run.
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         getGraphControler().clearFilters();
     }
 
+    /**
+     * Constructor for ClearFiltersAction.
+     * @param parent GraphControlerProvider
+     */
     public ClearFiltersAction(final GraphControlerProvider parent) {
-        super(parent,DEFAULT_ACTION_NAME);
+        super(parent, DEFAULT_ACTION_NAME);
     }
 
 }

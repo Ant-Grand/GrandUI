@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,8 +29,8 @@ package net.ggtools.grand.ui.graph.draw2d;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.graph.DotGraphAttributes;
@@ -50,19 +50,29 @@ import sf.jzgraph.IEdge;
 
 /**
  * A figure for node's tooltips.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttributes {
+    /**
+     * Field ELLIPSIS.
+     * (value is ""..."")
+     */
     private static final String ELLIPSIS = "...";
 
-    private static final Log log = LogFactory.getLog(LinkTooltip.class);
+    /**
+     * Field log.
+     */
+    private static final Log LOG = LogFactory.getLog(LinkTooltip.class);
 
+    /**
+     * Field edge.
+     */
     private final IEdge edge;
 
     /**
      * Creates a new tooltip from a Jzgraph node.
-     * @param vertex
+     * @param edge IEdge
      */
     public LinkTooltip(final IEdge edge) {
         super();
@@ -70,19 +80,21 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
         createContents();
     }
 
+    /**
+     * Method createContents.
+     */
     @Override
-    protected void createContents() {
-        if (log.isDebugEnabled()) {
-            log.debug("createContents() - start");
+    protected final void createContents() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("createContents() - start");
         }
 
         final Label type;
         if (edge.hasAttr(LINK_TASK_ATTR)) {
-            type = new Label(edge.getAttrAsString(LINK_TASK_ATTR), Application.getInstance()
-                    .getImage(Application.LINK_ICON));
-        }
-        else {
-            type = new Label("depency", Application.getInstance().getImage(Application.LINK_ICON));
+            type = new Label(edge.getAttrAsString(LINK_TASK_ATTR),
+                    Application.getInstance().getImage(Application.LINK_ICON));
+        } else {
+            type = new Label("dependency", Application.getInstance().getImage(Application.LINK_ICON));
         }
         type.setFont(Application.getInstance().getBoldFont(Application.TOOLTIP_FONT));
         add(type);
@@ -122,17 +134,17 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
         }
 
         if (edge.hasAttr(LINK_PARAMETERS_ATTR)) {
-            final Map parameters = (Map) edge.getAttr(LINK_PARAMETERS_ATTR);
+            @SuppressWarnings("unchecked")
+            final Map<String, String> parameters = (Map<String, String>) edge.getAttr(LINK_PARAMETERS_ATTR);
             if (!parameters.isEmpty()) {
                 final BlockFlow outterBlock = new BlockFlow();
-                for (final Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
-                    final Map.Entry entry = (Map.Entry) iter.next();
+                for (final Entry<String, String> entry : parameters.entrySet()) {
                     final BlockFlow innerBlock = new BlockFlow();
-                    textFlow = new TextFlow(((String) entry.getKey()) + ": ");
+                    textFlow = new TextFlow(entry.getKey() + ": ");
                     textFlow.setFont(monospaceFont);
                     innerBlock.add(textFlow);
                     inline = new InlineFlow();
-                    textFlow = new TextFlow((String) entry.getValue());
+                    textFlow = new TextFlow(entry.getValue());
                     textFlow.setFont(italicMonospaceFont);
                     inline.add(textFlow);
                     innerBlock.add(inline);
@@ -144,18 +156,17 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
         }
 
         if (edge.hasAttr(LINK_SUBANT_DIRECTORIES)) {
-            final Collection directories = (Collection) edge.getAttr(LINK_SUBANT_DIRECTORIES);
+            @SuppressWarnings("unchecked")
+            final Collection<String> directories = (Collection<String>) edge.getAttr(LINK_SUBANT_DIRECTORIES);
             if (!directories.isEmpty()) {
                 final BlockFlow outterBlock = new BlockFlow();
                 textFlow = new TextFlow("Generic ant file to be applied to:");
                 outterBlock.add(textFlow);
-                for (final Iterator iter = directories.iterator(); iter.hasNext();) {
-                    String currentDirectory = (String) iter.next();
-
+                for (String currentDirectory : directories) {
                     final Dimension dim = FigureUtilities.getTextExtents(currentDirectory, monospaceFont);
                     if (dim.width > TOOLTIP_WIDTH) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("createContents() - Filename too long, truncating : dim = "
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("createContents() - Filename too long, truncating : dim = "
                                     + dim + ", currentDirectory = " + currentDirectory);
                         }
 
@@ -172,8 +183,8 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
                         }
                         currentDirectory = ELLIPSIS + part;
 
-                        if (log.isDebugEnabled()) {
-                            log.debug("createContents() - dir truncated to: currentDirectory = "
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("createContents() - dir truncated to: currentDirectory = "
                                     + currentDirectory);
                         }
                     }
@@ -190,8 +201,8 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
             }
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("createContents() - end");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("createContents() - end");
         }
     }
 }

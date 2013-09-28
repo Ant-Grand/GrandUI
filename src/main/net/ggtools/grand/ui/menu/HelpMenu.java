@@ -37,12 +37,16 @@ import net.ggtools.grand.ui.widgets.GraphWindow;
 import org.eclipse.jface.action.MenuManager;
 
 /**
- * 
- * 
+ *
+ *
  * @author Christophe Labouisse
  */
 public class HelpMenu extends MenuManager {
 
+    /**
+     * Constructor for HelpMenu.
+     * @param window GraphWindow
+     */
     public HelpMenu(final GraphWindow window) {
         super("Help");
         add(new AboutAction(window));

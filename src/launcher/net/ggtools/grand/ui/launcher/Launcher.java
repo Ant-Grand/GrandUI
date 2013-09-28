@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -38,25 +38,41 @@ import java.util.Locale;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * @author Christophe Labouisse
+ */
 public class Launcher {
+    /**
+     * @author Christophe Labouisse
+     */
     private static final class JarFilenameFilter implements FilenameFilter {
+        /**
+         * Method accept.
+         * @param dir File
+         * @param name String
+         * @return boolean
+         * @see java.io.FilenameFilter#accept(File, String)
+         */
         public boolean accept(final File dir, final String name) {
             return name.endsWith(".jar");
         }
     }
 
     /**
-     * Logger for this class
+     * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(Launcher.class);
+    private static final Log LOG = LogFactory.getLog(Launcher.class);
 
+    /**
+     * Constructor for Launcher.
+     */
     public Launcher() {
         super();
-        // TODO Auto-generated constructor stub
+        // TODO auto-generated constructor stub
     }
 
     /**
-     * @param args
+     * @param args String[]
      */
     public static void main(final String[] args) {
         try {
@@ -75,20 +91,20 @@ public class Launcher {
                     Launcher.class.getClassLoader());
             Thread.currentThread().setName("Display thread");
             Thread.currentThread().setContextClassLoader(cl);
-            final Class clazz = cl.loadClass("net.ggtools.grand.ui.Application");
-            log.info("Classloader: " + clazz.getClassLoader());
+            final Class<?> clazz = cl.loadClass("net.ggtools.grand.ui.Application");
+            LOG.info("Classloader: " + clazz.getClassLoader());
             final Runnable application = (Runnable) clazz.newInstance();
             application.run();
         } catch (final Throwable e) {
-            log.fatal("Cannot run application", e);
+            LOG.fatal("Cannot run application", e);
         }
-        log.info("Exiting ...");
+        LOG.info("Exiting ...");
         System.exit(0);
     }
 
     /**
-     * @param directory
-     * @param jarList
+     * @param directory String
+     * @param jarList ArrayList<URL>
      * @throws MalformedURLException
      */
     private static void addDirectoryJars(final String directory, final ArrayList<URL> jarList)
@@ -98,7 +114,7 @@ public class Launcher {
 
         if (jars != null) {
             for (File element : jars) {
-                jarList.add(element.toURL());
+                jarList.add(element.toURI().toURL());
             }
         }
     }

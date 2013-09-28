@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,19 +42,29 @@ import org.eclipse.jface.preference.PreferenceDialog;
  */
 public class PreferenceAction extends Action {
 
-    private static final Log log = LogFactory.getLog(PreferenceAction.class);
+    /**
+     * Field log.
+     */
+    @SuppressWarnings("unused")
+    private static final Log LOG = LogFactory.getLog(PreferenceAction.class);
 
+    /**
+     * Field DEFAULT_ACTION_NAME.
+     * (value is ""Preferences"")
+     */
     private static final String DEFAULT_ACTION_NAME = "Preferences";
 
+    /**
+     * Field window.
+     */
     private final GraphWindow window;
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method run.
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final GrandUiPreferenceManager pm = new GrandUiPreferenceManager();
         final PreferenceDialog dialog = new PreferenceDialog(window.getShell(), pm);
         dialog.open();
@@ -62,8 +72,8 @@ public class PreferenceAction extends Action {
 
     /**
      * Creates a new PreferenceAction object.
-     * 
-     * @param parent
+     *
+     * @param parent GraphWindow
      */
     public PreferenceAction(final GraphWindow parent) {
         super(DEFAULT_ACTION_NAME);

@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,19 +41,36 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * A wrapper for a FilterChain.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class FilterChainModel implements GraphProducer {
 
-    private static final Log log = LogFactory.getLog(FilterChainModel.class);
+    /**
+     * Field log.
+     */
+    private static final Log LOG = LogFactory.getLog(FilterChainModel.class);
 
+    /**
+     * Field filterChain.
+     */
     private final FilterChain filterChain;
 
+    /**
+     * Field graph.
+     */
     private Graph graph = null;
 
+    /**
+     * Field graphModel.
+     */
+    @SuppressWarnings("unused")
     private GraphModel graphModel;
 
+    /**
+     * Constructor for FilterChainModel.
+     * @param graphModel GraphModel
+     */
     public FilterChainModel(final GraphModel graphModel) {
         filterChain = new FilterChain();
         this.graphModel = graphModel;
@@ -61,75 +78,78 @@ public class FilterChainModel implements GraphProducer {
     }
 
     /**
-     * @param newFilter
+     * @param newFilter GraphFilter
      */
-    public void addFilterFirst(final GraphFilter newFilter) {
-        if (log.isDebugEnabled()) {
-            log.debug("Adding new head filter " + newFilter);
+    public final void addFilterFirst(final GraphFilter newFilter) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Adding new head filter " + newFilter);
         }
         filterChain.addFilterFirst(newFilter);
         filterGraph();
     }
 
     /**
-     * @param newFilter
+     * @param newFilter GraphFilter
      */
-    public void addFilterLast(final GraphFilter newFilter) {
-        if (log.isDebugEnabled()) {
-            log.debug("Adding new tail filter " + newFilter);
+    public final void addFilterLast(final GraphFilter newFilter) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Adding new tail filter " + newFilter);
         }
         filterChain.addFilterLast(newFilter);
         filterGraph();
     }
 
     /**
-     *  
+     *
      */
-    public void clearFilters() {
+    public final void clearFilters() {
         if (filterChain.getFilterList().size() > 0) {
-            if (log.isDebugEnabled()) {
-                log.debug("Clearing filters");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Clearing filters");
             }
             filterChain.clearFilters();
             filterGraph();
-        }
-        else if (log.isDebugEnabled()) {
-            log.debug("Empty filter chain, not clearing");
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("Empty filter chain, not clearing");
         }
     }
 
     /**
-     * @return
+     * @return List<GraphFilter>
      */
-    public List getFilterList() {
+    public final List<GraphFilter> getFilterList() {
         return filterChain.getFilterList();
     }
 
     /**
      * @return Returns the graph.
+     * @see net.ggtools.grand.graph.GraphProducer#getGraph()
      */
     public final Graph getGraph() {
         return graph;
     }
 
-    public void filterGraph() {
-        if (log.isDebugEnabled()) {
-            log.debug("Start filtering, filter chain size is: "
+    /**
+     * Method filterGraph.
+     */
+    public final void filterGraph() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Start filtering, filter chain size is: "
                     + filterChain.getFilterList().size());
         }
         try {
             graph = filterChain.getGraph();
         } catch (final GrandException e) {
-            // TODO Proper exception handling.
-            log.error("Cannot filter graph", e);
+            // TODO proper exception handling.
+            LOG.error("Cannot filter graph", e);
             graph = null;
         }
     }
 
     /**
-     * @param producer
+     * @param producer GraphProducer
      */
-    public void setProducer(final GraphProducer producer) {
+    public final void setProducer(final GraphProducer producer) {
         filterChain.setProducer(producer);
     }
 }

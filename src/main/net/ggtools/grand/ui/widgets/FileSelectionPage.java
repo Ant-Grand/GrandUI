@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -53,22 +53,34 @@ import org.eclipse.swt.widgets.FileDialog;
 /**
  * @author Christophe Labouisse
  */
-public class FileSelectionPage extends WizardPage implements SelectedFileProvider {
+public class FileSelectionPage extends WizardPage
+        implements SelectedFileProvider {
     /**
-     * Logger for this class
+     * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(FileSelectionPage.class);
+    private static final Log LOG = LogFactory.getLog(FileSelectionPage.class);
 
+    /**
+     * Field FILTER_EXTENSIONS.
+     */
     private static final String[] FILTER_EXTENSIONS = new String[]{"*.xml", "*"};
 
+    /**
+     * Field selectedFileName.
+     */
     private String selectedFileName;
 
+    /**
+     * Field selectedFile.
+     */
     private File selectedFile;
 
+    /**
+     * Field subscribers.
+     */
     private final Collection<SelectedFileListener> subscribers;
 
     /**
-     * @param pageName
      */
     public FileSelectionPage() {
         super("fileselect", "Build file selection", null);
@@ -76,11 +88,12 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
         subscribers = new HashSet<SelectedFileListener>();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createControl.
+     * @param parent Composite
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl(final Composite parent) {
+    public final void createControl(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
         final GridLayout layout = new GridLayout();
         layout.numColumns = 2;
@@ -92,8 +105,8 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
 
         combo.add(""); // Default: no file.
         // Fill up the combo with the recent files
-        for (final Iterator<String> iter = RecentFilesManager.getInstance().getRecentFiles().iterator(); iter
-                .hasNext();) {
+        for (final Iterator<String> iter = RecentFilesManager.getInstance().getRecentFiles().iterator();
+                iter.hasNext();) {
             final String fileName = iter.next();
             combo.add(fileName);
         }
@@ -102,8 +115,8 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
             public void widgetSelected(final SelectionEvent e) {
                 updateSelectedFile(combo.getText());
 
-                if (log.isDebugEnabled()) {
-                    log.debug("widgetSelected() - Changing file : selectionFile = "
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("widgetSelected() - Changing file : selectionFile = "
                             + selectedFileName);
                 }
             }
@@ -133,7 +146,7 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
                 dialog.setFilterExtensions(FILTER_EXTENSIONS);
                 dialog.setFilterPath(selectedFileName);
                 final String buildFileName = dialog.open();
-                log.debug("Dialog returned " + buildFileName);
+                LOG.debug("Dialog returned " + buildFileName);
                 if (buildFileName != null) {
                     combo.add(buildFileName);
                     combo.select(combo.getItemCount() - 1);
@@ -144,21 +157,19 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
     }
 
     /**
-     * @param text
+     * @param text String
      */
     private void updateSelectedFile(final String text) {
         selectedFileName = text;
         if ("".equals(selectedFileName)) {
             selectedFile = null;
-        }
-        else {
+        } else {
             selectedFile = new File(selectedFileName);
             final boolean isSelectedFileValid = selectedFile.isFile();
             setPageComplete(isSelectedFileValid);
             if (isSelectedFileValid) {
                 setErrorMessage(null);
-            }
-            else {
+            } else {
                 selectedFile = null;
                 setErrorMessage(selectedFileName + " is not a valid build file");
             }
@@ -166,21 +177,38 @@ public class FileSelectionPage extends WizardPage implements SelectedFileProvide
         notifyListeners();
     }
 
+    /**
+     * Method getSelectedFile.
+     * @return File
+     */
     public final File getSelectedFile() {
         return selectedFile;
     }
 
-    public void addListener(final OpenFileWizard.SelectedFileListener listener) {
+    /**
+     * Method addListener.
+     * @param listener OpenFileWizard.SelectedFileListener
+     * @see net.ggtools.grand.ui.widgets.OpenFileWizard$SelectedFileProvider#addListener(OpenFileWizard.SelectedFileListener)
+     */
+    public final void addListener(final OpenFileWizard.SelectedFileListener listener) {
         if (!subscribers.contains(listener)) {
             subscribers.add(listener);
             listener.fileSelected(selectedFile);
         }
     }
 
-    public void removeListener(final OpenFileWizard.SelectedFileListener listener) {
+    /**
+     * Method removeListener.
+     * @param listener OpenFileWizard.SelectedFileListener
+     * @see net.ggtools.grand.ui.widgets.OpenFileWizard$SelectedFileProvider#removeListener(OpenFileWizard.SelectedFileListener)
+     */
+    public final void removeListener(final OpenFileWizard.SelectedFileListener listener) {
         subscribers.remove(listener);
     }
 
+    /**
+     * Method notifyListeners.
+     */
     private void notifyListeners() {
         for (final Iterator<SelectedFileListener> iter = subscribers.iterator(); iter.hasNext();) {
             final OpenFileWizard.SelectedFileListener listener = iter.next();

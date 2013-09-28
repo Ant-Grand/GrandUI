@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -43,22 +43,31 @@ import org.eclipse.swt.printing.PrinterData;
  */
 public class PrintAction extends GraphControlerAction {
 
-    private static final Log log = LogFactory.getLog(PrintAction.class);
+    /**
+     * Field log.
+     */
+    private static final Log LOG = LogFactory.getLog(PrintAction.class);
 
+    /**
+     * Field DEFAULT_ACTION_NAME.
+     * (value is ""Print"")
+     */
     private static final String DEFAULT_ACTION_NAME = "Print";
 
+    /**
+     * Field window.
+     */
     private final GraphWindow window;
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method run.
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final PrintDialog dialog = new PrintDialog(window.getShell());
         final PrinterData printerData = dialog.open();
-        log.debug("Dialog returned " + printerData);
+        LOG.debug("Dialog returned " + printerData);
         if (printerData != null) {
             final Printer printer = new Printer(printerData);
             getGraphControler().print(printer);
@@ -75,22 +84,22 @@ public class PrintAction extends GraphControlerAction {
 
     /**
      * Creates a new PrintAction object.
-     * 
-     * @param parent
+     *
+     * @param parent GraphWindow
      */
     public PrintAction(final GraphWindow parent) {
-        this(parent,DEFAULT_ACTION_NAME);
+        this(parent, DEFAULT_ACTION_NAME);
     }
 
     /**
      * Creates a new QuickOpenFileAction object with specific name.
-     * 
-     * @param name
-     * @param parent
+     *
+     * @param parent GraphWindow
+     * @param name String
      */
-    public PrintAction(final GraphWindow parent,final String name) {
-        super(parent,name);
+    public PrintAction(final GraphWindow parent, final String name) {
+        super(parent, name);
         window = parent;
-        setAccelerator(SWT.CONTROL|'P');
+        setAccelerator(SWT.CONTROL | 'P');
     }
 }

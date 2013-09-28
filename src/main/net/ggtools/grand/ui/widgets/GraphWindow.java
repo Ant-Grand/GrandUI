@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -66,34 +66,69 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * @author Christophe Labouisse
  */
-public class GraphWindow extends ApplicationWindow implements GraphControlerProvider {
+public class GraphWindow extends ApplicationWindow
+        implements GraphControlerProvider {
 
-    private static final Log log = LogFactory.getLog(GraphWindow.class);
+    /**
+     * Field log.
+     */
+    private static final Log LOG = LogFactory.getLog(GraphWindow.class);
 
+    /**
+     * Field controlerAvailableDispatcher.
+     */
     private final Dispatcher controlerAvailableDispatcher;
 
+    /**
+     * Field controlerEventManager.
+     */
     private final EventManager controlerEventManager;
 
+    /**
+     * Field controlerRemovedDispatcher.
+     */
     private final Dispatcher controlerRemovedDispatcher;
 
+    /**
+     * Field display.
+     */
     private Display display;
 
+    /**
+     * Field manager.
+     */
     private MenuManager manager;
 
+    /**
+     * Field outlinePanelVisible.
+     */
     private boolean outlinePanelVisible = false;
 
+    /**
+     * Field sourcePanelVisible.
+     */
     private boolean sourcePanelVisible = true;
 
+    /**
+     * Field tabFolder.
+     */
     private CTabFolder tabFolder;
 
+    /**
+     * Constructor for GraphWindow.
+     */
     public GraphWindow() {
         this(null);
     }
 
+    /**
+     * Constructor for GraphWindow.
+     * @param parent Shell
+     */
     public GraphWindow(final Shell parent) {
         super(parent);
-        if (log.isDebugEnabled()) {
-            log.debug("Creating new GraphWindow");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating new GraphWindow");
         }
 
         controlerEventManager = new EventManager("GraphControler Availability Event");
@@ -105,10 +140,10 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
                     .createDispatcher(GraphControlerListener.class.getDeclaredMethod(
                             "controlerRemoved", new Class[]{GraphControler.class}));
         } catch (final SecurityException e) {
-            log.fatal("Caught exception initializing GraphControler", e);
+            LOG.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         } catch (final NoSuchMethodException e) {
-            log.fatal("Caught exception initializing GraphControler", e);
+            LOG.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         }
 
@@ -116,25 +151,26 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
         addMenuBar();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method addControlerListener.
+     * @param listener GraphControlerListener
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#addControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
-    public void addControlerListener(final GraphControlerListener listener) {
+    public final void addControlerListener(final GraphControlerListener listener) {
         controlerEventManager.subscribe(listener);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method getControler.
+     * @return GraphControler
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#getControler()
      */
-    public GraphControler getControler() {
+    public final GraphControler getControler() {
         if (tabFolder != null) {
             final GraphTabItem selectedTab = (GraphTabItem) tabFolder.getSelection();
             if (selectedTab == null) {
                 return null;
-            }
-            else {
+            } else {
                 return selectedTab.getControler();
             }
         }
@@ -143,11 +179,11 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
 
     /**
      * Create a new displayer for a controler.
-     * 
-     * @param controler
-     * @return
+     *
+     * @param controler GraphControler
+     * @return GraphDisplayer
      */
-    public GraphDisplayer newDisplayer(final GraphControler controler) {
+    public final GraphDisplayer newDisplayer(final GraphControler controler) {
         final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE, controler);
         graphTabItem.setSourcePanelVisible(sourcePanelVisible);
         graphTabItem.setOutlinePanelVisible(outlinePanelVisible);
@@ -160,18 +196,19 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
 
     /**
      * Open an ant file in a new window.
-     * @param buildFile
+     * @param buildFile File
      * @param properties
      *            a set of properties to be preset when opening the graph or
      *            <code>null</code> if no properties should be preset.
      */
-    public void openGraphInNewDisplayer(final File buildFile, final Properties properties) {
+    public final void openGraphInNewDisplayer(final File buildFile,
+            final Properties properties) {
         openGraphInNewDisplayer(buildFile, null, properties);
     }
 
     /**
      * Open an ant file in a new window, focusing on a specific target.
-     * @param buildFile
+     * @param buildFile File
      * @param targetName
      *            the target to scroll to or <code>null</code> not to focus on
      *            any target.
@@ -179,13 +216,15 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
      *            a set of properties to be preset when opening the graph or
      *            <code>null</code> if no properties should be preset.
      */
-    public void openGraphInNewDisplayer(final File buildFile, final String targetName,
-            final Properties properties) {
+    public final void openGraphInNewDisplayer(final File buildFile,
+            final String targetName, final Properties properties) {
         final GraphControler controler = new GraphControler(this);
         try {
-            new ProgressMonitorDialog(getShell()).run(true, false, new IRunnableWithProgress() {
-                public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-                        InterruptedException {
+            new ProgressMonitorDialog(getShell()).run(true, false,
+                    new IRunnableWithProgress() {
+                            public void run(final IProgressMonitor monitor)
+                                    throws InvocationTargetException,
+                                            InterruptedException {
                     controler.setProgressMonitor(monitor);
                     controler.openFile(buildFile, properties);
                     if (targetName != null) {
@@ -194,17 +233,18 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
                 }
             });
         } catch (final InvocationTargetException e) {
-            log.error("Caugh exception opening file", e);
+            LOG.error("Caugh exception opening file", e);
         } catch (final InterruptedException e) {
-            log.info("Loading cancelled", e);
+            LOG.info("Loading cancelled", e);
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method removeControlerListener.
+     * @param listener GraphControlerListener
      * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
      */
-    public void removeControlerListener(final GraphControlerListener listener) {
+    public final void removeControlerListener(final GraphControlerListener listener) {
         controlerEventManager.unSubscribe(listener);
     }
 
@@ -242,26 +282,27 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method configureShell.
+     * @param shell Shell
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
-    protected void configureShell(final Shell shell) {
+    protected final void configureShell(final Shell shell) {
         super.configureShell(shell);
         shell.setText("Grand");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method createContents.
+     * @param parent Composite
+     * @return Control
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createContents(final Composite parent) {
-        if (log.isDebugEnabled()) {
-            log.debug("Creating contents");
+    protected final Control createContents(final Composite parent) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating contents");
         }
         tabFolder = new CTabFolder(parent, SWT.BORDER | SWT.TOP);
         tabFolder.addCTabFolder2Listener(new CTabFolder2Adapter() {
@@ -271,7 +312,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
              */
             @Override
             public void close(final CTabFolderEvent event) {
-                log.debug("Got " + event);
+                LOG.debug("Got " + event);
                 final Widget item = event.item;
                 if (item instanceof GraphTabItem) {
                     controlerRemovedDispatcher.dispatch(((GraphTabItem) item).getControler());
@@ -285,7 +326,7 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
              */
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                log.debug("Got " + e);
+                LOG.debug("Got " + e);
                 final Widget widget = e.widget;
                 if (widget instanceof CTabFolder) {
                     final CTabFolder folder = (CTabFolder) widget;
@@ -301,15 +342,15 @@ public class GraphWindow extends ApplicationWindow implements GraphControlerProv
         return tabFolder;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method createMenuManager.
+     * @return MenuManager
      * @see org.eclipse.jface.window.ApplicationWindow#createMenuManager()
      */
     @Override
-    protected MenuManager createMenuManager() {
-        if (log.isDebugEnabled()) {
-            log.debug("Creating menu manager");
+    protected final MenuManager createMenuManager() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating menu manager");
         }
         manager = new MenuManager();
         manager.add(new FileMenuManager(this));

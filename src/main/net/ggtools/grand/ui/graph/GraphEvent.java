@@ -33,12 +33,19 @@ package net.ggtools.grand.ui.graph;
 
 /**
  * Event send by the model to the controler.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class GraphEvent {
+    /**
+     * Field model.
+     */
     public final GraphModel model;
-    
+
+    /**
+     * Constructor for GraphEvent.
+     * @param model GraphModel
+     */
     public GraphEvent(final GraphModel model) {
         this.model = model;
     }

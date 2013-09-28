@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Logger factory used to make Grand's core log using the same mechanism than
  * the UI.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class CommonsLoggingLoggerFactory implements LoggerFactory {
@@ -46,19 +46,23 @@ public class CommonsLoggingLoggerFactory implements LoggerFactory {
     public CommonsLoggingLoggerFactory() {
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method getLog.
+     * @param clazz Class<?>
+     * @return Log
      * @see net.ggtools.grand.log.LoggerFactory#getLog(java.lang.Class)
      */
-    public Log getLog(final Class clazz) {
+    public final Log getLog(final Class<?> clazz) {
         return LogFactory.getLog(clazz);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method getLog.
+     * @param name String
+     * @return Log
      * @see net.ggtools.grand.log.LoggerFactory#getLog(java.lang.String)
      */
-    public Log getLog(final String name) {
+    public final Log getLog(final String name) {
         return LogFactory.getLog(name);
     }
 

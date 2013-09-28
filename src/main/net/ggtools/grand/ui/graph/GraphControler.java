@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,7 +33,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -79,15 +78,21 @@ import sf.jzgraph.dot.impl.Dot;
 /**
  * A class responsible of interfacing the Grand graph objects to the GrandUi
  * display.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class GraphControler implements DotGraphAttributes, SelectionManager,
         IPropertyChangeListener {
-    private static final Log log = LogFactory.getLog(GraphControler.class);
+    /**
+     * Field log.
+     */
+    private static final Log LOG = LogFactory.getLog(GraphControler.class);
 
-    // FIXME: Ok that's bad it'll probably have to go to the forthcoming pref
+    // FIXME Ok that's bad it'll probably have to go to the forthcoming pref
     // API.
+    /**
+     * Field printMode.
+     */
     private static int printMode = PrintFigureOperation.FIT_PAGE;
 
     /**
@@ -105,6 +110,9 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         GraphControler.printMode = printMode;
     }
 
+    /**
+     * Field busRoutingEnabled.
+     */
     private boolean busRoutingEnabled;
 
     /**
@@ -113,35 +121,78 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      */
     private boolean clearFiltersOnNextLoad;
 
+    /**
+     * Field defaultProgressMonitor.
+     */
     private IProgressMonitor defaultProgressMonitor;
 
+    /**
+     * Field displayer.
+     */
     private GraphDisplayer displayer;
 
+    /**
+     * Field figure.
+     */
     private Draw2dGraph figure;
 
+    /**
+     * Field filterChain.
+     */
     private FilterChainModel filterChain;
 
+    /**
+     * Field graph.
+     */
     private Graph graph;
 
+    /**
+     * Field graphEventManager.
+     */
     private EventManager graphEventManager;
 
+    /**
+     * Field model.
+     */
     private GraphModel model;
 
+    /**
+     * Field nodeContentProvider.
+     */
     private final GraphNodeContentProvider nodeContentProvider;
 
+    /**
+     * Field parameterChangedEvent.
+     */
     private Dispatcher parameterChangedEvent;
 
+    /**
+     * Field renderer.
+     */
     private Draw2dGraphRenderer renderer;
 
+    /**
+     * Field selectedNodes.
+     */
     private final Set<Draw2dNode> selectedNodes = new HashSet<Draw2dNode>();
 
+    /**
+     * Field selectionChangedDispatcher.
+     */
     private Dispatcher selectionChangedDispatcher;
 
+    /**
+     * Field window.
+     */
     private GraphWindow window;
 
+    /**
+     * Constructor for GraphControler.
+     * @param window GraphWindow
+     */
     public GraphControler(final GraphWindow window) {
-        if (log.isInfoEnabled()) {
-            log.info("Creating new controler to " + window);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Creating new controler to " + window);
         }
         this.window = window;
         model = new GraphModel();
@@ -159,10 +210,10 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             parameterChangedEvent = graphEventManager.createDispatcher(GraphListener.class
                     .getDeclaredMethod("parameterChanged", new Class[]{GraphControler.class}));
         } catch (final SecurityException e) {
-            log.fatal("Caught exception initializing GraphControler", e);
+            LOG.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         } catch (final NoSuchMethodException e) {
-            log.fatal("Caught exception initializing GraphControler", e);
+            LOG.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);
         }
 
@@ -173,16 +224,16 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     }
 
     /**
-     * @param filter
+     * @param filter GraphFilter
      */
-    public void addFilter(final GraphFilter filter) {
+    public final void addFilter(final GraphFilter filter) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         try {
             ModalContext.run(new IRunnableWithProgress() {
-                public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-                        InterruptedException {
-                    log.info("Adding filter " + filter);
+                public void run(final IProgressMonitor monitor)
+                        throws InvocationTargetException, InterruptedException {
+                    LOG.info("Adding filter " + filter);
                     progressMonitor.beginTask("Adding filter", 4);
                     filterChain.addFilterLast(filter);
                     progressMonitor.worked(1);
@@ -198,25 +249,28 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.SelectionManager#addSelectionListener(net.ggtools.grand.ui.graph.GraphListener)
+    /**
+     * Method addListener.
+     * @param listener GraphListener
+     * @see net.ggtools.grand.ui.graph.SelectionManager#addListener(net.ggtools.grand.ui.graph.GraphListener)
      */
-    public void addListener(final GraphListener listener) {
+    public final void addListener(final GraphListener listener) {
         if (graphEventManager != null) {
             graphEventManager.subscribe(listener);
         }
     }
 
-    public void clearFilters() {
+    /**
+     * Method clearFilters.
+     */
+    public final void clearFilters() {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         try {
             ModalContext.run(new IRunnableWithProgress() {
-                public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-                        InterruptedException {
-                    log.info("Clearing filters");
+                public void run(final IProgressMonitor monitor)
+                        throws InvocationTargetException, InterruptedException {
+                    LOG.info("Clearing filters");
                     progressMonitor.beginTask("Clearing filters", 4);
                     filterChain.clearFilters();
                     progressMonitor.worked(1);
@@ -233,12 +287,11 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method deselectAllNodes.
      * @see net.ggtools.grand.ui.graph.SelectionManager#deselectAllNodes()
      */
-    public void deselectAllNodes() {
+    public final void deselectAllNodes() {
         if (!selectedNodes.isEmpty()) {
             for (final Iterator<Draw2dNode> iter = selectedNodes.iterator(); iter.hasNext();) {
                 final Draw2dNode currentNode = iter.next();
@@ -250,13 +303,13 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.SelectionManager#deselectNode(net.ggtools.grand.ui.graph.Draw2dNode)
+    /**
+     * Method deselectNode.
+     * @param node Draw2dNode
+     * @see net.ggtools.grand.ui.graph.SelectionManager#deselectNode(net.ggtools.grand.ui.graph.draw2d.Draw2dNode)
      */
-    public void deselectNode(final Draw2dNode node) {
-        log.debug("Deselect node " + node);
+    public final void deselectNode(final Draw2dNode node) {
+        LOG.debug("Deselect node " + node);
         if (node.isSelected()) {
             selectedNodes.remove(node);
             node.setSelected(false);
@@ -267,9 +320,9 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     /**
      * Hack for gtk: print using the dot command.
      */
-    public void dotPrint() {
-        if (log.isDebugEnabled()) {
-            log.debug("Printing graph using dot");
+    public final void dotPrint() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Printing graph using dot");
         }
         final Properties props = new Properties();
         props.setProperty("dot.graph.attributes", "rankdir=\"TB\"");
@@ -300,28 +353,28 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
                     "dot -Tps " + dotParameters + " -o GrandDotPrint.ps GrandDotPrint.dot");
             proc.waitFor();
             proc.destroy();
-            log.info("Graph printed to GrandDotPrint.ps");
+            LOG.info("Graph printed to GrandDotPrint.ps");
             final MessageDialog dialog = new MessageDialog(window.getShell(), "Graph printed",
                     Application.getInstance().getImage(Application.APPLICATION_ICON),
                     "Graph saved as GraphDotPrint.ps", MessageDialog.INFORMATION,
                     new String[]{"OK"}, 0);
             dialog.open();
         } catch (final Exception e) {
-            log.error("Got execption printing", e);
+            LOG.error("Got execption printing", e);
         }
     }
 
     /**
      * Enable or disable the use of the bus routing algorithm for graph layout.
-     * 
-     * @param enabled
+     *
+     * @param enabled boolean
      */
-    public void enableBusRouting(final boolean enabled) {
+    public final void enableBusRouting(final boolean enabled) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         if (busRoutingEnabled != enabled) {
-            if (log.isInfoEnabled()) {
-                log.info("Using bus routing set to " + enabled);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Using bus routing set to " + enabled);
             }
             busRoutingEnabled = enabled;
             parameterChangedEvent.dispatch(this);
@@ -334,11 +387,11 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     /**
      * Focus on a specific target. The current implementation of focusing means
      * bring the specific target as close as possible from the canvas centre.
-     * 
+     *
      * @param targetName
      *            the target to focus on.
      */
-    public void focusOn(final String targetName) {
+    public final void focusOn(final String targetName) {
         if (displayer != null) {
             displayer.jumpToNode(targetName);
         }
@@ -349,8 +402,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      */
     public final GraphDisplayer getDisplayer() {
         if (displayer == null) {
-            if (log.isInfoEnabled()) {
-                log.info("Opening graph displayer");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Opening graph displayer");
             }
             Display.getDefault().syncExec(new Runnable() {
                 public void run() {
@@ -361,20 +414,31 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         return displayer;
     }
 
-    public Map getGraphProperties() {
+    /**
+     * Method getGraphProperties.
+     * @return Properties
+     */
+    public final Properties getGraphProperties() {
         if (model != null) {
             return model.getUserProperties();
-        }
-        else {
+        } else {
             return null;
         }
     }
 
-    public IStructuredContentProvider getNodeContentProvider() {
+    /**
+     * Method getNodeContentProvider.
+     * @return IStructuredContentProvider
+     */
+    public final IStructuredContentProvider getNodeContentProvider() {
         return nodeContentProvider;
     }
 
-    public ILabelProvider getNodeLabelProvider() {
+    /**
+     * Method getNodeLabelProvider.
+     * @return ILabelProvider
+     */
+    public final ILabelProvider getNodeLabelProvider() {
         return nodeContentProvider;
     }
 
@@ -385,15 +449,19 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         return defaultProgressMonitor;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method getSelection.
+     * @return Collection<Draw2dNode>
      * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
      */
-    public Collection<Draw2dNode> getSelection() {
+    public final Collection<Draw2dNode> getSelection() {
         return selectedNodes;
     }
 
+    /**
+     * Method getWindow.
+     * @return GraphWindow
+     */
     public final GraphWindow getWindow() {
         return window;
     }
@@ -407,18 +475,18 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     /**
      * Opens a new graph.
-     * 
+     *
      * @param file
      *            the file to open.
      * @param properties
      *            a set of properties to be preset when opening the graph or
      *            <code>null</code> if no properties should be preset.
      */
-    public void openFile(final File file, final Properties properties) {
+    public final void openFile(final File file, final Properties properties) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
-        if (log.isInfoEnabled()) {
-            log.info("Opening " + file);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Opening " + file);
         }
 
         progressMonitor.beginTask("Opening new graph", 5);
@@ -427,14 +495,14 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         try {
             progressMonitor.subTask("Loading ant file");
             model.openFile(file, properties);
-            if (log.isDebugEnabled()) {
-                log.debug("Model loaded graph");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Model loaded graph");
             }
             progressMonitor.worked(1);
 
             filterAndRenderGraph(progressMonitor);
-            if (log.isInfoEnabled()) {
-                log.info("Graph loaded & rendered");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Graph loaded & rendered");
             }
             RecentFilesManager.getInstance().addNewFile(file, properties);
         } catch (final GrandException e) {
@@ -450,10 +518,10 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     /**
      * Open the build file containing a specific node.
-     * 
-     * @param node
+     *
+     * @param node Draw2dNode
      */
-    public void openNodeFile(final Draw2dNode node) {
+    public final void openNodeFile(final Draw2dNode node) {
         final AntTargetNode targetNode = (AntTargetNode) node.getVertex().getData();
         final String buildFile = targetNode.getBuildFile();
         if ((buildFile != null) && (buildFile.length() > 0)) {
@@ -470,26 +538,26 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     /**
      * Prints the current graph.
-     * 
-     * @param printer
+     *
+     * @param printer Printer
      */
-    public void print(final Printer printer) {
-        if (log.isDebugEnabled()) {
-            log.debug("Printing graph");
+    public final void print(final Printer printer) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Printing graph");
         }
         final PrintFigureOperation printOp = new PrintFigureOperation(printer, figure);
         printOp.setPrintMode(printMode);
         printOp.run("Grand:" + graph.getName());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method propertyChange.
+     * @param event PropertyChangeEvent
      * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
      */
-    public void propertyChange(final PropertyChangeEvent event) {
-        if (log.isDebugEnabled()) {
-            log.debug("Get PropertyChangeEvent " + event.getProperty());
+    public final void propertyChange(final PropertyChangeEvent event) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Get PropertyChangeEvent " + event.getProperty());
         }
         if (event.getProperty().startsWith(PreferenceKeys.GRAPH_PREFIX)) {
             refreshGraph();
@@ -499,20 +567,20 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     /**
      * Refreshing (i.e.: rerender) the current graph.
      */
-    public void refreshGraph() {
+    public final void refreshGraph() {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         // FIXME check that there is a graph.
-        if (log.isInfoEnabled()) {
-            log.info("Refreshing current graph");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Refreshing current graph");
         }
         progressMonitor.beginTask("Refreshing graph", 3);
         clearFiltersOnNextLoad = false;
 
         try {
             renderFilteredGraph(progressMonitor);
-            if (log.isInfoEnabled()) {
-                log.info("Graph refreshed");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Graph refreshed");
             }
         } catch (final BuildException e) {
             reportError("Cannot open graph", e);
@@ -524,30 +592,34 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     /**
      * Reload the current graph.
      */
-    public void reloadGraph() {
+    public final void reloadGraph() {
         reloadGraph(null);
     }
 
-    public void reloadGraph(final Properties properties) {
+    /**
+     * Method reloadGraph.
+     * @param properties Properties
+     */
+    public final void reloadGraph(final Properties properties) {
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
-        // FIXME Check that there is a model.
-        if (log.isInfoEnabled()) {
-            log.info("Reloading current graph");
+        // FIXME check that there is a model.
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Reloading current graph");
         }
         progressMonitor.beginTask("Reloading graph", 5);
         clearFiltersOnNextLoad = false;
 
         try {
             model.reload(properties);
-            if (log.isDebugEnabled()) {
-                log.debug("Model reloaded graph");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Model reloaded graph");
             }
             progressMonitor.worked(1);
 
             filterAndRenderGraph(progressMonitor);
-            if (log.isInfoEnabled()) {
-                log.info("Graph reloaded");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Graph reloaded");
             }
             RecentFilesManager.getInstance().updatePropertiesFor(model.getLastLoadedFile(),
                     properties);
@@ -560,24 +632,24 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method removeSelectionListener.
+     * @param listener GraphListener
      * @see net.ggtools.grand.ui.graph.SelectionManager#removeSelectionListener(net.ggtools.grand.ui.graph.GraphListener)
      */
-    public void removeSelectionListener(final GraphListener listener) {
+    public final void removeSelectionListener(final GraphListener listener) {
         graphEventManager.unSubscribe(listener);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.SelectionManager#selectNode(net.ggtools.grand.ui.graph.Draw2dNode,
-     *      boolean)
+    /**
+     * Method selectNode.
+     * @param node Draw2dNode
+     * @param addToSelection boolean
+     * @see net.ggtools.grand.ui.graph.SelectionManager#selectNode(net.ggtools.grand.ui.graph.draw2d.Draw2dNode, boolean)
      */
-    public void selectNode(final Draw2dNode node, final boolean addToSelection) {
-        if (log.isTraceEnabled()) {
-            log.trace("Select node " + node);
+    public final void selectNode(final Draw2dNode node, final boolean addToSelection) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Select node " + node);
         }
         if (!node.isSelected()) {
             if (!addToSelection) {
@@ -585,19 +657,20 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             }
             selectedNodes.add(node);
             node.setSelected(true);
+            @SuppressWarnings("unused")
             final AntTargetNode antNode = (AntTargetNode) node.getVertex().getData();
             displayer.setRichSource(((AntTargetNode) node.getVertex().getData()).getRichSource());
             selectionChangedDispatcher.dispatch(selectedNodes);
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.ggtools.grand.ui.graph.SelectionManager#selectNodeByName(java.lang.String,
-     *      boolean)
+    /**
+     * Method selectNodeByName.
+     * @param nodeName String
+     * @param addToSelection boolean
+     * @see net.ggtools.grand.ui.graph.SelectionManager#selectNodeByName(java.lang.String, boolean)
      */
-    public void selectNodeByName(final String nodeName, final boolean addToSelection) {
+    public final void selectNodeByName(final String nodeName, final boolean addToSelection) {
         figure.selectNodeByName(nodeName, addToSelection);
     }
 
@@ -611,6 +684,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     /**
      * Filter the current graph of the model and render it.
+     * @param progressMonitor IProgressMonitor
      */
     private void filterAndRenderGraph(final IProgressMonitor progressMonitor) {
         progressMonitor.subTask("Filtering graph");
@@ -618,8 +692,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             filterChain.clearFilters();
         }
         filterChain.filterGraph();
-        if (log.isDebugEnabled()) {
-            log.debug("Filtering done");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Filtering done");
         }
         progressMonitor.worked(1);
 
@@ -629,10 +703,11 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     /**
      * Render the currently load/filtered graph. This method increase the
      * progress monitor by 3.
+     * @param progressMonitor IProgressMonitor
      */
     private void renderFilteredGraph(final IProgressMonitor progressMonitor) {
-        if (log.isDebugEnabled()) {
-            log.debug("Creating dot graph");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Creating dot graph");
         }
         progressMonitor.subTask("Laying out graph");
         graph = filterChain.getGraph();
@@ -641,8 +716,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         final IDotGraph dotGraph = creator.getGraph();
         progressMonitor.worked(1);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Laying out graph");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Laying out graph");
         }
         final Dot app = new Dot();
         app.layout(dotGraph, 0, -7);
@@ -653,8 +728,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             public void run() {
                 if (figure == null) {
                     figure = renderer.render(dotGraph);
-                }
-                else {
+                } else {
                     renderer.render(figure, dotGraph);
                 }
 
@@ -672,12 +746,12 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     /**
      * Reports an error in both log and a dialog.
-     * 
-     * @param message
-     * @param e
+     *
+     * @param message String
+     * @param e Throwable
      */
     private void reportError(final String message, final Throwable e) {
-        log.error(message, e);
+        LOG.error(message, e);
         ExceptionDialog.openException(window.getShell(), message, e);
     }
 
@@ -704,11 +778,11 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * Creates new {@link Image} for the current graph. As new image will be
      * created for each call the caller is responsible for calling
      * <code>dispose()</code> on the returned image.
-     * 
+     *
      * @return a new image or <code>null</code> if no graph is loaded. This
      *         image should be disposed after use.
      */
-    public Image createImageForGraph() {
+    public final Image createImageForGraph() {
         if (figure == null) {
             return null;
         }

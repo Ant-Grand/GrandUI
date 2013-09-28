@@ -1,20 +1,18 @@
-// $Id:
-// /grand/local/GrandUi/src/net/ggtools/grand/ui/log/LogEventDetailDialog.java
-// 535 2005-02-11T23:13:05.074023Z moi $
+// $Id$
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -54,20 +52,26 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * A dialog to display the details of a log event.
- * 
+ *
  * @author Christophe Labouisse
  */
 public class LogEventDetailDialog extends Dialog {
 
+    /**
+     * Field ICONS_FOR_LEVELS.
+     */
     private static final int[] ICONS_FOR_LEVELS = {SWT.ICON_INFORMATION, SWT.ICON_INFORMATION,
             SWT.ICON_INFORMATION, SWT.ICON_INFORMATION, SWT.ICON_WARNING, SWT.ICON_ERROR,
             SWT.ICON_ERROR};
 
     /**
-     * Logger for this class
+     * Logger for this class.
      */
-    private static final Log log = LogFactory.getLog(LogEventDetailDialog.class);
+    private static final Log LOG = LogFactory.getLog(LogEventDetailDialog.class);
 
+    /**
+     * Field details.
+     */
     private Control details;
 
     /**
@@ -75,15 +79,21 @@ public class LogEventDetailDialog extends Dialog {
      */
     private Button detailsButton;
 
+    /**
+     * Field display.
+     */
     private Display display;
 
+    /**
+     * Field event.
+     */
     private final LogEvent event;
 
     /**
      * Creates a new LogEventDetailDialog.
-     * 
-     * @param parentShell
-     * @param event
+     *
+     * @param parentShell Shell
+     * @param event LogEvent
      */
     public LogEventDetailDialog(final Shell parentShell, final LogEvent event) {
         super(parentShell);
@@ -94,30 +104,31 @@ public class LogEventDetailDialog extends Dialog {
     /**
      * Creates a key/value widget pair with the value widget spanning on 1
      * column.
-     * 
-     * @param composite
-     * @param key
-     * @param value
+     *
+     * @param composite Composite
+     * @param key String
+     * @param value String
      */
-    private void addKeyValue(final Composite composite, final String key, final String value) {
+    private void addKeyValue(final Composite composite, final String key,
+            final String value) {
         addKeyValue(composite, key, value, 1);
     }
 
     /**
      * Add a key/value widget pair.
-     * 
-     * @param composite
-     * @param key
-     * @param value
-     * @param valueColumnSpan
+     *
+     * @param composite Composite
+     * @param key String
+     * @param value String
+     * @param valueColumnSpan int
      */
-    private void addKeyValue(final Composite composite, final String key, final String value,
-            final int valueColumnSpan) {
+    private void addKeyValue(final Composite composite, final String key,
+            final String value, final int valueColumnSpan) {
         if (value == null) {
-            log.warn("Value is null, skipping");
+            LOG.warn("Value is null, skipping");
             return;
         }
-        
+
         final Label header = new Label(composite, SWT.BOLD);
         header.setText(key);
         header.setFont(JFaceResources.getDefaultFont());
@@ -141,8 +152,8 @@ public class LogEventDetailDialog extends Dialog {
     /**
      * Creates the detail widget for an exception. The widget will be made of a
      * {@link ScrolledComposite}containing a read only text control.
-     * 
-     * @param exception
+     *
+     * @param exception Throwable
      * @return the detail control
      */
     private Control createDetailWidget(final Throwable exception) {
@@ -186,8 +197,7 @@ public class LogEventDetailDialog extends Dialog {
             details.dispose();
             details = null;
             detailsButton.setText(IDialogConstants.SHOW_DETAILS_LABEL);
-        }
-        else {
+        } else {
             details = createDetailWidget(event.getException());
             detailsButton.setText(IDialogConstants.HIDE_DETAILS_LABEL);
         }
@@ -198,37 +208,39 @@ public class LogEventDetailDialog extends Dialog {
         shell.setSize(new Point(windowSize.x, windowSize.y + (newSize.y - oldSize.y)));
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method buttonPressed.
+     * @param buttonId int
      * @see org.eclipse.jface.dialogs.Dialog#buttonPressed(int)
      */
     @Override
-    protected void buttonPressed(final int buttonId) {
+    protected final void buttonPressed(final int buttonId) {
         if (IDialogConstants.DETAILS_ID == buttonId) {
             toggleExceptionDetail();
-        }
-        else {
+        } else {
             super.buttonPressed(buttonId);
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method configureShell.
+     * @param newShell Shell
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
-    protected void configureShell(final Shell newShell) {
+    protected final void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Log event details");
         display = newShell.getDisplay();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createButtonsForButtonBar.
+     * @param parent Composite
      * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected void createButtonsForButtonBar(final Composite parent) {
+    protected final void createButtonsForButtonBar(final Composite parent) {
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
         if (event.getException() != null) {
             detailsButton = createButton(parent, IDialogConstants.DETAILS_ID,
@@ -236,23 +248,27 @@ public class LogEventDetailDialog extends Dialog {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createContents.
+     * @param parent Composite
+     * @return Control
      * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createContents(final Composite parent) {
+    protected final Control createContents(final Composite parent) {
         final Control contents = super.createContents(parent);
         getShell().setMinimumSize(getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT));
         return contents;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createDialogArea.
+     * @param parent Composite
+     * @return Control
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createDialogArea(final Composite parent) {
+    protected final Control createDialogArea(final Composite parent) {
         final Composite composite = (Composite) super.createDialogArea(parent);
         final GridData compositeLayoutData = new GridData(GridData.FILL_HORIZONTAL);
         composite.setLayoutData(compositeLayoutData);

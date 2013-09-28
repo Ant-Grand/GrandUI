@@ -43,23 +43,35 @@ import org.eclipse.swt.SWT;
 
 /**
  * Open a build file allowing setting some properties.
- * 
+ *
  * @author Christophe Labouisse
  * @see org.eclipse.jface.action.Action
  */
 public class OpenFileAction extends Action {
 
-    private static final Log log = LogFactory.getLog(OpenFileAction.class);
+    /**
+     * Field log.
+     */
+    @SuppressWarnings("unused")
+    private static final Log LOG = LogFactory.getLog(OpenFileAction.class);
 
+    /**
+     * Field DEFAULT_ACTION_NAME.
+     * (value is ""Open with properties"")
+     */
     private static final String DEFAULT_ACTION_NAME = "Open with properties";
 
+    /**
+     * Field window.
+     */
     private final GraphWindow window;
 
-    /* (non-Javadoc)
+    /**
+     * Method run.
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final IWizard wizard = new OpenFileWizard(window);
         final WizardDialog dialog = new WizardDialog(window.getShell(), wizard);
         dialog.create();
@@ -68,8 +80,8 @@ public class OpenFileAction extends Action {
 
     /**
      * Creates a new QuickOpenFileAction object.
-     * 
-     * @param parent
+     *
+     * @param parent GraphWindow
      */
     public OpenFileAction(final GraphWindow parent) {
         super(DEFAULT_ACTION_NAME);
@@ -79,9 +91,9 @@ public class OpenFileAction extends Action {
 
     /**
      * Creates a new QuickOpenFileAction object with specific name.
-     * 
-     * @param name
-     * @param parent
+     *
+     * @param name String
+     * @param parent GraphWindow
      */
     public OpenFileAction(final String name, final GraphWindow parent) {
         super(name);

@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,36 +41,40 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * TODO The whole thing is crappy I've to change it when the Prefs API will be
- * there.
+ * TODO the whole thing is crappy, change it when the Prefs API will be there.
  * @author Christophe Labouisse
  */
 public class PageSetupDialog extends Dialog {
 
+    /**
+     * Field combo.
+     */
     private Combo combo;
 
     /**
-     * @param parentShell
+     * @param parentShell Shell
      */
     public PageSetupDialog(final Shell parentShell) {
         super(parentShell);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method cancelPressed.
      * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
      */
     @Override
-    protected void cancelPressed() {
+    protected final void cancelPressed() {
         super.cancelPressed();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method createDialogArea.
+     * @param parent Composite
+     * @return Control
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createDialogArea(final Composite parent) {
+    protected final Control createDialogArea(final Composite parent) {
         final Composite composite = (Composite) super.createDialogArea(parent);
         final GridLayout layout = new GridLayout();
         layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
@@ -82,7 +86,8 @@ public class PageSetupDialog extends Dialog {
         label.setAlignment(SWT.RIGHT);
         label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
         combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
-        combo.setItems(new String[]{"Tile", "Fit on one page", "Fit on one page horizontally", "Fit one page vertically"});
+        combo.setItems(new String[]{"Tile", "Fit on one page",
+                "Fit on one page horizontally", "Fit one page vertically"});
         combo.select(GraphControler.getPrintMode() - 1);
         combo
                 .setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
@@ -90,22 +95,23 @@ public class PageSetupDialog extends Dialog {
         return composite;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method okPressed.
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
     @Override
-    protected void okPressed() {
-        GraphControler.setPrintMode(combo.getSelectionIndex()+1);
+    protected final void okPressed() {
+        GraphControler.setPrintMode(combo.getSelectionIndex() + 1);
         super.okPressed();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Method configureShell.
+     * @param newShell Shell
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
-    protected void configureShell(final Shell newShell) {
+    protected final void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText("Page Setup");
     }

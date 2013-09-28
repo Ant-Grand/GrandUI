@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,31 +29,31 @@ package net.ggtools.grand.ui.graph;
 
 /**
  * Interface to be implemented by classes providing GraphControler instances. A
- * provider's goal is to inform the GraphControler user wether or not a controler
- * is currently available. This can happend either through a simple getGraphControler
- * method of through a listener mecanism.
- *  
+ * provider's goal is to inform the GraphControler user whether or not
+ * a controler is currently available. This can happen either
+ * through a simple getGraphControler method of through a listener mechanism.
+ *
  * @author Christophe Labouisse
  */
 public interface GraphControlerProvider {
-    
+
     /**
      * Get the current controler.
-     * 
+     *
      * @return the current controler or <code>null</code> if none is available.
      */
     GraphControler getControler();
 
     /**
      * Add a new listener to the provider.
-     * @param listener
+     * @param listener GraphControlerListener
      * @see GraphControlerListener
      */
     void addControlerListener(GraphControlerListener listener);
-    
+
     /**
      * Remove a listener.
-     * @param listener
+     * @param listener GraphControlerListener
      */
     void removeControlerListener(GraphControlerListener listener);
 }

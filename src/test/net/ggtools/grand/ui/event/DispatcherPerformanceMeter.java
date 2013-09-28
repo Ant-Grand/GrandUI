@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,6 +35,10 @@ import sf.blacksun.util.StopWatch;
  */
 public class DispatcherPerformanceMeter {
 
+    /**
+     * Field LOOP.
+     * (value is 100000000)
+     */
     private static final int LOOP = 100000000;
 
     /**
@@ -43,19 +47,19 @@ public class DispatcherPerformanceMeter {
     public static class ManualDispatcher extends DispatcherAdapter implements Dispatcher {
 
         /**
-         * @param manager
+         * @param manager EventManager
          */
         ManualDispatcher(final EventManager manager) {
             super(manager);
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see net.ggtools.grand.ui.event.EventManager.InternalDispatcher#sendEventToSubscriber(java.lang.Object,
-         *      java.lang.Object)
+        /**
+         * Method sendEventToSubscriber.
+         * @param subscriber Object
+         * @param eventData Object
+         * @see net.ggtools.grand.ui.event.Dispatcher#sendEventToSubscriber(java.lang.Object, java.lang.Object)
          */
-        public void sendEventToSubscriber(final Object subscriber, final Object eventData) {
+        public final void sendEventToSubscriber(final Object subscriber, final Object eventData) {
             ((Listener) subscriber).listen(eventData);
         }
 
@@ -63,15 +67,24 @@ public class DispatcherPerformanceMeter {
 
     /**
      * A dummy listener for performance testing.
-     * 
+     *
      * @author Christophe Labouisse
      */
     public static class Listener {
+        /**
+         * Method listen.
+         * @param o Object
+         */
         public void listen(final Object o) {
         }
     }
 
-    public static void main(final String[] args) throws SecurityException, NoSuchMethodException {
+    /**
+     * Method main.
+     * @param args String[]
+     * @throws NoSuchMethodException
+     */
+    public static void main(final String[] args) throws NoSuchMethodException {
         final StopWatch timer = new StopWatch();
         final Listener subscriber = new Listener();
         System.out.println("Testing manual dispatcher");

@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2003, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -47,14 +47,21 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class ExportGraphAction extends GraphControlerAction {
 
+    /**
+     * Field DEFAULT_ACTION_NAME.
+     * (value is ""Export Graph as Image"")
+     */
     private static final String DEFAULT_ACTION_NAME = "Export Graph as Image";
 
-    private static final Log log = LogFactory.getLog(ExportGraphAction.class);
+    /**
+     * Field log.
+     */
+    private static final Log LOG = LogFactory.getLog(ExportGraphAction.class);
 
     /**
      * Creates a new ReloadGraphAction object.
-     * 
-     * @param parent
+     *
+     * @param parent GraphControlerProvider
      */
     public ExportGraphAction(final GraphControlerProvider parent) {
         this(parent, DEFAULT_ACTION_NAME);
@@ -62,21 +69,20 @@ public class ExportGraphAction extends GraphControlerAction {
 
     /**
      * Creates a new QuickOpenFileAction object with specific name.
-     * 
-     * @param name
-     * @param parent
+     *
+     * @param parent GraphControlerProvider
+     * @param name String
      */
     public ExportGraphAction(final GraphControlerProvider parent, final String name) {
         super(parent, name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Method run.
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final Shell parentShell = getGraphControler().getWindow().getShell();
         final FileDialog dialog = new FileDialog(parentShell,
                 SWT.SAVE);
@@ -84,17 +90,17 @@ public class ExportGraphAction extends GraphControlerAction {
         dialog.setFilterExtensions(imageSaver.getSupportedExtensions());
         dialog.setText("Export graph as image");
         final String fileName = dialog.open();
-        log.debug("Dialog returned " + fileName);
+        LOG.debug("Dialog returned " + fileName);
         if (fileName != null) {
             Image image = null;
             try {
                 image = getGraphControler().createImageForGraph();
-                imageSaver.saveImage(image,fileName);
+                imageSaver.saveImage(image, fileName);
             } catch (final IllegalArgumentException e) {
-                ExceptionDialog.openException(parentShell,"Cannot export image",e);
-            
+                ExceptionDialog.openException(parentShell, "Cannot export image", e);
+
             } catch (final IOException e) {
-                ExceptionDialog.openException(parentShell,"Cannot export image",e);
+                ExceptionDialog.openException(parentShell, "Cannot export image", e);
             } finally {
                 if (image != null) {
                     image.dispose();

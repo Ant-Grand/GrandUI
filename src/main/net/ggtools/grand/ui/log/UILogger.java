@@ -2,17 +2,17 @@
 /*
  * ====================================================================
  * Copyright (c) 2002-2004, Christophe Labouisse All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,14 +34,25 @@ import org.apache.commons.logging.Log;
  */
 final class UILogger implements Log {
 
+    /**
+     * Field underlying.
+     */
     private final Log underlying;
 
+    /**
+     * Field name.
+     */
     private final String name;
 
+    /**
+     * Field logBuffer.
+     */
     private LogEventBufferImpl logBuffer;
 
     /**
-     * 
+     *
+     * @param name String
+     * @param logger Log
      */
     UILogger(final String name, final Log logger) {
         this.name = name;
@@ -50,7 +61,8 @@ final class UILogger implements Log {
     }
 
     /**
-     * @param message
+     * @param message Object
+     * @see org.apache.commons.logging.Log#debug(Object)
      */
     public void debug(final Object message) {
         underlying.debug(message);
@@ -58,8 +70,9 @@ final class UILogger implements Log {
     }
 
     /**
-     * @param message
-     * @param t
+     * @param message Object
+     * @param t Throwable
+     * @see org.apache.commons.logging.Log#debug(Object, Throwable)
      */
     public void debug(final Object message, final Throwable t) {
         underlying.debug(message, t);
@@ -67,7 +80,8 @@ final class UILogger implements Log {
     }
 
     /**
-     * @param message
+     * @param message Object
+     * @see org.apache.commons.logging.Log#error(Object)
      */
     public void error(final Object message) {
         underlying.error(message);
@@ -75,8 +89,9 @@ final class UILogger implements Log {
     }
 
     /**
-     * @param message
-     * @param t
+     * @param message Object
+     * @param t Throwable
+     * @see org.apache.commons.logging.Log#error(Object, Throwable)
      */
     public void error(final Object message, final Throwable t) {
         underlying.error(message, t);
@@ -84,7 +99,8 @@ final class UILogger implements Log {
     }
 
     /**
-     * @param message
+     * @param message Object
+     * @see org.apache.commons.logging.Log#fatal(Object)
      */
     public void fatal(final Object message) {
         underlying.fatal(message);
@@ -92,8 +108,9 @@ final class UILogger implements Log {
     }
 
     /**
-     * @param message
-     * @param t
+     * @param message Object
+     * @param t Throwable
+     * @see org.apache.commons.logging.Log#fatal(Object, Throwable)
      */
     public void fatal(final Object message, final Throwable t) {
         underlying.fatal(message, t);
@@ -101,7 +118,8 @@ final class UILogger implements Log {
     }
 
     /**
-     * @param message
+     * @param message Object
+     * @see org.apache.commons.logging.Log#info(Object)
      */
     public void info(final Object message) {
         underlying.info(message);
@@ -109,8 +127,9 @@ final class UILogger implements Log {
     }
 
     /**
-     * @param message
-     * @param t
+     * @param message Object
+     * @param t Throwable
+     * @see org.apache.commons.logging.Log#info(Object, Throwable)
      */
     public void info(final Object message, final Throwable t) {
         underlying.info(message, t);
@@ -118,49 +137,56 @@ final class UILogger implements Log {
     }
 
     /**
-     * @return
+     * @return boolean
+     * @see org.apache.commons.logging.Log#isDebugEnabled()
      */
     public boolean isDebugEnabled() {
         return underlying.isDebugEnabled();
     }
 
     /**
-     * @return
+     * @return boolean
+     * @see org.apache.commons.logging.Log#isErrorEnabled()
      */
     public boolean isErrorEnabled() {
         return underlying.isErrorEnabled();
     }
 
     /**
-     * @return
+     * @return boolean
+     * @see org.apache.commons.logging.Log#isFatalEnabled()
      */
     public boolean isFatalEnabled() {
         return underlying.isFatalEnabled();
     }
 
     /**
-     * @return
+     * @return boolean
+     * @see org.apache.commons.logging.Log#isInfoEnabled()
      */
     public boolean isInfoEnabled() {
         return underlying.isInfoEnabled();
     }
 
     /**
-     * @return
+     * @return boolean
+     * @see org.apache.commons.logging.Log#isTraceEnabled()
      */
     public boolean isTraceEnabled() {
         return underlying.isTraceEnabled();
     }
 
     /**
-     * @return
+     * @return boolean
+     * @see org.apache.commons.logging.Log#isWarnEnabled()
      */
     public boolean isWarnEnabled() {
         return underlying.isWarnEnabled();
     }
 
     /**
-     * @param message
+     * @param message Object
+     * @see org.apache.commons.logging.Log#trace(Object)
      */
     public void trace(final Object message) {
         underlying.trace(message);
@@ -168,8 +194,9 @@ final class UILogger implements Log {
     }
 
     /**
-     * @param message
-     * @param t
+     * @param message Object
+     * @param t Throwable
+     * @see org.apache.commons.logging.Log#trace(Object, Throwable)
      */
     public void trace(final Object message, final Throwable t) {
         underlying.trace(message, t);
@@ -177,7 +204,8 @@ final class UILogger implements Log {
     }
 
     /**
-     * @param message
+     * @param message Object
+     * @see org.apache.commons.logging.Log#warn(Object)
      */
     public void warn(final Object message) {
         underlying.warn(message);
@@ -185,8 +213,9 @@ final class UILogger implements Log {
     }
 
     /**
-     * @param message
-     * @param t
+     * @param message Object
+     * @param t Throwable
+     * @see org.apache.commons.logging.Log#warn(Object, Throwable)
      */
     public void warn(final Object message, final Throwable t) {
         underlying.warn(message, t);

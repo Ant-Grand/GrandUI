@@ -39,28 +39,44 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 
 /**
- * 
- * 
+ *
+ *
  * @author Christophe Labouisse
  */
 public class PageSetupAction extends Action {
-    
-    private static final Log log = LogFactory.getLog(PageSetupAction.class);
 
+    /**
+     * Field log.
+     */
+    @SuppressWarnings("unused")
+    private static final Log LOG = LogFactory.getLog(PageSetupAction.class);
+
+    /**
+     * Field DEFAULT_ACTION_NAME.
+     * (value is ""Page Setup"")
+     */
     private static final String DEFAULT_ACTION_NAME = "Page Setup";
 
+    /**
+     * Field window.
+     */
     private final GraphWindow window;
 
+    /**
+     * Constructor for PageSetupAction.
+     * @param parent GraphWindow
+     */
     public PageSetupAction(final GraphWindow parent) {
         super(DEFAULT_ACTION_NAME);
         window = parent;
     }
-    
-    /* (non-Javadoc)
+
+    /**
+     * Method run.
      * @see org.eclipse.jface.action.IAction#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         final PageSetupDialog dialog = new PageSetupDialog(window.getShell());
         dialog.open();
     }
