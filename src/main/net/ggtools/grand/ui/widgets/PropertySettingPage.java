@@ -59,7 +59,7 @@ public class PropertySettingPage extends WizardPage
     /**
      * @param fileProvider OpenFileWizard.SelectedFileProvider
      */
-    public PropertySettingPage(final OpenFileWizard.SelectedFileProvider fileProvider) {
+    public PropertySettingPage(final SelectedFileProvider fileProvider) {
         super("propertySetting", "Property setting", null);
         setDescription("Set the properties for the file");
         this.fileProvider = fileProvider;

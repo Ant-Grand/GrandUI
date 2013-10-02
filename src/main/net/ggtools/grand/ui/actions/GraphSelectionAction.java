@@ -118,7 +118,8 @@ public abstract class GraphSelectionAction extends GraphListenerAction
         boolean isEnabled = false;
 
         if (getGraphControler() != null) {
-            final Collection<Draw2dNode> selectedNodes = getGraphControler().getSelection();
+            final Collection<Draw2dNode> selectedNodes =
+                    getGraphControler().getSelection();
             isEnabled = selectedNodes.size() == 1;
             if (isEnabled) {
                 currentNode = selectedNodes.iterator().next().getName();

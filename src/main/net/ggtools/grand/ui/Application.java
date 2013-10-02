@@ -61,61 +61,71 @@ public class Application implements Runnable {
      * Field ABOUT_DIALOG_IMAGE.
      * (value is ""net.ggtools.grand.ui.aboutimage"")
      */
-    public static final String ABOUT_DIALOG_IMAGE = "net.ggtools.grand.ui.aboutimage";
+    public static final String ABOUT_DIALOG_IMAGE =
+            "net.ggtools.grand.ui.aboutimage";
 
     /**
      * Field APPLICATION_ICON.
      * (value is ""net.ggtools.grand.ui.appicon"")
      */
-    public static final String APPLICATION_ICON = "net.ggtools.grand.ui.appicon";
+    public static final String APPLICATION_ICON =
+            "net.ggtools.grand.ui.appicon";
 
     /**
      * Field GRAPH_FONT.
      * (value is ""net.ggtools.grand.ui.graphfont"")
      */
-    public static final String GRAPH_FONT = "net.ggtools.grand.ui.graphfont";
+    public static final String GRAPH_FONT =
+            "net.ggtools.grand.ui.graphfont";
 
     /**
      * Field LINK_FONT.
      * (value is ""net.ggtools.grand.ui.linkfont"")
      */
-    public static final String LINK_FONT = "net.ggtools.grand.ui.linkfont";
+    public static final String LINK_FONT =
+            "net.ggtools.grand.ui.linkfont";
 
     /**
      * Field LINK_ICON.
      * (value is ""net.ggtools.grand.ui.linkicon"")
      */
-    public static final String LINK_ICON = "net.ggtools.grand.ui.linkicon";
+    public static final String LINK_ICON =
+            "net.ggtools.grand.ui.linkicon";
 
     /**
      * Field MONOSPACE_FONT.
      * (value is ""net.ggtools.grand.ui.monospacefont"")
      */
-    public static final String MONOSPACE_FONT = "net.ggtools.grand.ui.monospacefont";
+    public static final String MONOSPACE_FONT =
+            "net.ggtools.grand.ui.monospacefont";
 
     /**
      * Field NODE_FONT.
      * (value is ""net.ggtools.grand.ui.nodefont"")
      */
-    public static final String NODE_FONT = "net.ggtools.grand.ui.nodefont";
+    public static final String NODE_FONT =
+            "net.ggtools.grand.ui.nodefont";
 
     /**
      * Field NODE_ICON.
      * (value is ""net.ggtools.grand.ui.nodeicon"")
      */
-    public static final String NODE_ICON = "net.ggtools.grand.ui.nodeicon";
+    public static final String NODE_ICON =
+            "net.ggtools.grand.ui.nodeicon";
 
     /**
      * Field TOOLTIP_FONT.
      * (value is ""net.ggtools.grand.ui.tooltipfont"")
      */
-    public static final String TOOLTIP_FONT = "net.ggtools.grand.ui.tooltipfont";
+    public static final String TOOLTIP_FONT =
+            "net.ggtools.grand.ui.tooltipfont";
 
     /**
      * Field TOOLTIP_MONOSPACE_FONT.
      * (value is ""net.ggtools.grand.ui.tooltipmonospacefont"")
      */
-    public static final String TOOLTIP_MONOSPACE_FONT = "net.ggtools.grand.ui.tooltipmonospacefont";
+    public static final String TOOLTIP_MONOSPACE_FONT =
+            "net.ggtools.grand.ui.tooltipmonospacefont";
 
     /**
      * Field log.
@@ -178,7 +188,7 @@ public class Application implements Runnable {
 
     /**
      * Constructor for Application.
-     * @throws IOException
+     * @throws IOException when error occurs in load()
      */
     public Application() throws IOException {
         if (LOG.isTraceEnabled()) {
@@ -263,7 +273,7 @@ public class Application implements Runnable {
      * Initializes the application resources. This method must be called from an
      * active display thread.
      *
-     * @throws IOException
+     * @throws IOException when error occurs in GrandUIPrefStore
      */
     private void initResources() throws IOException {
         if (LOG.isInfoEnabled()) {

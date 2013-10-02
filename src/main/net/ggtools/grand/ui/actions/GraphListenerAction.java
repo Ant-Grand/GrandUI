@@ -37,9 +37,10 @@ import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
- * An abstract class implementing basic features for actions listening to a graph.
- * This class manages the subscription/unsubscription process whenever the controller
- * gets available/unavailable and implements do nothing methods on events.
+ * An abstract class implementing basic features for actions listening to
+ * a graph. This class manages the subscription/unsubscription process
+ * whenever the controller gets available/unavailable and implements
+ * do nothing methods on events.
  *
  * @author Christophe Labouisse
  */

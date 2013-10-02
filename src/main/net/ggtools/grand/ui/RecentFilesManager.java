@@ -49,7 +49,8 @@ import org.eclipse.jface.util.PropertyChangeEvent;
  *
  * @author Christophe Labouisse
  */
-public final class RecentFilesManager implements IPropertyChangeListener, PreferenceKeys {
+public final class RecentFilesManager
+    implements IPropertyChangeListener, PreferenceKeys {
     /**
      * Logger for this class.
      */
@@ -252,7 +253,8 @@ public final class RecentFilesManager implements IPropertyChangeListener, Prefer
     public void propertyChange(final PropertyChangeEvent event) {
         final String changedProperty = event.getProperty();
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Prefs changed " + changedProperty + " '" + event.getNewValue() + "'");
+            LOG.debug("Prefs changed " + changedProperty
+                    + " '" + event.getNewValue() + "'");
         }
 
         if (MAX_RECENT_FILES_PREFS_KEY.equals(changedProperty)) {

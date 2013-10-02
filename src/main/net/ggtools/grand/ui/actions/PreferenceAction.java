@@ -66,7 +66,8 @@ public class PreferenceAction extends Action {
     @Override
     public final void run() {
         final GrandUiPreferenceManager pm = new GrandUiPreferenceManager();
-        final PreferenceDialog dialog = new PreferenceDialog(window.getShell(), pm);
+        final PreferenceDialog dialog =
+                new PreferenceDialog(window.getShell(), pm);
         dialog.open();
     }
 

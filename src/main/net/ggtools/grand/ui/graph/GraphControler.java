@@ -88,8 +88,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      */
     private static final Log LOG = LogFactory.getLog(GraphControler.class);
 
-    // FIXME Ok that's bad it'll probably have to go to the forthcoming pref
-    // API.
+    // FIXME ok that's bad, it'll probably have to go to the Prefs API.
     /**
      * Field printMode.
      */
@@ -522,14 +521,14 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      * @param node Draw2dNode
      */
     public final void openNodeFile(final Draw2dNode node) {
-        final AntTargetNode targetNode = (AntTargetNode) node.getVertex().getData();
+        final AntTargetNode targetNode =
+                (AntTargetNode) node.getVertex().getData();
         final String buildFile = targetNode.getBuildFile();
         if ((buildFile != null) && (buildFile.length() > 0)) {
             String targetName = targetNode.getName();
             if (targetName != null) {
                 // Remove the surrounding [].
-                // FIXME add a method to get the real target name in
-                // AntTargetNode.
+                // FIXME add a method to get the real target name in AntTargetNode.
                 targetName = targetName.substring(1, targetName.length() - 1);
             }
             window.openGraphInNewDisplayer(new File(buildFile), targetName, null);
@@ -545,7 +544,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         if (LOG.isDebugEnabled()) {
             LOG.debug("Printing graph");
         }
-        final PrintFigureOperation printOp = new PrintFigureOperation(printer, figure);
+        final PrintFigureOperation printOp =
+                new PrintFigureOperation(printer, figure);
         printOp.setPrintMode(printMode);
         printOp.run("Grand:" + graph.getName());
     }
@@ -712,7 +712,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         progressMonitor.subTask("Laying out graph");
         graph = filterChain.getGraph();
         nodeContentProvider.setGraph(graph);
-        final DotGraphCreator creator = new DotGraphCreator(graph, busRoutingEnabled);
+        final DotGraphCreator creator =
+                new DotGraphCreator(graph, busRoutingEnabled);
         final IDotGraph dotGraph = creator.getGraph();
         progressMonitor.worked(1);
 
@@ -741,7 +742,8 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         if (graphName == null) {
             graphName = "Untitled";
         }
-        getDisplayer().setGraph(figure, graphName, model.getLastLoadedFile().getAbsolutePath());
+        getDisplayer().setGraph(figure, graphName,
+                model.getLastLoadedFile().getAbsolutePath());
     }
 
     /**

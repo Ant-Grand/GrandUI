@@ -113,11 +113,12 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
      */
     private Draw2dGraph createGraph(final IDotGraph dotGraph,
             final Draw2dGraph contents) {
-        for (final IVertex node : dotGraph.allVertices()) {
-            buildNodeFigure(contents, node);
+        for (final Object node : dotGraph.allVertices()) {
+            buildNodeFigure(contents, (IVertex) node);
         }
 
-        for (final Iterator<IEdge> iter = dotGraph.edgeIterator(); iter.hasNext();) {
+        for (@SuppressWarnings("unchecked")
+        final Iterator<IEdge> iter = dotGraph.edgeIterator(); iter.hasNext();) {
             final IEdge edge = iter.next();
             buildEdgeFigure(contents, edge);
         }
@@ -159,7 +160,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     private PolylineConnection addConnectionFromRoute(final IFigure contents,
             final String name, final DotRoute route) {
         final float[] coords = new float[6];
-        final ArrayList<AbsoluteBendpoint> bends = new ArrayList<AbsoluteBendpoint>();
+        final ArrayList<AbsoluteBendpoint> bends =
+                new ArrayList<AbsoluteBendpoint>();
         boolean isFirstPoint = true;
         final Point min = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
         final Point max = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
@@ -215,7 +217,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
             label.setBackgroundColor(ColorConstants.buttonLightest);
             label.setBorder(new LineBorder());
             label.setFont(Application.getInstance().getFont(Application.LINK_FONT));
-            final ConnectionLocator locator = new MidpointLocator(conn, bends.size() / 2);
+            final ConnectionLocator locator =
+                    new MidpointLocator(conn, bends.size() / 2);
             locator.setRelativePosition(PositionConstants.CENTER);
             // Includes the label in the connection bounds.
             // Worst case scenario, the label is on the connection edge.
@@ -249,7 +252,8 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
             name = null;
         }
 
-        final PolylineConnection conn = addConnectionFromRoute(contents, name, route);
+        final PolylineConnection conn =
+                addConnectionFromRoute(contents, name, route);
 
         if (edge.getAttr(DRAW2DFGCOLOR_ATTR) != null) {
             conn.setForegroundColor((Color) edge.getAttr(DRAW2DFGCOLOR_ATTR));

@@ -65,7 +65,8 @@ import sf.jzgraph.dot.impl.DotGraph;
  *
  * @author Christophe Labouisse
  */
-public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttributes {
+public class DotGraphCreator
+    implements NodeVisitor, LinkVisitor, DotGraphAttributes {
     /**
      * Field log.
      */
@@ -209,7 +210,8 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
         edge.setAttr(LINK_TASK_ATTR, link.getTaskName());
         edge.setAttr(LINK_PARAMETERS_ATTR, link.getParameterMap());
         edge.setAttr(LINK_SUBANT_DIRECTORIES, link.getDirectories());
-        final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+        final GrandUiPrefStore preferenceStore =
+                Application.getInstance().getPreferenceStore();
         edge.setAttr(DRAW2DFGCOLOR_ATTR, preferenceStore
                 .getColor(PreferenceKeys.LINK_SUBANT_COLOR));
         edge.setAttr(DRAW2DLINEWIDTH_ATTR, preferenceStore
@@ -314,7 +316,8 @@ public class DotGraphCreator implements NodeVisitor, LinkVisitor, DotGraphAttrib
      */
     private void setVertexPreferences(final IVertex vertex,
             final String nodeType) {
-        final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+        final GrandUiPrefStore preferenceStore =
+                Application.getInstance().getPreferenceStore();
         final String keyPrefix = PreferenceKeys.NODE_PREFIX + nodeType;
         vertex.setAttr(SHAPE_ATTR, preferenceStore.getString(keyPrefix + ".shape"));
         vertex.setAttr(DRAW2DFGCOLOR_ATTR, preferenceStore.getColor(keyPrefix + ".fgcolor"));

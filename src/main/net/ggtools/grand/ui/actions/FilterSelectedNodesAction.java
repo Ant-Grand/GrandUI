@@ -48,12 +48,14 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
      * Field DEFAULT_ACTION_NAME.
      * (value is ""Filter out selected nodes"")
      */
-    private static final String DEFAULT_ACTION_NAME = "Filter out selected nodes";
+    private static final String DEFAULT_ACTION_NAME =
+            "Filter out selected nodes";
 
     /**
      * Field log.
      */
-    private static final Log LOG = LogFactory.getLog(FilterSelectedNodesAction.class);
+    private static final Log LOG =
+            LogFactory.getLog(FilterSelectedNodesAction.class);
 
 
     /**

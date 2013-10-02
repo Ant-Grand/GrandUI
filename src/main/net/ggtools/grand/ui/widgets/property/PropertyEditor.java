@@ -147,13 +147,14 @@ public class PropertyEditor {
     /**
      * @author Christophe Labouisse
      */
-    private static final class PropertyListContentProvider implements IStructuredContentProvider,
-            PropertyChangedListener {
+    private static final class PropertyListContentProvider
+        implements IStructuredContentProvider, PropertyChangedListener {
         /**
          * Logger for this class.
          */
         @SuppressWarnings("unused")
-        private static final Log PLCP_LOG = LogFactory.getLog(PropertyListContentProvider.class);
+        private static final Log PLCP_LOG =
+                LogFactory.getLog(PropertyListContentProvider.class);
 
         /**
          * Field currentPropertyList.
@@ -304,6 +305,7 @@ public class PropertyEditor {
          * @param e2 Object
          * @return int
          */
+        @SuppressWarnings("unchecked")
         @Override
         public int compare(final Viewer viewer, final Object e1, final Object e2) {
             if ((e1 instanceof PropertyPair) && (e2 instanceof PropertyPair)) {
@@ -325,7 +327,7 @@ public class PropertyEditor {
                     break;
 
                 }
-                return collator.compare(name1, name2);
+                return getComparator().compare(name1, name2);
             } else {
                 return super.compare(viewer, e1, e2);
             }
@@ -361,7 +363,8 @@ public class PropertyEditor {
     /**
      * Field FILTER_EXTENSIONS.
      */
-    private static final String[] FILTER_EXTENSIONS = new String[]{"*.properties", "*"};
+    private static final String[] FILTER_EXTENSIONS =
+            new String[]{"*.properties", "*"};
 
     /**
      * Field GRID_LAYOUT_COLUMNS.
@@ -419,7 +422,8 @@ public class PropertyEditor {
     /**
      * Field columnNames.
      */
-    private final String[] columnNames = new String[]{STATUS_COLUMN, NAME_COLUMN, VALUE_COLUMN};
+    private final String[] columnNames =
+            new String[]{STATUS_COLUMN, NAME_COLUMN, VALUE_COLUMN};
 
     /**
      * Field propertyList.

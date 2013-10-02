@@ -72,12 +72,6 @@ public class LogViewer extends Composite {
      */
     private final class LogEventFilter extends ViewerFilter {
         /**
-         * Logger for this class.
-         */
-        @SuppressWarnings("unused")
-        private final Log log = LogFactory.getLog(LogEventFilter.class);
-
-        /**
          * Method select.
          * @param v Viewer
          * @param parentElement Object
@@ -100,13 +94,6 @@ public class LogViewer extends Composite {
      * @author Christophe Labouisse
      */
     private final class LogEventRefreshListener implements LogEventListener {
-
-        /**
-         * Logger for this class.
-         */
-        @SuppressWarnings("unused")
-        private final Log log = LogFactory.getLog(LogEventRefreshListener.class);
-
         /**
          * Method logEventReceived.
          * @param event LogEvent
@@ -201,12 +188,6 @@ public class LogViewer extends Composite {
      * @author Christophe Labouisse
      */
     private final class LogSaver extends SelectionAdapter {
-        /**
-         * Logger for this class.
-         */
-        @SuppressWarnings("unused")
-        private final Log log = LogFactory.getLog(LogSaver.class);
-
         /**
          * Method widgetSelected.
          * @param e SelectionEvent
@@ -342,7 +323,8 @@ public class LogViewer extends Composite {
     /**
      * Field COLUMN_NAMES.
      */
-    static final String[] COLUMN_NAMES = new String[]{"Lvl", "Date", "Class", "Message"};
+    static final String[] COLUMN_NAMES =
+            new String[]{"Lvl", "Date", "Class", "Message"};
 
     /**
      * Field eventLevelFilter.
@@ -598,12 +580,13 @@ public class LogViewer extends Composite {
         });
 
         viewer.addDoubleClickListener(new IDoubleClickListener() {
+            @SuppressWarnings("unchecked")
             public void doubleClick(final DoubleClickEvent event) {
                 final ISelection s = event.getSelection();
                 if (s instanceof IStructuredSelection) {
                     final IStructuredSelection selection = (IStructuredSelection) s;
-                    for (final Iterator iter = selection.iterator(); iter.hasNext();) {
-                        final LogEvent logEvent = (LogEvent) iter.next();
+                    for (final Iterator<LogEvent> iter = selection.iterator(); iter.hasNext();) {
+                        final LogEvent logEvent = iter.next();
                         final LogEventDetailDialog window = new LogEventDetailDialog(getShell(),
                                 logEvent);
                         window.setBlockOnOpen(false);

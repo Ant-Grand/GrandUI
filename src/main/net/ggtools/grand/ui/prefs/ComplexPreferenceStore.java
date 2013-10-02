@@ -157,7 +157,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
     /**
      * Logger for this class.
      */
-    private static final Log LOG = LogFactory.getLog(ComplexPreferenceStore.class);
+    private static final Log LOG =
+            LogFactory.getLog(ComplexPreferenceStore.class);
 
     /**
      * Field PREF_FILE_VERSION_MAJOR.
@@ -253,7 +254,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
     public final Collection<String> getCollection(final String key,
             final int limit) {
         final LinkedList<String> list = new LinkedList<String>();
-        final StringTokenizer tokenizer = new StringTokenizer(getString(key), ",");
+        final StringTokenizer tokenizer =
+                new StringTokenizer(getString(key), ",");
         int lim = (limit == COLLECTION_NO_LIMIT) ? tokenizer.countTokens() : limit;
         for (int i = 0; (i < lim) && tokenizer.hasMoreTokens(); i++) {
             list.addLast(unEscapeString(tokenizer.nextToken()));
@@ -281,7 +283,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * @return Font
      */
     public final Font getFont(final String key) {
-        final FontData[] newFontDataArray = PreferenceConverter.getFontDataArray(this, key);
+        final FontData[] newFontDataArray =
+                PreferenceConverter.getFontDataArray(this, key);
         final FontData[] currentFontDataArray = fontRegistry.getFontData(key);
         if (!Arrays.equals(currentFontDataArray, newFontDataArray)) {
             fontRegistry.put(key, newFontDataArray);
@@ -307,7 +310,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
     /**
      * Method load.
-     * @throws IOException
+     * @throws IOException when error occurs in parse()
      * @see org.eclipse.jface.preference.PreferenceStore#load()
      */
     @Override
@@ -315,7 +318,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
         FileInputStream is = null;
         try {
             is = new FileInputStream(prefFile);
-            final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            final DocumentBuilderFactory dbf =
+                    DocumentBuilderFactory.newInstance();
             dbf.setIgnoringElementContentWhitespace(true);
             dbf.setValidating(false);
             dbf.setCoalescing(true);
@@ -385,7 +389,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
     /**
      * Method save.
-     * @throws IOException
+     * @throws IOException when error occurs
      * @see org.eclipse.jface.preference.IPersistentPreferenceStore#save()
      */
     @Override
@@ -505,7 +509,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * @param key String
      * @param value Collection<String>
      */
-    public final void setValue(final String key, final Collection<String> value) {
+    public final void setValue(final String key,
+            final Collection<String> value) {
         final StringBuffer buffer = new StringBuffer();
         for (final Iterator<String> iter = value.iterator(); iter.hasNext();) {
             final String item = iter.next();
@@ -535,7 +540,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * @param propElement Element
      * @param loader PropertyLoader
      */
-    private void loadProperties(final Element propElement, final PropertyLoader loader) {
+    private void loadProperties(final Element propElement,
+            final PropertyLoader loader) {
         final NodeList entries = propElement.getChildNodes();
         for (int i = 0; i < entries.getLength(); i++) {
             final Node item = entries.item(i);
@@ -560,11 +566,12 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * @param properties Element
      * @param saver PropertySaver
      */
-    private void saveProperties(final Document doc, final Element properties, final PropertySaver saver) {
+    private void saveProperties(final Document doc, final Element properties,
+            final PropertySaver saver) {
         final Collection<?> keys = saver.getKeys();
         // TODO solve the properties problem.
         for (Object i : keys) {
-            final String key = i instanceof String ? (String) i : i.toString();
+            final String key = (i instanceof String) ? (String) i : i.toString();
             if (saver.needSaving(key)) {
                 final Element entry = (Element) properties.appendChild(doc.createElement(ENTRY_ELEMENT));
                 entry.setAttribute(KEY_ATTRIBUTE, key);

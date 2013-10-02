@@ -89,8 +89,7 @@ public class PageSetupDialog extends Dialog {
         combo.setItems(new String[]{"Tile", "Fit on one page",
                 "Fit on one page horizontally", "Fit one page vertically"});
         combo.select(GraphControler.getPrintMode() - 1);
-        combo
-                .setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
+        combo.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
                         | GridData.GRAB_HORIZONTAL));
         return composite;
     }

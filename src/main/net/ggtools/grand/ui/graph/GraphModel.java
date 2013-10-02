@@ -69,7 +69,7 @@ public class GraphModel implements GraphProducer {
 
     /**
      * @return Returns the currentGraph.
-     * @throws GrandException
+     * @throws GrandException if error occurs in getGraph()
      * @see net.ggtools.grand.graph.GraphProducer#getGraph()
      */
     public final Graph getGraph() throws GrandException {
@@ -85,9 +85,10 @@ public class GraphModel implements GraphProducer {
      * Method openFile.
      * @param file File
      * @param properties Properties
-     * @throws GrandException
+     * @throws GrandException if error occurs in AntProject
      */
-    public final void openFile(final File file, final Properties properties) throws GrandException {
+    public final void openFile(final File file, final Properties properties)
+            throws GrandException {
         lastLoadedFileProperties = properties;
         if (LOG.isDebugEnabled()) {
             LOG.debug("Loading " + file);
@@ -99,9 +100,10 @@ public class GraphModel implements GraphProducer {
     /**
      * Method reload.
      * @param properties Properties
-     * @throws GrandException
+     * @throws GrandException see openFile()
      */
-    public final void reload(final Properties properties) throws GrandException {
+    public final void reload(final Properties properties)
+            throws GrandException {
         if (lastLoadedFile != null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Reloading last file");

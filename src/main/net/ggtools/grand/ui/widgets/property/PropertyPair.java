@@ -51,7 +51,6 @@ class PropertyPair {
     public PropertyPair(final Object name, final Object value) {
         this.name = (name instanceof String) ? (String) name : name.toString();
         this.value = (value instanceof String) ? (String) value : value.toString();
-
     }
 
     /**

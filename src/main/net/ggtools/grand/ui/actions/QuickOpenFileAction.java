@@ -55,7 +55,8 @@ public class QuickOpenFileAction extends Action {
     /**
      * Field FILTER_EXTENSIONS.
      */
-    private static final String[] FILTER_EXTENSIONS = new String[]{"*.xml", "*"};
+    private static final String[] FILTER_EXTENSIONS =
+            new String[]{"*.xml", "*"};
 
     /**
      * Field DEFAULT_ACTION_NAME.

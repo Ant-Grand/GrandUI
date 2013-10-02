@@ -59,7 +59,8 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      * Logger for this class.
      */
     @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(GraphNodeContentProvider.class);
+    private static final Log LOG =
+            LogFactory.getLog(GraphNodeContentProvider.class);
 
     /**
      * Field graph.
@@ -99,7 +100,8 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
     public final Color getBackground(final Object element) {
         if (element instanceof Node) {
             final Node node = (Node) element;
-            final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+            final GrandUiPrefStore preferenceStore =
+                    Application.getInstance().getPreferenceStore();
             if (node.equals(graph.getStartNode())) {
                 return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "start.fillcolor");
             }
@@ -145,7 +147,8 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
     public final Color getForeground(final Object element) {
         if (element instanceof Node) {
             final Node node = (Node) element;
-            final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+            final GrandUiPrefStore preferenceStore =
+                    Application.getInstance().getPreferenceStore();
             if (node.equals(graph.getStartNode())) {
                 return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "start.fgcolor");
             }
@@ -200,9 +203,9 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
      *      java.lang.Object, java.lang.Object)
      */
-    public final void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
+    public final void inputChanged(final Viewer viewer,
+            final Object oldInput, final Object newInput) {
         // TODO auto-generated method stub
-
     }
 
     /**
@@ -225,7 +228,6 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      */
     public void removeListener(final ILabelProviderListener listener) {
         // TODO auto-generated method stub
-
     }
 
     /**

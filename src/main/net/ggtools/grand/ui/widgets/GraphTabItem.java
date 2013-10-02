@@ -127,7 +127,8 @@ public class GraphTabItem extends CTabItem
         /**
          * Logger for this class.
          */
-        private static final Log OVC_LOG = LogFactory.getLog(OutlineViewerCollator.class);
+        private static final Log OVC_LOG =
+                LogFactory.getLog(OutlineViewerCollator.class);
         /**
          * Field NODE_INDEX_GROUP_NUM.
          * (value is 4)

@@ -45,7 +45,8 @@ import sf.jzgraph.IVertex;
  *
  * @author Christophe Labouisse
  */
-public class NodeTooltip extends AbstractGraphTooltip implements DotGraphAttributes {
+public class NodeTooltip extends AbstractGraphTooltip
+    implements DotGraphAttributes {
     /**
      * Field log.
      */

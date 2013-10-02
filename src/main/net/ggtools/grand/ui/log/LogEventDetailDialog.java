@@ -60,14 +60,15 @@ public class LogEventDetailDialog extends Dialog {
     /**
      * Field ICONS_FOR_LEVELS.
      */
-    private static final int[] ICONS_FOR_LEVELS = {SWT.ICON_INFORMATION, SWT.ICON_INFORMATION,
-            SWT.ICON_INFORMATION, SWT.ICON_INFORMATION, SWT.ICON_WARNING, SWT.ICON_ERROR,
-            SWT.ICON_ERROR};
+    private static final int[] ICONS_FOR_LEVELS = {SWT.ICON_INFORMATION,
+            SWT.ICON_INFORMATION, SWT.ICON_INFORMATION, SWT.ICON_INFORMATION,
+            SWT.ICON_WARNING, SWT.ICON_ERROR, SWT.ICON_ERROR};
 
     /**
      * Logger for this class.
      */
-    private static final Log LOG = LogFactory.getLog(LogEventDetailDialog.class);
+    private static final Log LOG =
+            LogFactory.getLog(LogEventDetailDialog.class);
 
     /**
      * Field details.

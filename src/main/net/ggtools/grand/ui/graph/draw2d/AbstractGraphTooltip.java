@@ -110,7 +110,8 @@ abstract class AbstractGraphTooltip extends Figure {
     protected FlowPage createFlowPage() {
         FlowPage page;
         page = new FlowPage();
-        final ConstrainedPageFlowLayout pageLayout = new ConstrainedPageFlowLayout(page);
+        final ConstrainedPageFlowLayout pageLayout =
+                new ConstrainedPageFlowLayout(page);
         page.setLayoutManager(pageLayout);
         pageLayout.setMaxFlowWidth(TOOLTIP_WIDTH);
         page.setBorder(new SectionBorder());
