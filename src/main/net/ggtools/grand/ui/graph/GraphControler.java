@@ -292,8 +292,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      */
     public final void deselectAllNodes() {
         if (!selectedNodes.isEmpty()) {
-            for (final Iterator<Draw2dNode> iter = selectedNodes.iterator(); iter.hasNext();) {
-                final Draw2dNode currentNode = iter.next();
+            for (final Draw2dNode currentNode : selectedNodes) {
                 currentNode.setSelected(false);
             }
             selectedNodes.clear();

@@ -116,7 +116,7 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
                 // As logLevelIcons may contains a null value, with check
                 // with containsKeys rather than get() == null.
                 if (logLevelIcons.containsKey(eventLevel)) {
-                    rc = (Image) logLevelIcons.get(eventLevel);
+                    rc = logLevelIcons.get(eventLevel);
                 } else {
                     final String resourceName = "resource/level_"
                             + eventLevel.name.toLowerCase() + ".gif";

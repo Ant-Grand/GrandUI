@@ -105,9 +105,7 @@ public class FileSelectionPage extends WizardPage
 
         combo.add(""); // Default: no file.
         // Fill up the combo with the recent files
-        for (final Iterator<String> iter = RecentFilesManager.getInstance().getRecentFiles().iterator();
-                iter.hasNext();) {
-            final String fileName = iter.next();
+        for (final String fileName : RecentFilesManager.getInstance().getRecentFiles()) {
             combo.add(fileName);
         }
 
@@ -210,8 +208,7 @@ public class FileSelectionPage extends WizardPage
      * Method notifyListeners.
      */
     private void notifyListeners() {
-        for (final Iterator<SelectedFileListener> iter = subscribers.iterator(); iter.hasNext();) {
-            final OpenFileWizard.SelectedFileListener listener = iter.next();
+        for (final SelectedFileListener listener : subscribers) {
             listener.fileSelected(selectedFile);
         }
     }

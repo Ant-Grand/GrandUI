@@ -6,3 +6,5 @@ lib/
 tmp/
 jnlp/*.jar
 jnlp/*/
+.idea
+*.iml
