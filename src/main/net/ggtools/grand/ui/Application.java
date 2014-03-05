@@ -319,7 +319,6 @@ public class Application implements Runnable {
 
     /**
      *
-     * @throws IOException
      * @see java.lang.Runnable#run()
      */
     public final void run() {

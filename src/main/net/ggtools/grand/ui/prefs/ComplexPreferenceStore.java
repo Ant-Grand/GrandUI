@@ -118,7 +118,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
         /**
          * Method getKeys.
-         * @return Collection<?>
+         * @return Collection
          */
         Collection<?> getKeys();
 
@@ -429,8 +429,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
             saveProperties(doc, rootElement, prefStoreSaver);
 
-            for (final Iterator<Map.Entry<String, Properties>> iter = propertiesTable.entrySet().iterator(); iter.hasNext();) {
-                final Map.Entry<String, Properties> entry = iter.next();
+            for (final Map.Entry<String, Properties> entry : propertiesTable.entrySet()) {
                 final String propKey = entry.getKey();
                 final Properties props = entry.getValue();
                 final Element currentElement = (Element) rootElement.appendChild(doc

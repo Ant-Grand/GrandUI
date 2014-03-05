@@ -149,12 +149,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
             }
             switch (me.button) {
             case (1): {
-                final boolean addToSelection;
-                if ((me.getState() & SWT.CONTROL) == 0) {
-                    addToSelection = false;
-                } else {
-                    addToSelection = true;
-                }
+                final boolean addToSelection = (me.getState() & SWT.CONTROL) != 0;
                 selectNode(node, addToSelection);
                 graphControler.openNodeFile(node);
             }
@@ -174,12 +169,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
             }
             switch (me.button) {
             case (1): {
-                final boolean addToSelection;
-                if ((me.getState() & SWT.CONTROL) == 0) {
-                    addToSelection = false;
-                } else {
-                    addToSelection = true;
-                }
+                final boolean addToSelection = (me.getState() & SWT.CONTROL) != 0;
                 toggleSelection(node, addToSelection);
                 me.consume();
                 break;

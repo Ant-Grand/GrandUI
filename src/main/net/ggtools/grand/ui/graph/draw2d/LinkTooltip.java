@@ -172,8 +172,7 @@ public class LinkTooltip extends AbstractGraphTooltip
                                     + dim + ", currentDirectory = " + currentDirectory);
                         }
 
-                        final int length = currentDirectory.length();
-                        int index = length;
+                        int index = currentDirectory.length();
                         String part = "";
                         while (true) {
                             index = currentDirectory.lastIndexOf(File.separatorChar, index - 1);

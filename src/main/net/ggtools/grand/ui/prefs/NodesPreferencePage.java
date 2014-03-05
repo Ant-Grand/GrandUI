@@ -128,8 +128,7 @@ public class NodesPreferencePage extends PreferencePage
     @Override
     public final boolean performOk() {
         if (fields != null) {
-            for (final Iterator<FieldEditor> iter = fields.iterator(); iter.hasNext();) {
-                final FieldEditor fieldEditor = iter.next();
+            for (final FieldEditor fieldEditor : fields) {
                 fieldEditor.store();
             }
         }
@@ -145,10 +144,8 @@ public class NodesPreferencePage extends PreferencePage
     private int calcNumberOfColumns(final List<FieldEditor> tabFields) {
         int result = 0;
         if (tabFields != null) {
-            final Iterator<FieldEditor> e = tabFields.iterator();
-            while (e.hasNext()) {
-                final FieldEditor pe = e.next();
-                result = Math.max(result, pe.getNumberOfControls());
+            for (FieldEditor fieldEditor : tabFields) {
+                result = Math.max(result, fieldEditor.getNumberOfControls());
             }
         }
         return result;
@@ -189,13 +186,12 @@ public class NodesPreferencePage extends PreferencePage
 
         layout.numColumns = calcNumberOfColumns(tabFields);
         if (tabFields != null) {
-            for (final Iterator<FieldEditor> iter = tabFields.iterator(); iter.hasNext();) {
-                final FieldEditor fieldEditor = iter.next();
+            for (final FieldEditor fieldEditor : tabFields) {
                 if (fieldEditor.getNumberOfControls() < layout.numColumns) {
                     fieldEditor.fillIntoGrid(parent, layout.numColumns);
                 }
                 fieldEditor.setPage(this);
-                //pe.setPropertyChangeListener(this);
+                //fieldEditor.setPropertyChangeListener(this);
                 fieldEditor.setPreferenceStore(getPreferenceStore());
                 fieldEditor.load();
             }
@@ -232,10 +228,8 @@ public class NodesPreferencePage extends PreferencePage
     @Override
     protected final void performDefaults() {
         if (fields != null) {
-            final Iterator<FieldEditor> e = fields.iterator();
-            while (e.hasNext()) {
-                final FieldEditor pe = e.next();
-                pe.loadDefault();
+            for (FieldEditor fieldEditor : fields) {
+                fieldEditor.loadDefault();
             }
         }
         super.performDefaults();

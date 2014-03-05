@@ -146,8 +146,7 @@ public class RecentFilesMenu extends MenuManager
                 }
 
                 // Re-add the contents.
-                for (final Iterator<String> iter = recentFiles.iterator(); iter.hasNext();) {
-                    final String fileName = iter.next();
+                for (final String fileName : recentFiles) {
                     appendToGroup(RECENT_FILES_GROUP, new OpenRecentFileAction(window, fileName));
                 }
             }

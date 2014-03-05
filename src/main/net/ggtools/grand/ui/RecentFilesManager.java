@@ -121,8 +121,7 @@ public final class RecentFilesManager
      * Method notifyListeners.
      */
     private void notifyListeners() {
-        for (final Iterator<RecentFilesListener> iter = subscribers.iterator(); iter.hasNext();) {
-            final RecentFilesListener listener = iter.next();
+        for (final RecentFilesListener listener : subscribers) {
             listener.refreshRecentFiles(getRecentFiles());
         }
     }
