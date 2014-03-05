@@ -516,7 +516,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
             final String item = iter.next();
             buffer.append(escapeString(item));
             if (iter.hasNext()) {
-                buffer.append(",");
+                buffer.append(',');
             }
         }
         setValue(key, buffer.toString());

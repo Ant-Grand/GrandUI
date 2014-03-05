@@ -29,6 +29,7 @@ package net.ggtools.grand.ui.graph;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.Node;
@@ -130,7 +131,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
             return null;
         }
 
-        final LinkedList<Node> list = new LinkedList<Node>();
+        final List<Node> list = new LinkedList<Node>();
         for (final Iterator<Node> iter = graph.getNodes(); iter.hasNext();) {
             list.add(iter.next());
         }

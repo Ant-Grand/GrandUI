@@ -32,6 +32,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -160,7 +161,7 @@ public class EventManager implements Runnable {
     /**
      * Field listenerList.
      */
-    private final LinkedList<WeakReference<Object>> listenerList =
+    private final List<WeakReference<Object>> listenerList =
             new LinkedList<WeakReference<Object>>();
 
     /**

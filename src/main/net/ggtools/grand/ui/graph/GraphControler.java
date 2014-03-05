@@ -359,7 +359,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
                     new String[]{"OK"}, 0);
             dialog.open();
         } catch (final Exception e) {
-            LOG.error("Got execption printing", e);
+            LOG.error("Got exception printing", e);
         }
     }
 

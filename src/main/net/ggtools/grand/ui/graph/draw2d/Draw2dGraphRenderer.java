@@ -33,6 +33,7 @@ import java.awt.geom.FlatteningPathIterator;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.graph.DotGraphAttributes;
@@ -128,11 +129,11 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
 
     /**
      * @param coords float[]
-     * @param bends ArrayList<AbsoluteBendpoint>
+     * @param bends List<AbsoluteBendpoint>
      * @param min Point
      * @param max Point
      */
-    private void addBendPoint(final float[] coords, final ArrayList<AbsoluteBendpoint> bends,
+    private void addBendPoint(final float[] coords, final List<AbsoluteBendpoint> bends,
             final Point min, final Point max) {
         final int x = (int) coords[0];
         final int y = (int) coords[1];
@@ -160,7 +161,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     private PolylineConnection addConnectionFromRoute(final IFigure contents,
             final String name, final DotRoute route) {
         final float[] coords = new float[6];
-        final ArrayList<AbsoluteBendpoint> bends =
+        final List<AbsoluteBendpoint> bends =
                 new ArrayList<AbsoluteBendpoint>();
         boolean isFirstPoint = true;
         final Point min = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
