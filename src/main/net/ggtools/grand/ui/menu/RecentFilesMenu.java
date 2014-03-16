@@ -30,7 +30,6 @@ package net.ggtools.grand.ui.menu;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Iterator;
 
 import net.ggtools.grand.ui.RecentFilesListener;
 import net.ggtools.grand.ui.RecentFilesManager;

@@ -30,7 +30,6 @@ package net.ggtools.grand.ui.widgets;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import net.ggtools.grand.ui.RecentFilesManager;
 import net.ggtools.grand.ui.widgets.OpenFileWizard.SelectedFileListener;
