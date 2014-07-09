@@ -138,8 +138,7 @@
 			</condition>
 		</fail>
 		<exec executable="keytool">
-			<arg line="-genkey -alias ${keystore.alias} -keyalg RSA -keysize 2048"/>
-			<arg value="-keystore"/>
+			<arg line="-genkey -alias ${keystore.alias} -keyalg RSA -keysize 2048 -keystore"/>
 			<arg file="${keystore.location}"/>
 			<arg line="-keypass ${keystore.password} -storepass ${keystore.password} -dname"/>
 			<arg value="${keystore.dn}"/>
@@ -434,7 +433,7 @@
 		<get-extract-zip dest="gef" url="${url.gef}">
 			<select>
 				<patternset>
-					<include name="**/org.eclipse.draw2d_${eclipse.core.version}*.jar"/>
+					<include name="**/org.eclipse.draw2d_${eclipse.gef.version}*.jar"/>
 				</patternset>
 			</select>
 		</get-extract-zip>
