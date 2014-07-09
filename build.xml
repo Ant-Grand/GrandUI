@@ -294,8 +294,7 @@
 		</javac>
 	</target>
 
-	<target name="incbuildnum" depends="setup-svn-macros" unless="noincbuildnum">
-		<svn-update file="${buildnum-file}"/>
+	<target name="incbuildnum" unless="noincbuildnum">
 		<propertyfile file="${buildnum-file}">
 			<entry key="build.date" type="date" value="now" pattern="yyyy-MM-dd"/>
 			<entry key="build.time" type="date" value="now" pattern="HH:mm:ss"/>
@@ -304,7 +303,6 @@
 		</propertyfile>
 		<property file="${buildnum-file}"/>
 		<echo message="build number set to ${build.number}"/>
-		<svn-commit message="Setting buildnum to ${build.number} for ${product.name}" file="${buildnum-file}"/>
 	</target>
 
 	<target name="init" depends="get-deps">
@@ -313,51 +311,6 @@
 				<include name="**/*.jar"/>
 			</fileset>
 		</path>
-	</target>
-
-	<target name="setup-svn-macros" depends="setup-svn-macros-svn,setup-svn-macros-svk"/>
-
-	<target name="setup-svn-macros-svn" unless="USE_SVK">
-		<taskdef resource="svntask.properties"/>
-		<macrodef name="svn-update">
-			<attribute name="file"/>
-			<sequential>
-				<svn>
-					<update file="@{file}"/>
-				</svn>
-			</sequential>
-		</macrodef>
-
-		<macrodef name="svn-commit">
-			<attribute name="file"/>
-			<attribute name="message"/>
-			<sequential>
-				<svn>
-					<commit file="@{file}" message="@{message}"/>
-				</svn>
-			</sequential>
-		</macrodef>
-	</target>
-
-	<target name="setup-svn-macros-svk" if="USE_SVK">
-		<macrodef name="svn-update">
-			<attribute name="file"/>
-			<sequential>
-				<exec executable="svk">
-					<arg line="update @{file}"/>
-				</exec>
-			</sequential>
-		</macrodef>
-
-		<macrodef name="svn-commit">
-			<attribute name="file"/>
-			<attribute name="message"/>
-			<sequential>
-				<exec executable="svk">
-					<arg line="commit -m '@{message}' @{file}"/>
-				</exec>
-			</sequential>
-		</macrodef>
 	</target>
 
 	<target name="clean" depends="clean.dist,clean.deps" description="Remove intermediate files but not external libs">
