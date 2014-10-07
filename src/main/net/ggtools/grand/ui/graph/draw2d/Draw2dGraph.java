@@ -180,8 +180,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                 }
                 // TODO rewrite in a clean way
                 if (graphControler != null) {
-                    (graphControler).getDisplayer().getContextMenu().setVisible(
-                            true);
+                    graphControler.getDisplayer().getContextMenu().setVisible(true);
                 }
                 break;
             }
