@@ -78,7 +78,7 @@ public class NodesPreferencePage extends PreferencePage
         PreferenceConverter.setDefault(prefs, NODE_PREFIX + "main.fgcolor",
                 ColorConstants.black.getRGB());
         PreferenceConverter.setDefault(prefs, NODE_PREFIX + "main.fillcolor",
-                ColorConstants.cyan.getRGB());
+                ColorConstants.green.getRGB());
         //prefs.setDefault(NODE_PREFIX + "main.font",4);
         prefs.setDefault(NODE_PREFIX + "main.shape", "box");
         prefs.setDefault(NODE_PREFIX + "main.linewidth", 1);
