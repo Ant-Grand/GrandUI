@@ -128,6 +128,8 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
         setBackgroundColor(nodeBgColor);
         setLineWidth(vertex.getAttrInt(DRAW2DLINEWIDTH_ATTR));
         setOpaque(true);
+        // Polygon extends Polyline that does setFill(false) since GEF 3.1
+        setFill(true);
 
         final GraphShape shape = (GraphShape) vertex.getAttr(_SHAPE_ATTR);
         final float[] coords = new float[6];
