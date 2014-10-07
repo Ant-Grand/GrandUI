@@ -99,7 +99,7 @@ public class FileSelectionPage extends WizardPage
         composite.setLayout(layout);
         setControl(composite);
 
-        final CCombo combo = new CCombo(composite, SWT.NONE);
+        final CCombo combo = new CCombo(composite, SWT.BORDER);
         combo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         combo.add(""); // Default: no file.
