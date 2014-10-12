@@ -93,6 +93,12 @@ public class Application implements Runnable {
             "net.ggtools.grand.ui.linkicon";
 
     /**
+     * Field APPLICATION_NAME.
+     * (value is ""GrandUI"")
+     */
+    public static final String APPLICATION_NAME = "GrandUI";
+
+    /**
      * Field MONOSPACE_FONT.
      * (value is ""net.ggtools.grand.ui.monospacefont"")
      */
@@ -337,6 +343,7 @@ public class Application implements Runnable {
             LOG.info("JRE: " + System.getProperty("java.vm.name") + " "
                     + System.getProperty("java.vm.version"));
         }
+        Display.setAppName(APPLICATION_NAME);
         final Display display = Display.getDefault();
         final Splash splash = new Splash(display, versionString);
         splash.open();

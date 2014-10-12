@@ -163,6 +163,7 @@
 				<include name="grand-ui"/>
 			</fileset>
 		</chmod>
+		<mkdir dir="tmp/${product.fullname}/GrandUI.app/Contents/MacOS"/>
 		<symlink link="tmp/${product.fullname}/GrandUI.app/Contents/MacOS/grand-ui" resource="../../../grand-ui"/>
 
 		<tar destfile="${distdir}/${product.fullname}.tar.gz" compression="gzip">
