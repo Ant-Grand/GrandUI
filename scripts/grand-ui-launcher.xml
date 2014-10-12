@@ -8,14 +8,12 @@
 			<classpath>
 				<path path="${java.class.path}"></path>
 				<fileset dir="${libdir}" includes="*.jar"/>
-				<fileset dir="${swtlibdir}" includes="*.jar"/>
+				<fileset dir="${libdir}/swt" includes="org.eclipse.swt.${swtfw}.${swtarch}_*.jar"/>
 			</classpath>
-			<jvmarg value="-Djava.library.path=${swtlibdir}"/>
 			<jvmarg line="${java.cli.args}"/>
 		</java>
 	</target>
 
-    
 	<!-- ================================= 
 	     target: help		    
 	     ================================= -->
@@ -34,26 +32,24 @@ Launcher for GrandUI. The following properties can be set:
 	     - - - - - - - - - - - - - - - - - -->
 	<target name="setup">
 		<property name="libdir" value="${basedir}/lib"/>
-		<condition property="swtlibdir" value="${libdir}/linux-gtk">
+		<condition property="swtfw" value="gtk.linux">
 			<os name="Linux"/>
 		</condition>
 
-		<condition property="swtlibdir" value="${libdir}/win32">
+		<condition property="swtfw" value="win32.win32">
 			<os family="windows"/>
 		</condition>
 
-		<condition property="swtlibdir" value="${libdir}/macosx">
+		<condition property="swtfw" value="cocoa.macosx">
 			<os family="mac"/>
 		</condition>
 
-		<condition property="java.cli.args" value="-d64 -XstartOnFirstThread">
+		<condition property="swtarch" value="x86_64" else="x86">
+			<equals arg1="${sun.arch.data.model}" arg2="64"/>
+		</condition>
+
+		<condition property="java.cli.args" value="-XstartOnFirstThread" else="-Xmixed">
 			<os family="mac"/>
 		</condition>
-
-		<condition property="java.cli.args" value="-server">
-			<os family="windows"/>
-		</condition>
-
-		<property name="java.cli.args" value="-d64"/>
 	</target>
 </project>

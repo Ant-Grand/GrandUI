@@ -9,28 +9,15 @@
 	<property name="extlibdir" value="deps"/>
 	<property name="dlcachedir" value="cache"/>
 	<property name="classdir.main" value="bin/main"/>
-	<property name="distdir" value="dist"/>
 	<property name="srcdir.main" value="src/main"/>
+	<property name="distdir" value="dist"/>
 	<property name="confdir" value="etc"/>
-	<property name="jnlpdir" value="jnlp"/>
 	<property name="buildnum-file" value="etc/net/ggtools/grand/ui/buildnum.properties"/>
 	<property name="classdir.launcher" value="bin/launcher"/>
 	<property name="srcdir.launcher" value="src/launcher"/>
 	<property name="javadocdir" value="tmp/docs/api"/>
 
 	<property name="verbose-get" value="false"/>
-
-	<condition property="isLinux">
-		<os name="Linux"/>
-	</condition>
-
-	<condition property="isWin32">
-		<os family="windows"/>
-	</condition>
-
-	<condition property="isMacOS">
-		<os family="mac"/>
-	</condition>
 
 	<macrodef name="getjar" description="Download a jar to a the extlib directory">
 		<attribute name="dest"/>
@@ -101,11 +88,14 @@
 		-->
 		<include name="**/org.eclipse.equinox.common_${eclipse.equinox.version}*.jar"/>
 		<include name="**/org.eclipse.core.commands_${eclipse.commands.version}*.jar"/>
-		<include name="**/org.eclipse.ui.workbench_${eclipse.workbench.version}*.jar"/>
+		<!-- workbench is optional -->
+		<!-- include name="**/org.eclipse.ui.workbench_${eclipse.workbench.version}*.jar"/ -->
 		<include name="**/org.eclipse.osgi_${eclipse.core.version}*.jar"/>
 		<include name="**/org.eclipse.jface_${eclipse.core.version}*.jar"/>
 		<include name="**/com.ibm.icu_${icu.version}*.jar"/>
-		<include name="**/org.eclipse.swt.${swt.archive.tag}_${swt.version}.jar"/>
+		<include name="**/org.eclipse.swt.*x86_${swt.version}.jar"/>
+		<include name="**/org.eclipse.swt.*x86_64_${swt.version}.jar"/>
+		<exclude name="**/org.eclipse.swt.gtk.solaris.*.jar"/>
 	</patternset>
 
 	<target name="javadoc" description="Generates javadoc" depends="jars">
@@ -127,75 +117,7 @@
 		</javadoc>
 	</target>
 
-	<target name="make.keystore" if="keystore.dn" description="Creates a self-signed keystore for testing">
-		<fail>
-			<condition>
-				<or>
-					<not><isset property="keystore.alias"/></not>
-					<not><isset property="keystore.password"/></not>
-					<available file="${keystore.location}" type="file"/>
-				</or>
-			</condition>
-		</fail>
-		<exec executable="keytool">
-			<arg line="-genkey -alias ${keystore.alias} -keyalg RSA -keysize 2048 -keystore"/>
-			<arg file="${keystore.location}"/>
-			<arg line="-keypass ${keystore.password} -storepass ${keystore.password} -dname"/>
-			<arg value="${keystore.dn}"/>
-		</exec>
-	</target>
-
-	<target name="dist" depends="deploy,bin-dist,src-dist" description="Create source and binary distributions"/>
-
-	<!-- ================================= 
-	  target: deploy	      
-	 ================================= -->
-	<target name="deploy" depends="clean,jars,get-alien-swt" description="Deploys the application to be used with Java Web Start.">
-		<fail message="You must define jnlp.deploydir" unless="jnlp.deploydir"/>
-		<copy tofile="${jnlp.deploydir}/${product.name}.jar" file="${libdir}/${product.fullname}.jar"/>
-		<copy tofile="${jnlp.deploydir}/${product.name}-launcher.jar" file="${libdir}/${product.fullname}-launcher.jar"/>
-		<copy todir="${jnlp.deploydir}">
-			<fileset dir="${extlibdir}">
-				<exclude name="*swt*.*"/>
-				<exclude name="**/*.so"/>
-				<exclude name="**/*.dll"/>
-				<exclude name="**/*.jnilib"/>
-			</fileset>
-			<fileset dir="${jnlpdir}">
-				<exclude name="*.jnlp"/>
-			</fileset>
-		</copy>
-		<!-- Substitute the tokens in the jnlp files -->
-		<copy todir="${jnlp.deploydir}">
-			<fileset dir="${jnlpdir}">
-				<include name="*.jnlp"/>
-			</fileset>
-			<filterset>
-				<filter token="ECLIPSE_VERSION" value="${eclipse.core.version}"/>
-				<filter token="CODEBASE" value="${jnlp.codebase}"/>
-				<filter token="TITLE" value="${jnlp.title}"/>
-				<filter token="WIN32_SWT_LIB" value="${jnlp.win32.swt-lib}"/>
-				<filter token="LINUX_SWT_LIB" value="${jnlp.linux.swt-lib}"/>
-				<filter token="MACOS_SWT_LIB" value="${jnlp.macos.swt-lib}"/>
-			</filterset>
-		</copy>
-		<copy todir="${jnlp.deploydir}/${dist.nativedir}">
-			<fileset dir="${extlibdir}">
-				<include name="*swt*.*"/>
-				<exclude name="**/*.so"/>
-				<exclude name="**/*.dll"/>
-				<exclude name="**/*.jnilib"/>
-			</fileset>
-		</copy>
-		<fail message="keystore.location must be defined" unless="keystore.location"/>
-		<fail message="keystore.alias must be defined" unless="keystore.alias"/>
-		<fail message="keystore.password must be defined" unless="keystore.password"/>
-		<signjar keystore="${keystore.location}" alias="${keystore.alias}" storepass="${keystore.password}" lazy="yes">
-			<fileset dir="${jnlp.deploydir}">
-				<include name="**/*.jar"/>
-			</fileset>
-		</signjar>
-	</target>
+	<target name="dist" depends="bin-dist,src-dist" description="Create source and binary distributions"/>
 
 	<target name="src-dist">
 		<mkdir dir="${distdir}"/>
@@ -211,23 +133,17 @@
 		</zip>
 	</target>
 
-	<target name="bin-dist" depends="clean,jars,get-alien-swt">
+	<target name="bin-dist" depends="clean,jars">
 		<mkdir dir="${distdir}"/>
 		<!-- Prepare for bin distribution -->
 		<delete dir="tmp"/>
 		<mkdir dir="tmp/${product.fullname}"/>
 		<copy tofile="tmp/${product.fullname}/lib/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
-		<copy tofile="tmp/${product.fullname}/grand-ui-launcher.jar" file="${libdir}/${product.fullname}-launcher.jar"/>
 		<copy todir="tmp/${product.fullname}/lib">
-			<fileset dir="${extlibdir}">
-				<exclude name="*swt*.*"/>
-			</fileset>
+			<fileset dir="${extlibdir}" excludes="org.eclipse.swt.*.jar,swt.jar"/>
 		</copy>
-		<copy todir="tmp/${product.fullname}/lib/${dist.nativedir}">
-			<fileset dir="${extlibdir}">
-				<include name="*swt*.*"/>
-				<exclude name="swt-lib.jar"/>
-			</fileset>
+		<copy todir="tmp/${product.fullname}/lib/swt">
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.*.jar"/>
 		</copy>
 		<copy todir="tmp/${product.fullname}" flatten="true">
 			<fileset dir=".">
@@ -236,8 +152,10 @@
 				<include name="COPYING"/>
 				<include name="LICENSE-Graphviz.txt"/>
 				<include name="cpl-v10.html"/>
-				<include name="scripts/*"/>
 			</fileset>
+		</copy>
+		<copy todir="tmp/${product.fullname}">
+			<fileset dir="scripts" includes="**/*"/>
 		</copy>
 		<chmod perm="755">
 			<fileset dir="tmp/${product.fullname}">
@@ -245,6 +163,7 @@
 				<include name="grand-ui"/>
 			</fileset>
 		</chmod>
+		<symlink link="tmp/${product.fullname}/GrandUI.app/Contents/MacOS/grand-ui" resource="../../../grand-ui"/>
 
 		<tar destfile="${distdir}/${product.fullname}.tar.gz" compression="gzip">
 			<tarfileset dir="tmp/${product.fullname}" prefix="${product.fullname}" mode="755">
@@ -330,7 +249,7 @@
 		<delete dir="${dlcachedir}"/>
 	</target>
 
-	<target name="get-deps" depends="get-extjars,get-rcp,get-draw2d" description="Get and prepare the external libraries"/>
+	<target name="get-deps" depends="get-extjars,get-rcp,get-draw2d,set-eclipse" description="Get and prepare the external libraries"/>
 
 	<target name="get-extjars" depends="prepare-download" unless="noget">
 		<getjar dest="ant.jar" url="${url.ant.jar}"/>
@@ -362,72 +281,7 @@
 
 	<target name="get-rcp" depends="set-swt-properties" unless="noget">
 		<antcall target="${get-rcp-target}" inheritall="true" inheritrefs="true"/>
-		<move file="${extlibdir}/org.eclipse.swt.${swt.archive.tag}_${swt.version}.jar" tofile="${extlibdir}/swt.jar"/>
-		<!-- extract dll from the bundle jar -->
-		<unjar src="${extlibdir}/swt.jar" dest="${dlcachedir}/rcp">
-			<patternset>
-				<include name="**/*.so"/>
-				<include name="**/*.dll"/>
-				<include name="**/*.jnilib"/>
-			</patternset>
-		</unjar>
-		<copy todir="${extlibdir}" preservelastmodified="true" flatten="true">
-			<fileset dir="${dlcachedir}/rcp">
-				<include name="**/*.so"/>
-				<include name="**/*.dll"/>
-				<include name="**/*.jnilib"/>
-			</fileset>
-		</copy>
-		<!-- Creates a swt-lib.jar for JNLP -->
-		<delete dir="tmp"/>
-		<mkdir dir="tmp/rcp"/>
-		<copy todir="tmp/rcp" preservelastmodified="true">
-			<fileset dir="${extlibdir}">
-				<include name="*.so"/>
-				<include name="*.dll"/>
-				<include name="*.jnilib"/>
-			</fileset>
-		</copy>
-		<jar destfile="${dlcachedir}/swt-lib.jar" basedir="tmp/rcp" index="true"/>
-		<copy todir="${extlibdir}" file="${dlcachedir}/swt-lib.jar" preservelastmodified="true"/>
 	</target>
-
-	<!-- - - - - - - - - - - - - - - - - - 
-	  target: get-alien-swt			     
-	 - - - - - - - - - - - - - - - - - -->
-	<target name="get-alien-swt" depends="set-swt-properties">
-		<get-swt url="${url.eclipse.alien.swt}" name="${dist.aliendir}"/>
-	</target>
-
-	<macrodef name="get-swt">
-		<attribute name="url"/>
-		<attribute name="name"/>
-		<sequential>
-			<get-extract-zip dest="alien-swt-@{name}" url="@{url}" libdir="${extlibdir}/@{name}">
-				<select>
-					<patternset>
-						<include name="**/swt*.jar"/>
-						<include name="**/swt*.dll"/>
-						<include name="**/libswt*.so"/>
-						<include name="**/libswt*.jnilib"/>
-					</patternset>
-				</select>
-			</get-extract-zip>
-			<!-- Creates a swt-lib.jar for JNLP -->
-			<delete dir="tmp"/>
-			<mkdir dir="tmp/alien-swt-@{name}"/>
-			<copy todir="tmp/alien-swt-@{name}" preservelastmodified="true" flatten="true">
-				<fileset dir="${dlcachedir}/alien-swt-@{name}">
-					<include name="**/*.so"/>
-					<include name="**/*.dll"/>
-					<include name="**/*.jnilib"/>
-				</fileset>
-			</copy>
-			<jar destfile="${dlcachedir}/swt-lib-alien-@{name}.jar" basedir="tmp/alien-swt-@{name}" index="true"/>
-			<copy tofile="${extlibdir}/@{name}/swt-lib.jar" file="${dlcachedir}/swt-lib-alien-@{name}.jar" preservelastmodified="true"/>
-			<delete dir="tmp/alien-swt-@{name}"/>
-		</sequential>
-	</macrodef>
 
 	<target name="get-draw2d" unless="noget">
 		<get-extract-zip dest="gef" url="${url.gef}">
@@ -439,46 +293,33 @@
 		</get-extract-zip>
 	</target>
 
+	<target name="set-eclipse" depends="set-swt-properties" if="eclipse.pdebuild.home">
+		<copy tofile="${extlibdir}/swt.jar">
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.${swtfw}.${swtarch}_*.jar"/>
+		</copy>
+	</target>
+
 	<target name="prepare-download">
 		<mkdir dir="${extlibdir}"/>
 		<mkdir dir="${dlcachedir}"/>
 	</target>
 
-	<target name="set-swt-properties" depends="set-swt-properties-linux,set-swt-properties-win32,set-swt-properties-macos" description="Set the swt properties according to the current os"/>
-
-	<target name="set-swt-properties-linux" if="isLinux">
-		<property name="url.eclipse.rcp" value="${url.eclipse.rcp}"/>
-		<property name="url.eclipse.alien.swt" value="${url.eclipse.swt.linux}"/>
-		<property name="dist.nativedir" value="linux-gtk"/>
-		<property name="dist.aliendir" value="linux-gtk-32-bit"/>
-		<property name="get-rcp-target" value="get-rcp-tgz"/>
-		<property name="swt.archive.tag" value="gtk.linux.x86_64"/>
-		<property name="jnlp.linux.swt-lib" value="swt-lib"/>
-		<property name="jnlp.win32.swt-lib" value="swt-lib"/>
-		<property name="jnlp.macos.swt-lib" value="swt-lib"/>
-	</target>
-
-	<target name="set-swt-properties-win32" if="isWin32">
-		<property name="url.eclipse.rcp" value="${url.eclipse.rcp}"/>
-		<property name="url.eclipse.alien.swt" value="${url.eclipse.swt.windows}"/>
-		<property name="dist.nativedir" value="win32"/>
-		<property name="dist.aliendir" value="win32-32-bit"/>
+	<target name="set-swt-properties" description="Set the swt properties">
 		<property name="get-rcp-target" value="get-rcp-zip"/>
-		<property name="swt.archive.tag" value="win32.win32.x86_64"/>
-		<property name="jnlp.linux.swt-lib" value="swt-lib"/>
-		<property name="jnlp.win32.swt-lib" value="swt-lib"/>
-		<property name="jnlp.macos.swt-lib" value="swt-lib"/>
-	</target>
+		<condition property="swtfw" value="gtk.linux">
+			<os name="Linux"/>
+		</condition>
 
-	<target name="set-swt-properties-macos" if="isMacOS">
-		<property name="url.eclipse.rcp" value="${url.eclipse.rcp}"/>
-		<property name="url.eclipse.alien.swt" value="${url.eclipse.swt.macosx}"/>
-		<property name="dist.nativedir" value="macosx"/>
-		<property name="dist.aliendir" value="macos-32-bit"/>
-		<property name="get-rcp-target" value="get-rcp-zip"/>
-		<property name="swt.archive.tag" value="cocoa.macosx.x86_64"/>
-		<property name="jnlp.linux.swt-lib" value="swt-lib"/>
-		<property name="jnlp.win32.swt-lib" value="swt-lib"/>
-		<property name="jnlp.macos.swt-lib" value="swt-lib"/>
+		<condition property="swtfw" value="win32.win32">
+			<os family="windows"/>
+		</condition>
+
+		<condition property="swtfw" value="cocoa.macosx">
+			<os family="mac"/>
+		</condition>
+
+		<condition property="swtarch" value="x86_64" else="x86">
+			<equals arg1="${sun.arch.data.model}" arg2="64"/>
+		</condition>
 	</target>
 </project>
