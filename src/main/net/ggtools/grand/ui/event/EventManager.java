@@ -101,7 +101,7 @@ public class EventManager implements Runnable {
          * @see java.lang.Runnable#run()
          */
         public void run() {
-            doSubscribtion(subscriber);
+            doSubscription(subscriber);
         }
     }
 
@@ -123,7 +123,7 @@ public class EventManager implements Runnable {
         }
 
         /**
-         * Add the subscriber to the event's dispatcher subscribtion list.
+         * Add the subscriber to the event's dispatcher subscription list.
          *
          * @see EventManager#doUnsubscription(Object)
          * @see java.lang.Runnable#run()
@@ -355,7 +355,7 @@ public class EventManager implements Runnable {
      *
      * @param listener Object
      */
-    private void doSubscribtion(final Object listener) {
+    private void doSubscription(final Object listener) {
         if (LOG.isDebugEnabled()) {
             LOG.debug(name + " subscribing " + listener);
         }

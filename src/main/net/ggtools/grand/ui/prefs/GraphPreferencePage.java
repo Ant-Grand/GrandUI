@@ -70,10 +70,10 @@ public class GraphPreferencePage extends FieldEditorPreferencePage
                 new IntegerFieldEditor(GRAPH_BUS_IN_THRESHOLD,
                         "Bus routing in threshold", parent);
         addField(inThreshold);
-        final IntegerFieldEditor outThreadshold =
+        final IntegerFieldEditor outThreshold =
                 new IntegerFieldEditor(GRAPH_BUS_OUT_THRESHOLD,
                         "Bus routing out threshold", parent);
-        addField(outThreadshold);
+        addField(outThreshold);
     }
 
 }

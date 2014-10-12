@@ -39,7 +39,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 
 /**
- * Open a file <em>quickly</em> that is usign the default values for
+ * Open a file <em>quickly</em> that is using the default values for
  * properties.
  *
  * @author Christophe Labouisse

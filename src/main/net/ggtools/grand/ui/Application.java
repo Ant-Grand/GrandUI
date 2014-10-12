@@ -345,7 +345,7 @@ public class Application implements Runnable {
         } catch (final IOException e) {
             splash.close();
             splash.dispose();
-            LOG.error("Caught exception initializing ressources", e);
+            LOG.error("Caught exception initializing resources", e);
             ExceptionDialog.openException(null, "Cannot load preferences", e);
             throw new RuntimeException("Cannot initialize resources", e);
         }
