@@ -15,7 +15,7 @@
 	<classpathentry kind="lib" path="deps/com.ibm.icu_52.1.0.v201404241930.jar"/>
 	<classpathentry kind="lib" path="deps/org.eclipse.core.commands_3.6.100.v20140528-1422.jar"/>
 	<classpathentry kind="lib" path="deps/org.eclipse.draw2d_3.9.101.201408150207.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.jface_3.10.0.v20140604-0740.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.10.0.v20140606-1445.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.jface_3.10.1.v20140813-1009.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.10.1.v20140909-1633.jar"/>
 	<classpathentry kind="output" path="bin/main"/>
 </classpath>
