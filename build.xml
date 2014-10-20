@@ -296,7 +296,7 @@
 
 	<target name="set-eclipse" depends="set-swt-properties" if="eclipse.pdebuild.home">
 		<copy tofile="${extlibdir}/swt.jar">
-			<fileset dir="${extlibdir}" includes="org.eclipse.swt.${swtfw}.${swtarch}_*.jar"/>
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.${swtfw}.${swtarch}_${swt.version}.jar"/>
 		</copy>
 	</target>
 
