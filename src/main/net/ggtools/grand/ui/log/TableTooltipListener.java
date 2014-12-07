@@ -75,7 +75,7 @@ abstract class TableTooltipListener implements Listener {
      * Constructor for TableTooltipListener.
      * @param table Table
      */
-    TableTooltipListener(final Table table) {
+    protected TableTooltipListener(final Table table) {
         this.table = table;
         labelListener = new ToolTipRemoverListener();
     }

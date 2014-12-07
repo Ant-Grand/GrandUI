@@ -49,7 +49,7 @@ public abstract class GraphListenerAction extends GraphControlerAction
     /**
      * @param parent GraphControlerProvider
      */
-    public GraphListenerAction(final GraphControlerProvider parent) {
+    protected GraphListenerAction(final GraphControlerProvider parent) {
         super(parent);
     }
 
@@ -57,7 +57,7 @@ public abstract class GraphListenerAction extends GraphControlerAction
      * @param parent GraphControlerProvider
      * @param text String
      */
-    public GraphListenerAction(final GraphControlerProvider parent,
+    protected GraphListenerAction(final GraphControlerProvider parent,
             final String text) {
         super(parent, text);
     }
@@ -67,7 +67,7 @@ public abstract class GraphListenerAction extends GraphControlerAction
      * @param text String
      * @param image ImageDescriptor
      */
-    public GraphListenerAction(final GraphControlerProvider parent,
+    protected GraphListenerAction(final GraphControlerProvider parent,
             final String text, final ImageDescriptor image) {
         super(parent, text, image);
     }
@@ -77,7 +77,7 @@ public abstract class GraphListenerAction extends GraphControlerAction
      * @param text String
      * @param style int
      */
-    public GraphListenerAction(final GraphControlerProvider parent,
+    protected GraphListenerAction(final GraphControlerProvider parent,
             final String text, final int style) {
         super(parent, text, style);
     }

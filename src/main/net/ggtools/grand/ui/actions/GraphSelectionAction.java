@@ -53,7 +53,7 @@ public abstract class GraphSelectionAction extends GraphListenerAction
     /**
      * @param parent GraphControlerProvider
      */
-    public GraphSelectionAction(final GraphControlerProvider parent) {
+    protected GraphSelectionAction(final GraphControlerProvider parent) {
         super(parent);
         init();
     }
@@ -62,7 +62,7 @@ public abstract class GraphSelectionAction extends GraphListenerAction
      * @param parent GraphControlerProvider
      * @param text String
      */
-    public GraphSelectionAction(final GraphControlerProvider parent,
+    protected GraphSelectionAction(final GraphControlerProvider parent,
             final String text) {
         super(parent, text);
         init();
@@ -73,7 +73,7 @@ public abstract class GraphSelectionAction extends GraphListenerAction
      * @param text String
      * @param image ImageDescriptor
      */
-    public GraphSelectionAction(final GraphControlerProvider parent,
+    protected GraphSelectionAction(final GraphControlerProvider parent,
             final String text, final ImageDescriptor image) {
         super(parent, text, image);
         init();
@@ -84,7 +84,7 @@ public abstract class GraphSelectionAction extends GraphListenerAction
      * @param text String
      * @param style int
      */
-    public GraphSelectionAction(final GraphControlerProvider parent,
+    protected GraphSelectionAction(final GraphControlerProvider parent,
             final String text, final int style) {
         super(parent, text, style);
         init();
