@@ -85,7 +85,7 @@ public class EventManager implements Runnable {
         /**
          * Field subscriber.
          */
-        private Object subscriber;
+        private final Object subscriber;
 
         /**
          * Constructor for SubscriptionAction.
@@ -112,7 +112,7 @@ public class EventManager implements Runnable {
         /**
          * Field subscriber.
          */
-        private Object subscriber;
+        private final Object subscriber;
 
         /**
          * Constructor for UnsubscriptionAction.

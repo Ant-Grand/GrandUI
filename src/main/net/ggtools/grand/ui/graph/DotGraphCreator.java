@@ -86,7 +86,7 @@ public class DotGraphCreator
     /**
      * Field graph.
      */
-    private Graph graph;
+    private final Graph graph;
 
     /**
      * Field nameDimensions.

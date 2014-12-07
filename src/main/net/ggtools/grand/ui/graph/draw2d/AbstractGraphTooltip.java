@@ -87,7 +87,7 @@ abstract class AbstractGraphTooltip extends Figure {
     /**
      * Default constructor.
      */
-    public AbstractGraphTooltip() {
+    protected AbstractGraphTooltip() {
         setForegroundColor(ColorConstants.tooltipForeground);
         setBackgroundColor(ColorConstants.tooltipBackground);
         setOpaque(true);
@@ -108,8 +108,7 @@ abstract class AbstractGraphTooltip extends Figure {
      * @return FlowPage
      */
     protected FlowPage createFlowPage() {
-        FlowPage page;
-        page = new FlowPage();
+        final FlowPage page = new FlowPage();
         final ConstrainedPageFlowLayout pageLayout =
                 new ConstrainedPageFlowLayout(page);
         page.setLayoutManager(pageLayout);

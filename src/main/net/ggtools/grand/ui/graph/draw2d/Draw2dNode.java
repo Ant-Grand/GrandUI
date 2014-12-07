@@ -63,12 +63,12 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
      * Field graph.
      */
     @SuppressWarnings("unused")
-    private Draw2dGraph graph;
+    private final Draw2dGraph graph;
 
     /**
      * Field label.
      */
-    private Label label;
+    private final Label label;
 
     /**
      * Field name.

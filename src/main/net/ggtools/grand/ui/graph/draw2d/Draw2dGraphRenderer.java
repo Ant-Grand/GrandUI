@@ -118,8 +118,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
             buildNodeFigure(contents, (IVertex) node);
         }
 
-        for (@SuppressWarnings("unchecked")
-        final Iterator<IEdge> iter = dotGraph.edgeIterator(); iter.hasNext();) {
+        for (final Iterator<IEdge> iter = dotGraph.edgeIterator(); iter.hasNext();) {
             final IEdge edge = iter.next();
             buildEdgeFigure(contents, edge);
         }
