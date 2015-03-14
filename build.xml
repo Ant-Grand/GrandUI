@@ -250,7 +250,7 @@
 		<delete dir="${dlcachedir}"/>
 	</target>
 
-	<target name="get-deps" depends="get-extjars,get-rcp,get-draw2d,set-eclipse" description="Get and prepare the external libraries"/>
+	<target name="get-deps" depends="get-extjars,get-draw2d" description="Get and prepare the external libraries"/>
 
 	<target name="get-extjars" depends="prepare-download" unless="noget">
 		<getjar dest="ant.jar" url="${url.ant.jar}"/>
@@ -284,7 +284,7 @@
 		<antcall target="${get-rcp-target}" inheritall="true" inheritrefs="true"/>
 	</target>
 
-	<target name="get-draw2d" unless="noget">
+	<target name="get-draw2d" depends="set-eclipse" unless="noget">
 		<get-extract-zip dest="gef" url="${url.gef}">
 			<select>
 				<patternset>
@@ -294,7 +294,7 @@
 		</get-extract-zip>
 	</target>
 
-	<target name="set-eclipse" depends="set-swt-properties" if="eclipse.pdebuild.home">
+	<target name="set-eclipse" depends="get-rcp" if="eclipse.pdebuild.home">
 		<copy tofile="${extlibdir}/swt.jar">
 			<fileset dir="${extlibdir}" includes="org.eclipse.swt.${swtfw}.${swtarch}_${swt.version}.jar"/>
 		</copy>
