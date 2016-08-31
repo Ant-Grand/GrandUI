@@ -8,14 +8,14 @@
 	<classpathentry kind="lib" path="deps/commons-logging.jar"/>
 	<classpathentry kind="lib" path="deps/jzgraph.jar"/>
 	<classpathentry kind="src" path="src/test"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
 	<classpathentry kind="lib" path="deps/ant.jar"/>
 	<classpathentry kind="lib" path="deps/blacksun-util.jar"/>
 	<classpathentry kind="lib" path="deps/swt.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.core.commands_3.6.100.v20140528-1422.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.draw2d_3.9.101.201408150207.jar"/>
-	<classpathentry kind="lib" path="deps/com.ibm.icu_52.1.1.v201501240615.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.jface_3.10.2.v20141021-1035.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.10.2.v20150203-1939.jar"/>
+	<classpathentry kind="lib" path="deps/com.ibm.icu_56.1.0.v201601250100.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.core.commands_3.8.0.v20160316-1921.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.draw2d_3.10.100.201606061308.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.equinox.common_3.8.0.v20160509-1230.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.jface_3.12.0.v20160518-1929.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.11.0.v20160603-1336.jar"/>
 	<classpathentry kind="output" path="bin/main"/>
 </classpath>

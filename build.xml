@@ -90,8 +90,8 @@
 		<include name="**/org.eclipse.core.commands_${eclipse.commands.version}*.jar"/>
 		<!-- workbench is optional -->
 		<!-- include name="**/org.eclipse.ui.workbench_${eclipse.workbench.version}*.jar"/ -->
-		<include name="**/org.eclipse.osgi_${eclipse.core.version}*.jar"/>
-		<include name="**/org.eclipse.jface_${eclipse.core.version}*.jar"/>
+		<include name="**/org.eclipse.osgi_${eclipse.osgi.version}*.jar"/>
+		<include name="**/org.eclipse.jface_${eclipse.jface.version}*.jar"/>
 		<include name="**/com.ibm.icu_${icu.version}*.jar"/>
 		<include name="**/org.eclipse.swt.*x86_${swt.version}.jar"/>
 		<include name="**/org.eclipse.swt.*x86_64_${swt.version}.jar"/>
@@ -288,7 +288,7 @@
 		<get-extract-zip dest="gef" url="${url.gef}">
 			<select>
 				<patternset>
-					<include name="**/org.eclipse.draw2d_${eclipse.gef.version}*.jar"/>
+					<include name="plugins/org.eclipse.draw2d_${eclipse.draw2d.version}*.jar"/>
 				</patternset>
 			</select>
 		</get-extract-zip>
