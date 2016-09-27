@@ -99,7 +99,7 @@ public class PropertySettingPage extends WizardPage
     /**
      * Method fileSelected.
      * @param selectedFile File
-     * @see net.ggtools.grand.ui.widgets.OpenFileWizard$SelectedFileListener#fileSelected(File)
+     * @see SelectedFileListener#fileSelected(File)
      */
     public final void fileSelected(final File selectedFile) {
         if (editor != null) {

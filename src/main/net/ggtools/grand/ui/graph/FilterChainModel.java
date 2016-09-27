@@ -115,7 +115,7 @@ public class FilterChainModel implements GraphProducer {
     }
 
     /**
-     * @return List<GraphFilter>
+     * @return List&lt;GraphFilter&gt;
      */
     public final List<GraphFilter> getFilterList() {
         return filterChain.getFilterList();

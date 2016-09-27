@@ -92,7 +92,7 @@ public abstract class GraphListenerAction extends GraphControlerAction
 
     /**
      * Method selectionChanged.
-     * @param selectedNodes Collection<Draw2dNode>
+     * @param selectedNodes Collection&lt;Draw2dNode&gt;
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
     public void selectionChanged(final Collection<Draw2dNode> selectedNodes) {

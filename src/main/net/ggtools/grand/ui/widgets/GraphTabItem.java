@@ -460,7 +460,7 @@ public class GraphTabItem extends CTabItem
 
     /**
      * Method selectionChanged.
-     * @param selectedNodes Collection<Draw2dNode>
+     * @param selectedNodes Collection&lt;Draw2dNode&gt;
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
     public final void selectionChanged(final Collection<Draw2dNode> selectedNodes) {

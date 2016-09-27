@@ -185,7 +185,7 @@ public class FileSelectionPage extends WizardPage
     /**
      * Method addListener.
      * @param listener OpenFileWizard.SelectedFileListener
-     * @see net.ggtools.grand.ui.widgets.OpenFileWizard$SelectedFileProvider#addListener(OpenFileWizard.SelectedFileListener)
+     * @see SelectedFileProvider#addListener(OpenFileWizard.SelectedFileListener)
      */
     public final void addListener(final OpenFileWizard.SelectedFileListener listener) {
         if (!subscribers.contains(listener)) {
@@ -197,7 +197,7 @@ public class FileSelectionPage extends WizardPage
     /**
      * Method removeListener.
      * @param listener OpenFileWizard.SelectedFileListener
-     * @see net.ggtools.grand.ui.widgets.OpenFileWizard$SelectedFileProvider#removeListener(OpenFileWizard.SelectedFileListener)
+     * @see SelectedFileProvider#removeListener(OpenFileWizard.SelectedFileListener)
      */
     public final void removeListener(final OpenFileWizard.SelectedFileListener listener) {
         subscribers.remove(listener);

@@ -137,7 +137,7 @@ public class NodesPreferencePage extends PreferencePage
     /**
      * Calculates the number of columns needed to host all field editors.
      *
-     * @param tabFields List<FieldEditor>
+     * @param tabFields List&lt;FieldEditor&gt;
      * @return the number of columns
      */
     private int calcNumberOfColumns(final List<FieldEditor> tabFields) {

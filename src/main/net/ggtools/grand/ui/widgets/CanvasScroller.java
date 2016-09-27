@@ -62,12 +62,14 @@ public final class CanvasScroller implements MouseMoveListener {
     private boolean inDragMode;
 
     /**
-     * Field startDragY.
-     */
-    /**
      * Field startDragX.
      */
-    private int startDragX, startDragY;
+    private int startDragX;
+
+    /**
+     * Field startDragY.
+     */
+    private int startDragY;
 
     /**
      * Field viewport.

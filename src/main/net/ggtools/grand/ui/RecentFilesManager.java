@@ -274,7 +274,7 @@ public final class RecentFilesManager
     /**
      * Get the recent files.
      *
-     * @return Collection<String>
+     * @return Collection&lt;String&gt;
      */
     public Collection<String> getRecentFiles() {
         return readOnlyRecentFiles;

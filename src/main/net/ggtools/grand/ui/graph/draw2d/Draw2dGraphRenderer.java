@@ -128,7 +128,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
 
     /**
      * @param coords float[]
-     * @param bends List<AbsoluteBendpoint>
+     * @param bends List&lt;AbsoluteBendpoint&gt;
      * @param min Point
      * @param max Point
      */

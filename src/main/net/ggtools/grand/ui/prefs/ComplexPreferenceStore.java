@@ -75,9 +75,6 @@ import org.xml.sax.SAXException;
  *
  * @author Christophe Labouisse
  */
-/**
- * @author Christophe Labouisse
- */
 public class ComplexPreferenceStore extends PreferenceStore {
     /**
      * An interface used to load properties like structure. It is used to save
@@ -234,7 +231,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * Get a collection of {@link String}s.
      *
      * @param key String
-     * @return Collection<String>
+     * @return Collection&lt;String&gt;
      */
     public final Collection<String> getCollection(final String key) {
         return getCollection(key, COLLECTION_NO_LIMIT);
@@ -249,7 +246,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * @param key String
      * @param limit
      *            maximum size of the returned list or -1 for unlimited.
-     * @return Collection<String>
+     * @return Collection&lt;String&gt;
      */
     public final Collection<String> getCollection(final String key,
             final int limit) {
@@ -506,7 +503,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      * stored by escaping each element and appending them separated by commas.
      *
      * @param key String
-     * @param value Collection<String>
+     * @param value Collection&lt;String&gt;
      */
     public final void setValue(final String key,
             final Collection<String> value) {

@@ -48,7 +48,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * The all singing all dancing class to provide content, label & decoration for
+ * The all singing all dancing class to provide content, label &amp; decoration for
  * nodes.
  *
  * TODO change the data model to provide something better.

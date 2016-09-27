@@ -12,8 +12,8 @@
     <macrodef name="testmacro">
         <attribute name="target" />
         <sequential>
-            <ant target="@{target}"></ant>
-            <antcall target="prepare"></antcall>
+            <ant target="@{target}"/>
+			<antcall target="prepare"/>
         </sequential>
     </macrodef>
 

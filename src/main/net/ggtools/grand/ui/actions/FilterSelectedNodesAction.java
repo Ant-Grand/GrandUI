@@ -97,7 +97,7 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
 
     /**
      * Method selectionChanged.
-     * @param selectedNodes Collection<Draw2dNode>
+     * @param selectedNodes Collection&lt;Draw2dNode&gt;
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(Collection)
      */
     @Override

@@ -37,7 +37,7 @@ import java.util.Collection;
 public interface RecentFilesListener {
     /**
      * Tell the listener to update the recent files list.
-     * @param fileList Collection<String>
+     * @param fileList Collection&lt;String&gt;
      */
     void refreshRecentFiles(Collection<String> fileList);
 }

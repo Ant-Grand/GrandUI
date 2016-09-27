@@ -110,7 +110,7 @@ public final class LogEventBufferImpl implements LogEventBuffer {
     /**
      * Return an unmodifiable list.
      *
-     * @return List<LogEvent>
+     * @return List&lt;LogEvent&gt;
      * @see net.ggtools.grand.ui.log.LogEventBuffer#getEventList()
      */
     public List<LogEvent> getEventList() {

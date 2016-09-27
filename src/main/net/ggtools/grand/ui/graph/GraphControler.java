@@ -448,7 +448,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
 
     /**
      * Method getSelection.
-     * @return Collection<Draw2dNode>
+     * @return Collection&lt;Draw2dNode&gt;
      * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
      */
     public final Collection<Draw2dNode> getSelection() {

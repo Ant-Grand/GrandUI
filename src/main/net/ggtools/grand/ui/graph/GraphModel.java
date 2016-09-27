@@ -127,7 +127,7 @@ public class GraphModel implements GraphProducer {
     /**
      * Gets all the properties from the producer.
      *
-     * @return Map<String,Object>
+     * @return Map&lt;String, Object&gt;
      */
     final Map<String, Object> getAllProperties() {
         Map<String, Object> rc = null;
