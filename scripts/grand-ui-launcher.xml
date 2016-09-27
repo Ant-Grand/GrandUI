@@ -6,7 +6,7 @@
 	<target name="start" depends="setup" description="--> Start Grand UI using the current ant">
 		<java classname="net.ggtools.grand.ui.Application" fork="yes" spawn="${background}">
 			<classpath>
-				<path path="${java.class.path}"></path>
+				<path path="${java.class.path}"/>
 				<fileset dir="${libdir}" includes="*.jar"/>
 				<fileset dir="${libdir}/swt" includes="org.eclipse.swt.${swtfw}.${swtarch}_*.jar"/>
 			</classpath>
