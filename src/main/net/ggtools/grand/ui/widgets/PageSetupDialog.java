@@ -86,8 +86,8 @@ public class PageSetupDialog extends Dialog {
         label.setAlignment(SWT.RIGHT);
         label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
         combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
-        combo.setItems("Tile", "Fit on one page",
-                "Fit on one page horizontally", "Fit one page vertically");
+        combo.setItems(new String[]{"Tile", "Fit on one page",
+                "Fit on one page horizontally", "Fit one page vertically"});
         combo.select(GraphControler.getPrintMode() - 1);
         combo.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
                         | GridData.GRAB_HORIZONTAL));
