@@ -126,10 +126,8 @@ public class NodesPreferencePage extends PreferencePage
      */
     @Override
     public final boolean performOk() {
-        if (fields != null) {
-            for (final FieldEditor fieldEditor : fields) {
-                fieldEditor.store();
-            }
+        for (final FieldEditor fieldEditor : fields) {
+            fieldEditor.store();
         }
         return true;
     }
@@ -184,16 +182,14 @@ public class NodesPreferencePage extends PreferencePage
         final GridLayout layout = (GridLayout) parent.getLayout();
 
         layout.numColumns = calcNumberOfColumns(tabFields);
-        if (tabFields != null) {
-            for (final FieldEditor fieldEditor : tabFields) {
-                if (fieldEditor.getNumberOfControls() < layout.numColumns) {
-                    fieldEditor.fillIntoGrid(parent, layout.numColumns);
-                }
-                fieldEditor.setPage(this);
-                //fieldEditor.setPropertyChangeListener(this);
-                fieldEditor.setPreferenceStore(getPreferenceStore());
-                fieldEditor.load();
+        for (final FieldEditor fieldEditor : tabFields) {
+            if (fieldEditor.getNumberOfControls() < layout.numColumns) {
+                fieldEditor.fillIntoGrid(parent, layout.numColumns);
             }
+            fieldEditor.setPage(this);
+            //fieldEditor.setPropertyChangeListener(this);
+            fieldEditor.setPreferenceStore(getPreferenceStore());
+            fieldEditor.load();
         }
 
         fields.addAll(tabFields);
@@ -226,10 +222,8 @@ public class NodesPreferencePage extends PreferencePage
      */
     @Override
     protected final void performDefaults() {
-        if (fields != null) {
-            for (FieldEditor fieldEditor : fields) {
-                fieldEditor.loadDefault();
-            }
+        for (FieldEditor fieldEditor : fields) {
+            fieldEditor.loadDefault();
         }
         super.performDefaults();
     }
