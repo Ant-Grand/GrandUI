@@ -204,9 +204,9 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
         graphEventManager = new EventManager("Graph Event");
         try {
             selectionChangedDispatcher = graphEventManager.createDispatcher(GraphListener.class
-                    .getDeclaredMethod("selectionChanged", new Class[]{Collection.class}));
+                    .getDeclaredMethod("selectionChanged", Collection.class));
             parameterChangedEvent = graphEventManager.createDispatcher(GraphListener.class
-                    .getDeclaredMethod("parameterChanged", new Class[]{GraphControler.class}));
+                    .getDeclaredMethod("parameterChanged", GraphControler.class));
         } catch (final SecurityException e) {
             LOG.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);

@@ -453,9 +453,9 @@ public class PropertyEditor {
     public PropertyEditor(final Composite parent, final int style) {
         if (columnNamesToNumMap == null) {
             columnNamesToNumMap = new HashMap<String, Integer>();
-            columnNamesToNumMap.put(STATUS_COLUMN, new Integer(STATUS_COLUMN_NUM));
-            columnNamesToNumMap.put(NAME_COLUMN, new Integer(NAME_COLUMN_NUM));
-            columnNamesToNumMap.put(VALUE_COLUMN, new Integer(VALUE_COLUMN_NUM));
+            columnNamesToNumMap.put(STATUS_COLUMN, STATUS_COLUMN_NUM);
+            columnNamesToNumMap.put(NAME_COLUMN, NAME_COLUMN_NUM);
+            columnNamesToNumMap.put(VALUE_COLUMN, VALUE_COLUMN_NUM);
         }
 
         propertyList = new PropertyList();

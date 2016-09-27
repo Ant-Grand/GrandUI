@@ -97,7 +97,7 @@ public class DispatcherPerformanceMeter {
         System.out.println(" -> " + timer);
         System.out.println("Testing simple dispatcher");
         final SimpleDispatcher simpleDispatcher = new SimpleDispatcher(null, Listener.class
-                .getDeclaredMethod("listen", new Class[]{Object.class}));
+                .getDeclaredMethod("listen", Object.class));
         timer.reset();
         timer.start();
         for (int i = 0; i < LOOP; i++) {

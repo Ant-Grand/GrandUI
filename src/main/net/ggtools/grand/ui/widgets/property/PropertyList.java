@@ -92,17 +92,17 @@ class PropertyList {
         eventManager = new EventManager("PropertyList event manager");
         try {
             propertyChangedDispatcher = eventManager.createDispatcher(PropertyChangedListener.class
-                    .getDeclaredMethod("propertyChanged", new Class[]{PropertyPair.class}));
+                    .getDeclaredMethod("propertyChanged", PropertyPair.class));
             propertyAddedDispatcher = eventManager.createDispatcher(PropertyChangedListener.class
-                    .getDeclaredMethod("propertyAdded", new Class[]{PropertyPair.class}));
+                    .getDeclaredMethod("propertyAdded", PropertyPair.class));
             propertyRemovedDispatcher = eventManager.createDispatcher(PropertyChangedListener.class
-                    .getDeclaredMethod("propertyRemoved", new Class[]{PropertyPair.class}));
+                    .getDeclaredMethod("propertyRemoved", PropertyPair.class));
             clearedPropertiesDispatcher = eventManager
                     .createDispatcher(PropertyChangedListener.class.getDeclaredMethod(
-                            "clearedProperties", new Class[]{Object.class}));
+                            "clearedProperties", Object.class));
             allPropertiesChangedDispatcher = eventManager
                     .createDispatcher(PropertyChangedListener.class.getDeclaredMethod(
-                            "allPropertiesChanged", new Class[]{Object.class}));
+                            "allPropertiesChanged", Object.class));
         } catch (final SecurityException e) {
             LOG.fatal("Caught exception initializing PropertyList", e);
             throw new RuntimeException("Cannot instanciate PropertyList", e);

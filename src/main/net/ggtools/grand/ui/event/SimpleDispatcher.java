@@ -70,7 +70,7 @@ class SimpleDispatcher extends DispatcherAdapter implements Dispatcher {
     public void sendEventToSubscriber(final Object subscriber,
             final Object eventData) {
         try {
-            method.invoke(subscriber, new Object[]{eventData});
+            method.invoke(subscriber, eventData);
         } catch (final IllegalAccessException e) {
             LOG.fatal(getEventManager().getName() + " dispatchOneEvent", e);
             throw new RuntimeException(e);
