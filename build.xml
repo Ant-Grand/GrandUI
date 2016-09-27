@@ -16,6 +16,7 @@
 	<property name="classdir.launcher" value="bin/launcher"/>
 	<property name="srcdir.launcher" value="src/launcher"/>
 	<property name="javadocdir" value="tmp/docs/api"/>
+	<property name="java.target" value="1.6"/>
 
 	<property name="verbose-get" value="false"/>
 
@@ -200,13 +201,13 @@
 
 	<target name="compile.java" depends="init" description="Compile the java source files">
 		<mkdir dir="${classdir.main}"/>
-		<javac srcdir="${srcdir.main}" destdir="${classdir.main}" debug="true" optimize="true" includeantruntime="false" source="1.5" target="1.5">
+		<javac srcdir="${srcdir.main}" destdir="${classdir.main}" debug="true" optimize="true" includeantruntime="false" source="${java.target}" target="${java.target}">
 			<classpath>
 				<path refid="ext-libs"/>
 			</classpath>
 		</javac>
 		<mkdir dir="${classdir.launcher}"/>
-		<javac srcdir="${srcdir.launcher}" destdir="${classdir.launcher}" debug="true" optimize="true" includeantruntime="false" source="1.5" target="1.5">
+		<javac srcdir="${srcdir.launcher}" destdir="${classdir.launcher}" debug="true" optimize="true" includeantruntime="false" source="${java.target}" target="${java.target}">
 			<classpath>
 				<path refid="ext-libs"/>
 			</classpath>
@@ -235,7 +236,7 @@
 	<target name="clean" depends="clean.dist,clean.deps" description="Remove intermediate files but not external libs">
 		<delete dir="${libdir}"/>
 		<delete dir="${classdir.main}"/>
-	<delete dir="${classdir.launcher}"/>
+		<delete dir="${classdir.launcher}"/>
 	</target>
 
 	<target name="clean.deps" description="Clean the dependencies directory">

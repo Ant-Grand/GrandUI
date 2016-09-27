@@ -522,7 +522,7 @@ public class GraphTabItem extends CTabItem
             return;
         }
 
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         for (final AntTargetNode.SourceElement element : richSource) {
             buffer.append(element.getText());
         }

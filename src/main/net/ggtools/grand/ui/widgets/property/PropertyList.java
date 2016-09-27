@@ -189,7 +189,7 @@ class PropertyList {
      */
     @Override
     public String toString() {
-        final StringBuffer strBuff = new StringBuffer();
+        final StringBuilder strBuff = new StringBuilder();
         for (final PropertyPair pair : pairList) {
             strBuff.append(pair.getName()).append(" => '").append(pair.getValue()).append("'\n");
         }

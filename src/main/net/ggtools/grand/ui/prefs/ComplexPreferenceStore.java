@@ -507,7 +507,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      */
     public final void setValue(final String key,
             final Collection<String> value) {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         for (final Iterator<String> iter = value.iterator(); iter.hasNext();) {
             final String item = iter.next();
             buffer.append(escapeString(item));
