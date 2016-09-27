@@ -78,12 +78,12 @@ class PropertyList {
     /**
      * Field eventManager.
      */
-    EventManager eventManager;
+    private final EventManager eventManager;
 
     /**
      * Field pairList.
      */
-    final Set<PropertyPair> pairList = new HashSet<PropertyPair>();
+    private final Set<PropertyPair> pairList = new HashSet<PropertyPair>();
 
     /**
      * Constructor for PropertyList.

@@ -42,12 +42,12 @@ public class XYRelativeAnchor extends ConnectionAnchorBase {
     /**
      * Field owner.
      */
-    private IFigure owner;
+    private final IFigure owner;
 
     /**
      * Field location.
      */
-    private Point location;
+    private final Point location;
 
     /**
      *

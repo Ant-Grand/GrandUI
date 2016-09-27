@@ -40,7 +40,7 @@ public class GraphEvent {
     /**
      * Field model.
      */
-    public final GraphModel model;
+    private final GraphModel model;
 
     /**
      * Constructor for GraphEvent.

@@ -73,17 +73,17 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
     /**
      * Field name.
      */
-    private String name;
+    private final String name;
 
     /**
      * Field nodeBgColor.
      */
-    private Color nodeBgColor;
+    private final Color nodeBgColor;
 
     /**
      * Field nodeFgColor.
      */
-    private Color nodeFgColor;
+    private final Color nodeFgColor;
 
     /**
      * Field selected.
@@ -93,12 +93,12 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
     /**
      * Field selectedBgColor.
      */
-    private Color selectedBgColor;
+    private final Color selectedBgColor;
 
     /**
      * Field vertex.
      */
-    private IVertex vertex;
+    private final IVertex vertex;
 
     /**
      * Constructor for Draw2dNode.

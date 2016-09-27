@@ -323,7 +323,7 @@ public class LogViewer extends Composite {
     /**
      * Field COLUMN_NAMES.
      */
-    static final String[] COLUMN_NAMES =
+    private static final String[] COLUMN_NAMES =
             new String[]{"Lvl", "Date", "Class", "Message"};
 
     /**

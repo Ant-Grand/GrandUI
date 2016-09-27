@@ -151,7 +151,7 @@ public class EventManager implements Runnable {
     /**
      * Field dispatcherThread.
      */
-    private Thread dispatcherThread;
+    private final Thread dispatcherThread;
 
     /**
      * Field eventQueue.

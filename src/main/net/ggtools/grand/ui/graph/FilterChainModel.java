@@ -65,7 +65,7 @@ public class FilterChainModel implements GraphProducer {
      * Field graphModel.
      */
     @SuppressWarnings("unused")
-    private GraphModel graphModel;
+    private final GraphModel graphModel;
 
     /**
      * Constructor for FilterChainModel.

@@ -96,7 +96,7 @@ public class Application implements Runnable {
      * Field APPLICATION_NAME.
      * (value is ""GrandUI"")
      */
-    public static final String APPLICATION_NAME = "GrandUI";
+    private static final String APPLICATION_NAME = "GrandUI";
 
     /**
      * Field MONOSPACE_FONT.
