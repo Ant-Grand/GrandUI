@@ -60,7 +60,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -343,7 +343,7 @@ public class GraphTabItem extends CTabItem
                 | SWT.H_SCROLL | SWT.V_SCROLL);
         outlineViewer.setContentProvider(controler.getNodeContentProvider());
         outlineViewer.setLabelProvider(controler.getNodeLabelProvider());
-        outlineViewer.setSorter(new ViewerSorter(new OutlineViewerCollator()));
+        outlineViewer.setComparator(new ViewerComparator(new OutlineViewerCollator()));
         outlineViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(final SelectionChangedEvent event) {
                 final ISelection selection = event.getSelection();
@@ -352,8 +352,7 @@ public class GraphTabItem extends CTabItem
                     if (selection instanceof IStructuredSelection) {
                         final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
                         if (structuredSelection.size() == 1) {
-                            final String nodeName = structuredSelection.getFirstElement()
-                                    .toString();
+                            final String nodeName = structuredSelection.getFirstElement().toString();
                             if (!skipJumpToNode) {
                                 jumpToNode(nodeName);
                             }

@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -280,7 +280,7 @@ public class PropertyEditor {
     /**
      * @author Christophe Labouisse
      */
-    private static final class Sorter extends ViewerSorter {
+    private static final class Sorter extends ViewerComparator {
         /**
          * Field NAME_COLUMN.
          * (value is 1)
@@ -305,7 +305,6 @@ public class PropertyEditor {
          * @param e2 Object
          * @return int
          */
-        @SuppressWarnings("unchecked")
         @Override
         public int compare(final Viewer viewer, final Object e1, final Object e2) {
             if ((e1 instanceof PropertyPair) && (e2 instanceof PropertyPair)) {
@@ -443,7 +442,7 @@ public class PropertyEditor {
     /**
      * Field viewerSorter.
      */
-    private Sorter viewerSorter;
+    private final Sorter viewerSorter;
 
     /**
      *
@@ -739,7 +738,7 @@ public class PropertyEditor {
         tableViewer.setCellEditors(editors);
         // Set the cell modifier for the viewer
         tableViewer.setCellModifier(new CellModifier());
-        tableViewer.setSorter(viewerSorter);
+        tableViewer.setComparator(viewerSorter);
     }
 
     /**
@@ -747,7 +746,7 @@ public class PropertyEditor {
      * @return int
      */
     final int getColumnNumber(final String columnName) {
-        return columnNamesToNumMap.get(columnName).intValue();
+        return columnNamesToNumMap.get(columnName);
     }
 
     /**
