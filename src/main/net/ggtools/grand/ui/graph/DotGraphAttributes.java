@@ -30,7 +30,7 @@ package net.ggtools.grand.ui.graph;
 
 /**
  * An interface holding the constants for some useful attributes use in the dot
- * & draw2d graph.
+ * &amp; draw2d graph.
  *
  * @author Christophe Labouisse
  */

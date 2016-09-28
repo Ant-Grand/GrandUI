@@ -78,12 +78,12 @@ class PropertyList {
     /**
      * Field eventManager.
      */
-    EventManager eventManager;
+    private final EventManager eventManager;
 
     /**
      * Field pairList.
      */
-    final Set<PropertyPair> pairList = new HashSet<PropertyPair>();
+    private final Set<PropertyPair> pairList = new HashSet<PropertyPair>();
 
     /**
      * Constructor for PropertyList.
@@ -92,17 +92,17 @@ class PropertyList {
         eventManager = new EventManager("PropertyList event manager");
         try {
             propertyChangedDispatcher = eventManager.createDispatcher(PropertyChangedListener.class
-                    .getDeclaredMethod("propertyChanged", new Class[]{PropertyPair.class}));
+                    .getDeclaredMethod("propertyChanged", PropertyPair.class));
             propertyAddedDispatcher = eventManager.createDispatcher(PropertyChangedListener.class
-                    .getDeclaredMethod("propertyAdded", new Class[]{PropertyPair.class}));
+                    .getDeclaredMethod("propertyAdded", PropertyPair.class));
             propertyRemovedDispatcher = eventManager.createDispatcher(PropertyChangedListener.class
-                    .getDeclaredMethod("propertyRemoved", new Class[]{PropertyPair.class}));
+                    .getDeclaredMethod("propertyRemoved", PropertyPair.class));
             clearedPropertiesDispatcher = eventManager
                     .createDispatcher(PropertyChangedListener.class.getDeclaredMethod(
-                            "clearedProperties", new Class[]{Object.class}));
+                            "clearedProperties", Object.class));
             allPropertiesChangedDispatcher = eventManager
                     .createDispatcher(PropertyChangedListener.class.getDeclaredMethod(
-                            "allPropertiesChanged", new Class[]{Object.class}));
+                            "allPropertiesChanged", Object.class));
         } catch (final SecurityException e) {
             LOG.fatal("Caught exception initializing PropertyList", e);
             throw new RuntimeException("Cannot instanciate PropertyList", e);
@@ -189,7 +189,7 @@ class PropertyList {
      */
     @Override
     public String toString() {
-        final StringBuffer strBuff = new StringBuffer();
+        final StringBuilder strBuff = new StringBuilder();
         for (final PropertyPair pair : pairList) {
             strBuff.append(pair.getName()).append(" => '").append(pair.getValue()).append("'\n");
         }

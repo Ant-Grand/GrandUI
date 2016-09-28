@@ -131,7 +131,9 @@
       <exec executable="${make}" dir="${kernel_root}/tools/javadata" output="${tmp_dir}/build-javadata.log" failonerror="true"/>
    </target>
 
-   <target name="build-admin-tools" depends="build-dataimport,build-anttasks,build-blobfile,build-admin,build-datainterf,build-javadata,build-testimport" description="Compile the administration GUI (ICM, User Manager)" unless="skip-jars"></target>
+    <target name="build-admin-tools"
+            depends="build-dataimport,build-anttasks,build-blobfile,build-admin,build-datainterf,build-javadata,build-testimport"
+            description="Compile the administration GUI (ICM, User Manager)" unless="skip-jars"/>
 
    <target name="build-setup" depends="build-core" description="Compile the installation/deployment tools" unless="skip-jars">
       <exec executable="${make}" dir="${kernel_root}/tools/setup" output="${tmp_dir}/build-setup.log" failonerror="true"/>

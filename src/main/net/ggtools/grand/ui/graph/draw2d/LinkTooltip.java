@@ -53,7 +53,8 @@ import sf.jzgraph.IEdge;
  *
  * @author Christophe Labouisse
  */
-public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttributes {
+public class LinkTooltip extends AbstractGraphTooltip
+    implements DotGraphAttributes {
     /**
      * Field ELLIPSIS.
      * (value is ""..."")
@@ -157,7 +158,8 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
 
         if (edge.hasAttr(LINK_SUBANT_DIRECTORIES)) {
             @SuppressWarnings("unchecked")
-            final Collection<String> directories = (Collection<String>) edge.getAttr(LINK_SUBANT_DIRECTORIES);
+            final Collection<String> directories =
+                    (Collection<String>) edge.getAttr(LINK_SUBANT_DIRECTORIES);
             if (!directories.isEmpty()) {
                 final BlockFlow outterBlock = new BlockFlow();
                 textFlow = new TextFlow("Generic ant file to be applied to:");
@@ -170,8 +172,7 @@ public class LinkTooltip extends AbstractGraphTooltip implements DotGraphAttribu
                                     + dim + ", currentDirectory = " + currentDirectory);
                         }
 
-                        final int length = currentDirectory.length();
-                        int index = length;
+                        int index = currentDirectory.length();
                         String part = "";
                         while (true) {
                             index = currentDirectory.lastIndexOf(File.separatorChar, index - 1);

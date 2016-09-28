@@ -3,19 +3,18 @@
 ## resolve links - $0 may be a link
 PRG="$0"
 progname=`basename "$0"`
- 
+
 # need this for relative symlinks
 while [ -h "$PRG" ] ; do
     ls=`ls -ld "$PRG"`
     link=`expr "$ls" : '.*-> \(.*\)$'`
     if expr "$link" : '/.*' > /dev/null; then
-	    PRG="$link"
+        PRG="$link"
     else
-		PRG=`dirname "$PRG"`"/$link"
+        PRG=`dirname "$PRG"`"/$link"
     fi
 done
 
 BASEDIR=`dirname "$PRG"`
 
-ant -f $BASEDIR/grand-ui-launcher.xml
-
+java -jar $BASEDIR/lib/ant-launcher.jar -f $BASEDIR/grand-ui-launcher.xml

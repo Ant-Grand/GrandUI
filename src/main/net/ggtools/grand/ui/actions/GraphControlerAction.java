@@ -57,7 +57,7 @@ public abstract class GraphControlerAction extends Action
      *
      * @param parent GraphControlerProvider
      */
-    public GraphControlerAction(final GraphControlerProvider parent) {
+    protected GraphControlerAction(final GraphControlerProvider parent) {
         super();
         init(parent);
     }
@@ -66,7 +66,7 @@ public abstract class GraphControlerAction extends Action
      * @param parent GraphControlerProvider
      * @param text String
      */
-    public GraphControlerAction(final GraphControlerProvider parent,
+    protected GraphControlerAction(final GraphControlerProvider parent,
             final String text) {
         super(text);
         init(parent);
@@ -77,7 +77,7 @@ public abstract class GraphControlerAction extends Action
      * @param text String
      * @param image ImageDescriptor
      */
-    public GraphControlerAction(final GraphControlerProvider parent,
+    protected GraphControlerAction(final GraphControlerProvider parent,
             final String text, final ImageDescriptor image) {
         super(text, image);
         init(parent);
@@ -88,7 +88,7 @@ public abstract class GraphControlerAction extends Action
      * @param text String
      * @param style int
      */
-    public GraphControlerAction(final GraphControlerProvider parent,
+    protected GraphControlerAction(final GraphControlerProvider parent,
             final String text, final int style) {
         super(text, style);
         init(parent);

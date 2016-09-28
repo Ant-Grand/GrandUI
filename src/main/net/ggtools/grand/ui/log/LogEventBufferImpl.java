@@ -110,7 +110,7 @@ public final class LogEventBufferImpl implements LogEventBuffer {
     /**
      * Return an unmodifiable list.
      *
-     * @return List<LogEvent>
+     * @return List&lt;LogEvent&gt;
      * @see net.ggtools.grand.ui.log.LogEventBuffer#getEventList()
      */
     public List<LogEvent> getEventList() {
@@ -134,7 +134,8 @@ public final class LogEventBufferImpl implements LogEventBuffer {
      * @param originator String
      * @param message Object
      */
-    void addLogEvent(final Level level, final String originator, final Object message) {
+    void addLogEvent(final Level level, final String originator,
+            final Object message) {
         addLogEvent(level, originator, message, null);
     }
 
@@ -145,9 +146,10 @@ public final class LogEventBufferImpl implements LogEventBuffer {
      * @param message Object
      * @param exception Throwable
      */
-    void addLogEvent(final Level level, final String originator, final Object message,
-            final Throwable exception) {
-        final LogEvent logEvent = new LogEvent(level, originator, message, exception);
+    void addLogEvent(final Level level, final String originator,
+            final Object message, final Throwable exception) {
+        final LogEvent logEvent =
+                new LogEvent(level, originator, message, exception);
         eventList.addLast(logEvent);
         if (listener != null) {
             listener.logEventReceived(logEvent);

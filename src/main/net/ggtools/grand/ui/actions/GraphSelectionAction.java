@@ -53,7 +53,7 @@ public abstract class GraphSelectionAction extends GraphListenerAction
     /**
      * @param parent GraphControlerProvider
      */
-    public GraphSelectionAction(final GraphControlerProvider parent) {
+    protected GraphSelectionAction(final GraphControlerProvider parent) {
         super(parent);
         init();
     }
@@ -62,7 +62,7 @@ public abstract class GraphSelectionAction extends GraphListenerAction
      * @param parent GraphControlerProvider
      * @param text String
      */
-    public GraphSelectionAction(final GraphControlerProvider parent,
+    protected GraphSelectionAction(final GraphControlerProvider parent,
             final String text) {
         super(parent, text);
         init();
@@ -73,7 +73,7 @@ public abstract class GraphSelectionAction extends GraphListenerAction
      * @param text String
      * @param image ImageDescriptor
      */
-    public GraphSelectionAction(final GraphControlerProvider parent,
+    protected GraphSelectionAction(final GraphControlerProvider parent,
             final String text, final ImageDescriptor image) {
         super(parent, text, image);
         init();
@@ -84,7 +84,7 @@ public abstract class GraphSelectionAction extends GraphListenerAction
      * @param text String
      * @param style int
      */
-    public GraphSelectionAction(final GraphControlerProvider parent,
+    protected GraphSelectionAction(final GraphControlerProvider parent,
             final String text, final int style) {
         super(parent, text, style);
         init();
@@ -99,14 +99,14 @@ public abstract class GraphSelectionAction extends GraphListenerAction
 
     /**
      * Method selectionChanged.
-     * @param selectedNodes Collection<Draw2dNode>
+     * @param selectedNodes Collection&lt;Draw2dNode&gt;
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
     @Override
     public final void selectionChanged(final Collection<Draw2dNode> selectedNodes) {
         final boolean isEnabled = selectedNodes.size() == 1;
         if (isEnabled) {
-            currentNode = ((Draw2dNode) selectedNodes.iterator().next()).getName();
+            currentNode = selectedNodes.iterator().next().getName();
         }
         setEnabled(isEnabled);
     }
@@ -118,7 +118,8 @@ public abstract class GraphSelectionAction extends GraphListenerAction
         boolean isEnabled = false;
 
         if (getGraphControler() != null) {
-            final Collection<Draw2dNode> selectedNodes = getGraphControler().getSelection();
+            final Collection<Draw2dNode> selectedNodes =
+                    getGraphControler().getSelection();
             isEnabled = selectedNodes.size() == 1;
             if (isEnabled) {
                 currentNode = selectedNodes.iterator().next().getName();

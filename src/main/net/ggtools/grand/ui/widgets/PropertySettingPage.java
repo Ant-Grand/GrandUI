@@ -59,7 +59,7 @@ public class PropertySettingPage extends WizardPage
     /**
      * @param fileProvider OpenFileWizard.SelectedFileProvider
      */
-    public PropertySettingPage(final OpenFileWizard.SelectedFileProvider fileProvider) {
+    public PropertySettingPage(final SelectedFileProvider fileProvider) {
         super("propertySetting", "Property setting", null);
         setDescription("Set the properties for the file");
         this.fileProvider = fileProvider;
@@ -99,7 +99,7 @@ public class PropertySettingPage extends WizardPage
     /**
      * Method fileSelected.
      * @param selectedFile File
-     * @see net.ggtools.grand.ui.widgets.OpenFileWizard$SelectedFileListener#fileSelected(File)
+     * @see SelectedFileListener#fileSelected(File)
      */
     public final void fileSelected(final File selectedFile) {
         if (editor != null) {

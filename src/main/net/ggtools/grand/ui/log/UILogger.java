@@ -47,7 +47,7 @@ final class UILogger implements Log {
     /**
      * Field logBuffer.
      */
-    private LogEventBufferImpl logBuffer;
+    private final LogEventBufferImpl logBuffer;
 
     /**
      *

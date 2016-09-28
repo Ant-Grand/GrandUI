@@ -92,7 +92,8 @@ public class Analyzer extends ApplicationWindow {
             @Override
             public void run() {
                 if (logViewer != null) {
-                    final FileDialog dialog = new FileDialog(getShell(), SWT.NONE);
+                    final FileDialog dialog =
+                            new FileDialog(getShell(), SWT.NONE);
                     dialog.setFilterExtensions(new String[]{"*.glg", "*.log", "*"});
                     final String logFileName = dialog.open();
                     if (logFileName != null) {

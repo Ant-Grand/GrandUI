@@ -58,7 +58,7 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
 
     /**
      * Constructor for GrandUiPrefStore.
-     * @throws IOException
+     * @throws IOException if load() fails
      */
     GrandUiPrefStore() throws IOException {
         super();
@@ -75,7 +75,7 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
 
     /**
      * Method save.
-     * @throws IOException
+     * @throws IOException if mkdirs() fails
      * @see org.eclipse.jface.preference.IPersistentPreferenceStore#save()
      */
     @Override
@@ -95,7 +95,8 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
      */
     private void migratePreferences() {
         // Try to get data from the old preference store.
-        final Preferences node = Preferences.userNodeForPackage(GrandUiPrefStore.class);
+        final Preferences node =
+                Preferences.userNodeForPackage(GrandUiPrefStore.class);
         final String[] keys;
         try {
             keys = node.keys();

@@ -41,6 +41,7 @@ import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.swt.SWT;
 
 /**
  *
@@ -62,7 +63,9 @@ public class FileMenuManager extends MenuManager {
         add(new PreferenceAction(window));
         add(new Separator("recent files"));
         add(new RecentFilesMenu(window));
-        add(new Separator("quit"));
-        add(new QuitAction());
+        if (!SWT.getPlatform().equals("cocoa")) {
+            add(new Separator("quit"));
+            add(new QuitAction());
+        }
     }
 }

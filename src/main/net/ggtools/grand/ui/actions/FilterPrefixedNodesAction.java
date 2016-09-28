@@ -28,34 +28,32 @@
 
 package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.filters.ConnectedToNodeFilter;
 import net.ggtools.grand.filters.GraphFilter;
+import net.ggtools.grand.filters.PrefixedNodeFilter;
 import net.ggtools.grand.ui.graph.GraphControlerProvider;
-import net.ggtools.grand.ui.graph.GraphListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * An action to add a filter to the currently selected node.
+ * An action to filter the prefixed nodes.
  *
  * @author Christophe Labouisse
  */
-public class FilterConnectedToNodeAction extends GraphSelectionAction
-    implements GraphListener {
+public class FilterPrefixedNodesAction extends GraphControlerAction {
     /**
      * Field log.
      */
     @SuppressWarnings("unused")
     private static final Log LOG =
-            LogFactory.getLog(FilterConnectedToNodeAction.class);
+            LogFactory.getLog(FilterPrefixedNodesAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Filter connected to selected node"")
+     * (value is ""Filter out prefixed nodes"")
      */
     private static final String DEFAULT_ACTION_NAME =
-            "Filter connected to selected node";
+            "Filter out prefixed nodes";
 
     /**
      * Method run.
@@ -63,15 +61,15 @@ public class FilterConnectedToNodeAction extends GraphSelectionAction
      */
     @Override
     public final void run() {
-        final GraphFilter filter = new ConnectedToNodeFilter(getCurrentNode());
+        final GraphFilter filter = new PrefixedNodeFilter();
         getGraphControler().addFilter(filter);
     }
 
     /**
-     * Constructor for FilterConnectedToNodeAction.
+     * Constructor for FilterPrefixedNodesAction.
      * @param parent GraphControlerProvider
      */
-    public FilterConnectedToNodeAction(final GraphControlerProvider parent) {
+    public FilterPrefixedNodesAction(final GraphControlerProvider parent) {
         super(parent, DEFAULT_ACTION_NAME);
     }
 }

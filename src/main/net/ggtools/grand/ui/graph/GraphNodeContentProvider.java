@@ -29,6 +29,7 @@ package net.ggtools.grand.ui.graph;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import net.ggtools.grand.graph.Graph;
 import net.ggtools.grand.graph.Node;
@@ -47,7 +48,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * The all singing all dancing class to provide content, label & decoration for
+ * The all singing all dancing class to provide content, label &amp; decoration for
  * nodes.
  *
  * TODO change the data model to provide something better.
@@ -59,7 +60,8 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      * Logger for this class.
      */
     @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(GraphNodeContentProvider.class);
+    private static final Log LOG =
+            LogFactory.getLog(GraphNodeContentProvider.class);
 
     /**
      * Field graph.
@@ -99,7 +101,8 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
     public final Color getBackground(final Object element) {
         if (element instanceof Node) {
             final Node node = (Node) element;
-            final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+            final GrandUiPrefStore preferenceStore =
+                    Application.getInstance().getPreferenceStore();
             if (node.equals(graph.getStartNode())) {
                 return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "start.fillcolor");
             }
@@ -128,7 +131,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
             return null;
         }
 
-        final LinkedList<Node> list = new LinkedList<Node>();
+        final List<Node> list = new LinkedList<Node>();
         for (final Iterator<Node> iter = graph.getNodes(); iter.hasNext();) {
             list.add(iter.next());
         }
@@ -145,7 +148,8 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
     public final Color getForeground(final Object element) {
         if (element instanceof Node) {
             final Node node = (Node) element;
-            final GrandUiPrefStore preferenceStore = Application.getInstance().getPreferenceStore();
+            final GrandUiPrefStore preferenceStore =
+                    Application.getInstance().getPreferenceStore();
             if (node.equals(graph.getStartNode())) {
                 return preferenceStore.getColor(PreferenceKeys.NODE_PREFIX + "start.fgcolor");
             }
@@ -200,9 +204,9 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
      *      java.lang.Object, java.lang.Object)
      */
-    public final void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
+    public final void inputChanged(final Viewer viewer,
+            final Object oldInput, final Object newInput) {
         // TODO auto-generated method stub
-
     }
 
     /**
@@ -225,7 +229,6 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      */
     public void removeListener(final ILabelProviderListener listener) {
         // TODO auto-generated method stub
-
     }
 
     /**

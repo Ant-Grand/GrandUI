@@ -149,12 +149,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
             }
             switch (me.button) {
             case (1): {
-                final boolean addToSelection;
-                if ((me.getState() & SWT.CONTROL) == 0) {
-                    addToSelection = false;
-                } else {
-                    addToSelection = true;
-                }
+                final boolean addToSelection = (me.getState() & SWT.CONTROL) != 0;
                 selectNode(node, addToSelection);
                 graphControler.openNodeFile(node);
             }
@@ -174,12 +169,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
             }
             switch (me.button) {
             case (1): {
-                final boolean addToSelection;
-                if ((me.getState() & SWT.CONTROL) == 0) {
-                    addToSelection = false;
-                } else {
-                    addToSelection = true;
-                }
+                final boolean addToSelection = (me.getState() & SWT.CONTROL) != 0;
                 toggleSelection(node, addToSelection);
                 me.consume();
                 break;
@@ -190,8 +180,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                 }
                 // TODO rewrite in a clean way
                 if (graphControler != null) {
-                    (graphControler).getDisplayer().getContextMenu().setVisible(
-                            true);
+                    graphControler.getDisplayer().getContextMenu().setVisible(true);
                 }
                 break;
             }
@@ -397,7 +386,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
 
     /**
      * Method getSelection.
-     * @return Collection<Draw2dNode>
+     * @return Collection&lt;Draw2dNode&gt;
      * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
      */
     public final Collection<Draw2dNode> getSelection() {

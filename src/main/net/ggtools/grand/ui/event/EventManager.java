@@ -32,6 +32,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,7 +85,7 @@ public class EventManager implements Runnable {
         /**
          * Field subscriber.
          */
-        private Object subscriber;
+        private final Object subscriber;
 
         /**
          * Constructor for SubscriptionAction.
@@ -100,7 +101,7 @@ public class EventManager implements Runnable {
          * @see java.lang.Runnable#run()
          */
         public void run() {
-            doSubscribtion(subscriber);
+            doSubscription(subscriber);
         }
     }
 
@@ -111,7 +112,7 @@ public class EventManager implements Runnable {
         /**
          * Field subscriber.
          */
-        private Object subscriber;
+        private final Object subscriber;
 
         /**
          * Constructor for UnsubscriptionAction.
@@ -122,7 +123,7 @@ public class EventManager implements Runnable {
         }
 
         /**
-         * Add the subscriber to the event's dispatcher subscribtion list.
+         * Add the subscriber to the event's dispatcher subscription list.
          *
          * @see EventManager#doUnsubscription(Object)
          * @see java.lang.Runnable#run()
@@ -150,7 +151,7 @@ public class EventManager implements Runnable {
     /**
      * Field dispatcherThread.
      */
-    private Thread dispatcherThread;
+    private final Thread dispatcherThread;
 
     /**
      * Field eventQueue.
@@ -160,7 +161,7 @@ public class EventManager implements Runnable {
     /**
      * Field listenerList.
      */
-    private final LinkedList<WeakReference<Object>> listenerList =
+    private final List<WeakReference<Object>> listenerList =
             new LinkedList<WeakReference<Object>>();
 
     /**
@@ -354,7 +355,7 @@ public class EventManager implements Runnable {
      *
      * @param listener Object
      */
-    private void doSubscribtion(final Object listener) {
+    private void doSubscription(final Object listener) {
         if (LOG.isDebugEnabled()) {
             LOG.debug(name + " subscribing " + listener);
         }

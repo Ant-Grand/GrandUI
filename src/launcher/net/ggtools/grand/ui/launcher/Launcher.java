@@ -33,6 +33,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.logging.Log;
@@ -104,10 +105,10 @@ public class Launcher {
 
     /**
      * @param directory String
-     * @param jarList ArrayList<URL>
+     * @param jarList List<URL>
      * @throws MalformedURLException
      */
-    private static void addDirectoryJars(final String directory, final ArrayList<URL> jarList)
+    private static void addDirectoryJars(final String directory, final List<URL> jarList)
             throws MalformedURLException {
         final File libDir = new File(directory);
         final File[] jars = libDir.listFiles(new JarFilenameFilter());

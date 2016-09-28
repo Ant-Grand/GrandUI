@@ -39,7 +39,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 
 /**
- * Open a file <em>quickly</em> that is usign the default values for
+ * Open a file <em>quickly</em> that is using the default values for
  * properties.
  *
  * @author Christophe Labouisse
@@ -55,7 +55,8 @@ public class QuickOpenFileAction extends Action {
     /**
      * Field FILTER_EXTENSIONS.
      */
-    private static final String[] FILTER_EXTENSIONS = new String[]{"*.xml", "*"};
+    private static final String[] FILTER_EXTENSIONS =
+            new String[]{"*.xml", "*"};
 
     /**
      * Field DEFAULT_ACTION_NAME.

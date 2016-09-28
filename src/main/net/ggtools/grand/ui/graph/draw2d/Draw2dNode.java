@@ -63,27 +63,27 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
      * Field graph.
      */
     @SuppressWarnings("unused")
-    private Draw2dGraph graph;
+    private final Draw2dGraph graph;
 
     /**
      * Field label.
      */
-    private Label label;
+    private final Label label;
 
     /**
      * Field name.
      */
-    private String name;
+    private final String name;
 
     /**
      * Field nodeBgColor.
      */
-    private Color nodeBgColor;
+    private final Color nodeBgColor;
 
     /**
      * Field nodeFgColor.
      */
-    private Color nodeFgColor;
+    private final Color nodeFgColor;
 
     /**
      * Field selected.
@@ -93,12 +93,12 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
     /**
      * Field selectedBgColor.
      */
-    private Color selectedBgColor;
+    private final Color selectedBgColor;
 
     /**
      * Field vertex.
      */
-    private IVertex vertex;
+    private final IVertex vertex;
 
     /**
      * Constructor for Draw2dNode.
@@ -128,6 +128,8 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
         setBackgroundColor(nodeBgColor);
         setLineWidth(vertex.getAttrInt(DRAW2DLINEWIDTH_ATTR));
         setOpaque(true);
+        // Polygon extends Polyline that does setFill(false) since GEF 3.1
+        setFill(true);
 
         final GraphShape shape = (GraphShape) vertex.getAttr(_SHAPE_ATTR);
         final float[] coords = new float[6];

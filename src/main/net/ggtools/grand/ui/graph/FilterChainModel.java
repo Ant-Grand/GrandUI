@@ -65,7 +65,7 @@ public class FilterChainModel implements GraphProducer {
      * Field graphModel.
      */
     @SuppressWarnings("unused")
-    private GraphModel graphModel;
+    private final GraphModel graphModel;
 
     /**
      * Constructor for FilterChainModel.
@@ -115,7 +115,7 @@ public class FilterChainModel implements GraphProducer {
     }
 
     /**
-     * @return List<GraphFilter>
+     * @return List&lt;GraphFilter&gt;
      */
     public final List<GraphFilter> getFilterList() {
         return filterChain.getFilterList();

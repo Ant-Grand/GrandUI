@@ -135,10 +135,10 @@ public class GraphWindow extends ApplicationWindow
         try {
             controlerAvailableDispatcher = controlerEventManager
                     .createDispatcher(GraphControlerListener.class.getDeclaredMethod(
-                            "controlerAvailable", new Class[]{GraphControler.class}));
+                            "controlerAvailable", GraphControler.class));
             controlerRemovedDispatcher = controlerEventManager
                     .createDispatcher(GraphControlerListener.class.getDeclaredMethod(
-                            "controlerRemoved", new Class[]{GraphControler.class}));
+                            "controlerRemoved", GraphControler.class));
         } catch (final SecurityException e) {
             LOG.fatal("Caught exception initializing GraphControler", e);
             throw new RuntimeException("Cannot instanciate GraphControler", e);

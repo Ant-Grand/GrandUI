@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -49,7 +48,8 @@ import org.eclipse.jface.util.PropertyChangeEvent;
  *
  * @author Christophe Labouisse
  */
-public final class RecentFilesManager implements IPropertyChangeListener, PreferenceKeys {
+public final class RecentFilesManager
+    implements IPropertyChangeListener, PreferenceKeys {
     /**
      * Logger for this class.
      */
@@ -120,8 +120,7 @@ public final class RecentFilesManager implements IPropertyChangeListener, Prefer
      * Method notifyListeners.
      */
     private void notifyListeners() {
-        for (final Iterator<RecentFilesListener> iter = subscribers.iterator(); iter.hasNext();) {
-            final RecentFilesListener listener = iter.next();
+        for (final RecentFilesListener listener : subscribers) {
             listener.refreshRecentFiles(getRecentFiles());
         }
     }
@@ -252,7 +251,8 @@ public final class RecentFilesManager implements IPropertyChangeListener, Prefer
     public void propertyChange(final PropertyChangeEvent event) {
         final String changedProperty = event.getProperty();
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Prefs changed " + changedProperty + " '" + event.getNewValue() + "'");
+            LOG.debug("Prefs changed " + changedProperty
+                    + " '" + event.getNewValue() + "'");
         }
 
         if (MAX_RECENT_FILES_PREFS_KEY.equals(changedProperty)) {
@@ -274,7 +274,7 @@ public final class RecentFilesManager implements IPropertyChangeListener, Prefer
     /**
      * Get the recent files.
      *
-     * @return Collection<String>
+     * @return Collection&lt;String&gt;
      */
     public Collection<String> getRecentFiles() {
         return readOnlyRecentFiles;

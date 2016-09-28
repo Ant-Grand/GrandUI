@@ -1,6 +1,12 @@
 $Id$
+Release 0.8 (build number 296):
+* Upgraded to Ant 1.9.7,
+* Upgraded to Grand core 1.9,
+* Upgraded to Eclipse 4.6,
+* Run natively on Linux, macOS and Windows.
 
-Release 0.7.3 (build number xxx):
+
+Release 0.7.3 (build number 238):
 
 * Upgraded to Ant 1.6.5,
 * Upgraded to Eclipse 3.1.

@@ -37,9 +37,10 @@ import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
- * An abstract class implementing basic features for actions listening to a graph.
- * This class manages the subscription/unsubscription process whenever the controller
- * gets available/unavailable and implements do nothing methods on events.
+ * An abstract class implementing basic features for actions listening to
+ * a graph. This class manages the subscription/unsubscription process
+ * whenever the controller gets available/unavailable and implements
+ * do nothing methods on events.
  *
  * @author Christophe Labouisse
  */
@@ -48,7 +49,7 @@ public abstract class GraphListenerAction extends GraphControlerAction
     /**
      * @param parent GraphControlerProvider
      */
-    public GraphListenerAction(final GraphControlerProvider parent) {
+    protected GraphListenerAction(final GraphControlerProvider parent) {
         super(parent);
     }
 
@@ -56,7 +57,7 @@ public abstract class GraphListenerAction extends GraphControlerAction
      * @param parent GraphControlerProvider
      * @param text String
      */
-    public GraphListenerAction(final GraphControlerProvider parent,
+    protected GraphListenerAction(final GraphControlerProvider parent,
             final String text) {
         super(parent, text);
     }
@@ -66,7 +67,7 @@ public abstract class GraphListenerAction extends GraphControlerAction
      * @param text String
      * @param image ImageDescriptor
      */
-    public GraphListenerAction(final GraphControlerProvider parent,
+    protected GraphListenerAction(final GraphControlerProvider parent,
             final String text, final ImageDescriptor image) {
         super(parent, text, image);
     }
@@ -76,7 +77,7 @@ public abstract class GraphListenerAction extends GraphControlerAction
      * @param text String
      * @param style int
      */
-    public GraphListenerAction(final GraphControlerProvider parent,
+    protected GraphListenerAction(final GraphControlerProvider parent,
             final String text, final int style) {
         super(parent, text, style);
     }
@@ -91,7 +92,7 @@ public abstract class GraphListenerAction extends GraphControlerAction
 
     /**
      * Method selectionChanged.
-     * @param selectedNodes Collection<Draw2dNode>
+     * @param selectedNodes Collection&lt;Draw2dNode&gt;
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
     public void selectionChanged(final Collection<Draw2dNode> selectedNodes) {

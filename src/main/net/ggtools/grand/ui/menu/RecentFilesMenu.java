@@ -30,7 +30,6 @@ package net.ggtools.grand.ui.menu;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Iterator;
 
 import net.ggtools.grand.ui.RecentFilesListener;
 import net.ggtools.grand.ui.RecentFilesManager;
@@ -146,8 +145,7 @@ public class RecentFilesMenu extends MenuManager
                 }
 
                 // Re-add the contents.
-                for (final Iterator<String> iter = recentFiles.iterator(); iter.hasNext();) {
-                    final String fileName = iter.next();
+                for (final String fileName : recentFiles) {
                     appendToGroup(RECENT_FILES_GROUP, new OpenRecentFileAction(window, fileName));
                 }
             }

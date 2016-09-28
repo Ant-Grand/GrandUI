@@ -48,7 +48,7 @@ public class CommonsLoggingLoggerFactory implements LoggerFactory {
 
     /**
      * Method getLog.
-     * @param clazz Class<?>
+     * @param clazz Class&lt;?&gt;
      * @return Log
      * @see net.ggtools.grand.log.LoggerFactory#getLog(java.lang.Class)
      */

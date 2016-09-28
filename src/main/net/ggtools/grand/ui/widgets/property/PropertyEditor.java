@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -147,13 +147,14 @@ public class PropertyEditor {
     /**
      * @author Christophe Labouisse
      */
-    private static final class PropertyListContentProvider implements IStructuredContentProvider,
-            PropertyChangedListener {
+    private static final class PropertyListContentProvider
+        implements IStructuredContentProvider, PropertyChangedListener {
         /**
          * Logger for this class.
          */
         @SuppressWarnings("unused")
-        private static final Log PLCP_LOG = LogFactory.getLog(PropertyListContentProvider.class);
+        private static final Log PLCP_LOG =
+                LogFactory.getLog(PropertyListContentProvider.class);
 
         /**
          * Field currentPropertyList.
@@ -279,7 +280,7 @@ public class PropertyEditor {
     /**
      * @author Christophe Labouisse
      */
-    private static final class Sorter extends ViewerSorter {
+    private static final class Sorter extends ViewerComparator {
         /**
          * Field NAME_COLUMN.
          * (value is 1)
@@ -325,7 +326,7 @@ public class PropertyEditor {
                     break;
 
                 }
-                return collator.compare(name1, name2);
+                return getComparator().compare(name1, name2);
             } else {
                 return super.compare(viewer, e1, e2);
             }
@@ -361,7 +362,8 @@ public class PropertyEditor {
     /**
      * Field FILTER_EXTENSIONS.
      */
-    private static final String[] FILTER_EXTENSIONS = new String[]{"*.properties", "*"};
+    private static final String[] FILTER_EXTENSIONS =
+            new String[]{"*.properties", "*"};
 
     /**
      * Field GRID_LAYOUT_COLUMNS.
@@ -419,7 +421,8 @@ public class PropertyEditor {
     /**
      * Field columnNames.
      */
-    private final String[] columnNames = new String[]{STATUS_COLUMN, NAME_COLUMN, VALUE_COLUMN};
+    private final String[] columnNames =
+            new String[]{STATUS_COLUMN, NAME_COLUMN, VALUE_COLUMN};
 
     /**
      * Field propertyList.
@@ -439,7 +442,7 @@ public class PropertyEditor {
     /**
      * Field viewerSorter.
      */
-    private Sorter viewerSorter;
+    private final Sorter viewerSorter;
 
     /**
      *
@@ -449,9 +452,9 @@ public class PropertyEditor {
     public PropertyEditor(final Composite parent, final int style) {
         if (columnNamesToNumMap == null) {
             columnNamesToNumMap = new HashMap<String, Integer>();
-            columnNamesToNumMap.put(STATUS_COLUMN, new Integer(STATUS_COLUMN_NUM));
-            columnNamesToNumMap.put(NAME_COLUMN, new Integer(NAME_COLUMN_NUM));
-            columnNamesToNumMap.put(VALUE_COLUMN, new Integer(VALUE_COLUMN_NUM));
+            columnNamesToNumMap.put(STATUS_COLUMN, STATUS_COLUMN_NUM);
+            columnNamesToNumMap.put(NAME_COLUMN, NAME_COLUMN_NUM);
+            columnNamesToNumMap.put(VALUE_COLUMN, VALUE_COLUMN_NUM);
         }
 
         propertyList = new PropertyList();
@@ -735,7 +738,7 @@ public class PropertyEditor {
         tableViewer.setCellEditors(editors);
         // Set the cell modifier for the viewer
         tableViewer.setCellModifier(new CellModifier());
-        tableViewer.setSorter(viewerSorter);
+        tableViewer.setComparator(viewerSorter);
     }
 
     /**
@@ -743,7 +746,7 @@ public class PropertyEditor {
      * @return int
      */
     final int getColumnNumber(final String columnName) {
-        return columnNamesToNumMap.get(columnName).intValue();
+        return columnNamesToNumMap.get(columnName);
     }
 
     /**

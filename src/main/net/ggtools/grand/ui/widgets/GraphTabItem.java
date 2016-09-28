@@ -31,7 +31,6 @@ import java.text.CollationKey;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,7 +60,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -127,7 +126,8 @@ public class GraphTabItem extends CTabItem
         /**
          * Logger for this class.
          */
-        private static final Log OVC_LOG = LogFactory.getLog(OutlineViewerCollator.class);
+        private static final Log OVC_LOG =
+                LogFactory.getLog(OutlineViewerCollator.class);
         /**
          * Field NODE_INDEX_GROUP_NUM.
          * (value is 4)
@@ -343,7 +343,7 @@ public class GraphTabItem extends CTabItem
                 | SWT.H_SCROLL | SWT.V_SCROLL);
         outlineViewer.setContentProvider(controler.getNodeContentProvider());
         outlineViewer.setLabelProvider(controler.getNodeLabelProvider());
-        outlineViewer.setSorter(new ViewerSorter(new OutlineViewerCollator()));
+        outlineViewer.setComparator(new ViewerComparator(new OutlineViewerCollator()));
         outlineViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(final SelectionChangedEvent event) {
                 final ISelection selection = event.getSelection();
@@ -352,8 +352,7 @@ public class GraphTabItem extends CTabItem
                     if (selection instanceof IStructuredSelection) {
                         final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
                         if (structuredSelection.size() == 1) {
-                            final String nodeName = structuredSelection.getFirstElement()
-                                    .toString();
+                            final String nodeName = structuredSelection.getFirstElement().toString();
                             if (!skipJumpToNode) {
                                 jumpToNode(nodeName);
                             }
@@ -460,14 +459,13 @@ public class GraphTabItem extends CTabItem
 
     /**
      * Method selectionChanged.
-     * @param selectedNodes Collection<Draw2dNode>
+     * @param selectedNodes Collection&lt;Draw2dNode&gt;
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(java.util.Collection)
      */
     public final void selectionChanged(final Collection<Draw2dNode> selectedNodes) {
 
         final List<Node> selection = new ArrayList<Node>(selectedNodes.size());
-        for (final Iterator<Draw2dNode> iter = selectedNodes.iterator(); iter.hasNext();) {
-            final Draw2dNode node = iter.next();
+        for (final Draw2dNode node : selectedNodes) {
             selection.add(node.getNode());
         }
 
@@ -524,7 +522,7 @@ public class GraphTabItem extends CTabItem
             return;
         }
 
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         for (final AntTargetNode.SourceElement element : richSource) {
             buffer.append(element.getText());
         }

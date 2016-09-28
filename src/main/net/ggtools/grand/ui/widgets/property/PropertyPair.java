@@ -51,14 +51,13 @@ class PropertyPair {
     public PropertyPair(final Object name, final Object value) {
         this.name = (name instanceof String) ? (String) name : name.toString();
         this.value = (value instanceof String) ? (String) value : value.toString();
-
     }
 
     /**
-     * Creates a new PropertyPair from a Map.Entry. The entry key & value should
+     * Creates a new PropertyPair from a Map.Entry. The entry key &amp; value should
      * be both instance of String.
      *
-     * @param entry Entry<Object, Object>
+     * @param entry Entry&lt;Object, Object&gt;
      */
     public PropertyPair(final Entry<Object, Object> entry) {
         this(entry.getKey(), entry.getValue());

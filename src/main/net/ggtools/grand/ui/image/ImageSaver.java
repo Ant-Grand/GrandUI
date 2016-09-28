@@ -106,7 +106,8 @@ public class ImageSaver {
          * @param swtId int
          * @param needDownsampling boolean
          */
-        public ImageFormat(final String name, final int swtId, final boolean needDownsampling) {
+        public ImageFormat(final String name, final int swtId,
+                final boolean needDownsampling) {
             this.name = name;
             this.swtId = swtId;
             this.needDownsampling = needDownsampling;
@@ -170,7 +171,7 @@ public class ImageSaver {
         }
 
         // compute a histogram of color frequencies
-        final HashMap<RGB, ColorCounter> freq = new HashMap<RGB, ColorCounter>();
+        final Map<RGB, ColorCounter> freq = new HashMap<RGB, ColorCounter>();
         final int width = data.width;
         final int[] pixels = new int[width];
         final int[] maskPixels = new int[width];
@@ -270,7 +271,7 @@ public class ImageSaver {
      * Method saveImage.
      * @param image Image
      * @param fileName String
-     * @throws IOException
+     * @throws IOException when file is not found
      */
     public final void saveImage(final Image image, final String fileName)
             throws IOException {

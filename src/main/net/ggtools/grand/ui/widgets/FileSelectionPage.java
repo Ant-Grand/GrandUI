@@ -30,7 +30,6 @@ package net.ggtools.grand.ui.widgets;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import net.ggtools.grand.ui.RecentFilesManager;
 import net.ggtools.grand.ui.widgets.OpenFileWizard.SelectedFileListener;
@@ -100,14 +99,12 @@ public class FileSelectionPage extends WizardPage
         composite.setLayout(layout);
         setControl(composite);
 
-        final CCombo combo = new CCombo(composite, SWT.NONE);
+        final CCombo combo = new CCombo(composite, SWT.BORDER);
         combo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         combo.add(""); // Default: no file.
         // Fill up the combo with the recent files
-        for (final Iterator<String> iter = RecentFilesManager.getInstance().getRecentFiles().iterator();
-                iter.hasNext();) {
-            final String fileName = iter.next();
+        for (final String fileName : RecentFilesManager.getInstance().getRecentFiles()) {
             combo.add(fileName);
         }
 
@@ -188,7 +185,7 @@ public class FileSelectionPage extends WizardPage
     /**
      * Method addListener.
      * @param listener OpenFileWizard.SelectedFileListener
-     * @see net.ggtools.grand.ui.widgets.OpenFileWizard$SelectedFileProvider#addListener(OpenFileWizard.SelectedFileListener)
+     * @see SelectedFileProvider#addListener(OpenFileWizard.SelectedFileListener)
      */
     public final void addListener(final OpenFileWizard.SelectedFileListener listener) {
         if (!subscribers.contains(listener)) {
@@ -200,7 +197,7 @@ public class FileSelectionPage extends WizardPage
     /**
      * Method removeListener.
      * @param listener OpenFileWizard.SelectedFileListener
-     * @see net.ggtools.grand.ui.widgets.OpenFileWizard$SelectedFileProvider#removeListener(OpenFileWizard.SelectedFileListener)
+     * @see SelectedFileProvider#removeListener(OpenFileWizard.SelectedFileListener)
      */
     public final void removeListener(final OpenFileWizard.SelectedFileListener listener) {
         subscribers.remove(listener);
@@ -210,8 +207,7 @@ public class FileSelectionPage extends WizardPage
      * Method notifyListeners.
      */
     private void notifyListeners() {
-        for (final Iterator<SelectedFileListener> iter = subscribers.iterator(); iter.hasNext();) {
-            final OpenFileWizard.SelectedFileListener listener = iter.next();
+        for (final SelectedFileListener listener : subscribers) {
             listener.fileSelected(selectedFile);
         }
     }

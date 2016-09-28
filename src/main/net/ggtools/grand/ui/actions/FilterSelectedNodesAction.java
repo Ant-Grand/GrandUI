@@ -28,7 +28,6 @@
 package net.ggtools.grand.ui.actions;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,12 +47,14 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
      * Field DEFAULT_ACTION_NAME.
      * (value is ""Filter out selected nodes"")
      */
-    private static final String DEFAULT_ACTION_NAME = "Filter out selected nodes";
+    private static final String DEFAULT_ACTION_NAME =
+            "Filter out selected nodes";
 
     /**
      * Field log.
      */
-    private static final Log LOG = LogFactory.getLog(FilterSelectedNodesAction.class);
+    private static final Log LOG =
+            LogFactory.getLog(FilterSelectedNodesAction.class);
 
 
     /**
@@ -83,8 +84,7 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
 
         final Collection<Draw2dNode> selection = getGraphControler().getSelection();
         final List<String> nodeList = new LinkedList<String>();
-        for (final Iterator<Draw2dNode> iter = selection.iterator(); iter.hasNext();) {
-            final Draw2dNode node = iter.next();
+        for (final Draw2dNode node : selection) {
             nodeList.add(node.getName());
         }
         final GraphFilter filter = new NodeRemoverFilter(nodeList);
@@ -97,7 +97,7 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
 
     /**
      * Method selectionChanged.
-     * @param selectedNodes Collection<Draw2dNode>
+     * @param selectedNodes Collection&lt;Draw2dNode&gt;
      * @see net.ggtools.grand.ui.graph.GraphListener#selectionChanged(Collection)
      */
     @Override

@@ -45,7 +45,8 @@ public class EditGraphPropertiesAction extends GraphControlerAction {
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(EditGraphPropertiesAction.class);
+    private static final Log LOG =
+        LogFactory.getLog(EditGraphPropertiesAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.
@@ -59,8 +60,8 @@ public class EditGraphPropertiesAction extends GraphControlerAction {
      */
     @Override
     public final void run() {
-        final PropertyEditionDialog dialog = new PropertyEditionDialog(getGraphControler()
-                .getWindow().getShell());
+        final PropertyEditionDialog dialog =
+                new PropertyEditionDialog(getGraphControler().getWindow().getShell());
         dialog.setProperties(getGraphControler().getGraphProperties());
         if (dialog.open() == Window.OK) {
             getGraphControler().reloadGraph(dialog.getProperties());

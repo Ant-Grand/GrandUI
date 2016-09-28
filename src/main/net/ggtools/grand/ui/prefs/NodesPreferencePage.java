@@ -28,7 +28,6 @@
 package net.ggtools.grand.ui.prefs;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -79,7 +78,7 @@ public class NodesPreferencePage extends PreferencePage
         PreferenceConverter.setDefault(prefs, NODE_PREFIX + "main.fgcolor",
                 ColorConstants.black.getRGB());
         PreferenceConverter.setDefault(prefs, NODE_PREFIX + "main.fillcolor",
-                ColorConstants.cyan.getRGB());
+                ColorConstants.green.getRGB());
         //prefs.setDefault(NODE_PREFIX + "main.font",4);
         prefs.setDefault(NODE_PREFIX + "main.shape", "box");
         prefs.setDefault(NODE_PREFIX + "main.linewidth", 1);
@@ -127,11 +126,8 @@ public class NodesPreferencePage extends PreferencePage
      */
     @Override
     public final boolean performOk() {
-        if (fields != null) {
-            for (final Iterator<FieldEditor> iter = fields.iterator(); iter.hasNext();) {
-                final FieldEditor fieldEditor = iter.next();
-                fieldEditor.store();
-            }
+        for (final FieldEditor fieldEditor : fields) {
+            fieldEditor.store();
         }
         return true;
     }
@@ -139,16 +135,14 @@ public class NodesPreferencePage extends PreferencePage
     /**
      * Calculates the number of columns needed to host all field editors.
      *
-     * @param tabFields List<FieldEditor>
+     * @param tabFields List&lt;FieldEditor&gt;
      * @return the number of columns
      */
     private int calcNumberOfColumns(final List<FieldEditor> tabFields) {
         int result = 0;
         if (tabFields != null) {
-            final Iterator<FieldEditor> e = tabFields.iterator();
-            while (e.hasNext()) {
-                final FieldEditor pe = e.next();
-                result = Math.max(result, pe.getNumberOfControls());
+            for (FieldEditor fieldEditor : tabFields) {
+                result = Math.max(result, fieldEditor.getNumberOfControls());
             }
         }
         return result;
@@ -188,17 +182,14 @@ public class NodesPreferencePage extends PreferencePage
         final GridLayout layout = (GridLayout) parent.getLayout();
 
         layout.numColumns = calcNumberOfColumns(tabFields);
-        if (tabFields != null) {
-            for (final Iterator<FieldEditor> iter = tabFields.iterator(); iter.hasNext();) {
-                final FieldEditor fieldEditor = iter.next();
-                if (fieldEditor.getNumberOfControls() < layout.numColumns) {
-                    fieldEditor.fillIntoGrid(parent, layout.numColumns);
-                }
-                fieldEditor.setPage(this);
-                //pe.setPropertyChangeListener(this);
-                fieldEditor.setPreferenceStore(getPreferenceStore());
-                fieldEditor.load();
+        for (final FieldEditor fieldEditor : tabFields) {
+            if (fieldEditor.getNumberOfControls() < layout.numColumns) {
+                fieldEditor.fillIntoGrid(parent, layout.numColumns);
             }
+            fieldEditor.setPage(this);
+            //fieldEditor.setPropertyChangeListener(this);
+            fieldEditor.setPreferenceStore(getPreferenceStore());
+            fieldEditor.load();
         }
 
         fields.addAll(tabFields);
@@ -231,12 +222,8 @@ public class NodesPreferencePage extends PreferencePage
      */
     @Override
     protected final void performDefaults() {
-        if (fields != null) {
-            final Iterator<FieldEditor> e = fields.iterator();
-            while (e.hasNext()) {
-                final FieldEditor pe = e.next();
-                pe.loadDefault();
-            }
+        for (FieldEditor fieldEditor : fields) {
+            fieldEditor.loadDefault();
         }
         super.performDefaults();
     }
