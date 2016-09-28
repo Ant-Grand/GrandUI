@@ -38,6 +38,7 @@ import net.ggtools.grand.ui.actions.FilterConnectedToNodeAction;
 import net.ggtools.grand.ui.actions.FilterFromNodeAction;
 import net.ggtools.grand.ui.actions.FilterIsolatedNodesAction;
 import net.ggtools.grand.ui.actions.FilterMissingNodesAction;
+import net.ggtools.grand.ui.actions.FilterPrefixedNodesAction;
 import net.ggtools.grand.ui.actions.FilterSelectedNodesAction;
 import net.ggtools.grand.ui.actions.FilterToNodeAction;
 import net.ggtools.grand.ui.actions.ReloadGraphAction;
@@ -65,6 +66,7 @@ public class GraphMenu extends MenuManager {
         add(new Separator("general filters"));
         add(new FilterIsolatedNodesAction(controlerProvider));
         add(new FilterMissingNodesAction(controlerProvider));
+        add(new FilterPrefixedNodesAction(controlerProvider));
         add(new Separator("selected node filters"));
         add(new FilterSelectedNodesAction(controlerProvider));
         add(new FilterConnectedToNodeAction(controlerProvider));
