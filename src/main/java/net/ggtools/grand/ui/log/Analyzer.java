@@ -86,7 +86,7 @@ public class Analyzer extends ApplicationWindow {
         fileMenu.add(new Action("Load") {
             @Override
             public int getAccelerator() {
-                return SWT.CONTROL | 'L';
+                return (SWT.getPlatform().equals("cocoa") ? SWT.MOD1 : SWT.CONTROL) | 'L';
             }
 
             @Override
@@ -129,7 +129,7 @@ public class Analyzer extends ApplicationWindow {
         fileMenu.add(new Action("Quit") {
             @Override
             public int getAccelerator() {
-                return SWT.CONTROL | 'Q';
+                return (SWT.getPlatform().equals("cocoa") ? SWT.MOD1 : SWT.CONTROL) | 'Q';
             }
 
             @Override

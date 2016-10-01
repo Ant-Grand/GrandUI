@@ -99,7 +99,7 @@ public class QuickOpenFileAction extends Action {
     public QuickOpenFileAction(final GraphWindow parent) {
         super(DEFAULT_ACTION_NAME);
         window = parent;
-        setAccelerator(SWT.CONTROL | 'O');
+        setAccelerator((SWT.getPlatform().equals("cocoa") ? SWT.MOD1 : SWT.CONTROL) | 'O');
     }
 
     /**

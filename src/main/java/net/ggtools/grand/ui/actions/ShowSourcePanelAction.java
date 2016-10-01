@@ -36,6 +36,7 @@ import net.ggtools.grand.ui.widgets.GraphWindow;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.SWT;
 
 /**
  *
@@ -70,7 +71,7 @@ public class ShowSourcePanelAction extends Action {
         super(DEFAULT_ACTION_NAME);
         window = parent;
         setChecked(parent.isSourcePanelVisible());
-        setAccelerator('s');
+        setAccelerator((SWT.getPlatform().equals("cocoa") ? SWT.MOD1 : SWT.CONTROL) | SWT.ALT | 'S');
     }
 
     /**

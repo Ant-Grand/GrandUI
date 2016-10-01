@@ -52,7 +52,7 @@ public class QuitAction extends Action {
      */
     public QuitAction() {
         super(DEFAULT_ACTION_NAME);
-        setAccelerator(SWT.CONTROL | 'Q');
+        setAccelerator((SWT.getPlatform().equals("cocoa") ? SWT.MOD1 : SWT.CONTROL) | 'Q');
     }
 
     /**

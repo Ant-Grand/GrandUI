@@ -86,7 +86,7 @@ public class OpenFileAction extends Action {
     public OpenFileAction(final GraphWindow parent) {
         super(DEFAULT_ACTION_NAME);
         window = parent;
-        setAccelerator(SWT.SHIFT | SWT.CONTROL | 'O');
+        setAccelerator(SWT.SHIFT | (SWT.getPlatform().equals("cocoa") ? SWT.MOD1 : SWT.CONTROL) | 'O');
     }
 
     /**

@@ -100,6 +100,6 @@ public class PrintAction extends GraphControlerAction {
     public PrintAction(final GraphWindow parent, final String name) {
         super(parent, name);
         window = parent;
-        setAccelerator(SWT.CONTROL | 'P');
+        setAccelerator((SWT.getPlatform().equals("cocoa") ? SWT.MOD1 : SWT.CONTROL) | 'P');
     }
 }

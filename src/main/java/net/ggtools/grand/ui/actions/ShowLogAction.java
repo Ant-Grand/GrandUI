@@ -34,6 +34,7 @@ import net.ggtools.grand.ui.widgets.LogWindow;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Shell;
@@ -105,7 +106,7 @@ public class ShowLogAction extends Action {
         super(DEFAULT_ACTION_NAME);
         setChecked(false);
         window = parent;
-        setAccelerator('l');
+        setAccelerator((SWT.getPlatform().equals("cocoa") ? SWT.MOD1 : SWT.CONTROL) | 'L');
     }
 
     /**
