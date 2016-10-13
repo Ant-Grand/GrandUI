@@ -35,6 +35,7 @@ import net.ggtools.grand.ui.actions.AboutAction;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.swt.SWT;
 
 /**
  *
@@ -49,6 +50,8 @@ public class HelpMenu extends MenuManager {
      */
     public HelpMenu(final GraphWindow window) {
         super("Help");
-        add(new AboutAction(window));
+        if (!SWT.getPlatform().equals("cocoa")) {
+            add(new AboutAction(window));
+        }
     }
 }

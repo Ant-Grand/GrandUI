@@ -32,6 +32,8 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
+import net.ggtools.grand.ui.actions.AboutAction;
+import net.ggtools.grand.ui.actions.PreferenceAction;
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
 import net.ggtools.grand.ui.graph.GraphControler;
@@ -60,6 +62,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
@@ -149,6 +155,43 @@ public class GraphWindow extends ApplicationWindow
 
         addStatusLine();
         addMenuBar();
+        if (SWT.getPlatform().equals("cocoa")) {
+            Menu systemMenu = Display.getDefault().getSystemMenu();
+
+            for (MenuItem systemItem : systemMenu.getItems())
+            {
+                if (systemItem.getID() == SWT.ID_PREFERENCES)
+                {
+                    systemItem.addListener(SWT.Selection, new Listener()
+                    {
+                        public void handleEvent(Event event)
+                        {
+                            runPreferencesAction();
+                        }
+                    });
+                }
+                if (systemItem.getID() == SWT.ID_ABOUT)
+                {
+                    systemItem.addListener(SWT.Selection, new Listener()
+                    {
+                        public void handleEvent(Event event)
+                        {
+                            runAboutAction();
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private void runPreferencesAction() {
+        PreferenceAction preferenceAction = new PreferenceAction(this);
+        preferenceAction.run();
+    }
+
+    private void runAboutAction() {
+        AboutAction aboutAction = new AboutAction(this);
+        aboutAction.run();
     }
 
     /**

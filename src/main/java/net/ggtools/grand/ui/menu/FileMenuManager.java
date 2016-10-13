@@ -57,13 +57,13 @@ public class FileMenuManager extends MenuManager {
         super("File");
         add(new QuickOpenFileAction(window));
         add(new OpenFileAction(window));
+        add(new Separator("recent files"));
+        add(new RecentFilesMenu(window));
         add(new Separator("print"));
         add(new PageSetupAction(window));
         add(new PrintAction(window));
-        add(new PreferenceAction(window));
-        add(new Separator("recent files"));
-        add(new RecentFilesMenu(window));
         if (!SWT.getPlatform().equals("cocoa")) {
+            add(new PreferenceAction(window));
             add(new Separator("quit"));
             add(new QuitAction());
         }
