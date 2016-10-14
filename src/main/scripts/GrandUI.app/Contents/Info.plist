@@ -7,7 +7,7 @@
 	<key>CFBundleIconFile</key>
 	<string>GenericApp.icns</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Grand UI 0.8 for Mac OS X</string>
+	<string>Grand UI @VERSION@ for Mac OS X</string>
 	<key>CFBundleIdentifier</key>
 	<string>net.ggtools.grand.ui</string>
 	<key>CFBundleInfoDictionaryVersion</key>

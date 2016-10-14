@@ -156,6 +156,9 @@
 		</copy>
 		<copy todir="tmp/${product.fullname}">
 			<fileset dir="${scriptdir}" includes="**/*"/>
+			<filterset>
+				<filter token="VERSION" value="${product.version}"/>
+			</filterset>
 		</copy>
 		<chmod perm="755">
 			<fileset dir="tmp/${product.fullname}">
@@ -222,7 +225,6 @@
 	<target name="clean" depends="clean.dist,clean.deps" description="Remove intermediate files but not external libs">
 		<delete dir="${libdir}"/>
 		<delete dir="${classdir}"/>
-		<delete dir="${classdir.launcher}"/>
 	</target>
 
 	<target name="clean.deps" description="Clean the dependencies directory">
