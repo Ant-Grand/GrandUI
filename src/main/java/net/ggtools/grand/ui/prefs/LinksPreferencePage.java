@@ -31,7 +31,6 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.widgets.Composite;
 
@@ -73,8 +72,8 @@ public class LinksPreferencePage extends FieldEditorPreferencePage
         final ColorFieldEditor defaultLinkColor =
                 new ColorFieldEditor(LINK_DEFAULT_COLOR, "Link color", parent);
         addField(defaultLinkColor);
-        final IntegerFieldEditor defaultLinkLineWidth =
-                new IntegerFieldEditor(LINK_DEFAULT_LINEWIDTH,
+        final SpinnerFieldEditor defaultLinkLineWidth =
+                new SpinnerFieldEditor(LINK_DEFAULT_LINEWIDTH,
                         "Link width", parent);
         defaultLinkLineWidth.setValidRange(1, 5);
         addField(defaultLinkLineWidth);
@@ -82,8 +81,8 @@ public class LinksPreferencePage extends FieldEditorPreferencePage
                 new ColorFieldEditor(LINK_WEAK_COLOR,
                         "Weak link color", parent);
         addField(weakLinkColor);
-        final IntegerFieldEditor weakLinkLineWidth =
-                new IntegerFieldEditor(LINK_WEAK_LINEWIDTH,
+        final SpinnerFieldEditor weakLinkLineWidth =
+                new SpinnerFieldEditor(LINK_WEAK_LINEWIDTH,
                         "Weak link width", parent);
         weakLinkLineWidth.setValidRange(1, 5);
         addField(weakLinkLineWidth);
@@ -91,8 +90,8 @@ public class LinksPreferencePage extends FieldEditorPreferencePage
                 new ColorFieldEditor(LINK_SUBANT_COLOR,
                         "subant link color", parent);
         addField(subantLinkColor);
-        final IntegerFieldEditor subantLinkLineWidth =
-                new IntegerFieldEditor(LINK_SUBANT_LINEWIDTH,
+        final SpinnerFieldEditor subantLinkLineWidth =
+                new SpinnerFieldEditor(LINK_SUBANT_LINEWIDTH,
                         "subant link width", parent);
         subantLinkLineWidth.setValidRange(1, 5);
         addField(subantLinkLineWidth);

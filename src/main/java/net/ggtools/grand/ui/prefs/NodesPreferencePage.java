@@ -35,7 +35,6 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
@@ -175,7 +174,7 @@ public class NodesPreferencePage extends PreferencePage
         final RadioGroupFieldEditor shapeField = new RadioGroupFieldEditor(prefix
                 + "shape", "Shape", 4, SUPPORTED_SHAPES, parent);
         tabFields.add(shapeField);
-        final IntegerFieldEditor lineWidthField = new IntegerFieldEditor(prefix
+        final SpinnerFieldEditor lineWidthField = new SpinnerFieldEditor(prefix
                 + "linewidth", "Line width", parent);
         lineWidthField.setValidRange(1, 5);
         tabFields.add(lineWidthField);

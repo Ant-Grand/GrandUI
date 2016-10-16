@@ -30,7 +30,6 @@ package net.ggtools.grand.ui.prefs;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -66,13 +65,15 @@ public class GraphPreferencePage extends FieldEditorPreferencePage
                 new BooleanFieldEditor(GRAPH_BUS_ENABLED_DEFAULT,
                         "Bus routing enabled on graph loading", parent);
         addField(enableBusRouting);
-        final IntegerFieldEditor inThreshold =
-                new IntegerFieldEditor(GRAPH_BUS_IN_THRESHOLD,
+        final SpinnerFieldEditor inThreshold =
+                new SpinnerFieldEditor(GRAPH_BUS_IN_THRESHOLD,
                         "Bus routing in threshold", parent);
+        inThreshold.setValidRange(1, 99);
         addField(inThreshold);
-        final IntegerFieldEditor outThreshold =
-                new IntegerFieldEditor(GRAPH_BUS_OUT_THRESHOLD,
+        final SpinnerFieldEditor outThreshold =
+                new SpinnerFieldEditor(GRAPH_BUS_OUT_THRESHOLD,
                         "Bus routing out threshold", parent);
+        outThreshold.setValidRange(1, 99);
         addField(outThreshold);
     }
 

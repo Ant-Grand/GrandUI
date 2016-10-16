@@ -28,7 +28,6 @@
 package net.ggtools.grand.ui.prefs;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -50,8 +49,9 @@ public class GeneralPreferencePage extends FieldEditorPreferencePage
     @Override
     protected final void createFieldEditors() {
         final Composite parent = getFieldEditorParent();
-        final IntegerFieldEditor maxFiles = new IntegerFieldEditor(MAX_RECENT_FILES_PREFS_KEY,
-                "Max Files", parent);
+        final SpinnerFieldEditor maxFiles = new SpinnerFieldEditor(MAX_RECENT_FILES_PREFS_KEY,
+                "Max Recent Files", parent);
+        maxFiles.setValidRange(1, 9);
         addField(maxFiles);
     }
 
