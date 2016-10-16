@@ -140,7 +140,7 @@
 		<mkdir dir="tmp/${product.fullname}"/>
 		<copy tofile="tmp/${product.fullname}/lib/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
 		<copy todir="tmp/${product.fullname}/lib">
-			<fileset dir="${extlibdir}" excludes="org.eclipse.swt.*.jar,swt.jar"/>
+			<fileset dir="${extlibdir}" excludes="org.eclipse.swt.*.jar,swt.jar,appbundler.jar"/>
 		</copy>
 		<copy todir="tmp/${product.fullname}/lib/swt">
 			<fileset dir="${extlibdir}" includes="org.eclipse.swt.*.jar"/>
@@ -155,19 +155,35 @@
 			</fileset>
 		</copy>
 		<copy todir="tmp/${product.fullname}">
-			<fileset dir="${scriptdir}" includes="**/*"/>
+			<fileset dir="${scriptdir}" includes="**/*" excludes="GrandUI.app/**"/>
+		</copy>
+		<chmod perm="755">
+			<fileset dir="tmp/${product.fullname}">
+				<include name="grand-ui"/>
+			</fileset>
+		</chmod>
+
+		<copy todir="tmp">
+			<fileset dir="${scriptdir}" includes="GrandUI.app/**"/>
 			<filterset>
 				<filter token="VERSION" value="${product.version}"/>
 			</filterset>
 		</copy>
+		<mkdir dir="tmp/GrandUI.app/Contents/MacOS"/>
+		<copy todir="tmp/GrandUI.app/Contents/MacOS">
+			<mappedresources>
+				<zipfileset src="${extlibdir}/appbundler.jar" includes="**/JavaAppLauncher"/>
+				<flattenmapper/>
+			</mappedresources>
+		</copy>
 		<chmod perm="755">
-			<fileset dir="tmp/${product.fullname}">
-				<include name="*.jar"/>
-				<include name="grand-ui"/>
-			</fileset>
+			<fileset dir="tmp/GrandUI.app/Contents/MacOS"/>
 		</chmod>
-		<mkdir dir="tmp/${product.fullname}/GrandUI.app/Contents/MacOS"/>
-		<symlink link="tmp/${product.fullname}/GrandUI.app/Contents/MacOS/grand-ui" resource="../../../grand-ui"/>
+		<mkdir dir="tmp/GrandUI.app/Contents/Java"/>
+		<copy todir="tmp/GrandUI.app/Contents/Java">
+			<fileset dir="${extlibdir}" includes="*.jar" excludes="appbundler.jar,org.eclipse.swt.gtk.*,org.eclipse.swt.win32.*"/>
+		</copy>
+		<copy tofile="tmp/GrandUI.app/Contents/Java/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
 
 		<tar destfile="${distdir}/${product.fullname}.tar.gz" compression="gzip">
 			<tarfileset dir="tmp/${product.fullname}" prefix="${product.fullname}" mode="755">
@@ -249,6 +265,7 @@
 		<getjar dest="jzgraph.jar" url="${url.jzgraph.jar}"/>
 		<getjar dest="oro.jar" url="${url.oro.jar}"/>
 		<getjar dest="grand.jar" url="${url.grand.jar}"/>
+		<getjar dest="appbundler.jar" url="${url.appbundler.jar}"/>
 	</target>
 
 	<target name="get-rcp-zip">
