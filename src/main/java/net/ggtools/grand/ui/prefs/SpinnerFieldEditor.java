@@ -39,7 +39,7 @@ public class SpinnerFieldEditor extends FieldEditor {
      * Text limit constant (value <code>-1</code>) indicating unlimited text
      * limit and width.
      */
-    public static int UNLIMITED = -1;
+    public static final int UNLIMITED = -1;
 
     /**
      * Cached valid state.
@@ -105,7 +105,7 @@ public class SpinnerFieldEditor extends FieldEditor {
 
         String numberString = spinner.getText();
         try {
-            int number = Integer.valueOf(numberString).intValue();
+            int number = Integer.valueOf(numberString);
 
             if (number >= minValue && number <= maxValue) {
                 clearErrorMessage();
@@ -334,10 +334,6 @@ public class SpinnerFieldEditor extends FieldEditor {
      */
     public void setIntValue(int value) {
         if (spinner != null) {
-            if (spinner == null) {
-                value = 0;//$NON-NLS-1$
-            }
-
             oldValue = spinner.getSelection();
             if (oldValue != value) {
                 spinner.setSelection(value);
