@@ -82,7 +82,7 @@ public class DispatcherPerformanceMeter {
     /**
      * Method main.
      * @param args String[]
-     * @throws NoSuchMethodException
+     * @throws NoSuchMethodException if Listener class has no listen() method
      */
     public static void main(final String[] args) throws NoSuchMethodException {
         final StopWatch timer = new StopWatch();
