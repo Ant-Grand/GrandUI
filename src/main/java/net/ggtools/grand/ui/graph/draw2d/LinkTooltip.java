@@ -138,7 +138,7 @@ public class LinkTooltip extends AbstractGraphTooltip
             @SuppressWarnings("unchecked")
             final Map<String, String> parameters = (Map<String, String>) edge.getAttr(LINK_PARAMETERS_ATTR);
             if (!parameters.isEmpty()) {
-                final BlockFlow outterBlock = new BlockFlow();
+                final BlockFlow outerBlock = new BlockFlow();
                 for (final Entry<String, String> entry : parameters.entrySet()) {
                     final BlockFlow innerBlock = new BlockFlow();
                     textFlow = new TextFlow(entry.getKey() + ": ");
@@ -149,10 +149,10 @@ public class LinkTooltip extends AbstractGraphTooltip
                     textFlow.setFont(italicMonospaceFont);
                     inline.add(textFlow);
                     innerBlock.add(inline);
-                    outterBlock.add(innerBlock);
+                    outerBlock.add(innerBlock);
                 }
-                outterBlock.setBorder(new SectionBorder());
-                page.add(outterBlock);
+                outerBlock.setBorder(new SectionBorder());
+                page.add(outerBlock);
             }
         }
 
@@ -161,9 +161,9 @@ public class LinkTooltip extends AbstractGraphTooltip
             final Collection<String> directories =
                     (Collection<String>) edge.getAttr(LINK_SUBANT_DIRECTORIES);
             if (!directories.isEmpty()) {
-                final BlockFlow outterBlock = new BlockFlow();
+                final BlockFlow outerBlock = new BlockFlow();
                 textFlow = new TextFlow("Generic ant file to be applied to:");
-                outterBlock.add(textFlow);
+                outerBlock.add(textFlow);
                 for (String currentDirectory : directories) {
                     final Dimension dim = FigureUtilities.getTextExtents(currentDirectory, monospaceFont);
                     if (dim.width > TOOLTIP_WIDTH) {
@@ -194,10 +194,10 @@ public class LinkTooltip extends AbstractGraphTooltip
                     textFlow = new TextFlow(currentDirectory);
                     textFlow.setFont(monospaceFont);
                     innerBlock.add(textFlow);
-                    outterBlock.add(innerBlock);
+                    outerBlock.add(innerBlock);
                 }
-                outterBlock.setBorder(new SectionBorder());
-                page.add(outterBlock);
+                outerBlock.setBorder(new SectionBorder());
+                page.add(outerBlock);
 
             }
         }

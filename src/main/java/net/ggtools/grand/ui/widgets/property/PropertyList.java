@@ -105,10 +105,10 @@ class PropertyList {
                             "allPropertiesChanged", Object.class));
         } catch (final SecurityException e) {
             LOG.fatal("Caught exception initializing PropertyList", e);
-            throw new RuntimeException("Cannot instanciate PropertyList", e);
+            throw new RuntimeException("Cannot instantiate PropertyList", e);
         } catch (final NoSuchMethodException e) {
             LOG.fatal("Caught exception initializing PropertyList", e);
-            throw new RuntimeException("Cannot instanciate PropertyList", e);
+            throw new RuntimeException("Cannot instantiate PropertyList", e);
         }
     }
 

@@ -279,7 +279,7 @@ public class ImageSaver {
         final String extension = fileName.substring(lastDotPosition + 1).toLowerCase();
 
         if (!FORMAT_REGISTRY.containsKey(extension)) {
-            final String message = "Unknow extension " + extension;
+            final String message = "Unknown extension " + extension;
             LOG.error(message);
             throw new IllegalArgumentException(message);
         }

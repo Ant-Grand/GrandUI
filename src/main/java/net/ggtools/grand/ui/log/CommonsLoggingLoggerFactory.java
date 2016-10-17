@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
 public class CommonsLoggingLoggerFactory implements LoggerFactory {
 
     /**
-     * Package instanciation only.
+     * Package instantiation only.
      */
     public CommonsLoggingLoggerFactory() {
     }
