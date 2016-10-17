@@ -80,12 +80,12 @@ import sf.jzgraph.dot.impl.Dot;
  *
  * @author Christophe Labouisse
  */
-public class GraphControler implements DotGraphAttributes, SelectionManager,
+public class GraphController implements DotGraphAttributes, SelectionManager,
         IPropertyChangeListener {
     /**
      * Field log.
      */
-    private static final Log LOG = LogFactory.getLog(GraphControler.class);
+    private static final Log LOG = LogFactory.getLog(GraphController.class);
 
     // FIXME ok that's bad, it'll probably have to go to the Prefs API.
     /**
@@ -105,7 +105,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
      *            The printMode to set.
      */
     public static final void setPrintMode(final int printMode) {
-        GraphControler.printMode = printMode;
+        GraphController.printMode = printMode;
     }
 
     /**
@@ -185,12 +185,12 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     private GraphWindow window;
 
     /**
-     * Constructor for GraphControler.
+     * Constructor for GraphController.
      * @param window GraphWindow
      */
-    public GraphControler(final GraphWindow window) {
+    public GraphController(final GraphWindow window) {
         if (LOG.isInfoEnabled()) {
-            LOG.info("Creating new controler to " + window);
+            LOG.info("Creating new controller to " + window);
         }
         this.window = window;
         model = new GraphModel();
@@ -206,13 +206,13 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             selectionChangedDispatcher = graphEventManager.createDispatcher(GraphListener.class
                     .getDeclaredMethod("selectionChanged", Collection.class));
             parameterChangedEvent = graphEventManager.createDispatcher(GraphListener.class
-                    .getDeclaredMethod("parameterChanged", GraphControler.class));
+                    .getDeclaredMethod("parameterChanged", GraphController.class));
         } catch (final SecurityException e) {
-            LOG.fatal("Caught exception initializing GraphControler", e);
-            throw new RuntimeException("Cannot instanciate GraphControler", e);
+            LOG.fatal("Caught exception initializing GraphController", e);
+            throw new RuntimeException("Cannot instantiate GraphController", e);
         } catch (final NoSuchMethodException e) {
-            LOG.fatal("Caught exception initializing GraphControler", e);
-            throw new RuntimeException("Cannot instanciate GraphControler", e);
+            LOG.fatal("Caught exception initializing GraphController", e);
+            throw new RuntimeException("Cannot instantiate GraphController", e);
         }
 
         clearFiltersOnNextLoad = true; // Conservative.
@@ -404,7 +404,7 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             }
             Display.getDefault().syncExec(new Runnable() {
                 public void run() {
-                    displayer = window.newDisplayer(GraphControler.this);
+                    displayer = window.newDisplayer(GraphController.this);
                 }
             });
         }
@@ -504,10 +504,10 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
             RecentFilesManager.getInstance().addNewFile(file, properties);
         } catch (final GrandException e) {
             reportError("Cannot open graph", e);
-            stopControler();
+            stopController();
         } catch (final BuildException e) {
             reportError("Cannot open graph", e);
-            stopControler();
+            stopController();
         } finally {
             progressMonitor.done();
         }
@@ -756,10 +756,10 @@ public class GraphControler implements DotGraphAttributes, SelectionManager,
     }
 
     /**
-     * Puts the controler in a pre-mortem state where it does not receive or
+     * Puts the controller in a pre-mortem state where it does not receive or
      * send event.
      */
-    private void stopControler() {
+    private void stopController() {
         // Stop sending & receiving events.
         graphEventManager.clear();
         Application.getInstance().getPreferenceStore().removePropertyChangeListener(this);

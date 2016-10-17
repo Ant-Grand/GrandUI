@@ -33,7 +33,7 @@ import java.util.List;
 
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.filters.NodeRemoverFilter;
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
 
 import org.apache.commons.logging.Log;
@@ -58,15 +58,15 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
 
 
     /**
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      */
-    public FilterSelectedNodesAction(final GraphControlerProvider parent) {
+    public FilterSelectedNodesAction(final GraphControllerProvider parent) {
         super(parent, DEFAULT_ACTION_NAME);
 
         boolean isEnabled = false;
 
-        if (getGraphControler() != null) {
-            final Collection<Draw2dNode> selectedNodes = getGraphControler().getSelection();
+        if (getGraphController() != null) {
+            final Collection<Draw2dNode> selectedNodes = getGraphController().getSelection();
             isEnabled = !selectedNodes.isEmpty();
         }
         setEnabled(isEnabled);
@@ -82,13 +82,13 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
             LOG.debug("run() - start");
         }
 
-        final Collection<Draw2dNode> selection = getGraphControler().getSelection();
+        final Collection<Draw2dNode> selection = getGraphController().getSelection();
         final List<String> nodeList = new LinkedList<String>();
         for (final Draw2dNode node : selection) {
             nodeList.add(node.getName());
         }
         final GraphFilter filter = new NodeRemoverFilter(nodeList);
-        getGraphControler().addFilter(filter);
+        getGraphController().addFilter(filter);
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("run() - end");

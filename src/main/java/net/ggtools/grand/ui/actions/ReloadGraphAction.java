@@ -28,8 +28,7 @@
 
 package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
-
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
@@ -38,7 +37,7 @@ import org.eclipse.swt.SWT;
  * @author Christophe Labouisse
  * @see org.eclipse.jface.action.Action
  */
-public class ReloadGraphAction extends GraphControlerAction {
+public class ReloadGraphAction extends GraphControllerAction {
 
     /**
      * Field log.
@@ -58,7 +57,7 @@ public class ReloadGraphAction extends GraphControlerAction {
      */
     @Override
     public final void run() {
-        getGraphControler().reloadGraph();
+        getGraphController().reloadGraph();
     }
 
     /**
@@ -66,7 +65,7 @@ public class ReloadGraphAction extends GraphControlerAction {
      *
      * @param parent GraphWindow
      */
-    public ReloadGraphAction(final GraphControlerProvider parent) {
+    public ReloadGraphAction(final GraphControllerProvider parent) {
         this(parent, DEFAULT_ACTION_NAME);
     }
 
@@ -76,7 +75,7 @@ public class ReloadGraphAction extends GraphControlerAction {
      * @param parent GraphWindow
      * @param name String
      */
-    public ReloadGraphAction(final GraphControlerProvider parent,
+    public ReloadGraphAction(final GraphControllerProvider parent,
             final String name) {
         super(parent, name);
         setAccelerator(SWT.F5);

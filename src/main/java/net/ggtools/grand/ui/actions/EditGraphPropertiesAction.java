@@ -28,7 +28,7 @@
 
 package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import net.ggtools.grand.ui.widgets.PropertyEditionDialog;
 
 import org.apache.commons.logging.Log;
@@ -40,7 +40,7 @@ import org.eclipse.jface.window.Window;
  *
  * @author Christophe Labouisse
  */
-public class EditGraphPropertiesAction extends GraphControlerAction {
+public class EditGraphPropertiesAction extends GraphControllerAction {
     /**
      * Field log.
      */
@@ -61,18 +61,18 @@ public class EditGraphPropertiesAction extends GraphControlerAction {
     @Override
     public final void run() {
         final PropertyEditionDialog dialog =
-                new PropertyEditionDialog(getGraphControler().getWindow().getShell());
-        dialog.setProperties(getGraphControler().getGraphProperties());
+                new PropertyEditionDialog(getGraphController().getWindow().getShell());
+        dialog.setProperties(getGraphController().getGraphProperties());
         if (dialog.open() == Window.OK) {
-            getGraphControler().reloadGraph(dialog.getProperties());
+            getGraphController().reloadGraph(dialog.getProperties());
         }
     }
 
     /**
      * Constructor for EditGraphPropertiesAction.
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      */
-    public EditGraphPropertiesAction(final GraphControlerProvider parent) {
+    public EditGraphPropertiesAction(final GraphControllerProvider parent) {
         super(parent, DEFAULT_ACTION_NAME);
     }
 

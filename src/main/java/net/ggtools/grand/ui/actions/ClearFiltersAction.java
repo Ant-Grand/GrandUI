@@ -28,8 +28,7 @@
 
 package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
-
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Christophe Labouisse
  */
-public class ClearFiltersAction extends GraphControlerAction {
+public class ClearFiltersAction extends GraphControllerAction {
     /**
      * Field log.
      */
@@ -57,14 +56,14 @@ public class ClearFiltersAction extends GraphControlerAction {
      */
     @Override
     public final void run() {
-        getGraphControler().clearFilters();
+        getGraphController().clearFilters();
     }
 
     /**
      * Constructor for ClearFiltersAction.
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      */
-    public ClearFiltersAction(final GraphControlerProvider parent) {
+    public ClearFiltersAction(final GraphControllerProvider parent) {
         super(parent, DEFAULT_ACTION_NAME);
     }
 

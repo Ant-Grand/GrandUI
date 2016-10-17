@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Menu;
  *
  * @author Christophe Labouisse
  */
-public interface GraphDisplayer extends GraphControlerProvider {
+public interface GraphDisplayer extends GraphControllerProvider {
 
     /**
      * Get the widget context menu.

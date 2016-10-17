@@ -42,8 +42,8 @@ import net.ggtools.grand.ui.actions.FilterPrefixedNodesAction;
 import net.ggtools.grand.ui.actions.FilterSelectedNodesAction;
 import net.ggtools.grand.ui.actions.FilterToNodeAction;
 import net.ggtools.grand.ui.actions.ReloadGraphAction;
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 
@@ -56,23 +56,23 @@ public class GraphMenu extends MenuManager {
 
     /**
      * Constructor for GraphMenu.
-     * @param controlerProvider GraphControlerProvider
+     * @param controllerProvider GraphControllerProvider
      */
-    public GraphMenu(final GraphControlerProvider controlerProvider) {
+    public GraphMenu(final GraphControllerProvider controllerProvider) {
         super("Graph");
-        add(new ReloadGraphAction(controlerProvider));
-        add(new EditGraphPropertiesAction(controlerProvider));
-        add(new ExportGraphAction(controlerProvider));
+        add(new ReloadGraphAction(controllerProvider));
+        add(new EditGraphPropertiesAction(controllerProvider));
+        add(new ExportGraphAction(controllerProvider));
         add(new Separator("general filters"));
-        add(new FilterIsolatedNodesAction(controlerProvider));
-        add(new FilterMissingNodesAction(controlerProvider));
-        add(new FilterPrefixedNodesAction(controlerProvider));
+        add(new FilterIsolatedNodesAction(controllerProvider));
+        add(new FilterMissingNodesAction(controllerProvider));
+        add(new FilterPrefixedNodesAction(controllerProvider));
         add(new Separator("selected node filters"));
-        add(new FilterSelectedNodesAction(controlerProvider));
-        add(new FilterConnectedToNodeAction(controlerProvider));
-        add(new FilterFromNodeAction(controlerProvider));
-        add(new FilterToNodeAction(controlerProvider));
+        add(new FilterSelectedNodesAction(controllerProvider));
+        add(new FilterConnectedToNodeAction(controllerProvider));
+        add(new FilterFromNodeAction(controllerProvider));
+        add(new FilterToNodeAction(controllerProvider));
         add(new Separator("clear filters"));
-        add(new ClearFiltersAction(controlerProvider));
+        add(new ClearFiltersAction(controllerProvider));
     }
 }

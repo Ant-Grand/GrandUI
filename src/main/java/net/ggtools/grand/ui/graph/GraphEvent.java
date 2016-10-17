@@ -32,7 +32,7 @@
 package net.ggtools.grand.ui.graph;
 
 /**
- * Event send by the model to the controler.
+ * Event send by the model to the controller.
  *
  * @author Christophe Labouisse
  */
@@ -40,6 +40,7 @@ public class GraphEvent {
     /**
      * Field model.
      */
+    @SuppressWarnings("unused")
     private final GraphModel model;
 
     /**

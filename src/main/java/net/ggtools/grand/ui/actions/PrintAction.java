@@ -41,7 +41,7 @@ import org.eclipse.swt.printing.PrinterData;
  * @author Christophe Labouisse
  * @see org.eclipse.jface.action.Action
  */
-public class PrintAction extends GraphControlerAction {
+public class PrintAction extends GraphControllerAction {
 
     /**
      * Field log.
@@ -70,7 +70,7 @@ public class PrintAction extends GraphControlerAction {
         LOG.debug("Dialog returned " + printerData);
         if (printerData != null) {
             final Printer printer = new Printer(printerData);
-            getGraphControler().print(printer);
+            getGraphController().print(printer);
             printer.dispose();
         }
         /*
@@ -78,7 +78,7 @@ public class PrintAction extends GraphControlerAction {
          * setEnabled(false); }
          */
         if (SWT.getPlatform().equals("gtk")) {
-            getGraphControler().dotPrint();
+            getGraphController().dotPrint();
         }
     }
 

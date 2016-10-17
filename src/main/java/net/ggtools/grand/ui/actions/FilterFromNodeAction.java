@@ -30,7 +30,7 @@ package net.ggtools.grand.ui.actions;
 
 import net.ggtools.grand.filters.FromNodeFilter;
 import net.ggtools.grand.filters.GraphFilter;
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import net.ggtools.grand.ui.graph.GraphListener;
 
 import org.apache.commons.logging.Log;
@@ -59,9 +59,9 @@ public class FilterFromNodeAction extends GraphSelectionAction
 
     /**
      * Constructor for FilterFromNodeAction.
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      */
-    public FilterFromNodeAction(final GraphControlerProvider parent) {
+    public FilterFromNodeAction(final GraphControllerProvider parent) {
         super(parent, DEFAULT_ACTION_NAME);
     }
 
@@ -72,6 +72,6 @@ public class FilterFromNodeAction extends GraphSelectionAction
     @Override
     public final void run() {
         final GraphFilter filter = new FromNodeFilter(getCurrentNode());
-        getGraphControler().addFilter(filter);
+        getGraphController().addFilter(filter);
     }
 }

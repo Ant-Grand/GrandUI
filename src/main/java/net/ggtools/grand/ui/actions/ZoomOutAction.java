@@ -27,8 +27,7 @@
  */
 package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
-
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
@@ -36,7 +35,7 @@ import org.eclipse.swt.SWT;
 /**
  * @author Christophe Labouisse
  */
-public class ZoomOutAction extends GraphControlerAction {
+public class ZoomOutAction extends GraphControllerAction {
 
     /**
      * Field DEFAULT_ACTION_NAME.
@@ -51,9 +50,9 @@ public class ZoomOutAction extends GraphControlerAction {
     private static final Log LOG = LogFactory.getLog(ZoomOutAction.class);
 
     /**
-     * @param provider GraphControlerProvider
+     * @param provider GraphControllerProvider
      */
-    public ZoomOutAction(final GraphControlerProvider provider) {
+    public ZoomOutAction(final GraphControllerProvider provider) {
         super(provider, DEFAULT_ACTION_NAME);
         setAccelerator(SWT.PAGE_DOWN);
     }
@@ -64,6 +63,6 @@ public class ZoomOutAction extends GraphControlerAction {
      */
     @Override
     public final void run() {
-        getGraphControler().getDisplayer().zoomOut();
+        getGraphController().getDisplayer().zoomOut();
     }
 }

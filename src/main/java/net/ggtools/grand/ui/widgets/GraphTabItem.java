@@ -39,10 +39,7 @@ import net.ggtools.grand.ant.AntTargetNode;
 import net.ggtools.grand.ant.AntTargetNode.SourceElement;
 import net.ggtools.grand.graph.Node;
 import net.ggtools.grand.ui.Application;
-import net.ggtools.grand.ui.graph.GraphControler;
-import net.ggtools.grand.ui.graph.GraphControlerListener;
-import net.ggtools.grand.ui.graph.GraphDisplayer;
-import net.ggtools.grand.ui.graph.GraphListener;
+import net.ggtools.grand.ui.graph.*;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dGraph;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
 import net.ggtools.grand.ui.menu.GraphMenu;
@@ -76,9 +73,9 @@ import org.eclipse.swt.widgets.Menu;
 
 /**
  * A CTabItem specialized in displaying graph. Although it implements
- * {@link net.ggtools.grand.ui.graph.GraphControlerProvider}this class only
+ * {@link GraphControllerProvider}this class only
  * manage a dummy notification system as there won't be any change of the
- * controler during the instances lifetime.
+ * controller during the instances lifetime.
  *
  * @author Christophe Labouisse
  */
@@ -278,9 +275,9 @@ public class GraphTabItem extends CTabItem
     private final MenuManager contextMenuManager;
 
     /**
-     * Field controler.
+     * Field controller.
      */
-    private final GraphControler controler;
+    private final GraphController controller;
 
     /**
      * Field graph.
@@ -330,19 +327,19 @@ public class GraphTabItem extends CTabItem
      * @param parent
      *            parent CTabFolder.
      * @param style int
-     * @param controler GraphControler
+     * @param controller GraphController
      */
-    public GraphTabItem(final CTabFolder parent, final int style, final GraphControler controler) {
+    public GraphTabItem(final CTabFolder parent, final int style, final GraphController controller) {
         super(parent, style);
-        this.controler = controler;
+        this.controller = controller;
         sourceSashForm = new SashForm(parent, SWT.VERTICAL | SWT.BORDER);
         outlineSashForm = new SashForm(sourceSashForm, SWT.HORIZONTAL | SWT.BORDER);
         setControl(sourceSashForm);
 
         outlineViewer = new TableViewer(outlineSashForm, SWT.READ_ONLY
                 | SWT.H_SCROLL | SWT.V_SCROLL);
-        outlineViewer.setContentProvider(controler.getNodeContentProvider());
-        outlineViewer.setLabelProvider(controler.getNodeLabelProvider());
+        outlineViewer.setContentProvider(controller.getNodeContentProvider());
+        outlineViewer.setLabelProvider(controller.getNodeLabelProvider());
         outlineViewer.setComparator(new ViewerComparator(new OutlineViewerCollator()));
         outlineViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(final SelectionChangedEvent event) {
@@ -357,7 +354,7 @@ public class GraphTabItem extends CTabItem
                                 jumpToNode(nodeName);
                             }
                             skipJumpToNode = false;
-                            getControler().selectNodeByName(nodeName, false);
+                            getController().selectNodeByName(nodeName, false);
                         }
                     }
                 }
@@ -385,15 +382,15 @@ public class GraphTabItem extends CTabItem
         textComposite.setExpandVertical(true);
         sourceSashForm.setWeights(new int[]{5, 1});
 
-        controler.addListener(this);
+        controller.addListener(this);
     }
 
     /**
-     * Method addControlerListener.
-     * @param listener GraphControlerListener
-     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#addControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
+     * Method addControllerListener.
+     * @param listener GraphControllerListener
+     * @see GraphControllerProvider#addControllerListener(GraphControllerListener)
      */
-    public void addControlerListener(final GraphControlerListener listener) {
+    public void addControllerListener(final GraphControllerListener listener) {
     }
 
     /**
@@ -406,12 +403,12 @@ public class GraphTabItem extends CTabItem
     }
 
     /**
-     * Method getControler.
-     * @return GraphControler
-     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#getControler()
+     * Method getController.
+     * @return GraphController
+     * @see GraphControllerProvider#getController()
      */
-    public final GraphControler getControler() {
-        return controler;
+    public final GraphController getController() {
+        return controller;
     }
 
     /**
@@ -443,18 +440,18 @@ public class GraphTabItem extends CTabItem
 
     /**
      * Method parameterChanged.
-     * @param graphControler GraphControler
-     * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanged(net.ggtools.grand.ui.graph.GraphControler)
+     * @param controller GraphController
+     * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanged(GraphController)
      */
-    public void parameterChanged(final GraphControler graphControler) {
+    public void parameterChanged(final GraphController controller) {
     }
 
     /**
-     * Method removeControlerListener.
-     * @param listener GraphControlerListener
-     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
+     * Method removeControllerListener.
+     * @param listener GraphControllerListener
+     * @see GraphControllerProvider#removeControllerListener(GraphControllerListener)
      */
-    public void removeControlerListener(final GraphControlerListener listener) {
+    public void removeControllerListener(final GraphControllerListener listener) {
     }
 
     /**

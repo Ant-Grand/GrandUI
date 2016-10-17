@@ -30,8 +30,8 @@ package net.ggtools.grand.ui.actions;
 
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.filters.MissingNodeFilter;
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
 
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Christophe Labouisse
  */
-public class FilterMissingNodesAction extends GraphControlerAction {
+public class FilterMissingNodesAction extends GraphControllerAction {
     /**
      * Field log.
      */
@@ -62,14 +62,14 @@ public class FilterMissingNodesAction extends GraphControlerAction {
     @Override
     public final void run() {
         final GraphFilter filter = new MissingNodeFilter();
-        getGraphControler().addFilter(filter);
+        getGraphController().addFilter(filter);
     }
 
     /**
      * Constructor for FilterMissingNodesAction.
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      */
-    public FilterMissingNodesAction(final GraphControlerProvider parent) {
+    public FilterMissingNodesAction(final GraphControllerProvider parent) {
         super(parent, DEFAULT_ACTION_NAME);
     }
 }

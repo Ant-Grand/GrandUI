@@ -226,7 +226,7 @@ public class EventManager implements Runnable {
     /**
      * @return boolean
      */
-    public final boolean isDefaultDispatchAnsynchronous() {
+    public final boolean isDefaultDispatchAsynchronous() {
         return defaultDispatchAsynchronous;
     }
 
@@ -272,13 +272,13 @@ public class EventManager implements Runnable {
     }
 
     /**
-     * Sets the defaultDispatchAnsynchronous.
+     * Sets the defaultDispatchAsynchronous.
      *
-     * @param defaultDispatchAnsynchronous
-     *            The defaultDispatchAnsynchronous to set
+     * @param defaultDispatchAsynchronous
+     *            The defaultDispatchAsynchronous to set
      */
-    public final void setDefaultDispatchAnsynchronous(final boolean defaultDispatchAnsynchronous) {
-        defaultDispatchAsynchronous = defaultDispatchAnsynchronous;
+    public final void setDefaultDispatchAsynchronous(final boolean defaultDispatchAsynchronous) {
+        this.defaultDispatchAsynchronous = defaultDispatchAsynchronous;
     }
 
     /**
@@ -401,7 +401,7 @@ public class EventManager implements Runnable {
 
     /**
      * Dispatch an event. The dispatching will be either synchronous or
-     * asynchronous depending of the <code>defaultDispatchAnsynchronous</code>
+     * asynchronous depending of the <code>defaultDispatchAsynchronous</code>
      * attributes. The default is to use synchronous event dispatching.
      *
      * @param eventData Object

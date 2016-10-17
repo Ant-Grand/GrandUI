@@ -29,7 +29,7 @@ package net.ggtools.grand.ui.actions;
 
 import java.util.Collection;
 
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import net.ggtools.grand.ui.graph.GraphListener;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
 
@@ -51,40 +51,40 @@ public abstract class GraphSelectionAction extends GraphListenerAction
     private String currentNode;
 
     /**
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      */
-    protected GraphSelectionAction(final GraphControlerProvider parent) {
+    protected GraphSelectionAction(final GraphControllerProvider parent) {
         super(parent);
         init();
     }
 
     /**
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      * @param text String
      */
-    protected GraphSelectionAction(final GraphControlerProvider parent,
+    protected GraphSelectionAction(final GraphControllerProvider parent,
             final String text) {
         super(parent, text);
         init();
     }
 
     /**
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      * @param text String
      * @param image ImageDescriptor
      */
-    protected GraphSelectionAction(final GraphControlerProvider parent,
+    protected GraphSelectionAction(final GraphControllerProvider parent,
             final String text, final ImageDescriptor image) {
         super(parent, text, image);
         init();
     }
 
     /**
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      * @param text String
      * @param style int
      */
-    protected GraphSelectionAction(final GraphControlerProvider parent,
+    protected GraphSelectionAction(final GraphControllerProvider parent,
             final String text, final int style) {
         super(parent, text, style);
         init();
@@ -117,9 +117,9 @@ public abstract class GraphSelectionAction extends GraphListenerAction
     private void init() {
         boolean isEnabled = false;
 
-        if (getGraphControler() != null) {
+        if (getGraphController() != null) {
             final Collection<Draw2dNode> selectedNodes =
-                    getGraphControler().getSelection();
+                    getGraphController().getSelection();
             isEnabled = selectedNodes.size() == 1;
             if (isEnabled) {
                 currentNode = selectedNodes.iterator().next().getName();

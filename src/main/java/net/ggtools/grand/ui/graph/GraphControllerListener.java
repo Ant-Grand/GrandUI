@@ -29,23 +29,23 @@ package net.ggtools.grand.ui.graph;
 
 /**
  * Interface to be implemented by classes listener
- * to GraphControler availability events.
+ * to GraphController availability events.
  *
  * @author Christophe Labouisse
  */
-public interface GraphControlerListener {
+public interface GraphControllerListener {
     /**
-     * Notify the listener that the controler has been removed and should
+     * Notify the listener that the controller has been removed and should
      * no longer be used.
      *
-     * @param controler GraphControler
+     * @param controller GraphController
      */
-    void controlerRemoved(GraphControler controler);
+    void controllerRemoved(GraphController controller);
 
     /**
-     * Notify the listener of the new available controler.
+     * Notify the listener of the new available controller.
      *
-     * @param controler GraphControler
+     * @param controller GraphController
      */
-    void controlerAvailable(GraphControler controler);
+    void controllerAvailable(GraphController controller);
 }

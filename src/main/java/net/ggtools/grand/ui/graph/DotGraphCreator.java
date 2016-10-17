@@ -71,7 +71,7 @@ public class DotGraphCreator
      * Field log.
      */
     @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(GraphControler.class);
+    private static final Log LOG = LogFactory.getLog(GraphController.class);
 
     /**
      * Field currentLinkName.

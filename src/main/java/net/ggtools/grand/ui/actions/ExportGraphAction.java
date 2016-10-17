@@ -30,7 +30,7 @@ package net.ggtools.grand.ui.actions;
 
 import java.io.IOException;
 
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import net.ggtools.grand.ui.image.ImageSaver;
 import net.ggtools.grand.ui.widgets.ExceptionDialog;
 
@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Shell;
  * @author Christophe Labouisse
  * @see org.eclipse.jface.action.Action
  */
-public class ExportGraphAction extends GraphControlerAction {
+public class ExportGraphAction extends GraphControllerAction {
 
     /**
      * Field DEFAULT_ACTION_NAME.
@@ -61,19 +61,19 @@ public class ExportGraphAction extends GraphControlerAction {
     /**
      * Creates a new ReloadGraphAction object.
      *
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      */
-    public ExportGraphAction(final GraphControlerProvider parent) {
+    public ExportGraphAction(final GraphControllerProvider parent) {
         this(parent, DEFAULT_ACTION_NAME);
     }
 
     /**
      * Creates a new QuickOpenFileAction object with specific name.
      *
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      * @param name String
      */
-    public ExportGraphAction(final GraphControlerProvider parent, final String name) {
+    public ExportGraphAction(final GraphControllerProvider parent, final String name) {
         super(parent, name);
     }
 
@@ -83,7 +83,7 @@ public class ExportGraphAction extends GraphControlerAction {
      */
     @Override
     public final void run() {
-        final Shell parentShell = getGraphControler().getWindow().getShell();
+        final Shell parentShell = getGraphController().getWindow().getShell();
         final FileDialog dialog = new FileDialog(parentShell,
                 SWT.SAVE);
         final ImageSaver imageSaver = new ImageSaver();
@@ -94,7 +94,7 @@ public class ExportGraphAction extends GraphControlerAction {
         if (fileName != null) {
             Image image = null;
             try {
-                image = getGraphControler().createImageForGraph();
+                image = getGraphController().createImageForGraph();
                 imageSaver.saveImage(image, fileName);
             } catch (final IllegalArgumentException e) {
                 ExceptionDialog.openException(parentShell, "Cannot export image", e);

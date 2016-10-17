@@ -36,9 +36,9 @@ import net.ggtools.grand.ui.actions.AboutAction;
 import net.ggtools.grand.ui.actions.PreferenceAction;
 import net.ggtools.grand.ui.event.Dispatcher;
 import net.ggtools.grand.ui.event.EventManager;
-import net.ggtools.grand.ui.graph.GraphControler;
-import net.ggtools.grand.ui.graph.GraphControlerListener;
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
+import net.ggtools.grand.ui.graph.GraphController;
+import net.ggtools.grand.ui.graph.GraphControllerListener;
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import net.ggtools.grand.ui.graph.GraphDisplayer;
 import net.ggtools.grand.ui.menu.FileMenuManager;
 import net.ggtools.grand.ui.menu.GraphMenu;
@@ -73,7 +73,7 @@ import org.eclipse.swt.widgets.Widget;
  * @author Christophe Labouisse
  */
 public class GraphWindow extends ApplicationWindow
-        implements GraphControlerProvider {
+        implements GraphControllerProvider {
 
     /**
      * Field log.
@@ -81,19 +81,19 @@ public class GraphWindow extends ApplicationWindow
     private static final Log LOG = LogFactory.getLog(GraphWindow.class);
 
     /**
-     * Field controlerAvailableDispatcher.
+     * Field controllerAvailableDispatcher.
      */
-    private final Dispatcher controlerAvailableDispatcher;
+    private final Dispatcher controllerAvailableDispatcher;
 
     /**
-     * Field controlerEventManager.
+     * Field controllerEventManager.
      */
-    private final EventManager controlerEventManager;
+    private final EventManager controllerEventManager;
 
     /**
-     * Field controlerRemovedDispatcher.
+     * Field controllerRemovedDispatcher.
      */
-    private final Dispatcher controlerRemovedDispatcher;
+    private final Dispatcher controllerRemovedDispatcher;
 
     /**
      * Field display.
@@ -137,20 +137,20 @@ public class GraphWindow extends ApplicationWindow
             LOG.debug("Creating new GraphWindow");
         }
 
-        controlerEventManager = new EventManager("GraphControler Availability Event");
+        controllerEventManager = new EventManager("GraphController Availability Event");
         try {
-            controlerAvailableDispatcher = controlerEventManager
-                    .createDispatcher(GraphControlerListener.class.getDeclaredMethod(
-                            "controlerAvailable", GraphControler.class));
-            controlerRemovedDispatcher = controlerEventManager
-                    .createDispatcher(GraphControlerListener.class.getDeclaredMethod(
-                            "controlerRemoved", GraphControler.class));
+            controllerAvailableDispatcher = controllerEventManager
+                    .createDispatcher(GraphControllerListener.class.getDeclaredMethod(
+                            "controllerAvailable", GraphController.class));
+            controllerRemovedDispatcher = controllerEventManager
+                    .createDispatcher(GraphControllerListener.class.getDeclaredMethod(
+                            "controllerRemoved", GraphController.class));
         } catch (final SecurityException e) {
-            LOG.fatal("Caught exception initializing GraphControler", e);
-            throw new RuntimeException("Cannot instanciate GraphControler", e);
+            LOG.fatal("Caught exception initializing GraphController", e);
+            throw new RuntimeException("Cannot instantiate GraphController", e);
         } catch (final NoSuchMethodException e) {
-            LOG.fatal("Caught exception initializing GraphControler", e);
-            throw new RuntimeException("Cannot instanciate GraphControler", e);
+            LOG.fatal("Caught exception initializing GraphController", e);
+            throw new RuntimeException("Cannot instantiate GraphController", e);
         }
 
         addStatusLine();
@@ -195,44 +195,44 @@ public class GraphWindow extends ApplicationWindow
     }
 
     /**
-     * Method addControlerListener.
-     * @param listener GraphControlerListener
-     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#addControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
+     * Method addControllerListener.
+     * @param listener GraphControllerListener
+     * @see GraphControllerProvider#addControllerListener(GraphControllerListener)
      */
-    public final void addControlerListener(final GraphControlerListener listener) {
-        controlerEventManager.subscribe(listener);
+    public final void addControllerListener(final GraphControllerListener listener) {
+        controllerEventManager.subscribe(listener);
     }
 
     /**
-     * Method getControler.
-     * @return GraphControler
-     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#getControler()
+     * Method getController.
+     * @return GraphController
+     * @see GraphControllerProvider#getController()
      */
-    public final GraphControler getControler() {
+    public final GraphController getController() {
         if (tabFolder != null) {
             final GraphTabItem selectedTab = (GraphTabItem) tabFolder.getSelection();
             if (selectedTab == null) {
                 return null;
             } else {
-                return selectedTab.getControler();
+                return selectedTab.getController();
             }
         }
         return null;
     }
 
     /**
-     * Create a new displayer for a controler.
+     * Create a new displayer for a controller.
      *
-     * @param controler GraphControler
+     * @param controller GraphController
      * @return GraphDisplayer
      */
-    public final GraphDisplayer newDisplayer(final GraphControler controler) {
-        final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE, controler);
+    public final GraphDisplayer newDisplayer(final GraphController controller) {
+        final GraphTabItem graphTabItem = new GraphTabItem(tabFolder, SWT.CLOSE, controller);
         graphTabItem.setSourcePanelVisible(sourcePanelVisible);
         graphTabItem.setOutlinePanelVisible(outlinePanelVisible);
         tabFolder.setSelection(graphTabItem);
-        controlerAvailableDispatcher.dispatch(controler);
-        controler.setProgressMonitor(new SafeProgressMonitor(getStatusLineManager()
+        controllerAvailableDispatcher.dispatch(controller);
+        controller.setProgressMonitor(new SafeProgressMonitor(getStatusLineManager()
                 .getProgressMonitor(), display));
         return graphTabItem;
     }
@@ -261,34 +261,34 @@ public class GraphWindow extends ApplicationWindow
      */
     public final void openGraphInNewDisplayer(final File buildFile,
             final String targetName, final Properties properties) {
-        final GraphControler controler = new GraphControler(this);
+        final GraphController controller = new GraphController(this);
         try {
             new ProgressMonitorDialog(getShell()).run(true, false,
                     new IRunnableWithProgress() {
                             public void run(final IProgressMonitor monitor)
                                     throws InvocationTargetException,
                                             InterruptedException {
-                    controler.setProgressMonitor(monitor);
-                    controler.openFile(buildFile, properties);
+                    controller.setProgressMonitor(monitor);
+                    controller.openFile(buildFile, properties);
                     if (targetName != null) {
-                        controler.focusOn(targetName);
+                        controller.focusOn(targetName);
                     }
                 }
             });
         } catch (final InvocationTargetException e) {
-            LOG.error("Caugh exception opening file", e);
+            LOG.error("Caught exception opening file", e);
         } catch (final InterruptedException e) {
             LOG.info("Loading cancelled", e);
         }
     }
 
     /**
-     * Method removeControlerListener.
-     * @param listener GraphControlerListener
-     * @see net.ggtools.grand.ui.graph.GraphControlerProvider#removeControlerListener(net.ggtools.grand.ui.graph.GraphControlerListener)
+     * Method removeControllerListener.
+     * @param listener GraphControllerListener
+     * @see GraphControllerProvider#removeControllerListener(GraphControllerListener)
      */
-    public final void removeControlerListener(final GraphControlerListener listener) {
-        controlerEventManager.unSubscribe(listener);
+    public final void removeControllerListener(final GraphControllerListener listener) {
+        controllerEventManager.unSubscribe(listener);
     }
 
     /**
@@ -358,7 +358,7 @@ public class GraphWindow extends ApplicationWindow
                 LOG.debug("Got " + event);
                 final Widget item = event.item;
                 if (item instanceof GraphTabItem) {
-                    controlerRemovedDispatcher.dispatch(((GraphTabItem) item).getControler());
+                    controllerRemovedDispatcher.dispatch(((GraphTabItem) item).getController());
                 }
             }
         });
@@ -375,8 +375,8 @@ public class GraphWindow extends ApplicationWindow
                     final CTabFolder folder = (CTabFolder) widget;
                     final CTabItem selection = folder.getSelection();
                     if (selection instanceof GraphTabItem) {
-                        controlerAvailableDispatcher.dispatch(((GraphTabItem) selection)
-                                .getControler());
+                        controllerAvailableDispatcher.dispatch(((GraphTabItem) selection)
+                                .getController());
                     }
                 }
             }

@@ -29,8 +29,8 @@ package net.ggtools.grand.ui.actions;
 
 import java.util.Collection;
 
-import net.ggtools.grand.ui.graph.GraphControler;
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
+import net.ggtools.grand.ui.graph.GraphController;
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import net.ggtools.grand.ui.graph.GraphListener;
 import net.ggtools.grand.ui.graph.draw2d.Draw2dNode;
 
@@ -44,50 +44,50 @@ import org.eclipse.jface.resource.ImageDescriptor;
  *
  * @author Christophe Labouisse
  */
-public abstract class GraphListenerAction extends GraphControlerAction
+public abstract class GraphListenerAction extends GraphControllerAction
         implements GraphListener {
     /**
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      */
-    protected GraphListenerAction(final GraphControlerProvider parent) {
+    protected GraphListenerAction(final GraphControllerProvider parent) {
         super(parent);
     }
 
     /**
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      * @param text String
      */
-    protected GraphListenerAction(final GraphControlerProvider parent,
+    protected GraphListenerAction(final GraphControllerProvider parent,
             final String text) {
         super(parent, text);
     }
 
     /**
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      * @param text String
      * @param image ImageDescriptor
      */
-    protected GraphListenerAction(final GraphControlerProvider parent,
+    protected GraphListenerAction(final GraphControllerProvider parent,
             final String text, final ImageDescriptor image) {
         super(parent, text, image);
     }
 
     /**
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      * @param text String
      * @param style int
      */
-    protected GraphListenerAction(final GraphControlerProvider parent,
+    protected GraphListenerAction(final GraphControllerProvider parent,
             final String text, final int style) {
         super(parent, text, style);
     }
 
     /**
      * Method parameterChanged.
-     * @param controler GraphControler
-     * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanged(net.ggtools.grand.ui.graph.GraphControler)
+     * @param controller GraphController
+     * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanged(GraphController)
      */
-    public void parameterChanged(final GraphControler controler) {
+    public void parameterChanged(final GraphController controller) {
     }
 
     /**
@@ -100,31 +100,31 @@ public abstract class GraphListenerAction extends GraphControlerAction
 
     /**
      * Method postAddHook.
-     * @see net.ggtools.grand.ui.actions.GraphControlerAction#postAddHook()
+     * @see GraphControllerAction#postAddHook()
      */
     @Override
     protected void postAddHook() {
-        getGraphControler().addListener(this);
+        getGraphController().addListener(this);
     }
 
     /**
      * Method postInitHook.
-     * @see net.ggtools.grand.ui.actions.GraphControlerAction#postInitHook()
+     * @see GraphControllerAction#postInitHook()
      */
     @Override
     protected void postInitHook() {
-        if (getGraphControler() != null) {
-            getGraphControler().addListener(this);
+        if (getGraphController() != null) {
+            getGraphController().addListener(this);
         }
     }
 
     /**
      * Method preRemoveHook.
-     * @see net.ggtools.grand.ui.actions.GraphControlerAction#preRemoveHook()
+     * @see GraphControllerAction#preRemoveHook()
      */
     @Override
     protected final void preRemoveHook() {
-        getGraphControler().removeSelectionListener(this);
+        getGraphController().removeSelectionListener(this);
         setEnabled(false);
     }
 }

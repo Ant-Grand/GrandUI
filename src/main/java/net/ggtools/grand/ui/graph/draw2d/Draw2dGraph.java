@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.ggtools.grand.ui.Application;
-import net.ggtools.grand.ui.graph.GraphControler;
+import net.ggtools.grand.ui.graph.GraphController;
 import net.ggtools.grand.ui.graph.GraphListener;
 import net.ggtools.grand.ui.graph.SelectionManager;
 import net.ggtools.grand.ui.widgets.CanvasScroller;
@@ -86,8 +86,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                 break;
 
             case (3):
-                if (graphControler != null) {
-                    graphControler.getDisplayer().getContextMenu().setVisible(true);
+                if (graphController != null) {
+                    graphController.getDisplayer().getContextMenu().setVisible(true);
                 }
                 break;
             }
@@ -151,7 +151,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
             case (1): {
                 final boolean addToSelection = (me.getState() & SWT.CONTROL) != 0;
                 selectNode(node, addToSelection);
-                graphControler.openNodeFile(node);
+                graphController.openNodeFile(node);
             }
             }
             me.consume();
@@ -179,8 +179,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                     selectNode(node, false);
                 }
                 // TODO rewrite in a clean way
-                if (graphControler != null) {
-                    graphControler.getDisplayer().getContextMenu().setVisible(true);
+                if (graphController != null) {
+                    graphController.getDisplayer().getContextMenu().setVisible(true);
                 }
                 break;
             }
@@ -219,9 +219,9 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     private static final Log LOG = LogFactory.getLog(Draw2dGraph.class);
 
     /**
-     * Field graphControler.
+     * Field graphController.
      */
-    private GraphControler graphControler;
+    private GraphController graphController;
 
     /**
      * Field graphMouseListener.
@@ -259,8 +259,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * @see net.ggtools.grand.ui.graph.SelectionManager#addListener(GraphListener)
      */
     public final void addListener(final GraphListener listener) {
-        if (graphControler != null) {
-            graphControler.addListener(listener);
+        if (graphController != null) {
+            graphController.addListener(listener);
         }
     }
 
@@ -299,8 +299,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * @see net.ggtools.grand.ui.graph.SelectionManager#deselectAllNodes()
      */
     public final void deselectAllNodes() {
-        if (graphControler != null) {
-            graphControler.deselectAllNodes();
+        if (graphController != null) {
+            graphController.deselectAllNodes();
         }
     }
 
@@ -309,8 +309,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * @see net.ggtools.grand.ui.graph.SelectionManager#deselectNode(Draw2dNode)
      */
     public final void deselectNode(final Draw2dNode node) {
-        if (graphControler != null) {
-            graphControler.deselectNode(node);
+        if (graphController != null) {
+            graphController.deselectNode(node);
         }
     }
 
@@ -343,8 +343,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     /**
      * @return Returns the controller.
      */
-    public final SelectionManager getControler() {
-        return graphControler;
+    public final SelectionManager getController() {
+        return graphController;
     }
 
     /**
@@ -390,8 +390,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * @see net.ggtools.grand.ui.graph.SelectionManager#getSelection()
      */
     public final Collection<Draw2dNode> getSelection() {
-        if (graphControler != null) {
-            return graphControler.getSelection();
+        if (graphController != null) {
+            return graphController.getSelection();
         }
         return null;
     }
@@ -424,8 +424,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      * @see net.ggtools.grand.ui.graph.SelectionManager#removeSelectionListener(GraphListener)
      */
     public final void removeSelectionListener(final GraphListener listener) {
-        if (graphControler != null) {
-            graphControler.removeSelectionListener(listener);
+        if (graphController != null) {
+            graphController.removeSelectionListener(listener);
         }
     }
 
@@ -436,8 +436,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
      */
     public final void selectNode(final Draw2dNode node,
             final boolean addToSelection) {
-        if (graphControler != null) {
-            graphControler.selectNode(node, addToSelection);
+        if (graphController != null) {
+            graphController.selectNode(node, addToSelection);
         }
     }
 
@@ -464,11 +464,11 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     }
 
     /**
-     * @param graphControler
-     *            The controler to set.
+     * @param graphController
+     *            The controller to set.
      */
-    public final void setSelectionManager(final GraphControler graphControler) {
-        this.graphControler = graphControler;
+    public final void setSelectionManager(final GraphController graphController) {
+        this.graphController = graphController;
     }
 
     /**

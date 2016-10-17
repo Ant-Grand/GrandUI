@@ -49,7 +49,7 @@ public interface GraphListener {
      * Method called when a graph parameter
      * such as the layout algorithm has changed.
      *
-     * @param controler GraphControler
+     * @param controller GraphController
      */
-    void parameterChanged(GraphControler controler);
+    void parameterChanged(GraphController controller);
 }

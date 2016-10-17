@@ -27,7 +27,7 @@
  */
 package net.ggtools.grand.ui.widgets;
 
-import net.ggtools.grand.ui.graph.GraphControler;
+import net.ggtools.grand.ui.graph.GraphController;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -88,7 +88,7 @@ public class PageSetupDialog extends Dialog {
         combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
         combo.setItems(new String[]{"Tile", "Fit on one page",
                 "Fit on one page horizontally", "Fit one page vertically"});
-        combo.select(GraphControler.getPrintMode() - 1);
+        combo.select(GraphController.getPrintMode() - 1);
         combo.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
                         | GridData.GRAB_HORIZONTAL));
         return composite;
@@ -100,7 +100,7 @@ public class PageSetupDialog extends Dialog {
      */
     @Override
     protected final void okPressed() {
-        GraphControler.setPrintMode(combo.getSelectionIndex() + 1);
+        GraphController.setPrintMode(combo.getSelectionIndex() + 1);
         super.okPressed();
     }
 

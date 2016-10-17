@@ -27,8 +27,7 @@
  */
 package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
-
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
@@ -36,7 +35,7 @@ import org.eclipse.swt.SWT;
 /**
  * @author Christophe Labouisse
  */
-public class ZoomResetAction extends GraphControlerAction {
+public class ZoomResetAction extends GraphControllerAction {
 
     /**
      * Field DEFAULT_ACTION_NAME.
@@ -51,9 +50,9 @@ public class ZoomResetAction extends GraphControlerAction {
     private static final Log LOG = LogFactory.getLog(ZoomResetAction.class);
 
     /**
-     * @param provider GraphControlerProvider
+     * @param provider GraphControllerProvider
      */
-    public ZoomResetAction(final GraphControlerProvider provider) {
+    public ZoomResetAction(final GraphControllerProvider provider) {
         super(provider, DEFAULT_ACTION_NAME);
         setAccelerator(SWT.HOME);
     }
@@ -64,6 +63,6 @@ public class ZoomResetAction extends GraphControlerAction {
      */
     @Override
     public final void run() {
-        getGraphControler().getDisplayer().zoomReset();
+        getGraphController().getDisplayer().zoomReset();
     }
 }

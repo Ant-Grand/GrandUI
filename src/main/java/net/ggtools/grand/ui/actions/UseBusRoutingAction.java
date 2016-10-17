@@ -27,9 +27,9 @@
  */
 package net.ggtools.grand.ui.actions;
 
-import net.ggtools.grand.ui.graph.GraphControler;
-import net.ggtools.grand.ui.graph.GraphControlerProvider;
+import net.ggtools.grand.ui.graph.GraphController;
 
+import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -51,20 +51,20 @@ public class UseBusRoutingAction extends GraphListenerAction {
     private static final Log LOG = LogFactory.getLog(UseBusRoutingAction.class);
 
     /**
-     * @param parent GraphControlerProvider
+     * @param parent GraphControllerProvider
      */
-    public UseBusRoutingAction(final GraphControlerProvider parent) {
+    public UseBusRoutingAction(final GraphControllerProvider parent) {
         super(parent, DEFAULT_ACTION_NAME, AS_CHECK_BOX);
     }
 
     /**
      * Method parameterChanged.
-     * @param controler GraphControler
-     * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanged(net.ggtools.grand.ui.graph.GraphControler)
+     * @param controller GraphController
+     * @see net.ggtools.grand.ui.graph.GraphListener#parameterChanged(GraphController)
      */
     @Override
-    public final void parameterChanged(final GraphControler controler) {
-        final boolean newState = getGraphControler().isBusRoutingEnabled();
+    public final void parameterChanged(final GraphController controller) {
+        final boolean newState = getGraphController().isBusRoutingEnabled();
         if (newState != isChecked()) {
             setChecked(newState);
         }
@@ -76,29 +76,29 @@ public class UseBusRoutingAction extends GraphListenerAction {
      */
     @Override
     public final void run() {
-        getGraphControler().enableBusRouting(isChecked());
+        getGraphController().enableBusRouting(isChecked());
     }
 
     /**
      * Method postAddHook.
-     * @see net.ggtools.grand.ui.actions.GraphControlerAction#postAddHook()
+     * @see GraphControllerAction#postAddHook()
      */
     @Override
     protected final void postAddHook() {
         super.postAddHook();
         setEnabled(true);
-        setChecked(getGraphControler().isBusRoutingEnabled());
+        setChecked(getGraphController().isBusRoutingEnabled());
     }
 
     /**
      * Method postInitHook.
-     * @see net.ggtools.grand.ui.actions.GraphControlerAction#postInitHook()
+     * @see GraphControllerAction#postInitHook()
      */
     @Override
     protected final void postInitHook() {
         super.postInitHook();
-        if (getGraphControler() != null) {
-            setChecked(getGraphControler().isBusRoutingEnabled());
+        if (getGraphController() != null) {
+            setChecked(getGraphController().isBusRoutingEnabled());
             setEnabled(true);
         } else {
             setEnabled(false);
