@@ -19,7 +19,7 @@
 
 	<property name="verbose-get" value="false"/>
 
-	<macrodef name="getjar" description="Download a jar to a the extlib directory">
+	<macrodef name="getjar" description="Download a jar to the extlib directory">
 		<attribute name="dest"/>
 		<attribute name="url"/>
 		<sequential>

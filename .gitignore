@@ -4,8 +4,6 @@ deps/
 dist/
 lib/
 tmp/
-jnlp/*.jar
-jnlp/*/
 .settings/
 .idea/
 *.iml
