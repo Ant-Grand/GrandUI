@@ -77,7 +77,7 @@ public class SpinnerFieldEditor extends FieldEditor {
      */
     private int validateStrategy = VALIDATE_ON_KEY_STROKE;
 
-    public SpinnerFieldEditor(String name, String labelText, Composite parent) {
+    public SpinnerFieldEditor(final String name, final String labelText, final Composite parent) {
         init(name, labelText);
         isValid = false;
         widthInChars = Integer.toString(maxValue).length() + 1;
@@ -86,7 +86,7 @@ public class SpinnerFieldEditor extends FieldEditor {
     }
 
     @Override
-    protected void adjustForNumColumns(int numColumns) {
+    protected void adjustForNumColumns(final int numColumns) {
         GridData gd = (GridData) spinner.getLayoutData();
         gd.horizontalSpan = numColumns - 1;
         gd.grabExcessHorizontalSpace = false;
@@ -137,7 +137,7 @@ public class SpinnerFieldEditor extends FieldEditor {
     }
 
     @Override
-    protected void doFillIntoGrid(Composite parent, int numColumns) {
+    protected void doFillIntoGrid(final Composite parent, final int numColumns) {
         getLabelControl(parent);
 
         spinner = getSpinnerControl(parent);
@@ -229,7 +229,7 @@ public class SpinnerFieldEditor extends FieldEditor {
      *            the parent
      * @return the text control
      */
-    public final Spinner getSpinnerControl(Composite parent) {
+    public final Spinner getSpinnerControl(final Composite parent) {
         if (spinner == null) {
             spinner = new Spinner(parent, SWT.SINGLE | SWT.BORDER);
             spinner.setFont(parent.getFont());
@@ -241,7 +241,7 @@ public class SpinnerFieldEditor extends FieldEditor {
                      * (non-Javadoc)
                      * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
                      */
-                    public void keyReleased(KeyEvent e) {
+                    public void keyReleased(final KeyEvent e) {
                         valueChanged();
                     }
                 });
@@ -249,7 +249,7 @@ public class SpinnerFieldEditor extends FieldEditor {
                     // Ensure that the value is checked on focus loss in case we
                     // missed a keyRelease or user hasn't released key.
                     // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=214716
-                    public void focusLost(FocusEvent e) {
+                    public void focusLost(final FocusEvent e) {
                         valueChanged();
                     }
                 });
@@ -257,16 +257,16 @@ public class SpinnerFieldEditor extends FieldEditor {
                 break;
             case VALIDATE_ON_FOCUS_LOST:
                 spinner.addKeyListener(new KeyAdapter() {
-                    public void keyPressed(KeyEvent e) {
+                    public void keyPressed(final KeyEvent e) {
                         clearErrorMessage();
                     }
                 });
                 spinner.addFocusListener(new FocusAdapter() {
-                    public void focusGained(FocusEvent e) {
+                    public void focusGained(final FocusEvent e) {
                         refreshValidState();
                     }
 
-                    public void focusLost(FocusEvent e) {
+                    public void focusLost(final FocusEvent e) {
                         valueChanged();
                         clearErrorMessage();
                     }
@@ -276,7 +276,7 @@ public class SpinnerFieldEditor extends FieldEditor {
                 Assert.isTrue(false, "Unknown validate strategy"); //$NON-NLS-1$
             }
             spinner.addDisposeListener(new DisposeListener() {
-                public void widgetDisposed(DisposeEvent event) {
+                public void widgetDisposed(final DisposeEvent event) {
                     spinner = null;
                 }
             });
@@ -314,7 +314,7 @@ public class SpinnerFieldEditor extends FieldEditor {
      * @param message
      *            the error message
      */
-    public void setErrorMessage(String message) {
+    public void setErrorMessage(final String message) {
         errorMessage = message;
     }
 
@@ -332,7 +332,7 @@ public class SpinnerFieldEditor extends FieldEditor {
      *
      * @param value the new value, or <code>null</code> meaning the empty string
      */
-    public void setIntValue(int value) {
+    public void setIntValue(final int value) {
         if (spinner != null) {
             oldValue = spinner.getSelection();
             if (oldValue != value) {
@@ -348,7 +348,7 @@ public class SpinnerFieldEditor extends FieldEditor {
      * @param limit the limit on the number of character in the text
      *  input field, or <code>UNLIMITED</code> for no limit
      */
-    public void setTextLimit(int limit) {
+    public void setTextLimit(final int limit) {
         textLimit = limit;
         if (spinner != null) {
             spinner.setTextLimit(limit);
@@ -368,7 +368,7 @@ public class SpinnerFieldEditor extends FieldEditor {
      *  on the fly checking (the default), or <code>VALIDATE_ON_FOCUS_LOST</code> to
      *  perform validation only after the text has been typed in
      */
-    public void setValidateStrategy(int value) {
+    public void setValidateStrategy(final int value) {
         Assert.isTrue(value == VALIDATE_ON_FOCUS_LOST
                       || value == VALIDATE_ON_KEY_STROKE);
         validateStrategy = value;
@@ -409,12 +409,12 @@ public class SpinnerFieldEditor extends FieldEditor {
      /*
      * @see FieldEditor.setEnabled(boolean,Composite).
      */
-    public void setEnabled(boolean enabled, Composite parent) {
+    public void setEnabled(final boolean enabled, final Composite parent) {
         super.setEnabled(enabled, parent);
         getSpinnerControl(parent).setEnabled(enabled);
     }
 
-    public void setIncrement(int increment) {
+    public void setIncrement(final int increment) {
         this.increment = increment;
     }
 
@@ -436,7 +436,7 @@ public class SpinnerFieldEditor extends FieldEditor {
      * @param min the minimum allowed value (inclusive)
      * @param max the maximum allowed value (inclusive)
      */
-    public void setValidRange(int min, int max) {
+    public void setValidRange(final int min, final int max) {
         minValue = min;
         maxValue = max;
         spinner.setMinimum(getMinValue());
