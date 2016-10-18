@@ -146,7 +146,7 @@ public class SpinnerFieldEditor extends FieldEditor {
         if (widthInChars != UNLIMITED) {
             GC gc = new GC(spinner);
             try {
-                Point extent = gc.textExtent("X");//$NON-NLS-1$
+                Point extent = gc.textExtent("X"); //$NON-NLS-1$
                 gd.widthHint = widthInChars * extent.x;
             } finally {
                 gc.dispose();
@@ -273,14 +273,14 @@ public class SpinnerFieldEditor extends FieldEditor {
                 });
                 break;
             default:
-                Assert.isTrue(false, "Unknown validate strategy");//$NON-NLS-1$
+                Assert.isTrue(false, "Unknown validate strategy"); //$NON-NLS-1$
             }
             spinner.addDisposeListener(new DisposeListener() {
                 public void widgetDisposed(DisposeEvent event) {
                     spinner = null;
                 }
             });
-            if (textLimit > 0) {// Only set limits above 0 - see SWT spec
+            if (textLimit > 0) { // Only set limits above 0 - see SWT spec
                 spinner.setTextLimit(textLimit);
             }
 
@@ -446,7 +446,7 @@ public class SpinnerFieldEditor extends FieldEditor {
         GridData gd = (GridData) spinner.getLayoutData();
         GC gc = new GC(spinner);
         try {
-            Point extent = gc.textExtent("X");//$NON-NLS-1$
+            Point extent = gc.textExtent("X"); //$NON-NLS-1$
             gd.widthHint = widthInChars * extent.x;
         } finally {
             gc.dispose();

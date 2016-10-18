@@ -148,11 +148,10 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                 log.trace("Node got mouseDoubleClicked " + me.button);
             }
             switch (me.button) {
-            case (1): {
+            case 1:
                 final boolean addToSelection = (me.getState() & SWT.CONTROL) != 0;
                 selectNode(node, addToSelection);
                 graphController.openNodeFile(node);
-            }
             }
             me.consume();
         }
@@ -168,13 +167,12 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                 log.trace("Node got mousePressed " + me.button);
             }
             switch (me.button) {
-            case (1): {
+            case 1:
                 final boolean addToSelection = (me.getState() & SWT.CONTROL) != 0;
                 toggleSelection(node, addToSelection);
                 me.consume();
                 break;
-            }
-            case (3): {
+            case 3:
                 if (!node.isSelected()) {
                     selectNode(node, false);
                 }
@@ -183,7 +181,6 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                     graphController.getDisplayer().getContextMenu().setVisible(true);
                 }
                 break;
-            }
             }
         }
 

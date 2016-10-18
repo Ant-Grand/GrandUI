@@ -106,15 +106,14 @@ abstract class TableTooltipListener implements Listener {
         switch (event.type) {
         case SWT.Dispose:
         case SWT.KeyDown:
-        case SWT.MouseMove: {
+        case SWT.MouseMove:
             if (tip == null) {
                 break;
             }
             tip.dispose();
             tip = null;
             break;
-        }
-        case SWT.MouseHover: {
+        case SWT.MouseHover:
             final TableItem item = table.getItem(new Point(event.x, event.y));
             if (item != null) {
                 if ((tip != null) && !tip.isDisposed()) {
@@ -130,7 +129,6 @@ abstract class TableTooltipListener implements Listener {
                 tip.setBounds(pt.x, pt.y, size.x, size.y);
                 tip.setVisible(true);
             }
-        }
         }
     }
 
