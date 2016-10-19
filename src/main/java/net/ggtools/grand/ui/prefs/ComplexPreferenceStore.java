@@ -253,7 +253,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
         final LinkedList<String> list = new LinkedList<String>();
         final StringTokenizer tokenizer =
                 new StringTokenizer(getString(key), ",");
-        int lim = (limit == COLLECTION_NO_LIMIT) ? tokenizer.countTokens() : limit;
+        final int lim = (limit == COLLECTION_NO_LIMIT) ? tokenizer.countTokens() : limit;
         for (int i = 0; (i < lim) && tokenizer.hasMoreTokens(); i++) {
             list.addLast(unEscapeString(tokenizer.nextToken()));
         }

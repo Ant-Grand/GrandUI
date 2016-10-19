@@ -105,6 +105,7 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
      * @param graph Draw2dGraph
      * @param vertex IVertex
      */
+    @SuppressWarnings("unused")
     public Draw2dNode(final Draw2dGraph graph, final IVertex vertex) {
         super();
 
@@ -116,13 +117,11 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
         nodeBgColor = (Color) vertex.getAttr(DRAW2DFILLCOLOR_ATTR);
         selectedBgColor = FigureUtilities.darker(nodeBgColor);
 
-        @SuppressWarnings("unused")
-        int x, y, width, height;
         final Rectangle2D rect = (Rectangle2D) vertex.getAttr(_BOUNDS_ATTR);
-        x = (int) rect.getX();
-        y = (int) rect.getY();
-        width = (int) rect.getWidth();
-        height = (int) rect.getHeight();
+        final int x = (int) rect.getX();
+        final int y = (int) rect.getY();
+        final int width = (int) rect.getWidth();
+        final int height = (int) rect.getHeight();
 
         setForegroundColor(nodeFgColor);
         setBackgroundColor(nodeBgColor);

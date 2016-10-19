@@ -114,7 +114,7 @@ public class SpinnerFieldEditor extends FieldEditor {
      */
     @Override
     protected void adjustForNumColumns(final int numColumns) {
-        GridData gd = (GridData) spinner.getLayoutData();
+        final GridData gd = (GridData) spinner.getLayoutData();
         gd.horizontalSpan = numColumns - 1;
         gd.grabExcessHorizontalSpace = false;
     }
@@ -130,9 +130,9 @@ public class SpinnerFieldEditor extends FieldEditor {
             return false;
         }
 
-        String numberString = spinner.getText();
+        final String numberString = spinner.getText();
         try {
-            int number = Integer.valueOf(numberString);
+            final int number = Integer.valueOf(numberString);
 
             if (number >= minValue && number <= maxValue) {
                 clearErrorMessage();
@@ -173,12 +173,12 @@ public class SpinnerFieldEditor extends FieldEditor {
         getLabelControl(parent);
 
         spinner = getSpinnerControl(parent);
-        GridData gd = new GridData();
+        final GridData gd = new GridData();
         gd.horizontalSpan = numColumns - 1;
         if (widthInChars != UNLIMITED) {
-            GC gc = new GC(spinner);
+            final GC gc = new GC(spinner);
             try {
-                Point extent = gc.textExtent("X"); //$NON-NLS-1$
+                final Point extent = gc.textExtent("X"); //$NON-NLS-1$
                 gd.widthHint = widthInChars * extent.x;
             } finally {
                 gc.dispose();
@@ -196,7 +196,7 @@ public class SpinnerFieldEditor extends FieldEditor {
     @Override
     protected void doLoad() {
         if (spinner != null) {
-            int value = getPreferenceStore().getInt(getPreferenceName());
+            final int value = getPreferenceStore().getInt(getPreferenceName());
             spinner.setSelection(value);
             oldValue = value;
         }
@@ -208,7 +208,7 @@ public class SpinnerFieldEditor extends FieldEditor {
     @Override
     protected void doLoadDefault() {
         if (spinner != null) {
-            int value = getPreferenceStore().getDefaultInt(getPreferenceName());
+            final int value = getPreferenceStore().getDefaultInt(getPreferenceName());
             spinner.setSelection(value);
         }
         valueChanged();
@@ -435,14 +435,14 @@ public class SpinnerFieldEditor extends FieldEditor {
      */
     protected void valueChanged() {
         setPresentsDefaultValue(false);
-        boolean oldState = isValid;
+        final boolean oldState = isValid;
         refreshValidState();
 
         if (isValid != oldState) {
             fireStateChanged(IS_VALID, oldState, isValid);
         }
 
-        int newValue = spinner.getSelection();
+        final int newValue = spinner.getSelection();
         if (newValue != oldValue) {
             fireValueChanged(VALUE, oldValue, newValue);
             oldValue = newValue;
@@ -504,10 +504,10 @@ public class SpinnerFieldEditor extends FieldEditor {
         spinner.setMaximum(getMaxValue());
 
         widthInChars = Integer.toString(maxValue).length() + 1;
-        GridData gd = (GridData) spinner.getLayoutData();
-        GC gc = new GC(spinner);
+        final GridData gd = (GridData) spinner.getLayoutData();
+        final GC gc = new GC(spinner);
         try {
-            Point extent = gc.textExtent("X"); //$NON-NLS-1$
+            final Point extent = gc.textExtent("X"); //$NON-NLS-1$
             gd.widthHint = widthInChars * extent.x;
         } finally {
             gc.dispose();
