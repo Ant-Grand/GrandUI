@@ -1,5 +1,15 @@
 $Id$
+Release 0.8.1 (build number 300):
+
+* Upgraded to Eclipse 4.6.1,
+* Provide macOS bundle for Oracle Java,
+* Adjusted menus and accelerators to macOS,
+* Use spinner fields in preference menus,
+* Stop using Ant script for launch (cf 0.7.2 distribution).
+
+
 Release 0.8 (build number 296):
+
 * Upgraded to Ant 1.9.7,
 * Upgraded to Grand core 1.9,
 * Upgraded to Eclipse 4.6,

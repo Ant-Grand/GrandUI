@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>JavaAppLauncher</string>
+	<key>CFBundleIconFile</key>
+	<string>GenericApp.icns</string>
+	<key>CFBundleGetInfoString</key>
+	<string>Grand UI @VERSION@ for Mac OS X</string>
+	<key>CFBundleIdentifier</key>
+	<string>net.ggtools.grand.ui</string>
+	<key>CFBundleDisplayName</key>
+	<string>GrandUI</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>GrandUI</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>@VERSION@</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2002-2016 Christophe Labouisse/ggTools</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.developer-tools</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>JVMMainClassName</key>
+	<string>net/ggtools/grand/ui/Application</string>
+	<key>JVMOptions</key>
+	<array>
+		<string>-XstartOnFirstThread</string>
+	</array>
+	<key>JVMArguments</key>
+	<array/>
+</dict>
+</plist>

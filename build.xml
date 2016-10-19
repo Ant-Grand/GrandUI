@@ -8,19 +8,20 @@
 	<property name="libdir" value="lib"/>
 	<property name="extlibdir" value="deps"/>
 	<property name="dlcachedir" value="cache"/>
-	<property name="classdir.main" value="bin/main"/>
-	<property name="srcdir.main" value="src/main"/>
+	<property name="classdir" value="bin"/>
+	<property name="srcdir" value="src/main/java"/>
+	<property name="confdir" value="src/main/resources"/>
+	<property name="scriptdir" value="src/main/scripts"/>
+	<property name="buildnum-file" value="${confdir}/net/ggtools/grand/ui/buildnum.properties"/>
 	<property name="distdir" value="dist"/>
-	<property name="confdir" value="etc"/>
-	<property name="buildnum-file" value="etc/net/ggtools/grand/ui/buildnum.properties"/>
-	<property name="classdir.launcher" value="bin/launcher"/>
-	<property name="srcdir.launcher" value="src/launcher"/>
 	<property name="javadocdir" value="tmp/docs/api"/>
 	<property name="java.target" value="1.6"/>
+	<property name="bundle.name" value="GrandUI.app"/>
+	<property name="bundle.launcher.name" value="JavaAppLauncher"/>
 
 	<property name="verbose-get" value="false"/>
 
-	<macrodef name="getjar" description="Download a jar to a the extlib directory">
+	<macrodef name="getjar" description="Download a jar to the extlib directory">
 		<attribute name="dest"/>
 		<attribute name="url"/>
 		<sequential>
@@ -69,14 +70,14 @@
 
 	<selector id="src-dist-selector">
 		<or>
-			<filename name="src/**"/>
-			<filename name="etc/**"/>
+			<filename name="${srcdir}/**"/>
+			<filename name="${confdir}/**"/>
+			<filename name="${scriptdir}/**"/>
 			<filename name="README.txt"/>
 			<filename name="LICENSE"/>
 			<filename name="COPYING"/>
 			<filename name="LICENSE-Graphviz.txt"/>
 			<filename name="cpl-v10.html"/>
-			<filename name="scripts/**"/>
 			<filename name="build.xml"/>
 			<filename name="build.properties"/>
 		</or>
@@ -106,7 +107,7 @@
 		</tstamp>
 		<property name="copyright" value="Copyright &amp;copy; ggTools. All Rights Reserved."/>
 		<property name="title" value="Grand UI"/>
-		<javadoc use="true" private="true" destdir="${javadocdir}" author="true" version="true" sourcepath="src/main" packagenames="net.ggtools.grand.*">
+		<javadoc use="true" private="true" destdir="${javadocdir}" author="true" version="true" sourcepath="${srcdir}" packagenames="net.ggtools.grand.*">
 			<classpath>
 				<fileset dir="${libdir}">
 					<include name="*.jar"/>
@@ -139,13 +140,25 @@
 		<!-- Prepare for bin distribution -->
 		<delete dir="tmp"/>
 		<mkdir dir="tmp/${product.fullname}"/>
+		<!-- Java libraries -->
 		<copy tofile="tmp/${product.fullname}/lib/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
 		<copy todir="tmp/${product.fullname}/lib">
-			<fileset dir="${extlibdir}" excludes="org.eclipse.swt.*.jar,swt.jar"/>
+			<fileset dir="${extlibdir}" excludes="org.eclipse.swt.*.jar,swt.jar,appbundler.jar"/>
 		</copy>
-		<copy todir="tmp/${product.fullname}/lib/swt">
-			<fileset dir="${extlibdir}" includes="org.eclipse.swt.*.jar"/>
+		<!-- SWT platform-specific libraries -->
+		<copy todir="tmp/${product.fullname}/lib/gtk/x86">
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86_*.jar" excludes="org.eclipse.swt.gtk.*.x86_64*.jar"/>
 		</copy>
+		<copy todir="tmp/${product.fullname}/lib/gtk/x86_64">
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86_64*.jar"/>
+		</copy>
+		<copy todir="tmp/${product.fullname}/lib/win32/x86">
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.win32.*.x86_*.jar" excludes="org.eclipse.swt.win32.*.x86_64*.jar"/>
+		</copy>
+		<copy todir="tmp/${product.fullname}/lib/win32/x86_64">
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.win32.*.x86_64*.jar"/>
+		</copy>
+		<!-- Licenses -->
 		<copy todir="tmp/${product.fullname}" flatten="true">
 			<fileset dir=".">
 				<include name="README.txt"/>
@@ -156,16 +169,47 @@
 			</fileset>
 		</copy>
 		<copy todir="tmp/${product.fullname}">
-			<fileset dir="scripts" includes="**/*"/>
+				<fileset dir="${scriptdir}" includes="**/*.sh"/>
+				<globmapper from="*.sh" to="*"/>
 		</copy>
 		<chmod perm="755">
-			<fileset dir="tmp/${product.fullname}">
-				<include name="*.jar"/>
-				<include name="grand-ui"/>
-			</fileset>
+			<fileset dir="tmp/${product.fullname}" includes="grand-ui"/>
 		</chmod>
-		<mkdir dir="tmp/${product.fullname}/GrandUI.app/Contents/MacOS"/>
-		<symlink link="tmp/${product.fullname}/GrandUI.app/Contents/MacOS/grand-ui" resource="../../../grand-ui"/>
+		<copy todir="tmp/${product.fullname}">
+			<fileset dir="${scriptdir}" includes="**/*.bat"/>
+		</copy>
+		<fixcrlf srcdir="tmp/${product.fullname}" includes="*.bat" eol="dos"/>
+
+		<copy todir="tmp">
+			<fileset dir="${scriptdir}" includes="${bundle.name}/**"/>
+			<filterset>
+				<filter token="VERSION" value="${product.version}"/>
+			</filterset>
+		</copy>
+		<copy todir="tmp/${bundle.name}/Contents/Resources" flatten="true">
+			<fileset dir=".">
+				<include name="README.txt"/>
+				<include name="LICENSE"/>
+				<include name="COPYING"/>
+				<include name="LICENSE-Graphviz.txt"/>
+				<include name="cpl-v10.html"/>
+			</fileset>
+		</copy>
+		<mkdir dir="tmp/${bundle.name}/Contents/MacOS"/>
+		<copy todir="tmp/${bundle.name}/Contents/MacOS">
+			<mappedresources>
+				<zipfileset src="${extlibdir}/appbundler.jar" includes="**/${bundle.launcher.name}"/>
+				<flattenmapper/>
+			</mappedresources>
+		</copy>
+		<chmod perm="755">
+			<fileset dir="tmp/${bundle.name}/Contents/MacOS"/>
+		</chmod>
+		<mkdir dir="tmp/${bundle.name}/Contents/Java"/>
+		<copy todir="tmp/${bundle.name}/Contents/Java">
+			<fileset dir="${extlibdir}" includes="*.jar" excludes="org.eclipse.swt.gtk.*.jar,org.eclipse.swt.win32.*.jar,swt.jar,appbundler.jar"/>
+		</copy>
+		<copy tofile="tmp/${bundle.name}/Contents/Java/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
 
 		<tar destfile="${distdir}/${product.fullname}.tar.gz" compression="gzip">
 			<tarfileset dir="tmp/${product.fullname}" prefix="${product.fullname}" mode="755">
@@ -176,38 +220,31 @@
 				<exclude name="grand-ui"/>
 				<exclude name="grand-ui.jar"/>
 			</tarfileset>
+			<tarfileset dir="tmp/${bundle.name}" prefix="${bundle.name}" mode="755">
+				<include name="${bundle.launcher.name}"/>
+			</tarfileset>
+			<tarfileset dir="tmp/${bundle.name}" prefix="${bundle.name}">
+				<exclude name="${bundle.launcher.name}"/>
+			</tarfileset>
 		</tar>
 
-		<zip destfile="${distdir}/${product.fullname}.zip" basedir="tmp" includes="${product.fullname}/**"/>
+		<zip destfile="${distdir}/${product.fullname}.zip" basedir="tmp" includes="${product.fullname}/**, ${bundle.name}/**"/>
 	</target>
 
 	<target name="jars" depends="compile.java,incbuildnum" description="Create the application jar(s)">
 		<mkdir dir="${libdir}"/>
 		<jar destfile="${libdir}/${product.fullname}.jar" index="true">
-			<fileset dir="${classdir.main}"/>
+			<fileset dir="${classdir}"/>
 			<fileset dir="${confdir}"/>
 			<manifest>
 				<attribute name="Main-Class" value="net.ggtools.grand.ui.Application"/>
 			</manifest>
 		</jar>
-		<jar destfile="${libdir}/${product.fullname}-launcher.jar" index="true">
-			<fileset dir="${classdir.launcher}"/>
-			<!--fileset dir="${confdir}" /-->
-			<manifest>
-				<attribute name="Main-Class" value="net.ggtools.grand.ui.launcher.Launcher"/>
-			</manifest>
-		</jar>
 	</target>
 
 	<target name="compile.java" depends="init" description="Compile the java source files">
-		<mkdir dir="${classdir.main}"/>
-		<javac srcdir="${srcdir.main}" destdir="${classdir.main}" debug="true" optimize="true" includeantruntime="false" source="${java.target}" target="${java.target}">
-			<classpath>
-				<path refid="ext-libs"/>
-			</classpath>
-		</javac>
-		<mkdir dir="${classdir.launcher}"/>
-		<javac srcdir="${srcdir.launcher}" destdir="${classdir.launcher}" debug="true" optimize="true" includeantruntime="false" source="${java.target}" target="${java.target}">
+		<mkdir dir="${classdir}"/>
+		<javac srcdir="${srcdir}" destdir="${classdir}" debug="true" optimize="true" includeantruntime="false" source="${java.target}" target="${java.target}">
 			<classpath>
 				<path refid="ext-libs"/>
 			</classpath>
@@ -235,8 +272,7 @@
 
 	<target name="clean" depends="clean.dist,clean.deps" description="Remove intermediate files but not external libs">
 		<delete dir="${libdir}"/>
-		<delete dir="${classdir.main}"/>
-		<delete dir="${classdir.launcher}"/>
+		<delete dir="${classdir}"/>
 	</target>
 
 	<target name="clean.deps" description="Clean the dependencies directory">
@@ -261,6 +297,7 @@
 		<getjar dest="jzgraph.jar" url="${url.jzgraph.jar}"/>
 		<getjar dest="oro.jar" url="${url.oro.jar}"/>
 		<getjar dest="grand.jar" url="${url.grand.jar}"/>
+		<getjar dest="appbundler.jar" url="${url.appbundler.jar}"/>
 	</target>
 
 	<target name="get-rcp-zip">
