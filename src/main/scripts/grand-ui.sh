@@ -1,11 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
 ## resolve links - $0 may be a link
 PRG="$0"
-progname=`basename "$0"`
 
 # need this for relative symlinks
-while [ -h "$PRG" ] ; do
+while [ -h "$PRG" ]; do
     ls=`ls -ld "$PRG"`
     link=`expr "$ls" : '.*-> \(.*\)$'`
     if expr "$link" : '/.*' > /dev/null; then
@@ -17,4 +16,9 @@ done
 
 BASEDIR=`dirname "$PRG"`
 
-java -jar $BASEDIR/lib/ant-launcher.jar -f $BASEDIR/grand-ui-launcher.xml
+ARCH=x86_64
+if [ `java -version 2>&1 | grep -c 64` -eq 0 ]; then
+    ARCH=x86
+fi
+
+java -Djava.ext.dirs=$BASEDIR/lib:$BASEDIR/lib/gtk/$ARCH -jar $BASEDIR/lib/grand-ui.jar

@@ -16,6 +16,8 @@
 	<property name="distdir" value="dist"/>
 	<property name="javadocdir" value="tmp/docs/api"/>
 	<property name="java.target" value="1.6"/>
+	<property name="bundle.name" value="GrandUI.app"/>
+	<property name="bundle.launcher.name" value="JavaAppLauncher"/>
 
 	<property name="verbose-get" value="false"/>
 
@@ -138,13 +140,25 @@
 		<!-- Prepare for bin distribution -->
 		<delete dir="tmp"/>
 		<mkdir dir="tmp/${product.fullname}"/>
+		<!-- Java libraries -->
 		<copy tofile="tmp/${product.fullname}/lib/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
 		<copy todir="tmp/${product.fullname}/lib">
 			<fileset dir="${extlibdir}" excludes="org.eclipse.swt.*.jar,swt.jar,appbundler.jar"/>
 		</copy>
-		<copy todir="tmp/${product.fullname}/lib/swt">
-			<fileset dir="${extlibdir}" includes="org.eclipse.swt.*.jar"/>
+		<!-- SWT platform-specific libraries -->
+		<copy todir="tmp/${product.fullname}/lib/gtk/x86">
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86_*.jar" excludes="org.eclipse.swt.gtk.*.x86_64*.jar"/>
 		</copy>
+		<copy todir="tmp/${product.fullname}/lib/gtk/x86_64">
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86_64*.jar"/>
+		</copy>
+		<copy todir="tmp/${product.fullname}/lib/win32/x86">
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.win32.*.x86_*.jar" excludes="org.eclipse.swt.win32.*.x86_64*.jar"/>
+		</copy>
+		<copy todir="tmp/${product.fullname}/lib/win32/x86_64">
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86_64*.jar"/>
+		</copy>
+		<!-- Licenses -->
 		<copy todir="tmp/${product.fullname}" flatten="true">
 			<fileset dir=".">
 				<include name="README.txt"/>
@@ -155,35 +169,47 @@
 			</fileset>
 		</copy>
 		<copy todir="tmp/${product.fullname}">
-			<fileset dir="${scriptdir}" includes="**/*" excludes="GrandUI.app/**"/>
+				<fileset dir="${scriptdir}" includes="**/*.sh"/>
+				<globmapper from="*.sh" to="*"/>
 		</copy>
 		<chmod perm="755">
-			<fileset dir="tmp/${product.fullname}">
-				<include name="grand-ui"/>
-			</fileset>
+			<fileset dir="tmp/${product.fullname}" includes="grand-ui"/>
 		</chmod>
+		<copy todir="tmp/${product.fullname}">
+			<fileset dir="${scriptdir}" includes="**/*.bat"/>
+		</copy>
+		<fixcrlf srcdir="tmp/${product.fullname}" includes="*.bat" eol="dos"/>
 
 		<copy todir="tmp">
-			<fileset dir="${scriptdir}" includes="GrandUI.app/**"/>
+			<fileset dir="${scriptdir}" includes="${bundle.name}/**"/>
 			<filterset>
 				<filter token="VERSION" value="${product.version}"/>
 			</filterset>
 		</copy>
-		<mkdir dir="tmp/GrandUI.app/Contents/MacOS"/>
-		<copy todir="tmp/GrandUI.app/Contents/MacOS">
+		<copy todir="tmp/${bundle.name}/Contents/Resources" flatten="true">
+			<fileset dir=".">
+				<include name="README.txt"/>
+				<include name="LICENSE"/>
+				<include name="COPYING"/>
+				<include name="LICENSE-Graphviz.txt"/>
+				<include name="cpl-v10.html"/>
+			</fileset>
+		</copy>
+		<mkdir dir="tmp/${bundle.name}/Contents/MacOS"/>
+		<copy todir="tmp/${bundle.name}/Contents/MacOS">
 			<mappedresources>
-				<zipfileset src="${extlibdir}/appbundler.jar" includes="**/JavaAppLauncher"/>
+				<zipfileset src="${extlibdir}/appbundler.jar" includes="**/${bundle.launcher.name}"/>
 				<flattenmapper/>
 			</mappedresources>
 		</copy>
 		<chmod perm="755">
-			<fileset dir="tmp/GrandUI.app/Contents/MacOS"/>
+			<fileset dir="tmp/${bundle.name}/Contents/MacOS"/>
 		</chmod>
-		<mkdir dir="tmp/GrandUI.app/Contents/Java"/>
-		<copy todir="tmp/GrandUI.app/Contents/Java">
-			<fileset dir="${extlibdir}" includes="*.jar" excludes="appbundler.jar,org.eclipse.swt.gtk.*,org.eclipse.swt.win32.*"/>
+		<mkdir dir="tmp/${bundle.name}/Contents/Java"/>
+		<copy todir="tmp/${bundle.name}/Contents/Java">
+			<fileset dir="${extlibdir}" includes="*.jar" excludes="org.eclipse.swt.gtk.*.jar,org.eclipse.swt.win32.*.jar,swt.jar,appbundler.jar"/>
 		</copy>
-		<copy tofile="tmp/GrandUI.app/Contents/Java/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
+		<copy tofile="tmp/${bundle.name}/Contents/Java/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
 
 		<tar destfile="${distdir}/${product.fullname}.tar.gz" compression="gzip">
 			<tarfileset dir="tmp/${product.fullname}" prefix="${product.fullname}" mode="755">
@@ -194,9 +220,15 @@
 				<exclude name="grand-ui"/>
 				<exclude name="grand-ui.jar"/>
 			</tarfileset>
+			<tarfileset dir="tmp/${bundle.name}" prefix="${bundle.name}" mode="755">
+				<include name="${bundle.launcher.name}"/>
+			</tarfileset>
+			<tarfileset dir="tmp/${bundle.name}" prefix="${bundle.name}">
+				<exclude name="${bundle.launcher.name}"/>
+			</tarfileset>
 		</tar>
 
-		<zip destfile="${distdir}/${product.fullname}.zip" basedir="tmp" includes="${product.fullname}/**"/>
+		<zip destfile="${distdir}/${product.fullname}.zip" basedir="tmp" includes="${product.fullname}/**, ${bundle.name}/**"/>
 	</target>
 
 	<target name="jars" depends="compile.java,incbuildnum" description="Create the application jar(s)">
