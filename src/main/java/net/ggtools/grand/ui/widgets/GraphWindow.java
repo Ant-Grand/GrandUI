@@ -156,26 +156,19 @@ public class GraphWindow extends ApplicationWindow
         addStatusLine();
         addMenuBar();
         if (SWT.getPlatform().equals("cocoa")) {
-            Menu systemMenu = Display.getDefault().getSystemMenu();
+            final Menu systemMenu = Display.getDefault().getSystemMenu();
 
-            for (MenuItem systemItem : systemMenu.getItems())
-            {
-                if (systemItem.getID() == SWT.ID_PREFERENCES)
-                {
-                    systemItem.addListener(SWT.Selection, new Listener()
-                    {
-                        public void handleEvent(final Event event)
-                        {
+            for (MenuItem systemItem : systemMenu.getItems()) {
+                if (systemItem.getID() == SWT.ID_PREFERENCES) {
+                    systemItem.addListener(SWT.Selection, new Listener() {
+                        public void handleEvent(final Event event) {
                             runPreferencesAction();
                         }
                     });
                 }
-                if (systemItem.getID() == SWT.ID_ABOUT)
-                {
-                    systemItem.addListener(SWT.Selection, new Listener()
-                    {
-                        public void handleEvent(final Event event)
-                        {
+                if (systemItem.getID() == SWT.ID_ABOUT) {
+                    systemItem.addListener(SWT.Selection, new Listener() {
+                        public void handleEvent(final Event event) {
                             runAboutAction();
                         }
                     });

@@ -42,8 +42,8 @@ import net.ggtools.grand.ui.actions.FilterPrefixedNodesAction;
 import net.ggtools.grand.ui.actions.FilterSelectedNodesAction;
 import net.ggtools.grand.ui.actions.FilterToNodeAction;
 import net.ggtools.grand.ui.actions.ReloadGraphAction;
-
 import net.ggtools.grand.ui.graph.GraphControllerProvider;
+
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 

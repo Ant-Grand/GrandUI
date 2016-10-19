@@ -74,18 +74,18 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                 LOG.trace("Graph got mousePressed " + me.button);
             }
             switch (me.button) {
-            case (1):
+            case 1:
                 deselectAllNodes();
                 me.consume();
             // No break
 
-            case (2):
+            case 2:
                 if (scroller != null) {
                     scroller.enterDragMode();
                 }
                 break;
 
-            case (3):
+            case 3:
                 if (graphController != null) {
                     graphController.getDisplayer().getContextMenu().setVisible(true);
                 }
