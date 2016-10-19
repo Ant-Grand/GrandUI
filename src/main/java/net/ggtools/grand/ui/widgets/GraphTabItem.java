@@ -76,7 +76,7 @@ import org.eclipse.swt.widgets.Menu;
 
 /**
  * A CTabItem specialized in displaying graph. Although it implements
- * {@link GraphControllerProvider}this class only
+ * {@link net.ggtools.grand.ui.graph.GraphControllerProvider} this class only
  * manage a dummy notification system as there won't be any change of the
  * controller during the instances lifetime.
  *
@@ -391,7 +391,7 @@ public class GraphTabItem extends CTabItem
     /**
      * Method addControllerListener.
      * @param listener GraphControllerListener
-     * @see GraphControllerProvider#addControllerListener(GraphControllerListener)
+     * @see net.ggtools.grand.ui.graph.GraphControllerProvider#addControllerListener(GraphControllerListener)
      */
     public void addControllerListener(final GraphControllerListener listener) {
     }
@@ -408,7 +408,7 @@ public class GraphTabItem extends CTabItem
     /**
      * Method getController.
      * @return GraphController
-     * @see GraphControllerProvider#getController()
+     * @see net.ggtools.grand.ui.graph.GraphControllerProvider#getController()
      */
     public final GraphController getController() {
         return controller;
@@ -452,7 +452,7 @@ public class GraphTabItem extends CTabItem
     /**
      * Method removeControllerListener.
      * @param listener GraphControllerListener
-     * @see GraphControllerProvider#removeControllerListener(GraphControllerListener)
+     * @see net.ggtools.grand.ui.graph.GraphControllerProvider#removeControllerListener(GraphControllerListener)
      */
     public void removeControllerListener(final GraphControllerListener listener) {
     }

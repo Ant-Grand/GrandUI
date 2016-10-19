@@ -184,11 +184,17 @@ public class GraphWindow extends ApplicationWindow
         }
     }
 
+    /**
+     * Method runPreferencesAction.
+     */
     private void runPreferencesAction() {
         PreferenceAction preferenceAction = new PreferenceAction(this);
         preferenceAction.run();
     }
 
+    /**
+     * Method runAboutAction.
+     */
     private void runAboutAction() {
         AboutAction aboutAction = new AboutAction(this);
         aboutAction.run();

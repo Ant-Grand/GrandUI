@@ -16,7 +16,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
 
+/**
+ * @author sergeche (Sergey Chikuyonok)
+ */
 public class SpinnerFieldEditor extends FieldEditor {
+    /**
+     * Field spinner.
+     */
     private Spinner spinner;
 
     /**
@@ -63,8 +69,19 @@ public class SpinnerFieldEditor extends FieldEditor {
      */
     private int textLimit = UNLIMITED;
 
+    /**
+     * Field increment.
+     */
     private int increment = 1;
+
+    /**
+     * Field minValue.
+     */
     private int minValue = 0;
+
+    /**
+     * Field maxValue.
+     */
     private int maxValue = Integer.MAX_VALUE;
 
     /**
@@ -77,6 +94,12 @@ public class SpinnerFieldEditor extends FieldEditor {
      */
     private int validateStrategy = VALIDATE_ON_KEY_STROKE;
 
+    /**
+     * Constructor for SpinnerFieldEditor.
+     * @param name String
+     * @param labelText String
+     * @param parent Composite
+     */
     public SpinnerFieldEditor(final String name, final String labelText, final Composite parent) {
         init(name, labelText);
         isValid = false;
@@ -85,6 +108,10 @@ public class SpinnerFieldEditor extends FieldEditor {
         createControl(parent);
     }
 
+    /**
+     * Method adjustForNumColumns.
+     * @param numColumns int
+     */
     @Override
     protected void adjustForNumColumns(final int numColumns) {
         GridData gd = (GridData) spinner.getLayoutData();
@@ -95,8 +122,8 @@ public class SpinnerFieldEditor extends FieldEditor {
     /**
      * Checks whether the text input field contains a valid value or not.
      *
-     * @return <code>true</code> if the field value is valid,
-     *   and <code>false</code> if invalid
+     * @return <code>true</code> if the field value is valid, and
+     *         <code>false</code> if invalid
      */
     protected boolean checkState() {
         if (spinner == null) {
@@ -136,6 +163,11 @@ public class SpinnerFieldEditor extends FieldEditor {
         return true;
     }
 
+    /**
+     * Method doFillIntoGrid.
+     * @param parent Composite
+     * @param numColumns int
+     */
     @Override
     protected void doFillIntoGrid(final Composite parent, final int numColumns) {
         getLabelControl(parent);
@@ -158,6 +190,9 @@ public class SpinnerFieldEditor extends FieldEditor {
         spinner.setLayoutData(gd);
     }
 
+    /**
+     * Method doLoad.
+     */
     @Override
     protected void doLoad() {
         if (spinner != null) {
@@ -167,6 +202,9 @@ public class SpinnerFieldEditor extends FieldEditor {
         }
     }
 
+    /**
+     * Method doLoadDefault.
+     */
     @Override
     protected void doLoadDefault() {
         if (spinner != null) {
@@ -176,6 +214,9 @@ public class SpinnerFieldEditor extends FieldEditor {
         valueChanged();
     }
 
+    /**
+     * Method doStore.
+     */
     @Override
     protected void doStore() {
         getPreferenceStore().setValue(getPreferenceName(), spinner.getSelection());
@@ -191,6 +232,10 @@ public class SpinnerFieldEditor extends FieldEditor {
         return errorMessage;
     }
 
+    /**
+     * Method getNumberOfControls.
+     * @return int
+     */
     @Override
     public int getNumberOfControls() {
         return 2;
@@ -212,8 +257,8 @@ public class SpinnerFieldEditor extends FieldEditor {
     /**
      * Returns this field editor's text control.
      *
-     * @return the text control, or <code>null</code> if no
-     * text field is created yet
+     * @return the text control,
+     *         or <code>null</code> if no text field is created yet
      */
     protected Spinner getSpinnerControl() {
         return spinner;
@@ -236,7 +281,6 @@ public class SpinnerFieldEditor extends FieldEditor {
             switch (validateStrategy) {
             case VALIDATE_ON_KEY_STROKE:
                 spinner.addKeyListener(new KeyAdapter() {
-
                     /*
                      * (non-Javadoc)
                      * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
@@ -253,7 +297,6 @@ public class SpinnerFieldEditor extends FieldEditor {
                         valueChanged();
                     }
                 });
-
                 break;
             case VALIDATE_ON_FOCUS_LOST:
                 spinner.addKeyListener(new KeyAdapter() {
@@ -265,7 +308,6 @@ public class SpinnerFieldEditor extends FieldEditor {
                     public void focusGained(final FocusEvent e) {
                         refreshValidState();
                     }
-
                     public void focusLost(final FocusEvent e) {
                         valueChanged();
                         clearErrorMessage();
@@ -293,15 +335,16 @@ public class SpinnerFieldEditor extends FieldEditor {
         return spinner;
     }
 
-    /*
-     * (non-Javadoc) Method declared on FieldEditor.
+    /**
+     * Method isValid.
+     * @return boolean
      */
     public boolean isValid() {
         return isValid;
     }
 
-    /*
-     * (non-Javadoc) Method declared on FieldEditor.
+    /**
+     * Method refreshValidState.
      */
     protected void refreshValidState() {
         isValid = checkState();
@@ -318,8 +361,8 @@ public class SpinnerFieldEditor extends FieldEditor {
         errorMessage = message;
     }
 
-    /* (non-Javadoc)
-     * Method declared on FieldEditor.
+    /**
+     * Method setFocus.
      */
     public void setFocus() {
         if (spinner != null) {
@@ -406,26 +449,44 @@ public class SpinnerFieldEditor extends FieldEditor {
         }
     }
 
-     /*
-     * @see FieldEditor.setEnabled(boolean,Composite).
-     */
+    /**
+      * Method setEnabled.
+      * @param enabled boolean
+      * @param parent Composite
+      */
     public void setEnabled(final boolean enabled, final Composite parent) {
         super.setEnabled(enabled, parent);
         getSpinnerControl(parent).setEnabled(enabled);
     }
 
+    /**
+     * Method setIncrement.
+     * @param increment int
+     */
     public void setIncrement(final int increment) {
         this.increment = increment;
     }
 
+    /**
+     * Method getIncrement.
+     * @return int
+     */
     public int getIncrement() {
         return increment;
     }
 
+    /**
+     * Method getMinValue.
+     * @return int
+     */
     public int getMinValue() {
         return minValue;
     }
 
+    /**
+     * Method getMaxValue.
+     * @return int
+     */
     public int getMaxValue() {
         return maxValue;
     }
