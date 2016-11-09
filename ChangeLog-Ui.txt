@@ -1,4 +1,10 @@
 $Id$
+Release 0.8.2 (build number 302):
+
+* Upgraded to Grand core 1.9.3,
+* Fixed execute bits in distribution archives.
+
+
 Release 0.8.1 (build number 300):
 
 * Upgraded to Eclipse 4.6.1,

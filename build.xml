@@ -212,23 +212,34 @@
 		<copy tofile="tmp/${bundle.name}/Contents/Java/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
 
 		<tar destfile="${distdir}/${product.fullname}.tar.gz" compression="gzip">
-			<tarfileset dir="tmp/${product.fullname}" prefix="${product.fullname}" mode="755">
+			<tarfileset dir="tmp/${product.fullname}" prefix="${product.fullname}" filemode="755">
 				<include name="grand-ui"/>
-				<include name="grand-ui.jar"/>
 			</tarfileset>
 			<tarfileset dir="tmp/${product.fullname}" prefix="${product.fullname}">
 				<exclude name="grand-ui"/>
-				<exclude name="grand-ui.jar"/>
 			</tarfileset>
-			<tarfileset dir="tmp/${bundle.name}" prefix="${bundle.name}" mode="755">
-				<include name="${bundle.launcher.name}"/>
+			<tarfileset dir="tmp/${bundle.name}" prefix="${bundle.name}" filemode="755">
+				<include name="**/${bundle.launcher.name}"/>
 			</tarfileset>
 			<tarfileset dir="tmp/${bundle.name}" prefix="${bundle.name}">
-				<exclude name="${bundle.launcher.name}"/>
+				<exclude name="**/${bundle.launcher.name}"/>
 			</tarfileset>
 		</tar>
 
-		<zip destfile="${distdir}/${product.fullname}.zip" basedir="tmp" includes="${product.fullname}/**, ${bundle.name}/**"/>
+		<zip destfile="${distdir}/${product.fullname}.zip">
+			<zipfileset dir="tmp/${product.fullname}" prefix="${product.fullname}" filemode="755">
+				<include name="grand-ui"/>
+			</zipfileset>
+			<zipfileset dir="tmp/${product.fullname}" prefix="${product.fullname}">
+				<exclude name="grand-ui"/>
+			</zipfileset>
+			<zipfileset dir="tmp/${bundle.name}" prefix="${bundle.name}" filemode="755">
+				<include name="**/${bundle.launcher.name}"/>
+			</zipfileset>
+			<zipfileset dir="tmp/${bundle.name}" prefix="${bundle.name}">
+				<exclude name="**/${bundle.launcher.name}"/>
+			</zipfileset>
+		</zip>
 	</target>
 
 	<target name="jars" depends="compile.java,incbuildnum" description="Create the application jar(s)">
