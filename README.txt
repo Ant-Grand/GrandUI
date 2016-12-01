@@ -1,9 +1,9 @@
 Description
 -----------
 
-Grand is a tool to create visual representation of ant target dependencies.
-Grand-Ui is a GUI based on Grand based on SWT, draw2d (http://www.eclipse.org)
-and Jzgraph (http://jzgraph.sf.net).
+Grand is a tool to create visual representation of Ant target dependencies.
+Grand-Ui is a GUI for Grand based on SWT, Draw2d (https://www.eclipse.org/gef/draw2d)
+and JzGraph (http://jzgraph.sf.net).
 
 This is an alpha release so be prepare to face bugs.
 
@@ -12,26 +12,24 @@ Usage
 -----
 
 Get the tar.gz/zip file, extract it in the right place, and either run
-grand-ui (linux) or grand-ui.bat.
+open GrandUi.app (macOS), grand-ui (Linux) or grand-ui.bat (Windows).
 
 
 Building from source
 --------------------
 
-You need Ant 1.6.1 to compile Grand-Ui. Get a source distribution, run "ant",
+You need Ant 1.8+ to compile Grand-Ui. Get a source distribution, run "ant",
 and voilà, the build file should be intelligent enough to download the
 external dependencies. You can skip this part by defining the "noget" property.
 You can override any property in the build.properties file by creating a
 build-local.properties file.
 
-The build process should work on windows but hasn't been tested so far.
-
 
 More information
 ----------------
 
- * The grand web site (http://www.ggtools.net/grand),
- * The Eclipse site (http://www.eclipse.org/) will provide info on SWT and
+ * The Grand web site (https://ant-grand.github.io/Grand/grand.html),
+ * The Eclipse web site (https://www.eclipse.org/) will provide info on SWT and
    Draw2d.
 
 You can contact me at grand@ggtools.net.
