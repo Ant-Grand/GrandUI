@@ -438,7 +438,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                         return props.getProperty(key);
                     }
 
-                    public Collection<?> getKeys() {
+                    public Collection<Object> getKeys() {
                         return props.keySet();
                     }
 
