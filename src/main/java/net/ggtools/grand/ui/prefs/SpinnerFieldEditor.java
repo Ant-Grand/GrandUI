@@ -31,7 +31,7 @@ public class SpinnerFieldEditor extends FieldEditor {
      *
      * @see #setValidateStrategy
      */
-    public static final int VALIDATE_ON_KEY_STROKE = 0;
+    private static final int VALIDATE_ON_KEY_STROKE = 0;
 
     /**
      * Validation strategy constant (value <code>1</code>) indicating that the
@@ -39,13 +39,13 @@ public class SpinnerFieldEditor extends FieldEditor {
      *
      * @see #setValidateStrategy
      */
-    public static final int VALIDATE_ON_FOCUS_LOST = 1;
+    private static final int VALIDATE_ON_FOCUS_LOST = 1;
 
     /**
      * Text limit constant (value <code>-1</code>) indicating unlimited text
      * limit and width.
      */
-    public static final int UNLIMITED = -1;
+    private static final int UNLIMITED = -1;
 
     /**
      * Cached valid state.
