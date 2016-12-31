@@ -415,7 +415,7 @@ public class PropertyEditor {
     /**
      * Field columnNamesToNumMap.
      */
-    private static Map<String, Integer> columnNamesToNumMap = null;
+    private static volatile Map<String, Integer> columnNamesToNumMap = null;
 
     // Set column names
     /**
@@ -450,11 +450,13 @@ public class PropertyEditor {
      * @param style int
      */
     public PropertyEditor(final Composite parent, final int style) {
-        if (columnNamesToNumMap == null) {
-            columnNamesToNumMap = new HashMap<String, Integer>();
-            columnNamesToNumMap.put(STATUS_COLUMN, STATUS_COLUMN_NUM);
-            columnNamesToNumMap.put(NAME_COLUMN, NAME_COLUMN_NUM);
-            columnNamesToNumMap.put(VALUE_COLUMN, VALUE_COLUMN_NUM);
+        synchronized (this) {
+            if (columnNamesToNumMap == null) {
+                columnNamesToNumMap = new HashMap<String, Integer>();
+                columnNamesToNumMap.put(STATUS_COLUMN, STATUS_COLUMN_NUM);
+                columnNamesToNumMap.put(NAME_COLUMN, NAME_COLUMN_NUM);
+                columnNamesToNumMap.put(VALUE_COLUMN, VALUE_COLUMN_NUM);
+            }
         }
 
         propertyList = new PropertyList();

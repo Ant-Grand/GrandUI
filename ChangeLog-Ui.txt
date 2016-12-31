@@ -1,4 +1,13 @@
 $Id$
+Release 0.8.3 (build number 306):
+
+* Upgraded to Grand core 1.9.4,
+* Upgraded to Eclipse 4.6.2,
+* Upgraded to Ant 1.10.0,
+* Download JzGraph from GitHub,
+* Removed dot fallback for GTK in PrintAction.
+
+
 Release 0.8.2 (build number 302):
 
 * Upgraded to Grand core 1.9.3,
@@ -95,7 +104,7 @@ Release 0.3 (build number 48):
 Release 0.2:
 
 * The UI can now open several graphs in several tabs,
-* Rewritten tootips for both Node & Links,
+* Rewritten tooltips for both Node & Links,
 * The antcall/ant parameters are now displayed on the link's tooltip,
 * Upgrade to Eclipse RCP 3.0RC2, Draw2d 20040610 and Grand (core) 1.4,
 * The graph can use the bus routing capability of JzGraph.

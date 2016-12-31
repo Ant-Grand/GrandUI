@@ -47,7 +47,7 @@ public final class LogEventBufferImpl implements LogEventBuffer {
     /**
      * Field instance.
      */
-    private static LogEventBufferImpl instance;
+    private static volatile LogEventBufferImpl instance;
 
     /**
      * Logger for this class.
@@ -67,8 +67,10 @@ public final class LogEventBufferImpl implements LogEventBuffer {
      * @return the instance.
      */
     public static LogEventBufferImpl getInstance() {
-        if (instance == null) {
-            instance = new LogEventBufferImpl();
+        synchronized (LogEventBufferImpl.class) {
+            if (instance == null) {
+                instance = new LogEventBufferImpl();
+            }
         }
         return instance;
     }
