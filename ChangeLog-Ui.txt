@@ -1,4 +1,13 @@
 $Id$
+Release 0.8.3 (build number 306):
+
+* Upgraded to Grand core 1.9.4,
+* Upgraded to Eclipse 4.6.2,
+* Upgraded to Ant 1.10.0,
+* Download JzGraph from GitHub,
+* Removed dot fallback for GTK in PrintAction.
+
+
 Release 0.8.2 (build number 302):
 
 * Upgraded to Grand core 1.9.3,
