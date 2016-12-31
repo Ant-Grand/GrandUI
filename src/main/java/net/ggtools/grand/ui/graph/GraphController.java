@@ -315,53 +315,6 @@ public class GraphController implements DotGraphAttributes, SelectionManager,
     }
 
     /**
-     * Hack for gtk: print using the dot command.
-     */
-    public final void dotPrint() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Printing graph using dot");
-        }
-        final Properties props = new Properties();
-        props.setProperty("dot.graph.attributes", "rankdir=\"TB\"");
-        String dotParameters;
-        switch (printMode) {
-        case PrintFigureOperation.FIT_WIDTH:
-            dotParameters = "-Gpage=8,11 -Gsize=10,65536 -Grotate=90 -Gmargin=0.45";
-            break;
-
-        case PrintFigureOperation.FIT_HEIGHT:
-            dotParameters = "-Gpage=8,11 -Gsize=65536,7 -Grotate=90 -Gmargin=0.45";
-            break;
-
-        case PrintFigureOperation.FIT_PAGE:
-            dotParameters = "-Gpage=8,11 -Gsize=10,7 -Grotate=90 -Gmargin=0.45";
-            break;
-
-        default:
-            dotParameters = "-Gpage=8,11 -Grotate=90";
-            break;
-        }
-        try {
-            final DotWriter dotWriter = new DotWriter(props);
-            dotWriter.setProducer(filterChain);
-            dotWriter.setShowGraphName(true);
-            dotWriter.write(new File("GrandDotPrint.dot"));
-            final Process proc = Runtime.getRuntime().exec(
-                    "dot -Tps " + dotParameters + " -o GrandDotPrint.ps GrandDotPrint.dot");
-            proc.waitFor();
-            proc.destroy();
-            LOG.info("Graph printed to GrandDotPrint.ps");
-            final MessageDialog dialog = new MessageDialog(window.getShell(), "Graph printed",
-                    Application.getInstance().getImage(Application.APPLICATION_ICON),
-                    "Graph saved as GraphDotPrint.ps", MessageDialog.INFORMATION,
-                    new String[]{"OK"}, 0);
-            dialog.open();
-        } catch (final Exception e) {
-            LOG.error("Got exception printing", e);
-        }
-    }
-
-    /**
      * Enable or disable the use of the bus routing algorithm for graph layout.
      *
      * @param enabled boolean

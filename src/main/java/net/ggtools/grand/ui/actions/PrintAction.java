@@ -77,9 +77,6 @@ public class PrintAction extends GraphControllerAction {
          * else { log.error("No printer available, disabling print");
          * setEnabled(false); }
          */
-        if (SWT.getPlatform().equals("gtk")) {
-            getGraphController().dotPrint();
-        }
     }
 
     /**
