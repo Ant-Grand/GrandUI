@@ -5,6 +5,7 @@
 
 	<property name="product.name" value="grand-ui"/>
 	<property name="product.fullname" value="${product.name}-${product.version}"/>
+	<property name="product.vendor" value="ggTools"/>
 	<property name="libdir" value="lib"/>
 	<property name="extlibdir" value="deps"/>
 	<property name="dlcachedir" value="cache"/>
@@ -20,6 +21,10 @@
 	<property name="bundle.launcher.name" value="JavaAppLauncher"/>
 
 	<property name="verbose-get" value="false"/>
+
+	<tstamp>
+		<format pattern="2004-yyyy" property="years"/>
+	</tstamp>
 
 	<macrodef name="getjar" description="Download a jar to the extlib directory">
 		<attribute name="dest"/>
@@ -102,12 +107,10 @@
 
 	<target name="javadoc" description="Generates javadoc" depends="jars">
 		<mkdir dir="${javadocdir}"/>
-		<tstamp>
-			<format pattern="2004-yyyy" property="year"/>
-		</tstamp>
-		<property name="copyright" value="Copyright &amp;copy; ggTools. All Rights Reserved."/>
-		<property name="title" value="Grand UI"/>
-		<javadoc use="true" private="true" destdir="${javadocdir}" author="true" version="true" sourcepath="${srcdir}" packagenames="net.ggtools.grand.*">
+		<property name="copyright" value="Copyright &amp;copy;${years} ${product.vendor}. All Rights Reserved."/>
+		<property name="title" value="Grand UI ${product.version} API"/>
+		<javadoc use="true" private="true" destdir="${javadocdir}" author="true" version="true" windowtitle="Grand UI" doctitle="${title}" bottom="${copyright}"
+				 sourcepath="${srcdir}" packagenames="net.ggtools.grand.*">
 			<classpath>
 				<fileset dir="${libdir}">
 					<include name="*.jar"/>
@@ -183,7 +186,9 @@
 		<copy todir="tmp">
 			<fileset dir="${scriptdir}" includes="${bundle.name}/**"/>
 			<filterset>
+				<filter token="VENDOR" value="${product.vendor}"/>
 				<filter token="VERSION" value="${product.version}"/>
+				<filter token="YEARS" value="${years}"/>
 			</filterset>
 		</copy>
 		<copy todir="tmp/${bundle.name}/Contents/Resources" flatten="true">
