@@ -30,7 +30,7 @@
 
 SUBCOMPONENTS:
 
-SWT and Draw2D libraries are subject to the Common Public License included in
+SWT and Draw2d libraries are subject to the Common Public License included in
 the cpl-v10.html file.
 
 JzGraph and blacksun utils are subject to the GNU GENERAL PUBLIC LICENSE,
