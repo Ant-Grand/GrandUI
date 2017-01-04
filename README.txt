@@ -2,16 +2,16 @@ Description
 -----------
 
 Grand is a tool to create visual representation of Ant target dependencies.
-Grand-Ui is a GUI for Grand based on SWT, Draw2d (https://www.eclipse.org/gef/draw2d)
-and JzGraph (http://jzgraph.sf.net).
+Grand-Ui is a GUI for Grand based on SWT (https://www.eclipse.org/swt),
+Draw2d (https://www.eclipse.org/gef/draw2d) and JzGraph (http://jzgraph.sf.net).
 
-This is an alpha release so be prepare to face bugs.
+This is an alpha release so be prepared to face bugs.
 
 
 Usage
 -----
 
-Get the tar.gz/zip file, extract it in the right place, and either run
+Get the zip file, extract it in the right place, and either run
 open GrandUi.app (macOS), grand-ui (Linux) or grand-ui.bat (Windows).
 
 
