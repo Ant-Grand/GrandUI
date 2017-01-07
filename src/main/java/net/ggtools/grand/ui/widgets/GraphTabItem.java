@@ -74,8 +74,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 
 /**
@@ -292,9 +290,9 @@ public class GraphTabItem extends CTabItem
     private final StyledText textDisplayer;
 
     /**
-     * Field isGesture.
+     * Field doGesture.
      */
-    private boolean isGesture = false;
+    private boolean doGesture = false;
 
     /**
      * Creates a tab to display a new graph. The tab will contain two sash forms
@@ -343,11 +341,10 @@ public class GraphTabItem extends CTabItem
         canvas.getViewport().setContentsTracksWidth(true);
         canvas.setBackground(ColorConstants.white);
         canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
-        // TODO is this activated by swipe?
         canvas.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseScrolled(MouseEvent event) {
-                if (isGesture)
+                if (doGesture)
                     return;
                 final float zoomBefore = getZoom();
                 if (event.count > 0) {
@@ -374,7 +371,7 @@ public class GraphTabItem extends CTabItem
                 Point locationBefore = new Point();
                 switch (gestureEvent.detail) {
                     case SWT.GESTURE_BEGIN:
-                        isGesture = true;
+                        doGesture = true;
                         zoomBefore = getZoom();
                         locationBefore = canvas.getViewport().getViewLocation();
                         break;
@@ -386,7 +383,7 @@ public class GraphTabItem extends CTabItem
                                 locationBefore.y + gestureEvent.y);
                         break;
                     case SWT.GESTURE_END:
-                        isGesture = false;
+                        doGesture = false;
                     default:
                         break;
                 }
