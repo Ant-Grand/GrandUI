@@ -68,6 +68,10 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.GestureEvent;
+import org.eclipse.swt.events.GestureListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -84,41 +88,6 @@ import org.eclipse.swt.widgets.Menu;
  */
 public class GraphTabItem extends CTabItem
         implements GraphDisplayer, GraphListener {
-    /**
-     * @author Christophe Labouisse
-     */
-    private final class MouseWheelZoomListener implements Listener {
-        /**
-         * Constructor for MouseWheelZoomListener.
-         */
-        private MouseWheelZoomListener() {
-        }
-
-        /**
-         * Method handleEvent.
-         * @param event Event
-         * @see org.eclipse.swt.widgets.Listener#handleEvent(Event)
-         */
-        public void handleEvent(final Event event) {
-            final float zoomBefore = getZoom();
-            event.doit = false;
-            if (event.count > 0) {
-                zoomIn();
-            } else {
-                zoomOut();
-            }
-            final float zoomAfter = getZoom();
-            if (zoomAfter != zoomBefore) {
-                final Point location = canvas.getViewport().getViewLocation();
-                final int newX = (int) (((location.x + event.x) / zoomBefore) * zoomAfter)
-                        - event.x;
-                final int newY = (int) (((location.y + event.y) / zoomBefore) * zoomAfter)
-                        - event.y;
-                canvas.scrollTo(newX, newY);
-            }
-        }
-    }
-
     /**
      * @author Christophe Labouisse
      */
@@ -323,6 +292,11 @@ public class GraphTabItem extends CTabItem
     private final StyledText textDisplayer;
 
     /**
+     * Field isGesture.
+     */
+    private boolean isGesture = false;
+
+    /**
      * Creates a tab to display a new graph. The tab will contain two sash forms
      * a vertical one with the source panel as the bottom part and a second
      * horizontal second one containing the outline window and the graph itself.
@@ -369,7 +343,55 @@ public class GraphTabItem extends CTabItem
         canvas.getViewport().setContentsTracksWidth(true);
         canvas.setBackground(ColorConstants.white);
         canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
-        canvas.addListener(SWT.MouseWheel, new MouseWheelZoomListener());
+        // TODO is this activated by swipe?
+        canvas.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseScrolled(MouseEvent event) {
+                if (isGesture)
+                    return;
+                final float zoomBefore = getZoom();
+                if (event.count > 0) {
+                    zoomIn();
+                } else {
+                    zoomOut();
+                }
+                final float zoomAfter = getZoom();
+                if (zoomAfter != zoomBefore) {
+                    final Point location = canvas.getViewport().getViewLocation();
+                    final int newX = (int) (((location.x + event.x) / zoomBefore) * zoomAfter)
+                            - event.x;
+                    final int newY = (int) (((location.y + event.y) / zoomBefore) * zoomAfter)
+                            - event.y;
+                    canvas.scrollTo(newX, newY);
+                }
+            }
+        });
+        // TODO more use for gestures (swipe? rotate?)
+        canvas.addGestureListener(new GestureListener() {
+            @Override
+            public void gesture(GestureEvent gestureEvent) {
+                float zoomBefore = 1.0f;
+                Point locationBefore = new Point();
+                switch (gestureEvent.detail) {
+                    case SWT.GESTURE_BEGIN:
+                        isGesture = true;
+                        zoomBefore = getZoom();
+                        locationBefore = canvas.getViewport().getViewLocation();
+                        break;
+                    case SWT.GESTURE_MAGNIFY:
+                        setZoom((float) (zoomBefore * gestureEvent.magnification));
+                        break;
+                    case SWT.GESTURE_PAN:
+                        canvas.scrollTo(locationBefore.x + gestureEvent.x,
+                                locationBefore.y + gestureEvent.y);
+                        break;
+                    case SWT.GESTURE_END:
+                        isGesture = false;
+                    default:
+                        break;
+                }
+            }
+        });
 
         canvasScroller = new CanvasScroller(canvas);
         contextMenuManager = new GraphMenu(this);
