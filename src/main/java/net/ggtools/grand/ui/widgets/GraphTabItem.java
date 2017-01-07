@@ -532,22 +532,21 @@ public class GraphTabItem extends CTabItem
         for (final AntTargetNode.SourceElement element : richSource) {
             Color textColor;
             switch (element.getStyle()) {
-            case AntTargetNode.SOURCE_ATTRIBUTE:
-                textColor = ColorConstants.darkGreen;
-                break;
+                case AntTargetNode.SOURCE_ATTRIBUTE:
+                    textColor = ColorConstants.darkGreen;
+                    break;
 
-            case AntTargetNode.SOURCE_MARKUP:
-                textColor = ColorConstants.darkBlue;
-                break;
+                case AntTargetNode.SOURCE_MARKUP:
+                    textColor = ColorConstants.darkBlue;
+                    break;
 
-            case AntTargetNode.SOURCE_TEXT:
-                textColor = ColorConstants.black;
-                break;
+                case AntTargetNode.SOURCE_TEXT:
+                    textColor = ColorConstants.black;
+                    break;
 
-            default:
-                textColor = ColorConstants.lightGray;
-
-                break;
+                default:
+                    textColor = ColorConstants.lightGray;
+                    break;
             }
             textDisplayer.setStyleRange(new StyleRange(start, element.getText().length(),
                     textColor, textDisplayer.getBackground()));
