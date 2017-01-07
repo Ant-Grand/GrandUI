@@ -184,12 +184,15 @@
 		<fixcrlf srcdir="tmp/${product.fullname}" includes="*.bat" eol="dos"/>
 
 		<copy todir="tmp">
-			<fileset dir="${scriptdir}" includes="${bundle.name}/**"/>
+			<fileset dir="${scriptdir}" includes="${bundle.name}/**" excludes="**/*.icns"/>
 			<filterset>
 				<filter token="VENDOR" value="${product.vendor}"/>
 				<filter token="VERSION" value="${product.version}"/>
 				<filter token="YEARS" value="${years}"/>
 			</filterset>
+		</copy>
+		<copy todir="tmp">
+			<fileset dir="${scriptdir}" includes="**/*.icns"/>
 		</copy>
 		<copy todir="tmp/${bundle.name}/Contents/Resources" flatten="true">
 			<fileset dir=".">
