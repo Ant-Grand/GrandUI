@@ -318,7 +318,8 @@ public class Application implements Runnable {
             LOG.debug("Initializing colors");
         }
         // Put the same icons for all windows & dialogs.
-        Window.setDefaultImage(getImage(APPLICATION_ICON));
+        if (!SWT.getPlatform().equals("cocoa"))
+            Window.setDefaultImage(getImage(APPLICATION_ICON));
 
         LoggerManager.setFactory(new CommonsLoggingLoggerFactory());
     }

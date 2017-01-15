@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<!DOCTYPE log4j:configuration PUBLIC
+        "-//APACHE//DTD LOG4J 1.2//EN" "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -10,11 +11,11 @@
 <!-- $Id: log4j.xml,v 1.13.2.8 2003/09/23 14:16:27 slaboure Exp $ -->
 
 <!--
-   | For more configuration infromation and examples see the Jakarta Log4j
-   | owebsite: http://jakarta.apache.org/log4j
+   | For more configuration information and examples see the Jakarta Log4j
+   | website: http://jakarta.apache.org/log4j
  -->
 
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+<log4j:configuration debug="false" xmlns:log4j="http://jakarta.apache.org/log4j/">
 
    <!-- ================================= -->
    <!-- Preserve messages in a local file -->
@@ -26,7 +27,7 @@
       <param name="Append" value="true"/>
       <param name="MaxFileSize" value="100KB"/>
       <param name="MaxBackupIndex" value="2"/>
-      
+
       <layout class="org.apache.log4j.PatternLayout">
         <!-- The default pattern: Date Priority [Category] Message\n -->
         <!--param name="ConversionPattern" value="%d %-5p [%c] %m%n"/-->

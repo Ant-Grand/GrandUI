@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>JavaAppLauncher</string>
 	<key>CFBundleIconFile</key>
-	<string>GenericApp.icns</string>
+	<string>Grand.icns</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Grand UI @VERSION@ for Mac OS X</string>
 	<key>CFBundleIdentifier</key>
