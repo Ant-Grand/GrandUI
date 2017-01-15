@@ -363,7 +363,7 @@ public class GraphTabItem extends CTabItem
                 }
             }
         });
-        // TODO more use for gestures (swipe? rotate?)
+        // TODO horisontal swipe to switch tabs
         canvas.addGestureListener(new GestureListener() {
             @Override
             public void gesture(GestureEvent gestureEvent) {
