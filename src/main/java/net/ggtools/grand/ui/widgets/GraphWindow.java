@@ -380,6 +380,7 @@ public class GraphWindow extends ApplicationWindow
                 }
             }
         });
+        parent.setSize(480, 320);
         display = parent.getDisplay();
         return tabFolder;
     }
