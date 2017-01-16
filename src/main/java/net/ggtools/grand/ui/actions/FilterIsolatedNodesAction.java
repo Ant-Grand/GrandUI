@@ -34,6 +34,7 @@ import net.ggtools.grand.filters.IsolatedNodeFilter;
 import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.swt.SWT;
 
 /**
  * An action to filter the isolated nodes.
@@ -71,5 +72,6 @@ public class FilterIsolatedNodesAction extends GraphControllerAction {
      */
     public FilterIsolatedNodesAction(final GraphControllerProvider parent) {
         super(parent, DEFAULT_ACTION_NAME);
+        setAccelerator((SWT.getPlatform().equals("cocoa") ? SWT.MOD1 : SWT.CONTROL) | SWT.ALT | 'I');
     }
 }

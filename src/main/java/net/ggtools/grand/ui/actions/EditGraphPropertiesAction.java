@@ -34,6 +34,7 @@ import net.ggtools.grand.ui.widgets.PropertyEditionDialog;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 
 /**
  * An action to remove all filters currently enabled.
@@ -74,6 +75,6 @@ public class EditGraphPropertiesAction extends GraphControllerAction {
      */
     public EditGraphPropertiesAction(final GraphControllerProvider parent) {
         super(parent, DEFAULT_ACTION_NAME);
+        setAccelerator((SWT.getPlatform().equals("cocoa") ? SWT.MOD1 : SWT.CONTROL) | 'E');
     }
-
 }
