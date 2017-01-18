@@ -295,6 +295,16 @@ public class GraphTabItem extends CTabItem
     private boolean doGesture = false;
 
     /**
+     * Field initialLocation.
+     */
+    private Point initialLocation = new Point(0, 0);
+
+    /**
+     * Field initialZoom.
+     */
+    private float initialZoom = 1.0f;
+
+    /**
      * Creates a tab to display a new graph. The tab will contain two sash forms
      * a vertical one with the source panel as the bottom part and a second
      * horizontal second one containing the outline window and the graph itself.
@@ -346,41 +356,39 @@ public class GraphTabItem extends CTabItem
             public void mouseScrolled(MouseEvent event) {
                 if (doGesture)
                     return;
-                final float zoomBefore = getZoom();
+                initialZoom = getZoom();
                 if (event.count > 0) {
                     zoomIn();
                 } else {
                     zoomOut();
                 }
-                final float zoomAfter = getZoom();
-                if (zoomAfter != zoomBefore) {
+                final float currentZoom = getZoom();
+                if (currentZoom != initialZoom) {
                     final Point location = canvas.getViewport().getViewLocation();
-                    final int newX = (int) (((location.x + event.x) / zoomBefore) * zoomAfter)
+                    final int newX = (int) (((location.x + event.x) / initialZoom) * currentZoom)
                             - event.x;
-                    final int newY = (int) (((location.y + event.y) / zoomBefore) * zoomAfter)
+                    final int newY = (int) (((location.y + event.y) / initialZoom) * currentZoom)
                             - event.y;
                     canvas.scrollTo(newX, newY);
                 }
             }
         });
-        // TODO horisontal swipe to switch tabs
+        // TODO horizontal swipe to switch tabs
         canvas.addGestureListener(new GestureListener() {
             @Override
             public void gesture(GestureEvent gestureEvent) {
-                float zoomBefore = 1.0f;
-                Point locationBefore = new Point();
                 switch (gestureEvent.detail) {
                     case SWT.GESTURE_BEGIN:
                         doGesture = true;
-                        zoomBefore = getZoom();
-                        locationBefore = canvas.getViewport().getViewLocation();
+                        initialZoom = getZoom();
+                        initialLocation = canvas.getViewport().getViewLocation();
                         break;
                     case SWT.GESTURE_MAGNIFY:
-                        setZoom((float) (zoomBefore * gestureEvent.magnification));
+                        setZoom((float) (initialZoom * gestureEvent.magnification));
                         break;
                     case SWT.GESTURE_PAN:
-                        canvas.scrollTo(locationBefore.x + gestureEvent.x,
-                                locationBefore.y + gestureEvent.y);
+                        canvas.scrollTo(initialLocation.x + gestureEvent.x,
+                                initialLocation.y + gestureEvent.y);
                         break;
                     case SWT.GESTURE_END:
                         doGesture = false;

@@ -606,8 +606,6 @@ public class GraphController implements DotGraphAttributes, SelectionManager,
             }
             selectedNodes.add(node);
             node.setSelected(true);
-            @SuppressWarnings("unused")
-            final AntTargetNode antNode = (AntTargetNode) node.getVertex().getData();
             displayer.setRichSource(((AntTargetNode) node.getVertex().getData()).getRichSource());
             selectionChangedDispatcher.dispatch(selectedNodes);
         }
