@@ -34,6 +34,7 @@ import net.ggtools.grand.filters.PrefixedNodeFilter;
 import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.swt.SWT;
 
 /**
  * An action to filter the prefixed nodes.
@@ -71,5 +72,6 @@ public class FilterPrefixedNodesAction extends GraphControllerAction {
      */
     public FilterPrefixedNodesAction(final GraphControllerProvider parent) {
         super(parent, DEFAULT_ACTION_NAME);
+        setAccelerator((SWT.getPlatform().equals("cocoa") ? SWT.MOD1 : SWT.CONTROL) | SWT.ALT | 'P');
     }
 }

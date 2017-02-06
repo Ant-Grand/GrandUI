@@ -1,4 +1,3 @@
-#Tue Jul 04 19:55:58 CEST 2006
 comment_clear_blank_lines=false
 comment_format_comments=true
 comment_format_header=true
@@ -19,4 +18,5 @@ org.eclipse.jdt.ui.importorder=java;javax;org;com;
 org.eclipse.jdt.ui.javadoc=false
 org.eclipse.jdt.ui.keywordthis=false
 org.eclipse.jdt.ui.ondemandthreshold=99
+org.eclipse.jdt.ui.overrideannotation=true
 org.eclipse.jdt.ui.text.custom_code_templates=<?xml version\="1.0" encoding\="UTF-8"?><templates/>

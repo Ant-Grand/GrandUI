@@ -75,6 +75,7 @@ public class ExportGraphAction extends GraphControllerAction {
      */
     public ExportGraphAction(final GraphControllerProvider parent, final String name) {
         super(parent, name);
+        setAccelerator(SWT.SHIFT | (SWT.getPlatform().equals("cocoa") ? SWT.MOD1 : SWT.CONTROL) | 'P');
     }
 
     /**
@@ -84,8 +85,7 @@ public class ExportGraphAction extends GraphControllerAction {
     @Override
     public final void run() {
         final Shell parentShell = getGraphController().getWindow().getShell();
-        final FileDialog dialog = new FileDialog(parentShell,
-                SWT.SAVE);
+        final FileDialog dialog = new FileDialog(parentShell, SWT.SAVE);
         final ImageSaver imageSaver = new ImageSaver();
         dialog.setFilterExtensions(imageSaver.getSupportedExtensions());
         dialog.setText("Export graph as image");
