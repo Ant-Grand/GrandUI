@@ -316,6 +316,7 @@
 		<getjar dest="jzgraph.jar" url="${url.jzgraph.jar}"/>
 		<getjar dest="oro.jar" url="${url.oro.jar}"/>
 		<getjar dest="grand.jar" url="${url.grand.jar}"/>
+		<getjar dest="ant-contrib.jar" url="${url.ant-contrib.jar}"/>
 		<getjar dest="appbundler.jar" url="${url.appbundler.jar}"/>
 	</target>
 
