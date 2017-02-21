@@ -353,7 +353,7 @@ public class GraphTabItem extends CTabItem
         canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
         canvas.addMouseWheelListener(new MouseWheelListener() {
             @Override
-            public void mouseScrolled(MouseEvent event) {
+            public void mouseScrolled(final MouseEvent event) {
                 if (doGesture)
                     return;
                 initialZoom = getZoom();
@@ -376,7 +376,7 @@ public class GraphTabItem extends CTabItem
         // TODO horizontal swipe to switch tabs
         canvas.addGestureListener(new GestureListener() {
             @Override
-            public void gesture(GestureEvent gestureEvent) {
+            public void gesture(final GestureEvent gestureEvent) {
                 switch (gestureEvent.detail) {
                     case SWT.GESTURE_BEGIN:
                         doGesture = true;

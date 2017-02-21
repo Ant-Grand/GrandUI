@@ -53,27 +53,27 @@ class PropertyList {
      * Field allPropertiesChangedDispatcher.
      */
     @SuppressWarnings("unused")
-    private Dispatcher allPropertiesChangedDispatcher;
+    private final Dispatcher allPropertiesChangedDispatcher;
 
     /**
      * Field clearedPropertiesDispatcher.
      */
-    private Dispatcher clearedPropertiesDispatcher;
+    private final Dispatcher clearedPropertiesDispatcher;
 
     /**
      * Field propertyAddedDispatcher.
      */
-    private Dispatcher propertyAddedDispatcher;
+    private final Dispatcher propertyAddedDispatcher;
 
     /**
      * Field propertyChangedDispatcher.
      */
-    private Dispatcher propertyChangedDispatcher;
+    private final Dispatcher propertyChangedDispatcher;
 
     /**
      * Field propertyRemovedDispatcher.
      */
-    private Dispatcher propertyRemovedDispatcher;
+    private final Dispatcher propertyRemovedDispatcher;
 
     /**
      * Field eventManager.
