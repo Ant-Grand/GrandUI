@@ -59,7 +59,7 @@ public interface PreferenceKeys {
      * Field GRAPH_BUS_ENABLED_DEFAULT.
      * (value is "GRAPH_PREFIX + "bus.enabled.defaut"")
      */
-    String GRAPH_BUS_ENABLED_DEFAULT = GRAPH_PREFIX + "bus.enabled.defaut";
+    String GRAPH_BUS_ENABLED_DEFAULT = GRAPH_PREFIX + "bus.enabled.default";
 
     /**
      * Field GRAPH_BUS_OUT_THRESHOLD.
