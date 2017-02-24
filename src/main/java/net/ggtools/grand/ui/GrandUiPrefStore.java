@@ -97,10 +97,8 @@ public class GrandUiPrefStore extends ComplexPreferenceStore {
         // Try to get data from the old preference store.
         final Preferences node =
                 Preferences.userNodeForPackage(GrandUiPrefStore.class);
-        final String[] keys;
         try {
-            keys = node.keys();
-            for (final String key : keys) {
+            for (final String key : node.keys()) {
                 putValue(key, node.get(key, "SHOULD NOT APPEAR"));
             }
             save();

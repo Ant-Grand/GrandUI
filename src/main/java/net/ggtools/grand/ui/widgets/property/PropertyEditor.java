@@ -668,8 +668,7 @@ public class PropertyEditor {
         gridData.heightHint = table.getHeaderHeight() * DEFAULT_NUM_LINES;
         table.setLayoutData(gridData);
 
-        TableColumn column;
-        column = new TableColumn(table, SWT.LEFT);
+        TableColumn column = new TableColumn(table, SWT.LEFT);
         // column.setText(STATUS_COLUMN);
         column.setWidth(20);
         column.setMoveable(true);
