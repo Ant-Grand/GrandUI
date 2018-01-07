@@ -51,61 +51,61 @@ public interface PreferenceKeys {
 
     /**
      * Field NODE_PREFIX.
-     * (value is "GRAPH_PREFIX + "node."")
+     * (value is ""graph.node."")
      */
     String NODE_PREFIX = GRAPH_PREFIX + "node.";
 
     /**
      * Field GRAPH_BUS_ENABLED_DEFAULT.
-     * (value is "GRAPH_PREFIX + "bus.enabled.defaut"")
+     * (value is ""graph.bus.enabled.default"")
      */
-    String GRAPH_BUS_ENABLED_DEFAULT = GRAPH_PREFIX + "bus.enabled.defaut";
+    String GRAPH_BUS_ENABLED_DEFAULT = GRAPH_PREFIX + "bus.enabled.default";
 
     /**
      * Field GRAPH_BUS_OUT_THRESHOLD.
-     * (value is "GRAPH_PREFIX + "bus.out.threshold"")
+     * (value is ""graph.bus.out.threshold"")
      */
     String GRAPH_BUS_OUT_THRESHOLD = GRAPH_PREFIX + "bus.out.threshold";
 
     /**
      * Field GRAPH_BUS_IN_THRESHOLD.
-     * (value is "GRAPH_PREFIX + "bus.in.threshold"")
+     * (value is ""graph.bus.in.threshold"")
      */
     String GRAPH_BUS_IN_THRESHOLD = GRAPH_PREFIX + "bus.in.threshold";
 
     /**
      * Field LINK_SUBANT_COLOR.
-     * (value is "GRAPH_PREFIX + "link.subant.color"")
+     * (value is ""graph.link.subant.color"")
      */
     String LINK_SUBANT_COLOR = GRAPH_PREFIX + "link.subant.color";
 
     /**
      * Field LINK_SUBANT_LINEWIDTH.
-     * (value is "GRAPH_PREFIX + "link.subant.linewidth"")
+     * (value is ""graph.link.subant.linewidth"")
      */
     String LINK_SUBANT_LINEWIDTH = GRAPH_PREFIX + "link.subant.linewidth";
 
     /**
      * Field LINK_WEAK_COLOR.
-     * (value is "GRAPH_PREFIX + "link.weak.color"")
+     * (value is ""graph.link.weak.color"")
      */
     String LINK_WEAK_COLOR = GRAPH_PREFIX + "link.weak.color";
 
     /**
      * Field LINK_WEAK_LINEWIDTH.
-     * (value is "GRAPH_PREFIX + "link.weak.linewidth"")
+     * (value is ""graph.link.weak.linewidth"")
      */
     String LINK_WEAK_LINEWIDTH = GRAPH_PREFIX + "link.weak.linewidth";
 
     /**
      * Field LINK_DEFAULT_COLOR.
-     * (value is "GRAPH_PREFIX + "link.default.color"")
+     * (value is ""graph.link.default.color"")
      */
     String LINK_DEFAULT_COLOR = GRAPH_PREFIX + "link.default.color";
 
     /**
      * Field LINK_DEFAULT_LINEWIDTH.
-     * (value is "GRAPH_PREFIX + "link.default.linewidth"")
+     * (value is ""graph.link.default.linewidth"")
      */
     String LINK_DEFAULT_LINEWIDTH = GRAPH_PREFIX + "link.default.linewidth";
 

@@ -11,11 +11,11 @@
 	<classpathentry kind="lib" path="deps/blacksun-util.jar"/>
 	<classpathentry kind="lib" path="deps/swt.jar"/>
 	<classpathentry kind="lib" path="deps/com.ibm.icu_56.1.0.v201601250100.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.core.commands_3.8.0.v20160316-1921.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.core.commands_3.8.1.v20161221-1651.jar"/>
 	<classpathentry kind="lib" path="deps/org.eclipse.draw2d_3.10.100.201606061308.jar"/>
 	<classpathentry kind="lib" path="deps/org.eclipse.equinox.common_3.8.0.v20160509-1230.jar"/>
 	<classpathentry kind="lib" path="deps/oro.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.jface_3.12.1.v20160923-1528.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.11.2.v20161107-1947.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.jface_3.12.2.v20170113-2113.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.11.3.v20170209-1843.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
