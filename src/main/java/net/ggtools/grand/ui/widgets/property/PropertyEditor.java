@@ -76,18 +76,8 @@ public class PropertyEditor {
          * @see org.eclipse.jface.viewers.ICellModifier#canModify(Object, String)
          */
         public boolean canModify(final Object element, final String property) {
-            if (columnExists(property)) {
-                final int columnNumber = getColumnNumber(property);
-                switch (columnNumber) {
-                case STATUS_COLUMN_NUM:
-                    return false;
+            return columnExists(property) && getColumnNumber(property) != STATUS_COLUMN_NUM;
 
-                default:
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         /**

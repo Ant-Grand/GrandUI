@@ -147,8 +147,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
             if (log.isTraceEnabled()) {
                 log.trace("Node got mouseDoubleClicked " + me.button);
             }
-            switch (me.button) {
-            case 1:
+            if (me.button == 1) {
                 final boolean addToSelection = (me.getState() & SWT.CONTROL) != 0;
                 selectNode(node, addToSelection);
                 graphController.openNodeFile(node);

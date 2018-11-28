@@ -405,7 +405,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
             final Document doc = db.newDocument();
             final Element rootElement = (Element) doc.appendChild(doc.createElement(ROOT_ELEMENT));
-            rootElement.setAttribute(VERSION_ATTRIBUTE, Integer.toString(PREF_FILE_VERSION_MAJOR)
+            rootElement.setAttribute(VERSION_ATTRIBUTE, PREF_FILE_VERSION_MAJOR
                     + "." + PREF_FILE_VERSION_MINOR);
             rootElement.setAttribute(DATE_ATTRIBUTE, new Date().toString());
 
@@ -466,9 +466,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 t.transform(doms, sr);
             } catch (final TransformerException e) {
                 LOG.error("Cannot save preferences", e);
-                final IOException ioe = new IOException("Cannot save preferences");
-                ioe.initCause(e);
-                throw ioe;
+                throw new IOException("Cannot save preferences", e);
             }
         } finally {
             if (os != null) {
@@ -493,9 +491,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      */
     public final void setPropertiesToDefault(final String key) {
         // TODO fire listeners
-        if (propertiesTable.containsKey(key)) {
-            propertiesTable.remove(key);
-        }
+        propertiesTable.remove(key);
     }
 
     /**
