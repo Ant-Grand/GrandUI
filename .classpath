@@ -10,12 +10,12 @@
 	<classpathentry kind="lib" path="deps/ant.jar"/>
 	<classpathentry kind="lib" path="deps/blacksun-util.jar"/>
 	<classpathentry kind="lib" path="deps/swt.jar"/>
-	<classpathentry kind="lib" path="deps/com.ibm.icu_56.1.0.v201601250100.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.core.commands_3.8.1.v20161221-1651.jar"/>
 	<classpathentry kind="lib" path="deps/org.eclipse.draw2d_3.10.100.201606061308.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.equinox.common_3.8.0.v20160509-1230.jar"/>
 	<classpathentry kind="lib" path="deps/oro.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.jface_3.12.2.v20170113-2113.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.11.3.v20170209-1843.jar"/>
+	<classpathentry kind="lib" path="deps/com.ibm.icu_58.2.0.v20170418-1837.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.core.commands_3.9.0.v20170530-1048.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.equinox.common_3.9.0.v20170207-1454.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.jface_3.13.2.v20171022-1656.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.12.100.v20180210-1608.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
