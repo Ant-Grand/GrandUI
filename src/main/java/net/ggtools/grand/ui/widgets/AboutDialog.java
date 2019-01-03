@@ -108,7 +108,7 @@ public class AboutDialog extends Dialog {
         image.setImage(Application.getInstance().getImage(Application.ABOUT_DIALOG_IMAGE));
         final Label message = new Label(composite, SWT.NONE);
         final StringBuilder messageBuffer = new StringBuilder(
-                "Grand (C)2004-2018 Christophe Labouisse, distributed under BSD License\nUi: ");
+                "Grand (C)2004-2019 Christophe Labouisse, distributed under BSD License\nUi: ");
         messageBuffer.append(Application.getInstance().getVersionString());
         if (coreConfiguration != null) {
             messageBuffer.append("\nCore: ").append(coreConfiguration.getVersionString());
