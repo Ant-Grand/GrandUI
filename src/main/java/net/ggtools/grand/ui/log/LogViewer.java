@@ -80,13 +80,8 @@ public class LogViewer extends Composite {
          */
         @Override
         public boolean select(final Viewer v, final Object parentElement, final Object element) {
-            if (element instanceof LogEvent) {
-                final LogEvent event = (LogEvent) element;
-                if (event.getLevel().value >= minLogLevel) {
-                    return true;
-                }
-            }
-            return false;
+            return element instanceof LogEvent
+                    && ((LogEvent) element).getLevel().value >= minLogLevel;
         }
     }
 

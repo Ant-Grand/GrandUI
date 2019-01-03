@@ -515,7 +515,7 @@ public class SpinnerFieldEditor extends FieldEditor {
         spinner.setLayoutData(gd);
 
         setErrorMessage(JFaceResources.format(
-                                              "IntegerFieldEditor.errorMessageRange", //$NON-NLS-1$
-                                              new Object[] { new Integer(min), new Integer(max) }));
+                "IntegerFieldEditor.errorMessageRange", //$NON-NLS-1$
+                min, max));
     }
 }
