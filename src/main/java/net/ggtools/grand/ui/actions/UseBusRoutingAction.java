@@ -28,10 +28,7 @@
 package net.ggtools.grand.ui.actions;
 
 import net.ggtools.grand.ui.graph.GraphController;
-
 import net.ggtools.grand.ui.graph.GraphControllerProvider;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Christophe Labouisse
@@ -43,12 +40,6 @@ public class UseBusRoutingAction extends GraphListenerAction {
      * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "Bus Routing";
-
-    /**
-     * Field log.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(UseBusRoutingAction.class);
 
     /**
      * @param parent GraphControllerProvider

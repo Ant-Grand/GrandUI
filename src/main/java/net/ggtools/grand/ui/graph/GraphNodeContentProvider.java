@@ -37,8 +37,6 @@ import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.GrandUiPrefStore;
 import net.ggtools.grand.ui.prefs.PreferenceKeys;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -56,12 +54,6 @@ import org.eclipse.swt.graphics.Image;
  */
 public class GraphNodeContentProvider implements IStructuredContentProvider,
         ILabelProvider, IColorProvider {
-    /**
-     * Logger for this class.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG =
-            LogFactory.getLog(GraphNodeContentProvider.class);
 
     /**
      * Field graph.
@@ -81,7 +73,6 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
      */
     public void addListener(final ILabelProviderListener listener) {
         // TODO auto-generated method stub
-
     }
 
     /**

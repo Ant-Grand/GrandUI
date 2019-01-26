@@ -36,8 +36,6 @@ import net.ggtools.grand.ui.RecentFilesManager;
 import net.ggtools.grand.ui.actions.ClearRecentFilesAction;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
@@ -91,12 +89,6 @@ public class RecentFilesMenu extends MenuManager
                     RecentFilesManager.getInstance().getProperties(file));
         }
     }
-
-    /**
-     * Field log.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(RecentFilesMenu.class);
 
     /**
      * Field RECENT_FILES_GROUP.

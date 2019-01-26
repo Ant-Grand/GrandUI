@@ -30,10 +30,8 @@ package net.ggtools.grand.ui.actions;
 
 import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.filters.MissingNodeFilter;
-
 import net.ggtools.grand.ui.graph.GraphControllerProvider;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.eclipse.swt.SWT;
 
 /**
@@ -42,12 +40,6 @@ import org.eclipse.swt.SWT;
  * @author Christophe Labouisse
  */
 public class FilterMissingNodesAction extends GraphControllerAction {
-    /**
-     * Field log.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG =
-            LogFactory.getLog(FilterMissingNodesAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

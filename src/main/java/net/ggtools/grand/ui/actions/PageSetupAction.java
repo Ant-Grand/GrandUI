@@ -34,8 +34,6 @@ package net.ggtools.grand.ui.actions;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 import net.ggtools.grand.ui.widgets.PageSetupDialog;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 
 /**
@@ -44,12 +42,6 @@ import org.eclipse.jface.action.Action;
  * @author Christophe Labouisse
  */
 public class PageSetupAction extends Action {
-
-    /**
-     * Field log.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(PageSetupAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

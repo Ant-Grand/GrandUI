@@ -27,9 +27,7 @@
  */
 package net.ggtools.grand.ui.graph.draw2d;
 
-//import org.eclipse.draw2d.text.BlockFlowLayout;
 import org.eclipse.draw2d.text.FlowPage;
-//import org.eclipse.draw2d.text.LineBox;
 import org.eclipse.draw2d.text.PageFlowLayout;
 
 /**
@@ -72,20 +70,4 @@ public class ConstrainedPageFlowLayout extends PageFlowLayout {
         this.maxFlowWidth = maxFlowWidth;
         invalidate();
     }
-
-    /*
-     * Override to setup the line's x, remaining, and available width.
-     * @param line
-     *            the LineBox to set up
-     */
-    /*
-    @Override
-    protected void setupLine(final LineBox line) {
-        super.setupLine(line);
-        final int lineWidth = line.getRecommendedWidth();
-        if ((maxFlowWidth > 0) && ((lineWidth > maxFlowWidth) || (lineWidth == -1))) {
-            line.setRecommendedWidth(maxFlowWidth);
-        }
-    }
-    */
 }

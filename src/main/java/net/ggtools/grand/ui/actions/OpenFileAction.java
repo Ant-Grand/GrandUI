@@ -34,8 +34,6 @@ package net.ggtools.grand.ui.actions;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 import net.ggtools.grand.ui.widgets.OpenFileWizard;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -48,12 +46,6 @@ import org.eclipse.swt.SWT;
  * @see org.eclipse.jface.action.Action
  */
 public class OpenFileAction extends Action {
-
-    /**
-     * Field log.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(OpenFileAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

@@ -33,9 +33,6 @@ import net.ggtools.grand.filters.GraphFilter;
 import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import net.ggtools.grand.ui.graph.GraphListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * An action to add a filter to the currently selected node.
  *
@@ -43,12 +40,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class FilterConnectedToNodeAction extends GraphSelectionAction
     implements GraphListener {
-    /**
-     * Field log.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG =
-            LogFactory.getLog(FilterConnectedToNodeAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

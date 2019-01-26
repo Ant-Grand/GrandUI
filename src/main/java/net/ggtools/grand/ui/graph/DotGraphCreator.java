@@ -46,8 +46,6 @@ import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.GrandUiPrefStore;
 import net.ggtools.grand.ui.prefs.PreferenceKeys;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Font;
@@ -67,11 +65,6 @@ import sf.jzgraph.dot.impl.DotGraph;
  */
 public class DotGraphCreator
     implements NodeVisitor, LinkVisitor, DotGraphAttributes {
-    /**
-     * Field log.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(GraphController.class);
 
     /**
      * Field currentLinkName.

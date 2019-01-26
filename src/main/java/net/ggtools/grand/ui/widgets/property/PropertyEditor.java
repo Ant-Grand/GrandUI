@@ -139,12 +139,6 @@ public class PropertyEditor {
      */
     private static final class PropertyListContentProvider
         implements IStructuredContentProvider, PropertyChangedListener {
-        /**
-         * Logger for this class.
-         */
-        @SuppressWarnings("unused")
-        private static final Log PLCP_LOG =
-                LogFactory.getLog(PropertyListContentProvider.class);
 
         /**
          * Field currentPropertyList.

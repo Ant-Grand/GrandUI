@@ -27,8 +27,6 @@
  */
 package net.ggtools.grand.ui.widgets;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.Viewport;
@@ -40,11 +38,6 @@ import org.eclipse.swt.events.MouseMoveListener;
  * @author Christophe Labouisse
  */
 public final class CanvasScroller implements MouseMoveListener {
-    /**
-     * Field log.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(CanvasScroller.class);
 
     /**
      * Field canvas.
