@@ -100,7 +100,7 @@ public class RecentFilesMenu extends MenuManager
 
     /**
      * Field RECENT_FILES_GROUP.
-     * (value is ""Recent files"")
+     * (value is {@value #RECENT_FILES_GROUP})
      */
     private static final String RECENT_FILES_GROUP = "Recent files";
 

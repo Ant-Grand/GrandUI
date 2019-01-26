@@ -37,7 +37,7 @@ public class DispatcherPerformanceMeter {
 
     /**
      * Field LOOP.
-     * (value is 100000000)
+     * (value is {@value #LOOP})
      */
     private static final int LOOP = 100000000;
 

@@ -50,7 +50,7 @@ public class PrintAction extends GraphControllerAction {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Print"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "Print";
 

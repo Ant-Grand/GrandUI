@@ -54,7 +54,7 @@ public class ShowOutlinePanelAction extends Action {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Show outline panel"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "Show outline panel";
 

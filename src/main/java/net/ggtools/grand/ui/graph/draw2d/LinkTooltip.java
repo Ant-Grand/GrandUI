@@ -57,7 +57,7 @@ public class LinkTooltip extends AbstractGraphTooltip
     implements DotGraphAttributes {
     /**
      * Field ELLIPSIS.
-     * (value is ""..."")
+     * (value is {@value #ELLIPSIS})
      */
     private static final String ELLIPSIS = "...";
 

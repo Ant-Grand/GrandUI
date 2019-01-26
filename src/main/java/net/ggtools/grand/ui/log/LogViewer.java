@@ -275,13 +275,13 @@ public class LogViewer extends Composite {
 
     /**
      * Field DEFAULT_NUM_LINES.
-     * (value is 10)
+     * (value is {@value #DEFAULT_NUM_LINES})
      */
     private static final int DEFAULT_NUM_LINES = 10;
 
     /**
      * Field HEADER_EXTRA_WIDTH.
-     * (value is 10)
+     * (value is {@value #HEADER_EXTRA_WIDTH})
      */
     private static final int HEADER_EXTRA_WIDTH = 10;
 
@@ -292,26 +292,26 @@ public class LogViewer extends Composite {
 
     /**
      * Field CI_CLASS.
-     * (value is 2)
+     * (value is {@value #CI_CLASS})
      */
     static final int CI_CLASS = 2;
 
     /**
      * Field CI_DATE.
-     * (value is 1)
+     * (value is {@value #CI_DATE})
      */
     static final int CI_DATE = 1;
 
     // Indexes for table columns.
     /**
      * Field CI_LEVEL.
-     * (value is 0)
+     * (value is {@value #CI_LEVEL})
      */
     static final int CI_LEVEL = 0;
 
     /**
      * Field CI_MESSAGE.
-     * (value is 3)
+     * (value is {@value #CI_MESSAGE})
      */
     static final int CI_MESSAGE = 3;
 

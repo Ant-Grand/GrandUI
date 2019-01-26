@@ -39,7 +39,7 @@ public class ZoomOutAction extends GraphControllerAction {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Zoom Out"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "Zoom Out";
 

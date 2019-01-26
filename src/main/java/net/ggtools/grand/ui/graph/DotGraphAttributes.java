@@ -38,109 +38,109 @@ public interface DotGraphAttributes {
 
     /**
      * Field _BOUNDS_ATTR.
-     * (value is ""-bounds"")
+     * (value is {@value #_BOUNDS_ATTR})
      */
     String _BOUNDS_ATTR = "-bounds";
 
     /**
      * Field _SHAPE_ATTR.
-     * (value is ""-shape"")
+     * (value is {@value #_SHAPE_ATTR})
      */
     String _SHAPE_ATTR = "-shape";
 
     /**
      * Field BUILD_FILE_ATTR.
-     * (value is ""build.file"")
+     * (value is {@value #BUILD_FILE_ATTR})
      */
     String BUILD_FILE_ATTR = "build.file";
 
     /**
      * Field DESCRIPTION_ATTR.
-     * (value is ""description"")
+     * (value is {@value #DESCRIPTION_ATTR})
      */
     String DESCRIPTION_ATTR = "description";
 
     /**
      * Field DRAW2DFGCOLOR_ATTR.
-     * (value is ""draw2dfgcolor"")
+     * (value is {@value #DRAW2DFGCOLOR_ATTR})
      */
     String DRAW2DFGCOLOR_ATTR = "draw2dfgcolor";
 
     /**
      * Field DRAW2DFILLCOLOR_ATTR.
-     * (value is ""draw2dfillcolor"")
+     * (value is {@value #DRAW2DFILLCOLOR_ATTR})
      */
     String DRAW2DFILLCOLOR_ATTR = "draw2dfillcolor";
 
     /**
      * Field DRAW2DLINEWIDTH_ATTR.
-     * (value is ""draw2dlinewidth"")
+     * (value is {@value #DRAW2DLINEWIDTH_ATTR})
      */
     String DRAW2DLINEWIDTH_ATTR = "draw2dlinewidth";
 
     /**
      * Field IF_CONDITION_ATTR.
-     * (value is ""ifCondition"")
+     * (value is {@value #IF_CONDITION_ATTR})
      */
     String IF_CONDITION_ATTR = "ifCondition";
 
     /**
      * Field LABEL_ATTR.
-     * (value is ""label"")
+     * (value is {@value #LABEL_ATTR})
      */
     String LABEL_ATTR = "label";
 
     /**
      * Field MINHEIGHT_ATTR.
-     * (value is ""minheight"")
+     * (value is {@value #MINHEIGHT_ATTR})
      */
     String MINHEIGHT_ATTR = "minheight";
 
     /**
      * Field MINWIDTH_ATTR.
-     * (value is ""minwidth"")
+     * (value is {@value #MINWIDTH_ATTR})
      */
     String MINWIDTH_ATTR = "minwidth";
 
     /**
      * Field PATH_ITERATOR_FLATNESS.
-     * (value is 1.0)
+     * (value is {@value #PATH_ITERATOR_FLATNESS})
      */
     double PATH_ITERATOR_FLATNESS = 1.0;
 
     /**
      * Field LINK_PARAMETERS_ATTR.
-     * (value is ""link.params"")
+     * (value is {@value #LINK_PARAMETERS_ATTR})
      */
     String LINK_PARAMETERS_ATTR = "link.params";
 
     /**
      * Field LINK_SUBANT_DIRECTORIES.
-     * (value is ""link.subant.directories"")
+     * (value is {@value #LINK_SUBANT_DIRECTORIES})
      */
     String LINK_SUBANT_DIRECTORIES = "link.subant.directories";
 
     /**
      * Field LINK_TASK_ATTR.
-     * (value is ""link.task"")
+     * (value is {@value #LINK_TASK_ATTR})
      */
     String LINK_TASK_ATTR = "link.task";
 
     /**
      * Field POSITION_ATTR.
-     * (value is ""pos"")
+     * (value is {@value #POSITION_ATTR})
      */
     String POSITION_ATTR = "pos";
 
     /**
      * Field SHAPE_ATTR.
-     * (value is ""shape"")
+     * (value is {@value #SHAPE_ATTR})
      */
     String SHAPE_ATTR = "shape";
 
     /**
      * Field UNLESS_CONDITION_ATTR.
-     * (value is ""unlessCondition"")
+     * (value is {@value #UNLESS_CONDITION_ATTR})
      */
     String UNLESS_CONDITION_ATTR = "unlessCondition";
 

@@ -43,7 +43,7 @@ public class QuitAction extends Action {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Quit"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "Quit";
 

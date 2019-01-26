@@ -80,7 +80,7 @@ abstract class AbstractGraphTooltip extends Figure {
 
     /**
      * Field TOOLTIP_WIDTH.
-     * (value is 400)
+     * (value is {@value #TOOLTIP_WIDTH})
      */
     static final int TOOLTIP_WIDTH = 400;
 

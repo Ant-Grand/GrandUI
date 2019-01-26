@@ -54,7 +54,7 @@ public class ShowSourcePanelAction extends Action {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Show source panel"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "Show source panel";
 

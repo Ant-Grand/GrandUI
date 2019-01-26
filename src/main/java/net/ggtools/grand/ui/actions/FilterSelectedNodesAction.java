@@ -45,7 +45,7 @@ import org.apache.commons.logging.LogFactory;
 public class FilterSelectedNodesAction extends GraphListenerAction {
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Filter out selected nodes"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME =
             "Filter out selected nodes";

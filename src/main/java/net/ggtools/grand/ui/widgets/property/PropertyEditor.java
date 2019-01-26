@@ -273,13 +273,13 @@ public class PropertyEditor {
     private static final class Sorter extends ViewerComparator {
         /**
          * Field NAME_COLUMN.
-         * (value is 1)
+         * (value is {@value #NAME_COLUMN})
          */
         private static final int NAME_COLUMN = 1;
 
         /**
          * Field VALUE_COLUMN.
-         * (value is 2)
+         * (value is {@value #VALUE_COLUMN})
          */
         private static final int VALUE_COLUMN = 2;
 
@@ -339,13 +339,13 @@ public class PropertyEditor {
 
     /**
      * Field BUTTON_WIDTH.
-     * (value is 80)
+     * (value is {@value #BUTTON_WIDTH})
      */
     private static final int BUTTON_WIDTH = 80;
 
     /**
      * Field DEFAULT_NUM_LINES.
-     * (value is 10)
+     * (value is {@value #DEFAULT_NUM_LINES})
      */
     private static final int DEFAULT_NUM_LINES = 10;
 
@@ -357,7 +357,7 @@ public class PropertyEditor {
 
     /**
      * Field GRID_LAYOUT_COLUMNS.
-     * (value is 6)
+     * (value is {@value #GRID_LAYOUT_COLUMNS})
      */
     private static final int GRID_LAYOUT_COLUMNS = 6;
 
@@ -368,37 +368,37 @@ public class PropertyEditor {
 
     /**
      * Field STATUS_COLUMN.
-     * (value is ""Status"")
+     * (value is {@value #STATUS_COLUMN})
      */
     private static final String STATUS_COLUMN = "Status";
 
     /**
      * Field NAME_COLUMN.
-     * (value is ""Name"")
+     * (value is {@value #NAME_COLUMN})
      */
     private static final String NAME_COLUMN = "Name";
 
     /**
      * Field VALUE_COLUMN.
-     * (value is ""Value"")
+     * (value is {@value #VALUE_COLUMN})
      */
     private static final String VALUE_COLUMN = "Value";
 
     /**
      * Field STATUS_COLUMN_NUM.
-     * (value is 0)
+     * (value is {@value #STATUS_COLUMN_NUM})
      */
     static final int STATUS_COLUMN_NUM = 0;
 
     /**
      * Field NAME_COLUMN_NUM.
-     * (value is 1)
+     * (value is {@value #NAME_COLUMN_NUM})
      */
     static final int NAME_COLUMN_NUM = 1;
 
     /**
      * Field VALUE_COLUMN_NUM.
-     * (value is 2)
+     * (value is {@value #VALUE_COLUMN_NUM})
      */
     static final int VALUE_COLUMN_NUM = 2;
 

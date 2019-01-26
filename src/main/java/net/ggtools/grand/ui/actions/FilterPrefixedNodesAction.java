@@ -51,7 +51,7 @@ public class FilterPrefixedNodesAction extends GraphControllerAction {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Filter out prefixed nodes"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME =
             "Filter out prefixed nodes";

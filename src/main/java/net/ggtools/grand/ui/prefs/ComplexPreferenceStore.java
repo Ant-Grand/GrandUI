@@ -129,25 +129,25 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
     /**
      * Field COLLECTION_NO_LIMIT.
-     * (value is -1)
+     * (value is {@value #COLLECTION_NO_LIMIT})
      */
     private static final int COLLECTION_NO_LIMIT = -1;
 
     /**
      * Field DATE_ATTRIBUTE.
-     * (value is ""date"")
+     * (value is {@value #DATE_ATTRIBUTE})
      */
     private static final String DATE_ATTRIBUTE = "date";
 
     /**
      * Field ENTRY_ELEMENT.
-     * (value is ""entry"")
+     * (value is {@value #ENTRY_ELEMENT})
      */
     private static final String ENTRY_ELEMENT = "entry";
 
     /**
      * Field KEY_ATTRIBUTE.
-     * (value is ""key"")
+     * (value is {@value #KEY_ATTRIBUTE})
      */
     private static final String KEY_ATTRIBUTE = "key";
 
@@ -159,31 +159,31 @@ public class ComplexPreferenceStore extends PreferenceStore {
 
     /**
      * Field PREF_FILE_VERSION_MAJOR.
-     * (value is 1)
+     * (value is {@value #PREF_FILE_VERSION_MAJOR})
      */
     private static final int PREF_FILE_VERSION_MAJOR = 1;
 
     /**
      * Field PREF_FILE_VERSION_MINOR.
-     * (value is 0)
+     * (value is {@value #PREF_FILE_VERSION_MINOR})
      */
     private static final int PREF_FILE_VERSION_MINOR = 0;
 
     /**
      * Field PROPERTIES_ELEMENT.
-     * (value is ""properties"")
+     * (value is {@value #PROPERTIES_ELEMENT})
      */
     private static final String PROPERTIES_ELEMENT = "properties";
 
     /**
      * Field ROOT_ELEMENT.
-     * (value is ""preferences"")
+     * (value is {@value #ROOT_ELEMENT})
      */
     private static final String ROOT_ELEMENT = "preferences";
 
     /**
      * Field VERSION_ATTRIBUTE.
-     * (value is ""version"")
+     * (value is {@value #VERSION_ATTRIBUTE})
      */
     private static final String VERSION_ATTRIBUTE = "version";
 
