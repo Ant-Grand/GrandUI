@@ -104,8 +104,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
                 LOG.trace("Graph got mouseReleased " + me.button);
             }
             switch (me.button) {
-            case (1):
-            case (2):
+            case 1:
+            case 2:
                 if (scroller != null) {
                     scroller.leaveDragMode();
                 }
@@ -198,8 +198,8 @@ public class Draw2dGraph extends Panel implements SelectionManager {
             // released
             // on a node.
             switch (me.button) {
-            case (1):
-            case (2):
+            case 1:
+            case 2:
                 if (scroller != null) {
                     scroller.leaveDragMode();
                 }

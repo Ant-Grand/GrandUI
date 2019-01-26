@@ -29,8 +29,8 @@ package net.ggtools.grand.ui.actions;
 
 import net.ggtools.grand.ui.graph.GraphController;
 import net.ggtools.grand.ui.graph.GraphControllerListener;
-
 import net.ggtools.grand.ui.graph.GraphControllerProvider;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 
