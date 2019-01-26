@@ -297,8 +297,7 @@ public class GraphWindow extends ApplicationWindow
     public final void setOutlinePanelVisible(final boolean outlinePanelVisible) {
         if (outlinePanelVisible != this.outlinePanelVisible) {
             this.outlinePanelVisible = outlinePanelVisible;
-            final CTabItem[] children = tabFolder.getItems();
-            for (final CTabItem current : children) {
+            for (final CTabItem current : tabFolder.getItems()) {
                 if (current instanceof GraphTabItem) {
                     final GraphTabItem tab = (GraphTabItem) current;
                     tab.setOutlinePanelVisible(outlinePanelVisible);
@@ -314,8 +313,7 @@ public class GraphWindow extends ApplicationWindow
     public final void setSourcePanelVisible(final boolean sourcePanelVisible) {
         if (sourcePanelVisible != this.sourcePanelVisible) {
             this.sourcePanelVisible = sourcePanelVisible;
-            final CTabItem[] children = tabFolder.getItems();
-            for (final CTabItem current : children) {
+            for (final CTabItem current : tabFolder.getItems()) {
                 if (current instanceof GraphTabItem) {
                     final GraphTabItem tab = (GraphTabItem) current;
                     tab.setSourcePanelVisible(sourcePanelVisible);

@@ -82,9 +82,8 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
             LOG.debug("run() - start");
         }
 
-        final Collection<Draw2dNode> selection = getGraphController().getSelection();
         final List<String> nodeList = new LinkedList<String>();
-        for (final Draw2dNode node : selection) {
+        for (final Draw2dNode node : getGraphController().getSelection()) {
             nodeList.add(node.getName());
         }
         final GraphFilter filter = new NodeRemoverFilter(nodeList);

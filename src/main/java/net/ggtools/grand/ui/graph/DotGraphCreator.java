@@ -137,10 +137,9 @@ public class DotGraphCreator
             public void run() {
                 final Font systemFont = Application.getInstance().getFont(Application.NODE_FONT);
                 for (final Entry<String, IVertex> entry : nameDimensions.entrySet()) {
-                    final String name = entry.getKey();
                     final IVertex vertex = entry.getValue();
 
-                    final Dimension dim = FigureUtilities.getTextExtents(name, systemFont);
+                    final Dimension dim = FigureUtilities.getTextExtents(entry.getKey(), systemFont);
                     vertex.setAttr(MINWIDTH_ATTR, Math.max(dim.width, 50));
                     vertex.setAttr(MINHEIGHT_ATTR, Math.max(dim.height, 25));
                 }
@@ -153,10 +152,7 @@ public class DotGraphCreator
             int index = 1;
             final int numDeps = deps.size();
             for (final Link link : deps) {
-                currentLinkName = "";
-                if (numDeps > 1) {
-                    currentLinkName += index++;
-                }
+                currentLinkName = (numDeps == 1) ? "" : String.valueOf(index++);
                 link.accept(this);
             }
         }
