@@ -31,8 +31,6 @@ package net.ggtools.grand.ui.actions;
 import net.ggtools.grand.ui.prefs.GrandUiPreferenceManager;
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.PreferenceDialog;
 
@@ -41,12 +39,6 @@ import org.eclipse.jface.preference.PreferenceDialog;
  * @see org.eclipse.jface.action.Action
  */
 public class PreferenceAction extends Action {
-
-    /**
-     * Field log.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(PreferenceAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

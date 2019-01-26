@@ -54,11 +54,6 @@ public class ImageSaver {
      * @author Christophe Labouisse
      */
     private static class ColorCounter implements Comparable<ColorCounter> {
-        /**
-         * Logger for this class.
-         */
-        @SuppressWarnings("unused")
-        private static final Log COLOR_LOG = LogFactory.getLog(ColorCounter.class);
 
         /**
          * Field count.

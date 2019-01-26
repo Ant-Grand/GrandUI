@@ -31,8 +31,6 @@ package net.ggtools.grand.ui.actions;
 import net.ggtools.grand.ui.graph.GraphControllerProvider;
 import net.ggtools.grand.ui.widgets.PropertyEditionDialog;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 
@@ -42,12 +40,6 @@ import org.eclipse.swt.SWT;
  * @author Christophe Labouisse
  */
 public class EditGraphPropertiesAction extends GraphControllerAction {
-    /**
-     * Field log.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG =
-        LogFactory.getLog(EditGraphPropertiesAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

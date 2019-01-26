@@ -33,9 +33,6 @@ import java.util.List;
 
 import net.ggtools.grand.ui.log.LogEvent.Level;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * A singleton class used to store the log events generated from the start of
  * the application.
@@ -48,12 +45,6 @@ public final class LogEventBufferImpl implements LogEventBuffer {
      * Field instance.
      */
     private static volatile LogEventBufferImpl instance;
-
-    /**
-     * Logger for this class.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(LogEventBufferImpl.class);
 
     /**
      * Comment for <code>serialVersionUID</code>.

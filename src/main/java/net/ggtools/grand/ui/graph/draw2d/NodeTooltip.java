@@ -30,8 +30,6 @@ package net.ggtools.grand.ui.graph.draw2d;
 import net.ggtools.grand.ui.Application;
 import net.ggtools.grand.ui.graph.DotGraphAttributes;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.text.BlockFlow;
 import org.eclipse.draw2d.text.FlowPage;
@@ -47,11 +45,6 @@ import sf.jzgraph.IVertex;
  */
 public class NodeTooltip extends AbstractGraphTooltip
     implements DotGraphAttributes {
-    /**
-     * Field log.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(NodeTooltip.class);
 
     /**
      * Field vertex.

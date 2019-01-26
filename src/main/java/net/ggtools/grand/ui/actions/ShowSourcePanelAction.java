@@ -33,8 +33,6 @@ package net.ggtools.grand.ui.actions;
 
 import net.ggtools.grand.ui.widgets.GraphWindow;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
 
@@ -44,13 +42,6 @@ import org.eclipse.swt.SWT;
  * @author Christophe Labouisse
  */
 public class ShowSourcePanelAction extends Action {
-
-    /**
-     * Field log.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG =
-            LogFactory.getLog(ShowSourcePanelAction.class);
 
     /**
      * Field DEFAULT_ACTION_NAME.

@@ -28,8 +28,7 @@
 package net.ggtools.grand.ui.actions;
 
 import net.ggtools.grand.ui.graph.GraphControllerProvider;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.eclipse.swt.SWT;
 
 /**
@@ -42,12 +41,6 @@ public class ZoomInAction extends GraphControllerAction {
      * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "Zoom In";
-
-    /**
-     * Logger for this class.
-     */
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(ZoomInAction.class);
 
     /**
      * @param provider GraphControllerProvider
