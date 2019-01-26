@@ -49,7 +49,7 @@ public class ExportGraphAction extends GraphControllerAction {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Export Graph as Image"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "Export Graph as Image";
 

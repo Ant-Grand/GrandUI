@@ -33,80 +33,79 @@ package net.ggtools.grand.ui.prefs;
 public interface PreferenceKeys {
     /**
      * Field MAX_RECENT_FILES_PREFS_KEY.
-     * (value is ""max recent files"")
+     * (value is {@value #MAX_RECENT_FILES_PREFS_KEY})
      */
     String MAX_RECENT_FILES_PREFS_KEY = "max recent files";
 
     /**
      * Field RECENT_FILES_PREFS_KEY.
-     * (value is ""recent files"")
+     * (value is {@value #RECENT_FILES_PREFS_KEY})
      */
     String RECENT_FILES_PREFS_KEY = "recent files";
 
     /**
      * Field GRAPH_PREFIX.
-     * (value is ""graph."")
+     * (value is {@value #GRAPH_PREFIX})
      */
     String GRAPH_PREFIX = "graph.";
 
     /**
      * Field NODE_PREFIX.
-     * (value is ""graph.node."")
+     * (value is {@value #NODE_PREFIX})
      */
     String NODE_PREFIX = GRAPH_PREFIX + "node.";
 
     /**
      * Field GRAPH_BUS_ENABLED_DEFAULT.
-     * (value is ""graph.bus.enabled.default"")
+     * (value is {@value #GRAPH_BUS_ENABLED_DEFAULT})
      */
     String GRAPH_BUS_ENABLED_DEFAULT = GRAPH_PREFIX + "bus.enabled.default";
 
     /**
      * Field GRAPH_BUS_OUT_THRESHOLD.
-     * (value is ""graph.bus.out.threshold"")
+     * (value is {@value #GRAPH_BUS_OUT_THRESHOLD})
      */
     String GRAPH_BUS_OUT_THRESHOLD = GRAPH_PREFIX + "bus.out.threshold";
 
     /**
      * Field GRAPH_BUS_IN_THRESHOLD.
-     * (value is ""graph.bus.in.threshold"")
+     * (value is {@value #GRAPH_BUS_IN_THRESHOLD})
      */
     String GRAPH_BUS_IN_THRESHOLD = GRAPH_PREFIX + "bus.in.threshold";
 
     /**
      * Field LINK_SUBANT_COLOR.
-     * (value is ""graph.link.subant.color"")
+     * (value is {@value #LINK_SUBANT_COLOR})
      */
     String LINK_SUBANT_COLOR = GRAPH_PREFIX + "link.subant.color";
 
     /**
      * Field LINK_SUBANT_LINEWIDTH.
-     * (value is ""graph.link.subant.linewidth"")
+     * (value is {@value #LINK_SUBANT_LINEWIDTH})
      */
     String LINK_SUBANT_LINEWIDTH = GRAPH_PREFIX + "link.subant.linewidth";
 
     /**
      * Field LINK_WEAK_COLOR.
-     * (value is ""graph.link.weak.color"")
+     * (value is {@value #LINK_WEAK_COLOR})
      */
     String LINK_WEAK_COLOR = GRAPH_PREFIX + "link.weak.color";
 
     /**
      * Field LINK_WEAK_LINEWIDTH.
-     * (value is ""graph.link.weak.linewidth"")
+     * (value is {@value #LINK_WEAK_LINEWIDTH})
      */
     String LINK_WEAK_LINEWIDTH = GRAPH_PREFIX + "link.weak.linewidth";
 
     /**
      * Field LINK_DEFAULT_COLOR.
-     * (value is ""graph.link.default.color"")
+     * (value is {@value #LINK_DEFAULT_COLOR})
      */
     String LINK_DEFAULT_COLOR = GRAPH_PREFIX + "link.default.color";
 
     /**
      * Field LINK_DEFAULT_LINEWIDTH.
-     * (value is ""graph.link.default.linewidth"")
+     * (value is {@value #LINK_DEFAULT_LINEWIDTH})
      */
     String LINK_DEFAULT_LINEWIDTH = GRAPH_PREFIX + "link.default.linewidth";
-
 }

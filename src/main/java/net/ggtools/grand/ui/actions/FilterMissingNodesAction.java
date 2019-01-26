@@ -51,7 +51,7 @@ public class FilterMissingNodesAction extends GraphControllerAction {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Filter out missing nodes"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME =
             "Filter out missing nodes";

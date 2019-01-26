@@ -60,7 +60,7 @@ public class QuickOpenFileAction extends Action {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Quick Open"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "Quick Open";
 

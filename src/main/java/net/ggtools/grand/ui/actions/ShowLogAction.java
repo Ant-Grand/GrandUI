@@ -84,7 +84,7 @@ public class ShowLogAction extends Action {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Log window"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "Log window";
 

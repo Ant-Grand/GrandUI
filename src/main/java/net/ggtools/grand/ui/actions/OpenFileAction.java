@@ -57,7 +57,7 @@ public class OpenFileAction extends Action {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Open with properties"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "Open with properties";
 

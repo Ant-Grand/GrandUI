@@ -52,7 +52,7 @@ public class FilterFromNodeAction extends GraphSelectionAction
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Filter from selected node"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME =
             "Filter from selected node";

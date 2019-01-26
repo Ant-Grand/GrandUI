@@ -50,7 +50,7 @@ public class PreferenceAction extends Action {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""Preferences"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "Preferences";
 

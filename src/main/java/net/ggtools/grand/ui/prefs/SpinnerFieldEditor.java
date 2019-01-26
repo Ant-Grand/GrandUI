@@ -26,7 +26,8 @@ public class SpinnerFieldEditor extends FieldEditor {
     private Spinner spinner;
 
     /**
-     * Validation strategy constant (value <code>0</code>) indicating that the
+     * Validation strategy constant
+     * (value <code>{@value #VALIDATE_ON_KEY_STROKE}</code>) indicating that the
      * editor should perform validation after every key stroke.
      *
      * @see #setValidateStrategy
@@ -34,7 +35,8 @@ public class SpinnerFieldEditor extends FieldEditor {
     private static final int VALIDATE_ON_KEY_STROKE = 0;
 
     /**
-     * Validation strategy constant (value <code>1</code>) indicating that the
+     * Validation strategy constant
+     * (value <code>{@value #VALIDATE_ON_FOCUS_LOST}</code>) indicating that the
      * editor should perform validation only when the text widget loses focus.
      *
      * @see #setValidateStrategy
@@ -42,8 +44,8 @@ public class SpinnerFieldEditor extends FieldEditor {
     private static final int VALIDATE_ON_FOCUS_LOST = 1;
 
     /**
-     * Text limit constant (value <code>-1</code>) indicating unlimited text
-     * limit and width.
+     * Text limit constant (value <code>{@value #UNLIMITED}</code>) indicating
+     * unlimited text limit and width.
      */
     private static final int UNLIMITED = -1;
 

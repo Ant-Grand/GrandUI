@@ -95,15 +95,16 @@ public class GraphTabItem extends CTabItem
          */
         private static final Log OVC_LOG =
                 LogFactory.getLog(OutlineViewerCollator.class);
+
         /**
          * Field NODE_INDEX_GROUP_NUM.
-         * (value is 4)
+         * (value is {@value NODE_INDEX_GROUP_NUM})
          */
         private static final int NODE_INDEX_GROUP_NUM = 4;
 
         /**
          * Field NODE_NAME_GROUP_NUM.
-         * (value is 1)
+         * (value is {@value NODE_NAME_GROUP_NUM})
          */
         private static final int NODE_NAME_GROUP_NUM = 1;
 
@@ -208,19 +209,19 @@ public class GraphTabItem extends CTabItem
 
     /**
      * Field ZOOM_MAX.
-     * (value is 3.0)
+     * (value is {@value #ZOOM_MAX})
      */
     private static final float ZOOM_MAX = 3.0f;
 
     /**
      * Field ZOOM_MIN.
-     * (value is 0.25)
+     * (value is {@value #ZOOM_MIN})
      */
     private static final float ZOOM_MIN = 0.25f;
 
     /**
      * Field ZOOM_STEP.
-     * (value is 1.1)
+     * (value is {@value #ZOOM_STEP})
      */
     private static final float ZOOM_STEP = 1.1f;
 

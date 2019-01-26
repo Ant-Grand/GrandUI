@@ -53,7 +53,7 @@ public class AboutAction extends Action {
 
     /**
      * Field DEFAULT_ACTION_NAME.
-     * (value is ""About Grand"")
+     * (value is {@value #DEFAULT_ACTION_NAME})
      */
     private static final String DEFAULT_ACTION_NAME = "About Grand";
 
