@@ -427,11 +427,10 @@ public class ComplexPreferenceStore extends PreferenceStore {
             saveProperties(doc, rootElement, prefStoreSaver);
 
             for (final Map.Entry<String, Properties> entry : propertiesTable.entrySet()) {
-                final String propKey = entry.getKey();
                 final Properties props = entry.getValue();
                 final Element currentElement = (Element) rootElement.appendChild(doc
                         .createElement(PROPERTIES_ELEMENT));
-                currentElement.setAttribute(KEY_ATTRIBUTE, propKey);
+                currentElement.setAttribute(KEY_ATTRIBUTE, entry.getKey());
                 final PropertySaver propertySaver = new PropertySaver() {
 
                     public String get(final String key) {
@@ -560,9 +559,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
      */
     private void saveProperties(final Document doc, final Element properties,
             final PropertySaver saver) {
-        final Collection<?> keys = saver.getKeys();
         // TODO solve the properties problem.
-        for (Object i : keys) {
+        for (Object i : saver.getKeys()) {
             final String key = (i instanceof String) ? (String) i : i.toString();
             if (saver.needSaving(key)) {
                 final Element entry = (Element) properties.appendChild(doc.createElement(ENTRY_ELEMENT));
