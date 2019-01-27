@@ -146,20 +146,29 @@
 		<!-- Java libraries -->
 		<copy tofile="tmp/${product.fullname}/lib/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
 		<copy todir="tmp/${product.fullname}/lib">
-			<fileset dir="${extlibdir}" excludes="org.eclipse.swt.*.jar,swt.jar,appbundler.jar"/>
+			<fileset dir="${extlibdir}" excludes="org.eclipse.*.jar,com.ibm.*.jar,swt.jar,appbundler.jar"/>
+		</copy>
+		<!-- Equinox versions are incompatible with JPMS automatic module naming -->
+		<copy todir="tmp/${product.fullname}/lib">
+			<fileset dir="${extlibdir}" excludes="org.eclipse.swt.*.jar"/>
+			<regexpmapper from="([^_]*)_(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
 		</copy>
 		<!-- SWT platform-specific libraries -->
 		<copy todir="tmp/${product.fullname}/lib/gtk/x86">
 			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86_*.jar" excludes="org.eclipse.swt.gtk.*.x86_64*.jar"/>
+			<regexpmapper from="([^_]*).x86_(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
 		</copy>
 		<copy todir="tmp/${product.fullname}/lib/gtk/x86_64">
 			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86_64*.jar"/>
+			<regexpmapper from="([^_]*).x86_64_(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
 		</copy>
 		<copy todir="tmp/${product.fullname}/lib/win32/x86">
 			<fileset dir="${extlibdir}" includes="org.eclipse.swt.win32.*.x86_*.jar" excludes="org.eclipse.swt.win32.*.x86_64*.jar"/>
+			<regexpmapper from="([^_]*).x86_(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
 		</copy>
 		<copy todir="tmp/${product.fullname}/lib/win32/x86_64">
 			<fileset dir="${extlibdir}" includes="org.eclipse.swt.win32.*.x86_64*.jar"/>
+			<regexpmapper from="([^_]*).x86_64_(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
 		</copy>
 		<!-- Licenses -->
 		<copy todir="tmp/${product.fullname}" flatten="true">
@@ -315,7 +324,7 @@
 		<getjar dest="blacksun-util.jar" url="${url.blacksun-util.jar}"/>
 		<getjar dest="jzgraph.jar" url="${url.jzgraph.jar}"/>
 		<getjar dest="oro.jar" url="${url.oro.jar}"/>
-		<getjar dest="grand.jar" url="${url.grand.jar}"/>
+		<getjar dest="grand-module.jar" url="${url.grand.jar}"/>
 		<getjar dest="ant-contrib.jar" url="${url.ant-contrib.jar}"/>
 		<getjar dest="appbundler.jar" url="${url.appbundler.jar}"/>
 	</target>

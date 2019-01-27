@@ -21,4 +21,8 @@ if [ `java -version 2>&1 | grep -c 64` -eq 0 ]; then
     ARCH=x86
 fi
 
-java -Djava.ext.dirs=$BASEDIR/lib:$BASEDIR/lib/gtk/$ARCH -jar $BASEDIR/lib/grand-ui.jar
+if [ `java -version 2>&1 | sed -n 's/.* version "\([^.]*\)\..*".*/\1/p'` -eq 1 ]; then
+    java -Djava.ext.dirs=$BASEDIR/lib:$BASEDIR/lib/gtk/$ARCH -jar $BASEDIR/lib/grand-ui.jar
+else
+    java -p $BASEDIR/lib:$BASEDIR/lib/gtk/$ARCH -m grand.ui
+fi
