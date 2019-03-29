@@ -139,9 +139,6 @@ public class Draw2dNode extends Polygon implements DotGraphAttributes {
 
             switch (segType) {
             case PathIterator.SEG_MOVETO:
-                addPoint(new PrecisionPoint(coords[0], coords[1]));
-                break;
-
             case PathIterator.SEG_LINETO:
                 addPoint(new PrecisionPoint(coords[0], coords[1]));
                 break;
