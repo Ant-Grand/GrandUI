@@ -11,11 +11,11 @@
 	<classpathentry kind="lib" path="deps/blacksun-util.jar"/>
 	<classpathentry kind="lib" path="deps/swt.jar"/>
 	<classpathentry kind="lib" path="deps/oro.jar"/>
-	<classpathentry kind="lib" path="deps/com.ibm.icu_58.2.0.v20170418-1837.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.core.commands_3.9.100.v20180404-1234.jar"/>
+	<classpathentry kind="lib" path="deps/com.ibm.icu_62.1.0.v20180727-1652.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.core.commands_3.9.200.v20180827-1727.jar"/>
 	<classpathentry kind="lib" path="deps/org.eclipse.draw2d_3.10.100.201606061308.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.equinox.common_3.10.0.v20180412-1130.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.jface_3.14.0.v20180423-0714.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.13.0.v20180409-1500.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.equinox.common_3.10.100.v20180827-1235.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.jface_3.14.100.v20180828-0836.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.13.100.v20180827-1536.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
