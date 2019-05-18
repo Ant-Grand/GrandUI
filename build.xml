@@ -266,6 +266,14 @@
 			<fileset dir="${confdir}"/>
 			<manifest>
 				<attribute name="Main-Class" value="net.ggtools.grand.ui.Application"/>
+				<section name="net/ggtools/grand/ui">
+					<attribute name="Specification-Title" value="${product.name}"/>
+					<attribute name="Specification-Version" value="${product.version}"/>
+					<attribute name="Specification-Vendor" value="${product.vendor}"/>
+					<attribute name="Implementation-Title" value="${product.name}"/>
+					<attribute name="Implementation-Version" value="${product.version}"/>
+					<attribute name="Implementation-Vendor" value="${product.vendor}"/>
+				</section>
 			</manifest>
 		</jar>
 	</target>
