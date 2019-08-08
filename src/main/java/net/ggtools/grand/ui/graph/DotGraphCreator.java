@@ -126,7 +126,7 @@ public class DotGraphCreator
 
         for (final Iterator<Node> iter = graph.getNodes(); iter.hasNext();) {
             final Node node = iter.next();
-            if ("".equals(node.getName()) || (node == startNode)) {
+            if (node.getName().isEmpty() || node == startNode) {
                 continue;
             }
             node.accept(this);

@@ -158,7 +158,7 @@ public class FileSelectionPage extends WizardPage
      */
     private void updateSelectedFile(final String text) {
         selectedFileName = text;
-        if ("".equals(selectedFileName)) {
+        if (selectedFileName == null || selectedFileName.isEmpty()) {
             selectedFile = null;
         } else {
             selectedFile = new File(selectedFileName);
