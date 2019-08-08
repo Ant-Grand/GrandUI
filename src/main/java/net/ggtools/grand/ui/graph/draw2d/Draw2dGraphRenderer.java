@@ -246,7 +246,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
         final DotRoute route = (DotRoute) edge.getAttr(POSITION_ATTR);
 
         String name = edge.getName();
-        if ("".equals(name)) {
+        if (name.isEmpty()) {
             name = null;
         }
 

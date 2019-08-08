@@ -127,7 +127,7 @@ public class LinkTooltip extends AbstractGraphTooltip
         blockFlow.add(inline);
         page.add(blockFlow);
 
-        if (!"".equals(edge.getName())) {
+        if (!edge.getName().isEmpty()) {
             blockFlow = new BlockFlow();
             textFlow = new TextFlow("Link #" + edge.getName());
             blockFlow.add(textFlow);
