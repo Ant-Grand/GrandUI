@@ -134,7 +134,7 @@ public class SpinnerFieldEditor extends FieldEditor {
 
         final String numberString = spinner.getText();
         try {
-            final int number = Integer.valueOf(numberString);
+            final int number = Integer.parseInt(numberString);
 
             if (number >= minValue && number <= maxValue) {
                 clearErrorMessage();
