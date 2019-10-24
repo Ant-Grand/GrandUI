@@ -5,17 +5,15 @@
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/Grand"/>
-	<classpathentry kind="lib" path="deps/commons-logging.jar"/>
 	<classpathentry kind="lib" path="deps/jzgraph.jar"/>
-	<classpathentry kind="lib" path="deps/ant.jar"/>
 	<classpathentry kind="lib" path="deps/blacksun-util.jar"/>
 	<classpathentry kind="lib" path="deps/swt.jar"/>
-	<classpathentry kind="lib" path="deps/oro.jar"/>
-	<classpathentry kind="lib" path="deps/com.ibm.icu_62.1.0.v20180727-1652.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.core.commands_3.9.200.v20180827-1727.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.draw2d_3.10.100.201606061308.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.equinox.common_3.10.100.v20180827-1235.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.jface_3.14.100.v20180828-0836.jar"/>
-	<classpathentry kind="lib" path="deps/org.eclipse.osgi_3.13.100.v20180827-1536.jar"/>
+	<classpathentry kind="lib" path="deps/com.ibm.icu-62.1.0.v20180727-1652.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.core.commands-3.9.200.v20180827-1727.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.draw2d-3.10.100.201606061308.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.equinox.common-3.10.100.v20180827-1235.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.jface-3.14.100.v20180828-0836.jar"/>
+	<classpathentry kind="lib" path="deps/org.eclipse.osgi-3.13.100.v20180827-1536.jar"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=GrandUi&amp;ivyXmlPath=ivy.xml&amp;confs=default%2Ctest%2Ccompile%2Cmacos&amp;ivySettingsPath=ivy.settings.xml&amp;loadSettingsOnDemand=false&amp;ivyUserDir=&amp;propertyFiles=&amp;acceptedTypes=jar%2Cbundle%2Cejb%2Cmaven-plugin&amp;alphaOrder=false&amp;resolveInWorkspace=false&amp;transitiveResolve=true&amp;readOSGiMetadata=false&amp;retrievedClasspath=false"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="jars" name="grand-ui" basedir=".">
+<project default="jars" name="grand-ui" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 	<property file="build-local.properties"/>
 	<property file="build.properties"/>
 
@@ -8,7 +8,6 @@
 	<property name="product.vendor" value="ggTools"/>
 	<property name="libdir" value="lib"/>
 	<property name="extlibdir" value="deps"/>
-	<property name="dlcachedir" value="cache"/>
 	<property name="classdir" value="bin"/>
 	<property name="srcdir" value="src/main/java"/>
 	<property name="confdir" value="src/main/resources"/>
@@ -26,52 +25,41 @@
 		<format pattern="2004-yyyy" property="years"/>
 	</tstamp>
 
+	<property name="ivy.version" value="2.5.0"/>
+	<property name="ivy.dir" value="${user.home}/.ivy2/cache/org.apache.ivy/jars"/>
+	<property name="ivy.jar.name" value="ivy-${ivy.version}.jar"/>
+	<available property="has.ivy" file="${ivy.dir}/${ivy.jar.name}" type="file"/>
+
+	<target name="get-ivy" description="Get Ivy jar unless already cached" unless="has.ivy">
+		<mkdir dir="${ivy.dir}"/>
+		<get usetimestamp="true" src="https://repository.apache.org/content/repositories/releases/org/apache/ivy/ivy/${ivy.version}/${ivy.jar.name}"
+		     skipexisting="true"
+		     dest="${ivy.dir}/${ivy.jar.name}"/>
+	</target>
+
+	<target name="init" description="Initialize Ivy" depends="get-ivy">
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.dir}/${ivy.jar.name}"/>
+		<ivy:settings file="${basedir}/ivy.settings.xml"/>
+	</target>
+
+	<target name="get-deps" description="Retrieve dependencies" depends="init" unless="noget">
+		<ivy:retrieve pattern="${extlibdir}/[artifact]-[revision].[ext]" sync="true" type="jar"/>
+	</target>
+
 	<macrodef name="getjar" description="Download a jar to the extlib directory">
 		<attribute name="dest"/>
 		<attribute name="url"/>
 		<sequential>
-			<get dest="${dlcachedir}/@{dest}" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}"/>
-			<copy file="${dlcachedir}/@{dest}" todir="${extlibdir}" preservelastmodified="true"/>
+			<get dest="${extlibdir}/@{dest}" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}"/>
 		</sequential>
 	</macrodef>
 
-	<macrodef name="get-extract-zip">
-		<attribute name="dest"/>
-		<attribute name="url"/>
-		<attribute name="libdir" default="${extlibdir}"/>
-		<element name="select" optional="yes"/>
-		<sequential>
-			<get dest="${dlcachedir}/@{dest}.zip" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}"/>
-			<delete dir="${dlcachedir}/@{dest}"/>
-			<mkdir dir="${dlcachedir}/@{dest}"/>
-			<unzip dest="${dlcachedir}/@{dest}" src="${dlcachedir}/@{dest}.zip">
-				<select/>
-			</unzip>
-			<mkdir dir="@{libdir}"/>
-			<copy todir="@{libdir}" flatten="true" includeemptydirs="no" preservelastmodified="true">
-				<fileset dir="${dlcachedir}/@{dest}"/>
-			</copy>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="get-extract-tgz">
-		<attribute name="dest"/>
-		<attribute name="url"/>
-		<attribute name="libdir" default="${extlibdir}"/>
-		<element name="select" optional="yes"/>
-		<sequential>
-			<get dest="${dlcachedir}/@{dest}.tgz" verbose="${verbose-get}" usetimestamp="true" ignoreerrors="true" src="@{url}"/>
-			<delete dir="${dlcachedir}/@{dest}"/>
-			<mkdir dir="${dlcachedir}/@{dest}"/>
-			<untar compression="gzip" dest="${dlcachedir}/@{dest}" src="${dlcachedir}/@{dest}.tgz">
-				<select/>
-			</untar>
-			<mkdir dir="@{libdir}"/>
-			<copy todir="@{libdir}" flatten="true" includeemptydirs="no" preservelastmodified="true">
-				<fileset dir="${dlcachedir}/@{dest}"/>
-			</copy>
-		</sequential>
-	</macrodef>
+	<target name="get-alldeps" description="Retrieve all dependencies" depends="get-deps,set-eclipse-deps" unless="noget">
+		<getjar dest="blacksun-util.jar" url="${url.blacksun-util.jar}"/>
+		<getjar dest="jzgraph.jar" url="${url.jzgraph.jar}"/>
+		<getjar dest="grand-module.jar" url="${url.grand.jar}"/>
+		<getjar dest="appbundler.jar" url="${url.appbundler.jar}"/>
+	</target>
 
 	<selector id="src-dist-selector">
 		<or>
@@ -87,23 +75,6 @@
 			<filename name="build.properties"/>
 		</or>
 	</selector>
-
-	<patternset id="get-rcp-patterns">
-		<!--
-		<include name="**/org.eclipse.core.runtime_${eclipse.core.version}*.jar"/>
-		See http://wiki.eclipse.org/index.php/JFace#Using_JFace_outside_the_Eclipse_platform
-		-->
-		<include name="**/org.eclipse.equinox.common_${eclipse.equinox.version}*.jar"/>
-		<include name="**/org.eclipse.core.commands_${eclipse.commands.version}*.jar"/>
-		<!-- workbench is optional -->
-		<!-- include name="**/org.eclipse.ui.workbench_${eclipse.workbench.version}*.jar"/ -->
-		<include name="**/org.eclipse.osgi_${eclipse.osgi.version}*.jar"/>
-		<include name="**/org.eclipse.jface_${eclipse.jface.version}*.jar"/>
-		<include name="**/com.ibm.icu_${icu.version}*.jar"/>
-		<include name="**/org.eclipse.swt.*x86_${swt.version}.jar"/>
-		<include name="**/org.eclipse.swt.*x86_64_${swt.version}.jar"/>
-		<exclude name="**/org.eclipse.swt.gtk.solaris.*.jar"/>
-	</patternset>
 
 	<target name="javadoc" description="Generates javadoc" depends="jars">
 		<mkdir dir="${javadocdir}"/>
@@ -138,37 +109,30 @@
 		</zip>
 	</target>
 
-	<target name="bin-dist" depends="clean,jars">
-		<mkdir dir="${distdir}"/>
+	<target name="bin-dist" depends="real-clean,jars">
 		<!-- Prepare for bin distribution -->
-		<delete dir="tmp"/>
 		<mkdir dir="tmp/${product.fullname}"/>
 		<!-- Java libraries -->
 		<copy tofile="tmp/${product.fullname}/lib/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
 		<copy todir="tmp/${product.fullname}/lib">
-			<fileset dir="${extlibdir}" excludes="org.eclipse.*.jar,com.ibm.*.jar,swt.jar,appbundler.jar"/>
+			<fileset dir="${extlibdir}" excludes="org.eclipse.swt.*.jar,swt.jar,appbundler.jar"/>
 		</copy>
-		<!-- Equinox versions are incompatible with JPMS automatic module naming -->
-		<copy todir="tmp/${product.fullname}/lib">
-			<fileset dir="${extlibdir}" excludes="org.eclipse.swt.*.jar"/>
-			<regexpmapper from="([^_]*)_(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
-		</copy>
-		<!-- SWT platform-specific libraries -->
+		<!-- Names of SWT platform-specific libraries are incompatible with JPMS automatic module naming -->
 		<copy todir="tmp/${product.fullname}/lib/gtk/x86">
-			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86_*.jar" excludes="org.eclipse.swt.gtk.*.x86_64*.jar"/>
-			<regexpmapper from="([^_]*).x86_(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86-*.jar"/>
+			<regexpmapper from="([^-]*).x86-(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
 		</copy>
 		<copy todir="tmp/${product.fullname}/lib/gtk/x86_64">
-			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86_64*.jar"/>
-			<regexpmapper from="([^_]*).x86_64_(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86_64-*.jar"/>
+			<regexpmapper from="([^-]*).x86_64-(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
 		</copy>
 		<copy todir="tmp/${product.fullname}/lib/win32/x86">
-			<fileset dir="${extlibdir}" includes="org.eclipse.swt.win32.*.x86_*.jar" excludes="org.eclipse.swt.win32.*.x86_64*.jar"/>
-			<regexpmapper from="([^_]*).x86_(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.win32.*.x86-*.jar"/>
+			<regexpmapper from="([^-]*).x86-(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
 		</copy>
 		<copy todir="tmp/${product.fullname}/lib/win32/x86_64">
-			<fileset dir="${extlibdir}" includes="org.eclipse.swt.win32.*.x86_64*.jar"/>
-			<regexpmapper from="([^_]*).x86_64_(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.win32.*.x86_64-*.jar"/>
+			<regexpmapper from="([^-]*).x86_64-(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
 		</copy>
 		<!-- Licenses -->
 		<copy todir="tmp/${product.fullname}" flatten="true">
@@ -228,6 +192,7 @@
 		</copy>
 		<copy tofile="tmp/${bundle.name}/Contents/Java/grand-ui.jar" file="${libdir}/${product.fullname}.jar"/>
 
+		<mkdir dir="${distdir}"/>
 		<tar destfile="${distdir}/${product.fullname}.tar.gz" compression="gzip">
 			<tarfileset dir="tmp/${product.fullname}" prefix="${product.fullname}" filemode="755">
 				<include name="grand-ui"/>
@@ -259,7 +224,7 @@
 		</zip>
 	</target>
 
-	<target name="jars" depends="compile.java,incbuildnum" description="Create the application jar(s)">
+	<target name="jars" depends="compile-java,incbuildnum" description="Create the application jar(s)">
 		<mkdir dir="${libdir}"/>
 		<jar destfile="${libdir}/${product.fullname}.jar" index="true">
 			<fileset dir="${classdir}"/>
@@ -278,11 +243,11 @@
 		</jar>
 	</target>
 
-	<target name="compile.java" depends="init" description="Compile the java source files">
+	<target name="compile-java" depends="get-alldeps" description="Compile the java source files">
 		<mkdir dir="${classdir}"/>
 		<javac srcdir="${srcdir}" destdir="${classdir}" debug="true" optimize="true" includeantruntime="false" source="${java.target}" target="${java.target}">
 			<classpath>
-				<path refid="ext-libs"/>
+				<fileset dir="${extlibdir}" includes="*.jar"/>
 			</classpath>
 		</javac>
 	</target>
@@ -298,90 +263,32 @@
 		<echo message="build number set to ${build.number}"/>
 	</target>
 
-	<target name="init" depends="get-deps">
-		<path id="ext-libs">
-			<fileset dir="${extlibdir}">
-				<include name="**/*.jar"/>
-			</fileset>
-		</path>
-	</target>
-
-	<target name="clean" depends="clean.dist,clean.deps" description="Remove intermediate files but not external libs">
+	<target name="clean" depends="clean-dist,clean-deps" description="Remove intermediate files but not external libs">
 		<delete dir="${libdir}"/>
 		<delete dir="${classdir}"/>
 	</target>
 
-	<target name="clean.deps" description="Clean the dependencies directory">
+	<target name="clean-deps" description="Clean the dependencies directory">
 		<delete dir="${extlibdir}"/>
 	</target>
 
-	<target name="clean.dist" description="Clean the dist directory">
+	<target name="clean-dist" description="Clean the dist directory">
 		<delete dir="${distdir}"/>
 	</target>
 
-	<target name="real.clean" depends="clean" description="Remove intermediate files ant external libs">
-		<delete dir="${dlcachedir}"/>
+	<target name="real-clean" depends="clean" description="Remove intermediate files ant external libs">
+		<delete dir="tmp"/>
 	</target>
 
-	<target name="get-deps" depends="get-extjars,get-draw2d" description="Get and prepare the external libraries"/>
+	<!-- Eclipse helper targets -->
 
-	<target name="get-extjars" depends="prepare-download" unless="noget">
-		<getjar dest="ant.jar" url="${url.ant.jar}"/>
-		<getjar dest="ant-launcher.jar" url="${url.ant-launcher.jar}"/>
-		<getjar dest="commons-logging.jar" url="${url.commons-logging.jar}"/>
-		<getjar dest="blacksun-util.jar" url="${url.blacksun-util.jar}"/>
-		<getjar dest="jzgraph.jar" url="${url.jzgraph.jar}"/>
-		<getjar dest="oro.jar" url="${url.oro.jar}"/>
-		<getjar dest="grand-module.jar" url="${url.grand.jar}"/>
-		<getjar dest="ant-contrib.jar" url="${url.ant-contrib.jar}"/>
-		<getjar dest="appbundler.jar" url="${url.appbundler.jar}"/>
-	</target>
-
-	<target name="get-rcp-zip">
-		<fail unless="url.eclipse.rcp" message="url.eclipse.rcp should be defined"/>
-		<get-extract-zip dest="rcp" url="${url.eclipse.rcp}">
-			<select>
-				<patternset refid="get-rcp-patterns"/>
-			</select>
-		</get-extract-zip>
-	</target>
-
-	<target name="get-rcp-tgz">
-		<fail unless="url.eclipse.rcp" message="url.eclipse.rcp should be defined"/>
-		<get-extract-tgz dest="rcp" url="${url.eclipse.rcp}">
-			<select>
-				<patternset refid="get-rcp-patterns"/>
-			</select>
-		</get-extract-tgz>
-	</target>
-
-	<target name="get-rcp" depends="set-swt-properties" unless="noget">
-		<antcall target="${get-rcp-target}" inheritall="true" inheritrefs="true"/>
-	</target>
-
-	<target name="get-draw2d" depends="set-eclipse" unless="noget">
-		<get-extract-zip dest="gef" url="${url.gef}">
-			<select>
-				<patternset>
-					<include name="plugins/org.eclipse.draw2d_${eclipse.draw2d.version}*.jar"/>
-				</patternset>
-			</select>
-		</get-extract-zip>
-	</target>
-
-	<target name="set-eclipse" depends="get-rcp" if="eclipse.pdebuild.home">
+	<target name="set-eclipse-deps" depends="set-swt-properties" if="eclipse.pdebuild.home">
 		<copy tofile="${extlibdir}/swt.jar">
-			<fileset dir="${extlibdir}" includes="org.eclipse.swt.${swtfw}.${swtarch}_${swt.version}.jar"/>
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.${swtfw}.${swtarch}-*.jar"/>
 		</copy>
 	</target>
 
-	<target name="prepare-download">
-		<mkdir dir="${extlibdir}"/>
-		<mkdir dir="${dlcachedir}"/>
-	</target>
-
-	<target name="set-swt-properties" description="Set the swt properties">
-		<property name="get-rcp-target" value="get-rcp-zip"/>
+	<target name="set-swt-properties">
 		<condition property="swtfw" value="gtk.linux">
 			<os name="Linux"/>
 		</condition>

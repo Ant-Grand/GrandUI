@@ -1,0 +1,35 @@
+<ivy-module version="2.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+  <info organisation="net.ggtools" module="grand"/>
+  <configurations>
+    <conf name="default"/>
+    <conf name="test" visibility="private"/>
+    <conf name="compile" extends="default" description="Dependencies for the compilation"/>
+    <conf name="win32" extends="compile" description="To run on Microsoft Windows"/>
+    <conf name="macos" extends="compile" description="To run on Mac OS X"/>
+    <conf name="linux" extends="compile" description="To run on Linux"/>
+  </configurations>
+  <!-- See http://wiki.eclipse.org/index.php/JFace#Using_JFace_outside_the_Eclipse_platform -->
+  <dependencies>
+    <dependency org="org.apache.ant" name="ant" rev="1.10.6"/>
+    <dependency org="org.apache.ant" name="ant-launcher" rev="1.10.6"/>
+    <dependency org="oro" name="oro" rev="2.0.8"/>
+    <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3"/>
+    <dependency org="commons-logging" name="commons-logging" rev="1.2" conf="compile->default"/>
+    <dependency org="bundle" name="com.ibm.icu" rev="62.+" conf="compile->default"/>
+    <dependency org="bundle" name="org.eclipse.draw2d" rev="3.+" conf="compile->default"/>
+    <dependency org="bundle" name="org.eclipse.core.commands" rev="3.+" conf="compile->default"/>
+    <dependency org="bundle" name="org.eclipse.equinox.common" rev="3.+" conf="compile->default"/>
+    <dependency org="bundle" name="org.eclipse.jface" rev="3.+" conf="compile->default"/>
+    <dependency org="bundle" name="org.eclipse.osgi" rev="3.+" conf="compile->default"/>
+    <dependency org="bundle" name="org.eclipse.swt.win32.win32.x86" rev="3.+" conf="win32->default"/>
+    <dependency org="bundle" name="org.eclipse.swt.win32.win32.x86_64" rev="3.+" conf="win32->default"/>
+    <dependency org="bundle" name="org.eclipse.swt.gtk.linux.x86" rev="3.+" conf="linux->default"/>
+    <dependency org="bundle" name="org.eclipse.swt.gtk.linux.x86_64" rev="3.+" conf="linux->default"/>
+    <dependency org="bundle" name="org.eclipse.swt.cocoa.macosx.x86_64" rev="3.+" conf="macos->default"/>
+    <exclude org="bundle" module="org.eclipse.swt"/>
+    <exclude org="package"/>
+    <exclude org="ant"/>
+  </dependencies>
+</ivy-module>
