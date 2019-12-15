@@ -66,12 +66,7 @@ public class SafeProgressMonitor implements IProgressMonitor {
      * @see org.eclipse.core.runtime.IProgressMonitor#beginTask(java.lang.String, int)
      */
     public final void beginTask(final String name, final int totalWork) {
-        display.asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.beginTask(name, totalWork);
-            }
-        });
+        display.asyncExec(() -> monitor.beginTask(name, totalWork));
     }
 
     /**
@@ -88,12 +83,7 @@ public class SafeProgressMonitor implements IProgressMonitor {
      * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
      */
     public final void internalWorked(final double work) {
-        display.asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.internalWorked(work);
-            }
-        });
+        display.asyncExec(() -> monitor.internalWorked(work));
     }
 
     /**
@@ -113,12 +103,7 @@ public class SafeProgressMonitor implements IProgressMonitor {
      * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
      */
     public final void setCanceled(final boolean value) {
-        display.asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.setCanceled(value);
-            }
-        });
+        display.asyncExec(() -> monitor.setCanceled(value));
     }
 
     /**
@@ -127,12 +112,7 @@ public class SafeProgressMonitor implements IProgressMonitor {
      * @see org.eclipse.core.runtime.IProgressMonitor#setTaskName(java.lang.String)
      */
     public final void setTaskName(final String name) {
-        display.asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.setTaskName(name);
-            }
-        });
+        display.asyncExec(() -> monitor.setTaskName(name));
     }
 
     /**
@@ -141,12 +121,7 @@ public class SafeProgressMonitor implements IProgressMonitor {
      * @see org.eclipse.core.runtime.IProgressMonitor#subTask(java.lang.String)
      */
     public final void subTask(final String name) {
-        display.asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.subTask(name);
-            }
-        });
+        display.asyncExec(() -> monitor.subTask(name));
     }
 
     /**
@@ -155,12 +130,7 @@ public class SafeProgressMonitor implements IProgressMonitor {
      * @see org.eclipse.core.runtime.IProgressMonitor#worked(int)
      */
     public final void worked(final int work) {
-        display.asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.worked(work);
-            }
-        });
+        display.asyncExec(() -> monitor.worked(work));
     }
 
 }

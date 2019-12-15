@@ -76,10 +76,6 @@ public final class ExceptionDialog extends ErrorDialog {
         } else {
             display = parent.getDisplay();
         }
-        display.syncExec(new Runnable() {
-            public void run() {
-                ErrorDialog.openError(parent, message, e.getMessage(), topStatus);
-            }
-        });
+        display.syncExec(() -> ErrorDialog.openError(parent, message, e.getMessage(), topStatus));
     }
 }

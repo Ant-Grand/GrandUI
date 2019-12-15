@@ -4,8 +4,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
@@ -319,11 +317,7 @@ public class SpinnerFieldEditor extends FieldEditor {
             default:
                 Assert.isTrue(false, "Unknown validate strategy"); //$NON-NLS-1$
             }
-            spinner.addDisposeListener(new DisposeListener() {
-                public void widgetDisposed(final DisposeEvent event) {
-                    spinner = null;
-                }
-            });
+            spinner.addDisposeListener(event -> spinner = null);
             if (textLimit > 0) { // Only set limits above 0 - see SWT spec
                 spinner.setTextLimit(textLimit);
             }

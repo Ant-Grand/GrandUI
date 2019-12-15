@@ -156,11 +156,7 @@ public class PropertyEditor {
          * @see net.ggtools.grand.ui.widgets.property.PropertyChangedListener#allPropertiesChanged(Object)
          */
         public void allPropertiesChanged(final Object fillerParameter) {
-            tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
-                public void run() {
-                    tableViewer.refresh();
-                }
-            });
+            tableViewer.getTable().getDisplay().asyncExec(() -> tableViewer.refresh());
         }
 
         /**
@@ -169,11 +165,7 @@ public class PropertyEditor {
          * @see net.ggtools.grand.ui.widgets.property.PropertyChangedListener#clearedProperties(Object)
          */
         public void clearedProperties(final Object fillerParameter) {
-            tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
-                public void run() {
-                    tableViewer.refresh();
-                }
-            });
+            tableViewer.getTable().getDisplay().asyncExec(() -> tableViewer.refresh());
         }
 
         /**
@@ -227,11 +219,7 @@ public class PropertyEditor {
          * @see net.ggtools.grand.ui.widgets.property.PropertyChangedListener#propertyAdded(PropertyPair)
          */
         public void propertyAdded(final PropertyPair propertyPair) {
-            tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
-                public void run() {
-                    tableViewer.refresh();
-                }
-            });
+            tableViewer.getTable().getDisplay().asyncExec(() -> tableViewer.refresh());
         }
 
         /**
@@ -240,11 +228,7 @@ public class PropertyEditor {
          * @see net.ggtools.grand.ui.widgets.property.PropertyChangedListener#propertyChanged(PropertyPair)
          */
         public void propertyChanged(final PropertyPair propertyPair) {
-            tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
-                public void run() {
-                    tableViewer.update(propertyPair, null);
-                }
-            });
+            tableViewer.getTable().getDisplay().asyncExec(() -> tableViewer.update(propertyPair, null));
         }
 
         /**
@@ -253,11 +237,7 @@ public class PropertyEditor {
          * @see net.ggtools.grand.ui.widgets.property.PropertyChangedListener#propertyRemoved(PropertyPair)
          */
         public void propertyRemoved(final PropertyPair propertyPair) {
-            tableViewer.getTable().getDisplay().asyncExec(new Runnable() {
-                public void run() {
-                    tableViewer.refresh();
-                }
-            });
+            tableViewer.getTable().getDisplay().asyncExec(() -> tableViewer.refresh());
         }
     }
 

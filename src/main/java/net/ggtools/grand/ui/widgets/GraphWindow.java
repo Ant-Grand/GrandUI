@@ -47,10 +47,8 @@ import net.ggtools.grand.ui.menu.ViewMenu;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -62,8 +60,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -157,18 +153,10 @@ public class GraphWindow extends ApplicationWindow
 
             for (MenuItem systemItem : systemMenu.getItems()) {
                 if (systemItem.getID() == SWT.ID_PREFERENCES) {
-                    systemItem.addListener(SWT.Selection, new Listener() {
-                        public void handleEvent(final Event event) {
-                            runPreferencesAction();
-                        }
-                    });
+                    systemItem.addListener(SWT.Selection, event -> runPreferencesAction());
                 }
                 if (systemItem.getID() == SWT.ID_ABOUT) {
-                    systemItem.addListener(SWT.Selection, new Listener() {
-                        public void handleEvent(final Event event) {
-                            runAboutAction();
-                        }
-                    });
+                    systemItem.addListener(SWT.Selection, event -> runAboutAction());
                 }
             }
         }
@@ -260,15 +248,11 @@ public class GraphWindow extends ApplicationWindow
         final GraphController controller = new GraphController(this);
         try {
             new ProgressMonitorDialog(getShell()).run(true, false,
-                    new IRunnableWithProgress() {
-                            public void run(final IProgressMonitor monitor)
-                                    throws InvocationTargetException,
-                                            InterruptedException {
-                    controller.setProgressMonitor(monitor);
-                    controller.openFile(buildFile, properties);
-                    if (targetName != null) {
-                        controller.focusOn(targetName);
-                    }
+                    monitor -> {
+                controller.setProgressMonitor(monitor);
+                controller.openFile(buildFile, properties);
+                if (targetName != null) {
+                    controller.focusOn(targetName);
                 }
             });
         } catch (final InvocationTargetException e) {
