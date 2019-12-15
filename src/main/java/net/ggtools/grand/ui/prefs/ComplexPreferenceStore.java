@@ -224,8 +224,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
     /**
      * Field propertiesTable.
      */
-    private final Map<String, Properties> propertiesTable =
-            new HashMap<String, Properties>();
+    private final Map<String, Properties> propertiesTable = new HashMap<>();
 
     /**
      * Get a collection of {@link String}s.
@@ -250,7 +249,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      */
     public final Collection<String> getCollection(final String key,
             final int limit) {
-        final LinkedList<String> list = new LinkedList<String>();
+        final LinkedList<String> list = new LinkedList<>();
         final StringTokenizer tokenizer =
                 new StringTokenizer(getString(key), ",");
         final int lim = (limit == COLLECTION_NO_LIMIT) ? tokenizer.countTokens() : limit;

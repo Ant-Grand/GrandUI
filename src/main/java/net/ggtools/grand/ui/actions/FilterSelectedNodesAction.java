@@ -82,7 +82,7 @@ public class FilterSelectedNodesAction extends GraphListenerAction {
             LOG.debug("run() - start");
         }
 
-        final List<String> nodeList = new LinkedList<String>();
+        final List<String> nodeList = new LinkedList<>();
         for (final Draw2dNode node : getGraphController().getSelection()) {
             nodeList.add(node.getName());
         }

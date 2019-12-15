@@ -83,7 +83,7 @@ class PropertyList {
     /**
      * Field pairList.
      */
-    private final Set<PropertyPair> pairList = new HashSet<PropertyPair>();
+    private final Set<PropertyPair> pairList = new HashSet<>();
 
     /**
      * Constructor for PropertyList.

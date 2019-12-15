@@ -158,8 +158,7 @@ public class Draw2dGraphRenderer implements DotGraphAttributes {
     private PolylineConnection addConnectionFromRoute(final IFigure contents,
             final String name, final DotRoute route) {
         final float[] coords = new float[6];
-        final List<AbsoluteBendpoint> bends =
-                new ArrayList<AbsoluteBendpoint>();
+        final List<AbsoluteBendpoint> bends = new ArrayList<>();
         boolean isFirstPoint = true;
         final Point min = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
         final Point max = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);

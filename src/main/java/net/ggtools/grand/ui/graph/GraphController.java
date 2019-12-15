@@ -170,7 +170,7 @@ public class GraphController implements DotGraphAttributes, SelectionManager,
     /**
      * Field selectedNodes.
      */
-    private final Set<Draw2dNode> selectedNodes = new HashSet<Draw2dNode>();
+    private final Set<Draw2dNode> selectedNodes = new HashSet<>();
 
     /**
      * Field selectionChangedDispatcher.

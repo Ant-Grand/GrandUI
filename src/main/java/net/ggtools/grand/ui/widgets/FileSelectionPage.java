@@ -84,7 +84,7 @@ public class FileSelectionPage extends WizardPage
     public FileSelectionPage() {
         super("fileselect", "Build file selection", null);
         setDescription("Select the build file to be opened");
-        subscribers = new HashSet<SelectedFileListener>();
+        subscribers = new HashSet<>();
     }
 
     /**

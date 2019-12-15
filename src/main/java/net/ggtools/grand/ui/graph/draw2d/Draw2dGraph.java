@@ -227,7 +227,7 @@ public class Draw2dGraph extends Panel implements SelectionManager {
     /**
      * Field nodeIndex.
      */
-    private final Map<String, Draw2dNode> nodeIndex = new HashMap<String, Draw2dNode>();
+    private final Map<String, Draw2dNode> nodeIndex = new HashMap<>();
 
     /**
      * Field scroller.
