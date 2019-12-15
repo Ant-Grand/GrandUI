@@ -323,10 +323,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
                 final DocumentBuilder db = dbf.newDocumentBuilder();
 //                final InputSource inputSource = new InputSource(is);
                 doc = db.parse(is);
-            } catch (final ParserConfigurationException e) {
-                LOG.error("Got exception while parsing preference file", e);
-                throw new Error(e);
-            } catch (final SAXException e) {
+            } catch (final ParserConfigurationException | SAXException e) {
                 LOG.error("Got exception while parsing preference file", e);
                 throw new Error(e);
             }

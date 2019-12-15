@@ -106,10 +106,7 @@ public class ExportGraphAction extends GraphControllerAction {
             try {
                 image = getGraphController().createImageForGraph();
                 imageSaver.saveImage(image, fileName);
-            } catch (final IllegalArgumentException e) {
-                ExceptionDialog.openException(parentShell, "Cannot export image", e);
-
-            } catch (final IOException e) {
+            } catch (final IllegalArgumentException | IOException e) {
                 ExceptionDialog.openException(parentShell, "Cannot export image", e);
             } finally {
                 if (image != null) {

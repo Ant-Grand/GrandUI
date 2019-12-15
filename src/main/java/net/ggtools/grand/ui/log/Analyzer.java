@@ -28,7 +28,6 @@
 package net.ggtools.grand.ui.log;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
@@ -101,13 +100,7 @@ public class Analyzer extends ApplicationWindow {
                         try {
                             ois = new ObjectInputStream(new FileInputStream(logFileName));
                             logViewer.setLogBuffer((LogEventBuffer) ois.readObject());
-                        } catch (final FileNotFoundException e) {
-                            // TODO auto-generated catch block
-                            e.printStackTrace();
-                        } catch (final IOException e) {
-                            // TODO auto-generated catch block
-                            e.printStackTrace();
-                        } catch (final ClassNotFoundException e) {
+                        } catch (final ClassNotFoundException | IOException e) {
                             // TODO auto-generated catch block
                             e.printStackTrace();
                         } finally {

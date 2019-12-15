@@ -205,10 +205,7 @@ public class GraphController implements DotGraphAttributes, SelectionManager,
                     .getDeclaredMethod("selectionChanged", Collection.class));
             parameterChangedEvent = graphEventManager.createDispatcher(GraphListener.class
                     .getDeclaredMethod("parameterChanged", GraphController.class));
-        } catch (final SecurityException e) {
-            LOG.fatal("Caught exception initializing GraphController", e);
-            throw new RuntimeException("Cannot instantiate GraphController", e);
-        } catch (final NoSuchMethodException e) {
+        } catch (final SecurityException | NoSuchMethodException e) {
             LOG.fatal("Caught exception initializing GraphController", e);
             throw new RuntimeException("Cannot instantiate GraphController", e);
         }
@@ -236,9 +233,7 @@ public class GraphController implements DotGraphAttributes, SelectionManager,
                     renderFilteredGraph(progressMonitor);
                 }
             }, true, progressMonitor, Display.getCurrent());
-        } catch (final InvocationTargetException e) {
-            reportError("Cannot add filter", e);
-        } catch (final InterruptedException e) {
+        } catch (final InvocationTargetException | InterruptedException e) {
             reportError("Cannot add filter", e);
         } finally {
             progressMonitor.done();
@@ -273,9 +268,7 @@ public class GraphController implements DotGraphAttributes, SelectionManager,
                     renderFilteredGraph(progressMonitor);
                 }
             }, true, progressMonitor, Display.getCurrent());
-        } catch (final InvocationTargetException e) {
-            reportError("Cannot clear filters", e);
-        } catch (final InterruptedException e) {
+        } catch (final InvocationTargetException | InterruptedException e) {
             reportError("Cannot clear filters", e);
         } finally {
             progressMonitor.done();
@@ -453,10 +446,7 @@ public class GraphController implements DotGraphAttributes, SelectionManager,
                 LOG.info("Graph loaded & rendered");
             }
             RecentFilesManager.getInstance().addNewFile(file, properties);
-        } catch (final GrandException e) {
-            reportError("Cannot open graph", e);
-            stopController();
-        } catch (final BuildException e) {
+        } catch (final GrandException | BuildException e) {
             reportError("Cannot open graph", e);
             stopController();
         } finally {
