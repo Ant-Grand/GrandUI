@@ -117,7 +117,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
          * Method getKeys.
          * @return Collection
          */
-        Collection<?> getKeys();
+        Collection<String> getKeys();
 
         /**
          * Method needSaving.
@@ -437,8 +437,8 @@ public class ComplexPreferenceStore extends PreferenceStore {
                         return props.getProperty(key);
                     }
 
-                    public Collection<Object> getKeys() {
-                        return props.keySet();
+                    public Collection<String> getKeys() {
+                        return props.stringPropertyNames();
                     }
 
                     public boolean needSaving(final String key) {
@@ -560,8 +560,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
     private void saveProperties(final Document doc, final Element properties,
             final PropertySaver saver) {
         // TODO solve the properties problem.
-        for (Object i : saver.getKeys()) {
-            final String key = (i instanceof String) ? (String) i : i.toString();
+        for (final String key : saver.getKeys()) {
             if (saver.needSaving(key)) {
                 final Element entry = (Element) properties.appendChild(doc.createElement(ENTRY_ELEMENT));
                 entry.setAttribute(KEY_ATTRIBUTE, key);
