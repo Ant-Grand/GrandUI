@@ -492,7 +492,7 @@ public class GraphTabItem extends CTabItem
      */
     public final void selectionChanged(final Collection<Draw2dNode> selectedNodes) {
 
-        final List<Node> selection = new ArrayList<Node>(selectedNodes.size());
+        final List<Node> selection = new ArrayList<>(selectedNodes.size());
         for (final Draw2dNode node : selectedNodes) {
             selection.add(node.getNode());
         }

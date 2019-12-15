@@ -70,7 +70,7 @@ public final class RecentFilesManager
     /**
      * Field recentFiles.
      */
-    private final LinkedList<String> recentFiles = new LinkedList<String>();
+    private final LinkedList<String> recentFiles = new LinkedList<>();
 
     /**
      * Field preferenceStore.
@@ -91,7 +91,7 @@ public final class RecentFilesManager
      * Private constructor.
      */
     private RecentFilesManager() {
-        subscribers = new HashSet<RecentFilesListener>();
+        subscribers = new HashSet<>();
         readOnlyRecentFiles = Collections.unmodifiableList(recentFiles);
         preferenceStore = Application.getInstance().getPreferenceStore();
         loadRecentFiles();

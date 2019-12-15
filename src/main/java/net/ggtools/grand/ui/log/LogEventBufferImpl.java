@@ -69,7 +69,7 @@ public final class LogEventBufferImpl implements LogEventBuffer {
     /**
      * Field eventList.
      */
-    private final LinkedList<LogEvent> eventList = new LinkedList<LogEvent>();
+    private final LinkedList<LogEvent> eventList = new LinkedList<>();
 
     /**
      * Field listener.

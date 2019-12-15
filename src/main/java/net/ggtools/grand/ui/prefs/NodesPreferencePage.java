@@ -103,7 +103,7 @@ public class NodesPreferencePage extends PreferencePage
     /**
      * Field fields.
      */
-    private final List<FieldEditor> fields = new ArrayList<FieldEditor>();
+    private final List<FieldEditor> fields = new ArrayList<>();
 
     /**
      * Creates a new NodesPreferencePage instance using the default
@@ -161,7 +161,7 @@ public class NodesPreferencePage extends PreferencePage
         final Composite parent = new Composite(tabFolder, SWT.NONE);
         tabItem.setControl(parent);
 
-        final List<FieldEditor> tabFields = new LinkedList<FieldEditor>();
+        final List<FieldEditor> tabFields = new LinkedList<>();
         final ColorFieldEditor fgcolorField = new ColorFieldEditor(prefix
                 + "fgcolor", "Foreground", parent);
         tabFields.add(fgcolorField);

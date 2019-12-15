@@ -57,7 +57,7 @@ class LogLabelProvider implements ITableLabelProvider, ITableColorProvider {
     /**
      * Field logLevelIcons.
      */
-    private final Map<Level, Image> logLevelIcons = new HashMap<Level, Image>();
+    private final Map<Level, Image> logLevelIcons = new HashMap<>();
 
     /**
      *

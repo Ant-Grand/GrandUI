@@ -109,9 +109,9 @@ public class DotGraphCreator
     public DotGraphCreator(final Graph graph, final boolean useBusRouting) {
         this.graph = graph;
         this.useBusRouting = useBusRouting;
-        nameDimensions = new HashMap<String, IVertex>();
+        nameDimensions = new HashMap<>();
         dotGraph = new DotGraph(IGraph.GRAPH, graph.getName());
-        vertexLUT = new HashMap<String, IVertex>();
+        vertexLUT = new HashMap<>();
         startNode = graph.getStartNode();
     }
 

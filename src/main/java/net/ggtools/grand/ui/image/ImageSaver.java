@@ -117,8 +117,7 @@ public class ImageSaver {
     /**
      * Field formatRegistry.
      */
-    private static final Map<String, ImageFormat> FORMAT_REGISTRY =
-            new HashMap<String, ImageFormat>();
+    private static final Map<String, ImageFormat> FORMAT_REGISTRY = new HashMap<>();
 
     /**
      * Logger for this class.
@@ -166,7 +165,7 @@ public class ImageSaver {
         }
 
         // compute a histogram of color frequencies
-        final Map<RGB, ColorCounter> freq = new HashMap<RGB, ColorCounter>();
+        final Map<RGB, ColorCounter> freq = new HashMap<>();
         final int width = data.width;
         final int[] pixels = new int[width];
         final int[] maskPixels = new int[width];

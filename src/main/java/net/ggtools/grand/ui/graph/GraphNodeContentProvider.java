@@ -122,7 +122,7 @@ public class GraphNodeContentProvider implements IStructuredContentProvider,
             return null;
         }
 
-        final List<Node> list = new LinkedList<Node>();
+        final List<Node> list = new LinkedList<>();
         for (final Iterator<Node> iter = graph.getNodes(); iter.hasNext();) {
             list.add(iter.next());
         }

@@ -156,13 +156,13 @@ public class EventManager implements Runnable {
     /**
      * Field eventQueue.
      */
-    private final LinkedList<Runnable> eventQueue = new LinkedList<Runnable>();
+    private final LinkedList<Runnable> eventQueue = new LinkedList<>();
 
     /**
      * Field listenerList.
      */
     private final List<WeakReference<Object>> listenerList =
-            new LinkedList<WeakReference<Object>>();
+            new LinkedList<>();
 
     /**
      * Field name.
@@ -361,7 +361,7 @@ public class EventManager implements Runnable {
         }
 
         synchronized (listenerList) {
-            listenerList.add(new WeakReference<Object>(listener));
+            listenerList.add(new WeakReference<>(listener));
         }
     }
 
