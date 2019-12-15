@@ -311,9 +311,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      */
     @Override
     public void load() throws IOException {
-        FileInputStream is = null;
-        try {
-            is = new FileInputStream(prefFile);
+        try (FileInputStream is = new FileInputStream(prefFile)) {
             final DocumentBuilderFactory dbf =
                     DocumentBuilderFactory.newInstance();
             dbf.setIgnoringElementContentWhitespace(true);
@@ -376,10 +374,6 @@ public class ComplexPreferenceStore extends PreferenceStore {
             };
 
             loadProperties(rootElement, loader);
-        } finally {
-            if (is != null) {
-                is.close();
-            }
         }
     }
 
@@ -390,9 +384,7 @@ public class ComplexPreferenceStore extends PreferenceStore {
      */
     @Override
     public void save() throws IOException {
-        FileOutputStream os = null;
-        try {
-            os = new FileOutputStream(prefFile);
+        try (FileOutputStream os = new FileOutputStream(prefFile)) {
             final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = null;
             try {
@@ -465,10 +457,6 @@ public class ComplexPreferenceStore extends PreferenceStore {
             } catch (final TransformerException e) {
                 LOG.error("Cannot save preferences", e);
                 throw new IOException("Cannot save preferences", e);
-            }
-        } finally {
-            if (os != null) {
-                os.close();
             }
         }
     }
