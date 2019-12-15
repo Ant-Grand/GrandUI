@@ -241,8 +241,9 @@ public class ImageSaver {
             FORMAT_REGISTRY.put("gif", new ImageFormat("gif", SWT.IMAGE_GIF, true));
             FORMAT_REGISTRY.put("png", new ImageFormat("png", SWT.IMAGE_PNG, false));
             FORMAT_REGISTRY.put("bmp", new ImageFormat("bmp", SWT.IMAGE_BMP, false));
-            supportedExtensions = FORMAT_REGISTRY.keySet().toArray(
-                    new String[FORMAT_REGISTRY.keySet().size()]);
+            supportedExtensions = FORMAT_REGISTRY.keySet().stream()
+                    .map(s -> SWT.getPlatform().equals("cocoa") ? s : "*." + s)
+                    .toArray(String[]::new);
             formatInitDone = true;
         }
     }
