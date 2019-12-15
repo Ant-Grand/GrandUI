@@ -16,13 +16,13 @@ done
 
 BASEDIR=`dirname "$PRG"`
 
-ARCH=x86_64
 if [ `java -version 2>&1 | grep -c 64` -eq 0 ]; then
-    ARCH=x86
+    echo "SWT 4.10+ requires 64-bit Java"
+    exit 1
 fi
 
 if [ `java -version 2>&1 | sed -n 's/.* version "\([^.]*\)\..*".*/\1/p'` -eq 1 ]; then
-    java -Djava.ext.dirs=$BASEDIR/lib:$BASEDIR/lib/gtk/$ARCH -jar $BASEDIR/lib/grand-ui.jar
+    java -Djava.ext.dirs=$BASEDIR/lib:$BASEDIR/lib/gtk -jar $BASEDIR/lib/grand-ui.jar
 else
-    java -p $BASEDIR/lib:$BASEDIR/lib/gtk/$ARCH -m grand.ui
+    java -p $BASEDIR/lib:$BASEDIR/lib/gtk -m grand.ui
 fi
