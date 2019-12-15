@@ -15,7 +15,7 @@
 	<property name="buildnum-file" value="${confdir}/net/ggtools/grand/ui/buildnum.properties"/>
 	<property name="distdir" value="dist"/>
 	<property name="javadocdir" value="tmp/docs/api"/>
-	<property name="java.target" value="1.6"/>
+	<property name="java.target" value="1.8"/>
 	<property name="bundle.name" value="GrandUI.app"/>
 	<property name="bundle.launcher.name" value="JavaAppLauncher"/>
 
@@ -118,19 +118,11 @@
 			<fileset dir="${extlibdir}" excludes="org.eclipse.swt.*.jar,swt.jar,appbundler.jar"/>
 		</copy>
 		<!-- Names of SWT platform-specific libraries are incompatible with JPMS automatic module naming -->
-		<copy todir="tmp/${product.fullname}/lib/gtk/x86">
-			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86-*.jar"/>
-			<regexpmapper from="([^-]*).x86-(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
-		</copy>
-		<copy todir="tmp/${product.fullname}/lib/gtk/x86_64">
+		<copy todir="tmp/${product.fullname}/lib/gtk">
 			<fileset dir="${extlibdir}" includes="org.eclipse.swt.gtk.*.x86_64-*.jar"/>
 			<regexpmapper from="([^-]*).x86_64-(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
 		</copy>
-		<copy todir="tmp/${product.fullname}/lib/win32/x86">
-			<fileset dir="${extlibdir}" includes="org.eclipse.swt.win32.*.x86-*.jar"/>
-			<regexpmapper from="([^-]*).x86-(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
-		</copy>
-		<copy todir="tmp/${product.fullname}/lib/win32/x86_64">
+		<copy todir="tmp/${product.fullname}/lib/win32">
 			<fileset dir="${extlibdir}" includes="org.eclipse.swt.win32.*.x86_64-*.jar"/>
 			<regexpmapper from="([^-]*).x86_64-(\d+\.\d+\.\d+).*\.jar" to="\1-\2.jar"/>
 		</copy>
@@ -284,7 +276,7 @@
 
 	<target name="set-eclipse-deps" depends="set-swt-properties" if="eclipse.pdebuild.home">
 		<copy tofile="${extlibdir}/swt.jar">
-			<fileset dir="${extlibdir}" includes="org.eclipse.swt.${swtfw}.${swtarch}-*.jar"/>
+			<fileset dir="${extlibdir}" includes="org.eclipse.swt.${swtfw}.x86_64-*.jar"/>
 		</copy>
 	</target>
 
@@ -299,10 +291,6 @@
 
 		<condition property="swtfw" value="cocoa.macosx">
 			<os family="mac"/>
-		</condition>
-
-		<condition property="swtarch" value="x86_64" else="x86">
-			<equals arg1="${sun.arch.data.model}" arg2="64"/>
 		</condition>
 	</target>
 </project>
