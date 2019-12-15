@@ -133,16 +133,14 @@ public class DotGraphCreator
         }
 
         // Update width and height in nodes.
-        Display.getDefault().syncExec(new Runnable() {
-            public void run() {
-                final Font systemFont = Application.getInstance().getFont(Application.NODE_FONT);
-                for (final Entry<String, IVertex> entry : nameDimensions.entrySet()) {
-                    final IVertex vertex = entry.getValue();
+        Display.getDefault().syncExec(() -> {
+            final Font systemFont = Application.getInstance().getFont(Application.NODE_FONT);
+            for (final Entry<String, IVertex> entry : nameDimensions.entrySet()) {
+                final IVertex vertex = entry.getValue();
 
-                    final Dimension dim = FigureUtilities.getTextExtents(entry.getKey(), systemFont);
-                    vertex.setAttr(MINWIDTH_ATTR, Math.max(dim.width, 50));
-                    vertex.setAttr(MINHEIGHT_ATTR, Math.max(dim.height, 25));
-                }
+                final Dimension dim = FigureUtilities.getTextExtents(entry.getKey(), systemFont);
+                vertex.setAttr(MINWIDTH_ATTR, Math.max(dim.width, 50));
+                vertex.setAttr(MINHEIGHT_ATTR, Math.max(dim.height, 25));
             }
         });
 

@@ -55,9 +55,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -68,10 +66,6 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.GestureEvent;
-import org.eclipse.swt.events.GestureListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -327,21 +321,19 @@ public class GraphTabItem extends CTabItem
         outlineViewer.setContentProvider(controller.getNodeContentProvider());
         outlineViewer.setLabelProvider(controller.getNodeLabelProvider());
         outlineViewer.setComparator(new ViewerComparator(new OutlineViewerCollator()));
-        outlineViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged(final SelectionChangedEvent event) {
-                final ISelection selection = event.getSelection();
+        outlineViewer.addSelectionChangedListener(event -> {
+            final ISelection selection = event.getSelection();
 
-                if (!selection.isEmpty()) {
-                    if (selection instanceof IStructuredSelection) {
-                        final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-                        if (structuredSelection.size() == 1) {
-                            final String nodeName = structuredSelection.getFirstElement().toString();
-                            if (!skipJumpToNode) {
-                                jumpToNode(nodeName);
-                            }
-                            skipJumpToNode = false;
-                            getController().selectNodeByName(nodeName, false);
+            if (!selection.isEmpty()) {
+                if (selection instanceof IStructuredSelection) {
+                    final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+                    if (structuredSelection.size() == 1) {
+                        final String nodeName = structuredSelection.getFirstElement().toString();
+                        if (!skipJumpToNode) {
+                            jumpToNode(nodeName);
                         }
+                        skipJumpToNode = false;
+                        getController().selectNodeByName(nodeName, false);
                     }
                 }
             }
@@ -352,50 +344,44 @@ public class GraphTabItem extends CTabItem
         canvas.getViewport().setContentsTracksWidth(true);
         canvas.setBackground(ColorConstants.white);
         canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
-        canvas.addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseScrolled(final MouseEvent event) {
-                if (doGesture)
-                    return;
-                initialZoom = getZoom();
-                if (event.count > 0) {
-                    zoomIn();
-                } else {
-                    zoomOut();
-                }
-                final float currentZoom = getZoom();
-                if (currentZoom != initialZoom) {
-                    final Point location = canvas.getViewport().getViewLocation();
-                    final int newX = (int) (((location.x + event.x) / initialZoom) * currentZoom)
-                            - event.x;
-                    final int newY = (int) (((location.y + event.y) / initialZoom) * currentZoom)
-                            - event.y;
-                    canvas.scrollTo(newX, newY);
-                }
+        canvas.addMouseWheelListener(event -> {
+            if (doGesture)
+                return;
+            initialZoom = getZoom();
+            if (event.count > 0) {
+                zoomIn();
+            } else {
+                zoomOut();
+            }
+            final float currentZoom = getZoom();
+            if (currentZoom != initialZoom) {
+                final Point location = canvas.getViewport().getViewLocation();
+                final int newX = (int) (((location.x + event.x) / initialZoom) * currentZoom)
+                        - event.x;
+                final int newY = (int) (((location.y + event.y) / initialZoom) * currentZoom)
+                        - event.y;
+                canvas.scrollTo(newX, newY);
             }
         });
         // TODO horizontal swipe to switch tabs
-        canvas.addGestureListener(new GestureListener() {
-            @Override
-            public void gesture(final GestureEvent gestureEvent) {
-                switch (gestureEvent.detail) {
-                    case SWT.GESTURE_BEGIN:
-                        doGesture = true;
-                        initialZoom = getZoom();
-                        initialLocation = canvas.getViewport().getViewLocation();
-                        break;
-                    case SWT.GESTURE_MAGNIFY:
-                        setZoom((float) (initialZoom * gestureEvent.magnification));
-                        break;
-                    case SWT.GESTURE_PAN:
-                        canvas.scrollTo(initialLocation.x + gestureEvent.x,
-                                initialLocation.y + gestureEvent.y);
-                        break;
-                    case SWT.GESTURE_END:
-                        doGesture = false;
-                    default:
-                        break;
-                }
+        canvas.addGestureListener(gestureEvent -> {
+            switch (gestureEvent.detail) {
+                case SWT.GESTURE_BEGIN:
+                    doGesture = true;
+                    initialZoom = getZoom();
+                    initialLocation = canvas.getViewport().getViewLocation();
+                    break;
+                case SWT.GESTURE_MAGNIFY:
+                    setZoom((float) (initialZoom * gestureEvent.magnification));
+                    break;
+                case SWT.GESTURE_PAN:
+                    canvas.scrollTo(initialLocation.x + gestureEvent.x,
+                            initialLocation.y + gestureEvent.y);
+                    break;
+                case SWT.GESTURE_END:
+                    doGesture = false;
+                default:
+                    break;
             }
         });
 
@@ -457,12 +443,10 @@ public class GraphTabItem extends CTabItem
             if (bounds != null) {
                 final Point center = bounds.getCenter();
                 final float graphZoom = graph.getZoom();
-                Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
-                        final org.eclipse.swt.graphics.Point size = canvas.getSize();
-                        canvas.scrollSmoothTo((int) (center.x * graphZoom - size.x / 2),
-                                (int) (center.y * graphZoom - size.y / 2));
-                    }
+                Display.getDefault().asyncExec(() -> {
+                    final org.eclipse.swt.graphics.Point size = canvas.getSize();
+                    canvas.scrollSmoothTo((int) (center.x * graphZoom - size.x / 2),
+                            (int) (center.y * graphZoom - size.y / 2));
                 });
 
             }
@@ -497,11 +481,9 @@ public class GraphTabItem extends CTabItem
             selection.add(node.getNode());
         }
 
-        Display.getDefault().syncExec(new Runnable() {
-            public void run() {
-                skipJumpToNode = true;
-                outlineViewer.setSelection(new StructuredSelection(selection), true);
-            }
+        Display.getDefault().syncExec(() -> {
+            skipJumpToNode = true;
+            outlineViewer.setSelection(new StructuredSelection(selection), true);
         });
     }
 
@@ -517,16 +499,13 @@ public class GraphTabItem extends CTabItem
             final String toolTip) {
         this.graph = graph;
 
-        Display.getDefault().asyncExec(new Runnable() {
-
-            public void run() {
-                // Do something for the previous graph.
-                canvas.setContents(graph);
-                setText(name);
-                setToolTipText(toolTip);
-                graph.setScroller(canvasScroller);
-                outlineViewer.setInput(graph);
-            }
+        Display.getDefault().asyncExec(() -> {
+            // Do something for the previous graph.
+            canvas.setContents(graph);
+            setText(name);
+            setToolTipText(toolTip);
+            graph.setScroller(canvasScroller);
+            outlineViewer.setInput(graph);
         });
     }
 

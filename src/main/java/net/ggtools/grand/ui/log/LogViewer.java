@@ -36,16 +36,12 @@ import java.util.Iterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
@@ -505,6 +501,7 @@ public class LogViewer extends Composite {
      * Method createViewer.
      * @param parent Composite
      */
+    @SuppressWarnings("unchecked")
     private void createViewer(final Composite parent) {
         viewer = new TableViewer(parent, SWT.READ_ONLY | SWT.H_SCROLL
                 | SWT.V_SCROLL | SWT.HIDE_SELECTION);
@@ -560,29 +557,23 @@ public class LogViewer extends Composite {
         }
         gc.dispose();
 
-        table.addDisposeListener(new DisposeListener() {
-
-            public void widgetDisposed(final DisposeEvent e) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Table disposed");
-                }
-                stopRefreshThread();
+        table.addDisposeListener(e -> {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Table disposed");
             }
+            stopRefreshThread();
         });
 
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @SuppressWarnings("unchecked")
-            public void doubleClick(final DoubleClickEvent event) {
-                final ISelection s = event.getSelection();
-                if (s instanceof IStructuredSelection) {
-                    final IStructuredSelection selection = (IStructuredSelection) s;
-                    for (final Iterator<LogEvent> iter = selection.iterator(); iter.hasNext();) {
-                        final LogEvent logEvent = iter.next();
-                        final LogEventDetailDialog window = new LogEventDetailDialog(getShell(),
-                                logEvent);
-                        window.setBlockOnOpen(false);
-                        window.open();
-                    }
+        viewer.addDoubleClickListener(event -> {
+            final ISelection s = event.getSelection();
+            if (s instanceof IStructuredSelection) {
+                final IStructuredSelection selection = (IStructuredSelection) s;
+                for (final Iterator<LogEvent> iter = selection.iterator(); iter.hasNext();) {
+                    final LogEvent logEvent = iter.next();
+                    final LogEventDetailDialog window = new LogEventDetailDialog(getShell(),
+                            logEvent);
+                    window.setBlockOnOpen(false);
+                    window.open();
                 }
             }
         });

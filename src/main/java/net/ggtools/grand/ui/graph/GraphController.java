@@ -58,7 +58,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.PrintFigureOperation;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -223,15 +222,12 @@ public class GraphController implements DotGraphAttributes, SelectionManager,
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         try {
-            ModalContext.run(new IRunnableWithProgress() {
-                public void run(final IProgressMonitor monitor)
-                        throws InvocationTargetException, InterruptedException {
-                    LOG.info("Adding filter " + filter);
-                    progressMonitor.beginTask("Adding filter", 4);
-                    filterChain.addFilterLast(filter);
-                    progressMonitor.worked(1);
-                    renderFilteredGraph(progressMonitor);
-                }
+            ModalContext.run(monitor -> {
+                LOG.info("Adding filter " + filter);
+                progressMonitor.beginTask("Adding filter", 4);
+                filterChain.addFilterLast(filter);
+                progressMonitor.worked(1);
+                renderFilteredGraph(progressMonitor);
             }, true, progressMonitor, Display.getCurrent());
         } catch (final InvocationTargetException | InterruptedException e) {
             reportError("Cannot add filter", e);
@@ -258,15 +254,12 @@ public class GraphController implements DotGraphAttributes, SelectionManager,
         final IProgressMonitor progressMonitor = defaultProgressMonitor;
 
         try {
-            ModalContext.run(new IRunnableWithProgress() {
-                public void run(final IProgressMonitor monitor)
-                        throws InvocationTargetException, InterruptedException {
-                    LOG.info("Clearing filters");
-                    progressMonitor.beginTask("Clearing filters", 4);
-                    filterChain.clearFilters();
-                    progressMonitor.worked(1);
-                    renderFilteredGraph(progressMonitor);
-                }
+            ModalContext.run(monitor -> {
+                LOG.info("Clearing filters");
+                progressMonitor.beginTask("Clearing filters", 4);
+                filterChain.clearFilters();
+                progressMonitor.worked(1);
+                renderFilteredGraph(progressMonitor);
             }, true, progressMonitor, Display.getCurrent());
         } catch (final InvocationTargetException | InterruptedException e) {
             reportError("Cannot clear filters", e);
@@ -346,11 +339,7 @@ public class GraphController implements DotGraphAttributes, SelectionManager,
             if (LOG.isInfoEnabled()) {
                 LOG.info("Opening graph displayer");
             }
-            Display.getDefault().syncExec(new Runnable() {
-                public void run() {
-                    displayer = window.newDisplayer(GraphController.this);
-                }
-            });
+            Display.getDefault().syncExec(() -> displayer = window.newDisplayer(GraphController.this));
         }
         return displayer;
     }
@@ -662,14 +651,11 @@ public class GraphController implements DotGraphAttributes, SelectionManager,
         progressMonitor.worked(1);
 
         progressMonitor.subTask("Rendering graph");
-        Display.getDefault().syncExec(new Runnable() {
-            public void run() {
-                if (figure == null) {
-                    figure = renderer.render(dotGraph);
-                } else {
-                    renderer.render(figure, dotGraph);
-                }
-
+        Display.getDefault().syncExec(() -> {
+            if (figure == null) {
+                figure = renderer.render(dotGraph);
+            } else {
+                renderer.render(figure, dotGraph);
             }
         });
         figure.setSelectionManager(this);
@@ -730,25 +716,23 @@ public class GraphController implements DotGraphAttributes, SelectionManager,
         final Image image = new Image(display, r.width, r.height);
 
         // Fill the image up.
-        display.syncExec(new Runnable() {
-            public void run() {
-                GC gc = null;
-                SWTGraphics g = null;
-                try {
-                    gc = new GC(image);
-                    g = new SWTGraphics(gc);
-                    g.translate(r.x * -1, r.y * -1);
-                    g.setForegroundColor(figure.getForegroundColor());
-                    g.setBackgroundColor(figure.getBackgroundColor());
-                    g.setFont(figure.getFont());
-                    figure.paint(g);
-                } finally {
-                    if (g != null) {
-                        g.dispose();
-                    }
-                    if (gc != null) {
-                        gc.dispose();
-                    }
+        display.syncExec(() -> {
+            GC gc = null;
+            SWTGraphics g = null;
+            try {
+                gc = new GC(image);
+                g = new SWTGraphics(gc);
+                g.translate(r.x * -1, r.y * -1);
+                g.setForegroundColor(figure.getForegroundColor());
+                g.setBackgroundColor(figure.getBackgroundColor());
+                g.setFont(figure.getFont());
+                figure.paint(g);
+            } finally {
+                if (g != null) {
+                    g.dispose();
+                }
+                if (gc != null) {
+                    gc.dispose();
                 }
             }
         });

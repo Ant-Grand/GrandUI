@@ -123,23 +123,21 @@ public class RecentFilesMenu extends MenuManager
      * @see net.ggtools.grand.ui.RecentFilesListener#refreshRecentFiles(Collection)
      */
     public final void refreshRecentFiles(final Collection<String> recentFiles) {
-        final Runnable runnable = new Runnable() {
-            public void run() {
-                // Clear the previous items.
-                final IContributionItem[] items = getItems();
+        final Runnable runnable = () -> {
+            // Clear the previous items.
+            final IContributionItem[] items = getItems();
 
-                for (int i = indexOf(RECENT_FILES_GROUP) + 1; i < items.length; i++) {
-                    IContributionItem item = items[i];
-                    if (item.isGroupMarker()) {
-                        break;
-                    }
-                    remove(item);
+            for (int i = indexOf(RECENT_FILES_GROUP) + 1; i < items.length; i++) {
+                IContributionItem item = items[i];
+                if (item.isGroupMarker()) {
+                    break;
                 }
+                remove(item);
+            }
 
-                // Re-add the contents.
-                for (final String fileName : recentFiles) {
-                    appendToGroup(RECENT_FILES_GROUP, new OpenRecentFileAction(window, fileName));
-                }
+            // Re-add the contents.
+            for (final String fileName : recentFiles) {
+                appendToGroup(RECENT_FILES_GROUP, new OpenRecentFileAction(window, fileName));
             }
         };
 
