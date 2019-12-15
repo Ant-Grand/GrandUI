@@ -30,7 +30,6 @@ package net.ggtools.grand.ui.image;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -184,9 +183,8 @@ public class ImageSaver {
         }
 
         // sort colors by most frequently used
-        final ColorCounter[] counters = new ColorCounter[freq.size()];
-        freq.values().toArray(counters);
-        Arrays.sort(counters);
+        final ColorCounter[] counters = freq.values().stream().sorted()
+                .toArray(ColorCounter[]::new);
 
         // pick the most frequently used 256 (or fewer), and make a palette
         ImageData mask = null;

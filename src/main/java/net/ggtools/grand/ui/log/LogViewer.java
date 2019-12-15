@@ -244,11 +244,7 @@ public class LogViewer extends Composite {
                 }
 
                 if (myEvent != null) {
-                    display.syncExec(new Runnable() {
-                        public void run() {
-                            refreshViewer();
-                        }
-                    });
+                    display.syncExec(LogViewer.this::refreshViewer);
                 }
 
                 try {
