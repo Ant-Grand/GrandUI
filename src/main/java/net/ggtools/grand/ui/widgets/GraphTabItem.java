@@ -175,7 +175,7 @@ public class GraphTabItem extends CTabItem
                     targetIndex = 0;
                 }
 
-                result = (sourceIndex < targetIndex) ? -1 : ((sourceIndex == targetIndex) ? 0 : 1);
+                result = Integer.compare(sourceIndex, targetIndex);
             }
 
             return result;
