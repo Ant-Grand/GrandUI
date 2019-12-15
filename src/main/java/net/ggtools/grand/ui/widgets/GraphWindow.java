@@ -145,10 +145,7 @@ public class GraphWindow extends ApplicationWindow
             controllerRemovedDispatcher = controllerEventManager
                     .createDispatcher(GraphControllerListener.class.getDeclaredMethod(
                             "controllerRemoved", GraphController.class));
-        } catch (final SecurityException e) {
-            LOG.fatal("Caught exception initializing GraphController", e);
-            throw new RuntimeException("Cannot instantiate GraphController", e);
-        } catch (final NoSuchMethodException e) {
+        } catch (final SecurityException | NoSuchMethodException e) {
             LOG.fatal("Caught exception initializing GraphController", e);
             throw new RuntimeException("Cannot instantiate GraphController", e);
         }

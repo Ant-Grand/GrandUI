@@ -103,10 +103,7 @@ class PropertyList {
             allPropertiesChangedDispatcher = eventManager
                     .createDispatcher(PropertyChangedListener.class.getDeclaredMethod(
                             "allPropertiesChanged", Object.class));
-        } catch (final SecurityException e) {
-            LOG.fatal("Caught exception initializing PropertyList", e);
-            throw new RuntimeException("Cannot instantiate PropertyList", e);
-        } catch (final NoSuchMethodException e) {
+        } catch (final SecurityException | NoSuchMethodException e) {
             LOG.fatal("Caught exception initializing PropertyList", e);
             throw new RuntimeException("Cannot instantiate PropertyList", e);
         }
