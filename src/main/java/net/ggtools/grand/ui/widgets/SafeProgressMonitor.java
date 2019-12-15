@@ -79,12 +79,7 @@ public class SafeProgressMonitor implements IProgressMonitor {
      * @see org.eclipse.core.runtime.IProgressMonitor#done()
      */
     public final void done() {
-        display.asyncExec(new Runnable() {
-
-            public void run() {
-                monitor.done();
-            }
-        });
+        display.asyncExec(monitor::done);
     }
 
     /**

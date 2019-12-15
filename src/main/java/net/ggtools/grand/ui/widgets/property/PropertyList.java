@@ -177,7 +177,7 @@ class PropertyList {
      * @return PropertyPair[]
      */
     public PropertyPair[] toArray() {
-        return pairList.toArray(new PropertyPair[pairList.size()]);
+        return pairList.toArray(new PropertyPair[0]);
     }
 
     /**
