@@ -89,9 +89,19 @@ public class ExportGraphAction extends GraphControllerAction {
         final ImageSaver imageSaver = new ImageSaver();
         dialog.setFilterExtensions(imageSaver.getSupportedExtensions());
         dialog.setText("Export graph as image");
-        final String fileName = dialog.open();
-        LOG.debug("Dialog returned " + fileName);
+        String fileName = dialog.open();
+        LOG.debug("Dialog returned file name " + fileName);
         if (fileName != null) {
+            int filterIndex = dialog.getFilterIndex();
+            // TODO why does this not work with GTK?
+            if (filterIndex >= 0) {
+                String fileExtension = imageSaver.getSupportedExtensions()[filterIndex]
+                        .replace("*", "");
+                LOG.debug("Dialog returned file extension " + fileExtension);
+                if (!fileName.endsWith(fileExtension)) {
+                    fileName += fileExtension;
+                }
+            }
             Image image = null;
             try {
                 image = getGraphController().createImageForGraph();
