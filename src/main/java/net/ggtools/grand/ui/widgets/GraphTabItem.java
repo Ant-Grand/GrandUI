@@ -345,8 +345,9 @@ public class GraphTabItem extends CTabItem
         canvas.setBackground(ColorConstants.white);
         canvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
         canvas.addMouseWheelListener(event -> {
-            if (doGesture)
+            if (doGesture) {
                 return;
+            }
             initialZoom = getZoom();
             if (event.count > 0) {
                 zoomIn();
