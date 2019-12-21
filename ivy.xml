@@ -7,13 +7,13 @@
     <conf name="test" visibility="private"/>
     <conf name="compile" extends="default" description="Dependencies for the compilation"/>
     <conf name="win32" extends="compile" description="To run on Microsoft Windows"/>
-    <conf name="macos" extends="compile" description="To run on Mac OS X"/>
+    <conf name="macos" extends="compile" description="To run on macOS"/>
     <conf name="linux" extends="compile" description="To run on Linux"/>
   </configurations>
   <!-- See http://wiki.eclipse.org/index.php/JFace#Using_JFace_outside_the_Eclipse_platform -->
   <dependencies>
-    <dependency org="org.apache.ant" name="ant" rev="1.10.6"/>
-    <dependency org="org.apache.ant" name="ant-launcher" rev="1.10.6"/>
+    <dependency org="org.apache.ant" name="ant" rev="1.10.7"/>
+    <dependency org="org.apache.ant" name="ant-launcher" rev="1.10.7"/>
     <dependency org="oro" name="oro" rev="2.0.8"/>
     <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3"/>
     <dependency org="commons-logging" name="commons-logging" rev="1.2" conf="compile->default"/>
