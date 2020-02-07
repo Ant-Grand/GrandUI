@@ -25,6 +25,7 @@
 		<format pattern="2004-yyyy" property="years"/>
 	</tstamp>
 
+	<property name="central.repo" value="https://repo1.maven.org/maven2"/>
 	<property name="ivy.version" value="2.5.0"/>
 	<property name="ivy.dir" value="${user.home}/.ivy2/cache/org.apache.ivy/jars"/>
 	<property name="ivy.jar.name" value="ivy-${ivy.version}.jar"/>
@@ -32,7 +33,7 @@
 
 	<target name="get-ivy" description="Get Ivy jar unless already cached" unless="has.ivy">
 		<mkdir dir="${ivy.dir}"/>
-		<get usetimestamp="true" src="https://repository.apache.org/content/repositories/releases/org/apache/ivy/ivy/${ivy.version}/${ivy.jar.name}"
+		<get usetimestamp="true" src="${central.repo}/org/apache/ivy/ivy/${ivy.version}/${ivy.jar.name}"
 		     skipexisting="true"
 		     dest="${ivy.dir}/${ivy.jar.name}"/>
 	</target>
