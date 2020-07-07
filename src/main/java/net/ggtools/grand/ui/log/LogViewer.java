@@ -191,20 +191,10 @@ public class LogViewer extends Composite {
                 dialog.setFilterExtensions(new String[]{"*.glg", "*.log", "*"});
                 final String logFileName = dialog.open();
                 if (logFileName != null) {
-                    ObjectOutputStream oos = null;
-                    try {
-                        oos = new ObjectOutputStream(new FileOutputStream(logFileName));
+                    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(logFileName))) {
                         oos.writeObject(LogEventBufferImpl.getInstance());
                     } catch (final IOException exception) {
                         throw new RuntimeException("Cannot save log to " + logFileName, exception);
-                    } finally {
-                        if (oos != null) {
-                            try {
-                                oos.close();
-                            } catch (final IOException exception) {
-                                throw new RuntimeException("Cannot close " + logFileName, exception);
-                            }
-                        }
                     }
                 }
             }

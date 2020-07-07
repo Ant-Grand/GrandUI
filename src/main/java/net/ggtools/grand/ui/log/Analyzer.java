@@ -96,25 +96,13 @@ public class Analyzer extends ApplicationWindow {
                     dialog.setFilterExtensions(new String[]{"*.glg", "*.log", "*"});
                     final String logFileName = dialog.open();
                     if (logFileName != null) {
-                        ObjectInputStream ois = null;
-                        try {
-                            ois = new ObjectInputStream(new FileInputStream(logFileName));
+                        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(logFileName))) {
                             logViewer.setLogBuffer((LogEventBuffer) ois.readObject());
                         } catch (final ClassNotFoundException | IOException e) {
                             // TODO auto-generated catch block
                             e.printStackTrace();
-                        } finally {
-                            if (ois != null) {
-                                try {
-                                    ois.close();
-                                } catch (final IOException exception) {
-                                    throw new RuntimeException("Cannot close " + logFileName,
-                                            exception);
-                                }
-                            }
                         }
                     }
-
                 }
             }
         });
